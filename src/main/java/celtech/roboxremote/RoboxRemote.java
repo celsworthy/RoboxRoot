@@ -20,7 +20,7 @@ public class RoboxRemote extends Application<RoboxRemoteConfiguration>
     @Override
     public String getName()
     {
-        return "hello-world";
+        return "printerControl";
     }
 
     @Override
@@ -29,6 +29,7 @@ public class RoboxRemote extends Application<RoboxRemoteConfiguration>
        DiscoveryAgentRemoteEnd discoveryAgent = new DiscoveryAgentRemoteEnd();
        
        Thread discoveryThread = new Thread(discoveryAgent);
+       discoveryThread.setDaemon(true);
        discoveryThread.start();
     }
 
