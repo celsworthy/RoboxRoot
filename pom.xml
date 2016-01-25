@@ -41,7 +41,7 @@
             </resource>
         </resources>
         <plugins>
-             <plugin>
+            <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <archive>
@@ -101,20 +101,30 @@
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>
             <version>0.8.2</version>
+            <exclusions>
+                <exclusion> 
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>log4j-over-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         
+        <dependency>
+            <groupId>celtech</groupId>
+            <artifactId>RoboxBase</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>celtech</groupId>
+            <artifactId>RoboxCommsLibrary</artifactId>
+            <version>1.0</version>
+            <type>jar</type>
+        </dependency>
         <dependency>
             <groupId>celtech</groupId>
             <artifactId>CELTechCore</artifactId>
             <version>1.0-SNAPSHOT</version>
             <type>jar</type>
-        </dependency>
-
-        <dependency>
-            <groupId>celtech</groupId>
-            <artifactId>RoboxRemoteLibrary</artifactId>
-            <version>1.0</version>
-            <type>jar</type>
-        </dependency>
-    </dependencies>
+        </dependency>             
+    </dependencies>    
 </project>

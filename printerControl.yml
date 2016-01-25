@@ -9,3 +9,11 @@ server:
   adminConnectors:
   - type: http
     port: 9001
+  requestLog:
+    timeZone: UTC
+    
+logging:
+  appenders:
+    - type: console
+      threshold: TRACE
+      target: stderr
