@@ -47,10 +47,6 @@ public class LowLevelAPITest
     {
         WebTarget target = resources.client().target("/123456/writeData");
         
-        Blah testBlah = new Blah();
-        testBlah.setbVariable(6);
-        testBlah.setaVariable(3);
-        
         QueryFirmwareVersion fw = (QueryFirmwareVersion)RoboxTxPacketFactory.createPacket(TxPacketTypeEnum.QUERY_FIRMWARE_VERSION);
         fw.setSequenceNumber(33);
         
