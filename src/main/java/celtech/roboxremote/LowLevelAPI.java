@@ -28,6 +28,12 @@ public class LowLevelAPI
     private final PrinterRegistry printerRegistry;
     private final RoboxCommsManager commsManager;
 
+    public LowLevelAPI()
+    {
+        this.printerRegistry = null;
+        this.commsManager = null;
+    }
+
     public LowLevelAPI(String template, String defaultName)
     {
         printerRegistry = PrinterRegistry.getInstance();
@@ -61,6 +67,7 @@ public class LowLevelAPI
             RoboxTxPacket remoteTx)
     {
         RoboxRxPacket rxPacket = null;
+        System.out.println("Remote sent " + remoteTx + " type " + remoteTx.getClass().getName());
         try
         {
             rxPacket = printerRegistry.getRemotePrinters().get(printerID).getCommandInterface().writeToPrinter(remoteTx, true);
