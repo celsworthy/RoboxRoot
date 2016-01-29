@@ -1,4 +1,5 @@
-import celtech.comms.remote.tx.AbortPrint;
+import celtech.comms.remote.rx.PrinterIDResponse;
+import celtech.comms.remote.rx.RoboxRxPacket;
 import celtech.comms.remote.tx.RoboxTxPacket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import static io.dropwizard.testing.FixtureHelpers.fixture;
@@ -13,11 +14,11 @@ import static org.junit.Assert.*;
  *
  * @author Ian
  */
-public class RoboxTxPacketTest
+public class RoboxRxPacketTest
 {
     private final ObjectMapper mapper = new ObjectMapper();
     
-    public RoboxTxPacketTest()
+    public RoboxRxPacketTest()
     {
     }
     
@@ -43,15 +44,26 @@ public class RoboxTxPacketTest
 
     @Test
     public void serializesAbortPrintToJSON() throws Exception {
-        final RoboxTxPacket fw =new AbortPrint();
+        final RoboxRxPacket fw =new PrinterIDResponse();
+        fw.setSequenceNumber(44);
         String mappedValue = mapper.writeValueAsString(fw);
-        assertEquals(fixture("fixtures/AbortPrint.json"),
+        assertEquals(fixture("fixtures/PrinterIDResponse.json"),
                 mappedValue);
     }
     
        @Test
     public void deserializesFromJSON() throws Exception {
-        final RoboxTxPacket abort = new AbortPrint();
-        assertEquals(abort, mapper.readValue(fixture("fixtures/AbortPrint.json"), RoboxTxPacket.class));
+        final RoboxRxPacket abort = new PrinterIDResponse();
+        abort.setSequenceNumber(44);
+        try
+        {
+            RoboxRxPacket packetRec = mapper.readValue(fixture("fixtures/PrinterIDResponse.json"), RoboxRxPacket.class);
+        assertEquals(abort, packetRec);
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getCause().getMessage());
+            fail();
+        }
     }
 }

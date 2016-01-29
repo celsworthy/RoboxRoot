@@ -87,5 +87,7 @@ public class RoboxRemote extends Application<RoboxRemoteConfiguration>
         environment.jersey().register(lowLevelAPI);
         environment.jersey().register(highLevelAPI);
         environment.jersey().register(discoveryAPI);
+        
+        commsManager.addDummyPrinter();
     }
 }

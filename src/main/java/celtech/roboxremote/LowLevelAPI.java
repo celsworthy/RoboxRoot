@@ -63,6 +63,7 @@ public class LowLevelAPI
     @Timed
     @Path(Configuration.writeDataService)
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public RoboxRxPacket writeToPrinter(@PathParam("printerID") String printerID,
             RoboxTxPacket remoteTx)
     {

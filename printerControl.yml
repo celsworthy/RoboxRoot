@@ -13,7 +13,34 @@ server:
     timeZone: UTC
     
 logging:
+  level: INFO
+  loggers:
+    "io.dropwizard": 
+      level: ALL
+      additive: false
+      appenders:
+        - type: file
+          currentLogFilename: /Users/ianhudson/Development/roboxremoteserver/dw.log
+          archivedLogFilenamePattern: /Users/ianhudson/Development/roboxremoteserver/dw.log-%d.log.gz
+          archivedFileCount: 5
+    "org.hibernate.SQL":
+      level: DEBUG
+      additive: false
+      appenders:
+        - type: file
+          currentLogFilename: /Users/ianhudson/Development/roboxremoteserver/sql.log
+          archivedLogFilenamePattern: /Users/ianhudson/Development/roboxremoteserver/sql.log-%d.log.gz
+          archivedFileCount: 5
+    "org.eclipse.jetty.server":
+      level: ALL
+      additive: false
+      appenders:
+        - type: file
+          currentLogFilename: /Users/ianhudson/Development/roboxremoteserver/jetty.log
+          archivedLogFilenamePattern: /Users/ianhudson/Development/roboxremoteserver/jetty.log-%d.log.gz
+          archivedFileCount: 5
+          
+          
   appenders:
     - type: console
-      threshold: TRACE
-      target: stderr
+      threshold: TRACE    
