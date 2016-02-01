@@ -34,12 +34,6 @@
     </organization>
 
     <build>
-        <resources>
-            <resource>
-                <directory>src/main/java/celtech/roboxremote/resources</directory>
-                <targetPath>celtech/roboxremote/resources</targetPath>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -142,6 +136,11 @@
             <artifactId>junit</artifactId>
             <version>4.10</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-assets</artifactId>
+            <version>0.9.1</version>
         </dependency>
     </dependencies>    
 </project>

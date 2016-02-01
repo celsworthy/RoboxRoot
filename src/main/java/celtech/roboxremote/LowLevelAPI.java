@@ -5,6 +5,8 @@ import celtech.comms.remote.rx.RoboxRxPacket;
 import celtech.comms.remote.tx.RoboxTxPacket;
 import celtech.printerControl.comms.RoboxCommsManager;
 import celtech.comms.remote.exceptions.RoboxCommsException;
+import celtech.comms.remote.tx.ReportErrors;
+import celtech.comms.remote.tx.StatusRequest;
 import com.codahale.metrics.annotation.Timed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -45,7 +47,7 @@ public class LowLevelAPI
     @Path(Configuration.connectService)
     public boolean connect(@PathParam("printerID") String printerID)
     {
-        printerRegistry.getRemotePrinters().get(printerID).getCommandInterface().operateRemotely(true);
+//        printerRegistry.getRemotePrinters().get(printerID).getCommandInterface().operateRemotely(true);
         steno.info("Was asked to connect to " + printerID);
         return true;
     }
@@ -56,7 +58,7 @@ public class LowLevelAPI
     public void disconnect(@PathParam("printerID") String printerID)
     {
         steno.info("Was asked to disconnect from " + printerID);
-        printerRegistry.getRemotePrinters().get(printerID).getCommandInterface().operateRemotely(false);
+//        printerRegistry.getRemotePrinters().get(printerID).getCommandInterface().operateRemotely(false);
     }
 
     @POST
@@ -68,13 +70,22 @@ public class LowLevelAPI
             RoboxTxPacket remoteTx)
     {
         RoboxRxPacket rxPacket = null;
-        System.out.println("Remote sent " + remoteTx + " type " + remoteTx.getClass().getName());
-        try
+
+        if (remoteTx instanceof StatusRequest)
         {
-            rxPacket = printerRegistry.getRemotePrinters().get(printerID).getCommandInterface().writeToPrinter(remoteTx, true);
-        } catch (RoboxCommsException ex)
+            rxPacket = printerRegistry.getRemotePrinters().get(printerID).getCommandInterface().getLastStatusResponse();
+        } else if (remoteTx instanceof ReportErrors)
         {
-            steno.error("Failed whilst writing to local printer with ID" + printerID);
+            rxPacket = printerRegistry.getRemotePrinters().get(printerID).getCommandInterface().getLastErrorResponse();
+        } else
+        {
+            try
+            {
+                rxPacket = printerRegistry.getRemotePrinters().get(printerID).getCommandInterface().writeToPrinter(remoteTx, true);
+            } catch (RoboxCommsException ex)
+            {
+                steno.error("Failed whilst writing to local printer with ID" + printerID);
+            }
         }
 
         return rxPacket;

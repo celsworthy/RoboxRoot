@@ -7,6 +7,7 @@ import celtech.configuration.ApplicationConfiguration;
 import celtech.printerControl.comms.RoboxCommsManager;
 import celtech.utils.tasks.HeadlessTaskExecutor;
 import io.dropwizard.Application;
+import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import libertysystems.stenographer.Stenographer;
@@ -66,6 +67,8 @@ public class RoboxRemote extends Application<RoboxRemoteConfiguration>
 
         commsManager = RoboxCommsManager.getInstance(ApplicationConfiguration.getBinariesDirectory(), false, false);
         commsManager.start();
+        
+        bootstrap.addBundle(new AssetsBundle("/assets", "/"));
     }
 
     @Override
@@ -87,7 +90,7 @@ public class RoboxRemote extends Application<RoboxRemoteConfiguration>
         environment.jersey().register(lowLevelAPI);
         environment.jersey().register(highLevelAPI);
         environment.jersey().register(discoveryAPI);
-        
+                
         commsManager.addDummyPrinter();
     }
 }
