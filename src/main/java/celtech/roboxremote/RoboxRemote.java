@@ -67,7 +67,7 @@ public class RoboxRemote extends Application<RoboxRemoteConfiguration>
 
         commsManager = RoboxCommsManager.getInstance(ApplicationConfiguration.getBinariesDirectory(), false, false);
         commsManager.start();
-        
+
         bootstrap.addBundle(new AssetsBundle("/assets", "/"));
     }
 
@@ -90,7 +90,7 @@ public class RoboxRemote extends Application<RoboxRemoteConfiguration>
         environment.jersey().register(lowLevelAPI);
         environment.jersey().register(highLevelAPI);
         environment.jersey().register(discoveryAPI);
-                
-        commsManager.addDummyPrinter();
+
+        environment.admin().addTask(new AdminUpdateTask());
     }
 }

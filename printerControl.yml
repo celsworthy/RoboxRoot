@@ -5,9 +5,6 @@ defaultName: Stranger
 server:
   rootPath: /api/*
   applicationContextPath: /
-#  connector:
-#    type: http
-#    port: 9000
   applicationConnectors:
   - type: http 
     port: 9000
@@ -22,31 +19,31 @@ logging:
   level: INFO
   loggers:
     "io.dropwizard": 
-      level: ALL
+      level: INFO
       additive: false
       appenders:
         - type: file
-          currentLogFilename: /Users/ianhudson/Development/roboxremoteserver/dw.log
-          archivedLogFilenamePattern: /Users/ianhudson/Development/roboxremoteserver/dw.log-%d.log.gz
+          currentLogFilename: dw.log
+          archivedLogFilenamePattern: dw.log-%d.log.gz
           archivedFileCount: 5
     "org.hibernate.SQL":
-      level: DEBUG
+      level: INFO
       additive: false
       appenders:
         - type: file
-          currentLogFilename: /Users/ianhudson/Development/roboxremoteserver/sql.log
-          archivedLogFilenamePattern: /Users/ianhudson/Development/roboxremoteserver/sql.log-%d.log.gz
+          currentLogFilename: sql.log
+          archivedLogFilenamePattern: sql.log-%d.log.gz
           archivedFileCount: 5
     "org.eclipse.jetty.server":
-      level: ALL
+      level: INFO
       additive: false
       appenders:
         - type: file
-          currentLogFilename: /Users/ianhudson/Development/roboxremoteserver/jetty.log
-          archivedLogFilenamePattern: /Users/ianhudson/Development/roboxremoteserver/jetty.log-%d.log.gz
+          currentLogFilename: jetty.log
+          archivedLogFilenamePattern: jetty.log-%d.log.gz
           archivedFileCount: 5
           
           
   appenders:
     - type: console
-      threshold: TRACE    
+      threshold: INFO

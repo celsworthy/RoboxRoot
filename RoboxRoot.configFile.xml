@@ -2,18 +2,17 @@
 <root>
 	<ApplicationConfiguration>
 	<AppFolderName>CEL Robox</AppFolderName>
-        <ApplicationName>CEL Robox Remote</ApplicationName>
-        <ApplicationShortName>RoboxRemote</ApplicationShortName>
+        <ApplicationName>CEL RoboxRoot</ApplicationName>
+        <ApplicationShortName>RoboxRoot</ApplicationShortName>
         <ApplicationDataStorageDirectory>$APPDATA_HOME$/#ApplicationConfiguration:AppFolderName#/</ApplicationDataStorageDirectory>
-        <UserDataStorageDirectory>$USER_HOME$/#ApplicationConfiguration:AppFolderName#/</UserDataStorageDirectory>
+        <UserDataStorageDirectory>$USER_HOME$/</UserDataStorageDirectory>
         <requiredFirmwareVersion>741</requiredFirmwareVersion>
         <DefaultMode>Normal</DefaultMode>
         <DefaultLocaleLanguageTag>en-GB</DefaultLocaleLanguageTag>
-        <FakeInstallDirectory>/Applications/CEL/AutoMaker/</FakeInstallDirectory>
     </ApplicationConfiguration>
     <Stenographer>
-       <logfilename>#ApplicationConfiguration:ApplicationDataStorageDirectory#/RoboxRemote.log</logfilename>
+       <logfilename>#ApplicationConfiguration:ApplicationDataStorageDirectory#/RoboxRoot.log</logfilename>
        <logmode>LOCAL</logmode>
-       <logtee>F</logtee>
+       <logtee>T</logtee>
     </Stenographer>
 </root>
