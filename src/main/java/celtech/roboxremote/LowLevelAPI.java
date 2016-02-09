@@ -1,12 +1,12 @@
 package celtech.roboxremote;
 
-import celtech.comms.remote.Configuration;
-import celtech.comms.remote.rx.RoboxRxPacket;
-import celtech.comms.remote.tx.RoboxTxPacket;
-import celtech.printerControl.comms.RoboxCommsManager;
-import celtech.comms.remote.exceptions.RoboxCommsException;
-import celtech.comms.remote.tx.ReportErrors;
-import celtech.comms.remote.tx.StatusRequest;
+import celtech.roboxbase.comms.RoboxCommsManager;
+import celtech.roboxbase.comms.remote.Configuration;
+import celtech.roboxbase.comms.rx.RoboxRxPacket;
+import celtech.roboxbase.comms.tx.RoboxTxPacket;
+import celtech.roboxbase.comms.exceptions.RoboxCommsException;
+import celtech.roboxbase.comms.tx.ReportErrors;
+import celtech.roboxbase.comms.tx.StatusRequest;
 import com.codahale.metrics.annotation.Timed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;

@@ -1,11 +1,11 @@
 package celtech.roboxremote;
 
-import celtech.Lookup;
-import celtech.printerControl.model.Head;
-import celtech.printerControl.model.Printer;
-import celtech.printerControl.model.Reel;
+import celtech.roboxbase.BaseLookup;
+import celtech.roboxbase.printerControl.model.Head;
+import celtech.roboxbase.printerControl.model.Printer;
+import celtech.roboxbase.printerControl.model.PrinterListChangesListener;
+import celtech.roboxbase.printerControl.model.Reel;
 import celtech.roboxbase.utils.SystemUtils;
-import celtech.utils.PrinterListChangesListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +28,7 @@ public class PrinterRegistry implements PrinterListChangesListener
 
     private PrinterRegistry()
     {
-        Lookup.getPrinterListChangesNotifier().addListener(this);
+        BaseLookup.getPrinterListChangesNotifier().addListener(this);
     }
 
     public static PrinterRegistry getInstance()

@@ -1,11 +1,11 @@
 package celtech.roboxremote;
 
-import celtech.Lookup;
-import celtech.appManager.ConsoleSystemNotificationManager;
-import celtech.comms.DiscoveryAgentRemoteEnd;
-import celtech.configuration.ApplicationConfiguration;
-import celtech.printerControl.comms.RoboxCommsManager;
-import celtech.utils.tasks.HeadlessTaskExecutor;
+import celtech.roboxbase.BaseLookup;
+import celtech.roboxbase.appManager.ConsoleSystemNotificationManager;
+import celtech.roboxbase.comms.DiscoveryAgentRemoteEnd;
+import celtech.roboxbase.comms.RoboxCommsManager;
+import celtech.roboxbase.configuration.BaseConfiguration;
+import celtech.roboxbase.utils.tasks.HeadlessTaskExecutor;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
@@ -55,18 +55,17 @@ public class RoboxRemote extends Application<RoboxRemoteConfiguration>
             }
         });
 
-        String installDir = ApplicationConfiguration.getApplicationInstallDirectory(RoboxRemote.class);
-        Lookup.setupDefaultValues();
-        Lookup.setSystemNotificationHandler(new ConsoleSystemNotificationManager());
-        Lookup.setTaskExecutor(new HeadlessTaskExecutor());
+        String installDir = BaseConfiguration.getApplicationInstallDirectory(RoboxRemote.class);
+        BaseLookup.setupDefaultValues();
+        BaseLookup.setSystemNotificationHandler(new ConsoleSystemNotificationManager());
+        BaseLookup.setTaskExecutor(new HeadlessTaskExecutor());
 
         discoveryAgent = new DiscoveryAgentRemoteEnd();
         Thread discoveryThread = new Thread(discoveryAgent);
         discoveryThread.setDaemon(true);
         discoveryThread.start();
 
-        commsManager = RoboxCommsManager.getInstance(ApplicationConfiguration.getBinariesDirectory(), false, false);
-        commsManager.start();
+        commsManager = RoboxCommsManager.getInstance(BaseConfiguration.getBinariesDirectory(), false, true, false);
 
         bootstrap.addBundle(new AssetsBundle("/assets", "/"));
     }
@@ -92,5 +91,7 @@ public class RoboxRemote extends Application<RoboxRemoteConfiguration>
         environment.jersey().register(discoveryAPI);
 
         environment.admin().addTask(new AdminUpdateTask());
+
+        commsManager.start();
     }
 }

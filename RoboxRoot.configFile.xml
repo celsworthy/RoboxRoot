@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-	<ApplicationConfiguration>
-	<AppFolderName>CEL Robox</AppFolderName>
+    <ApplicationConfiguration>
+        <AppFolderName>CEL Robox</AppFolderName>
         <ApplicationName>CEL RoboxRoot</ApplicationName>
         <ApplicationShortName>RoboxRoot</ApplicationShortName>
         <ApplicationDataStorageDirectory>$APPDATA_HOME$/#ApplicationConfiguration:AppFolderName#/</ApplicationDataStorageDirectory>
@@ -9,10 +9,11 @@
         <requiredFirmwareVersion>741</requiredFirmwareVersion>
         <DefaultMode>Normal</DefaultMode>
         <DefaultLocaleLanguageTag>en-GB</DefaultLocaleLanguageTag>
+        <FakeInstallDirectory>/Applications/CEL/AutoMaker/</FakeInstallDirectory>
     </ApplicationConfiguration>
     <Stenographer>
-       <logfilename>#ApplicationConfiguration:ApplicationDataStorageDirectory#/RoboxRoot.log</logfilename>
-       <logmode>LOCAL</logmode>
-       <logtee>T</logtee>
+        <logfilename>#ApplicationConfiguration:ApplicationDataStorageDirectory#/RoboxRoot.log</logfilename>
+        <logmode>LOCAL</logmode>
+        <logtee>T</logtee>
     </Stenographer>
 </root>

@@ -34,7 +34,7 @@
     </organization>
 
     <build>
-       <plugins>
+        <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -80,7 +80,13 @@
         </plugins>
     </build>
     
-    <dependencies>
+    <dependencies>        
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-core</artifactId>
@@ -103,34 +109,15 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
-        <dependency>
-            <groupId>celtech</groupId>
-            <artifactId>RoboxBase</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>celtech</groupId>
-            <artifactId>RoboxCommsLibrary</artifactId>
-            <version>1.0</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>celtech</groupId>
-            <artifactId>CELTechCore</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.10</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-assets</artifactId>
             <version>0.9.1</version>
+        </dependency>
+        <dependency>
+            <groupId>celtech</groupId>
+            <artifactId>RoboxBase</artifactId>
+            <version>1.0</version>
         </dependency>
     </dependencies>    
 </project>

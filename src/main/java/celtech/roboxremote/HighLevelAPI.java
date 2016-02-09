@@ -1,7 +1,7 @@
 package celtech.roboxremote;
 
-import celtech.comms.remote.Configuration;
-import celtech.printerControl.model.PrinterException;
+import celtech.roboxbase.comms.remote.Configuration;
+import celtech.roboxbase.printerControl.model.PrinterException;
 import com.codahale.metrics.annotation.Timed;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
