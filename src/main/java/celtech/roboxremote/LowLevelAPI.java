@@ -32,12 +32,6 @@ public class LowLevelAPI
 
     public LowLevelAPI()
     {
-        this.printerRegistry = null;
-        this.commsManager = null;
-    }
-
-    public LowLevelAPI(String template, String defaultName)
-    {
         printerRegistry = PrinterRegistry.getInstance();
         commsManager = RoboxCommsManager.getInstance();
     }

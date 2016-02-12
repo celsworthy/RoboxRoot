@@ -15,7 +15,6 @@ public class AdminUpdateTask extends Task
     public AdminUpdateTask()
     {
         super("update");
-        System.out.println("created");
     }
 
     @Override

@@ -74,11 +74,7 @@ public class RoboxRemote extends Application<RoboxRemoteConfiguration>
     public void run(RoboxRemoteConfiguration configuration,
             Environment environment)
     {
-        final LowLevelAPI lowLevelAPI = new LowLevelAPI(
-                configuration.getTemplate(),
-                configuration.getDefaultName()
-        );
-
+        final LowLevelAPI lowLevelAPI = new LowLevelAPI();
         final HighLevelAPI highLevelAPI = new HighLevelAPI();
         final DiscoveryAPI discoveryAPI = new DiscoveryAPI();
 

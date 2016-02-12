@@ -4,6 +4,7 @@ import celtech.roboxbase.BaseLookup;
 import celtech.roboxbase.printerControl.model.Head;
 import celtech.roboxbase.printerControl.model.Printer;
 import celtech.roboxbase.printerControl.model.PrinterListChangesListener;
+import celtech.roboxbase.printerControl.model.PrinterListChangesNotifier;
 import celtech.roboxbase.printerControl.model.Reel;
 import celtech.roboxbase.utils.SystemUtils;
 import java.util.ArrayList;
@@ -28,7 +29,11 @@ public class PrinterRegistry implements PrinterListChangesListener
 
     private PrinterRegistry()
     {
-        BaseLookup.getPrinterListChangesNotifier().addListener(this);
+        PrinterListChangesNotifier notifier = BaseLookup.getPrinterListChangesNotifier();
+        if (notifier != null)
+        {
+            notifier.addListener(this);
+        }
     }
 
     public static PrinterRegistry getInstance()

@@ -13,13 +13,14 @@ server:
     port: 9001
   requestLog:
     timeZone: UTC
+    appenders: []
 
     
 logging:
-  level: INFO
+  level: ERROR
   loggers:
     "io.dropwizard": 
-      level: INFO
+      level: ERROR
       additive: false
       appenders:
         - type: file
@@ -27,7 +28,7 @@ logging:
           archivedLogFilenamePattern: dw.log-%d.log.gz
           archivedFileCount: 5
     "org.hibernate.SQL":
-      level: INFO
+      level: ERROR
       additive: false
       appenders:
         - type: file
@@ -35,15 +36,10 @@ logging:
           archivedLogFilenamePattern: sql.log-%d.log.gz
           archivedFileCount: 5
     "org.eclipse.jetty.server":
-      level: INFO
+      level: ERROR
       additive: false
       appenders:
         - type: file
           currentLogFilename: jetty.log
           archivedLogFilenamePattern: jetty.log-%d.log.gz
           archivedFileCount: 5
-          
-          
-  appenders:
-    - type: console
-      threshold: INFO
