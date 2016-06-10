@@ -6,7 +6,7 @@
         <ApplicationShortName>RoboxRoot</ApplicationShortName>
         <ApplicationDataStorageDirectory>$APPDATA_HOME$/#ApplicationConfiguration:AppFolderName#/</ApplicationDataStorageDirectory>
         <UserDataStorageDirectory>$USER_HOME$/</UserDataStorageDirectory>
-        <requiredFirmwareVersion>741</requiredFirmwareVersion>
+        <requiredFirmwareVersion>751</requiredFirmwareVersion>
         <DefaultMode>Normal</DefaultMode>
         <DefaultLocaleLanguageTag>en-GB</DefaultLocaleLanguageTag>
         <FakeInstallDirectory>/Applications/CEL/AutoMaker/</FakeInstallDirectory>
