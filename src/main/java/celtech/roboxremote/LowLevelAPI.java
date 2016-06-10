@@ -5,6 +5,8 @@ import celtech.roboxbase.comms.remote.Configuration;
 import celtech.roboxbase.comms.rx.RoboxRxPacket;
 import celtech.roboxbase.comms.tx.RoboxTxPacket;
 import celtech.roboxbase.comms.exceptions.RoboxCommsException;
+import celtech.roboxbase.comms.rx.RoboxRxPacketFactory;
+import celtech.roboxbase.comms.rx.RxPacketTypeEnum;
 import celtech.roboxbase.comms.tx.ReportErrors;
 import celtech.roboxbase.comms.tx.StatusRequest;
 import com.codahale.metrics.annotation.Timed;
@@ -65,23 +67,29 @@ public class LowLevelAPI
     {
         RoboxRxPacket rxPacket = null;
 
-        if (remoteTx instanceof StatusRequest)
+        if (!printerRegistry.getRemotePrinterIDs().contains(printerID))
         {
-            rxPacket = printerRegistry.getRemotePrinters().get(printerID).getCommandInterface().getLastStatusResponse();
-        } else if (remoteTx instanceof ReportErrors)
-        {
-            rxPacket = printerRegistry.getRemotePrinters().get(printerID).getCommandInterface().getLastErrorResponse();
+            rxPacket = RoboxRxPacketFactory.createPacket(RxPacketTypeEnum.PRINTER_NOT_FOUND);
         } else
         {
-            try
+            if (remoteTx instanceof StatusRequest)
             {
-                rxPacket = printerRegistry.getRemotePrinters().get(printerID).getCommandInterface().writeToPrinter(remoteTx, true);
-            } catch (RoboxCommsException ex)
+                rxPacket = printerRegistry.getRemotePrinters().get(printerID).getCommandInterface().getLastStatusResponse();
+            } else if (remoteTx instanceof ReportErrors)
             {
-                steno.error("Failed whilst writing to local printer with ID" + printerID);
+                rxPacket = printerRegistry.getRemotePrinters().get(printerID).getCommandInterface().getLastErrorResponse();
+            } else
+            {
+                try
+                {
+                    rxPacket = printerRegistry.getRemotePrinters().get(printerID).getCommandInterface().writeToPrinter(remoteTx, true);
+                } catch (RoboxCommsException ex)
+                {
+                    steno.error("Failed whilst writing to local printer with ID" + printerID);
+                }
             }
         }
-
+        
         return rxPacket;
     }
 
