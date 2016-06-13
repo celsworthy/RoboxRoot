@@ -55,7 +55,7 @@ public class RoboxRemote extends Application<RoboxRemoteConfiguration>
             }
         });
 
-        String installDir = BaseConfiguration.getApplicationInstallDirectory(RoboxRemote.class);
+        BaseConfiguration.initialise(RoboxRemote.class);
         BaseLookup.setupDefaultValues();
         BaseLookup.setSystemNotificationHandler(new ConsoleSystemNotificationManager());
         BaseLookup.setTaskExecutor(new HeadlessTaskExecutor());
