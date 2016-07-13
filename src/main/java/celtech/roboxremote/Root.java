@@ -17,16 +17,16 @@ import libertysystems.stenographer.StenographerFactory;
  *
  * @author Ian
  */
-public class RoboxRemote extends Application<RoboxRemoteConfiguration>
+public class Root extends Application<RoboxRemoteConfiguration>
 {
 
-    private final Stenographer steno = StenographerFactory.getStenographer(RoboxRemote.class.getName());
+    private final Stenographer steno = StenographerFactory.getStenographer(Root.class.getName());
     private RoboxCommsManager commsManager = null;
     private DiscoveryAgentRemoteEnd discoveryAgent = null;
 
     public static void main(String[] args) throws Exception
     {
-        new RoboxRemote().run(args);
+        new Root().run(args);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class RoboxRemote extends Application<RoboxRemoteConfiguration>
             }
         });
 
-        BaseConfiguration.initialise(RoboxRemote.class);
+        BaseConfiguration.initialise(Root.class);
         BaseLookup.setupDefaultValues();
         BaseLookup.setSystemNotificationHandler(new ConsoleSystemNotificationManager());
         BaseLookup.setTaskExecutor(new HeadlessTaskExecutor());
