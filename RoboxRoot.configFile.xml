@@ -9,7 +9,7 @@
         <requiredFirmwareVersion>751</requiredFirmwareVersion>
         <DefaultMode>Normal</DefaultMode>
         <DefaultLocaleLanguageTag>en</DefaultLocaleLanguageTag>
-        <FakeInstallDirectory>C:/Program Files/CELRoot/Root/</FakeInstallDirectory>
+        <FakeInstallDirectory>/Users/ianhudson/Development/RootMacOSX/Root/</FakeInstallDirectory>
     </ApplicationConfiguration>
     <Stenographer>
         <logfilename>#ApplicationConfiguration:ApplicationDataStorageDirectory#/RoboxRoot.log</logfilename>

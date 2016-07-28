@@ -1,8 +1,12 @@
 package celtech.roboxremote;
 
 import celtech.roboxbase.comms.remote.Configuration;
+import celtech.roboxbase.comms.remote.DiscoveryResponse;
+import celtech.roboxbase.comms.rx.StatusResponse;
 import celtech.roboxbase.printerControl.model.PrinterException;
+import celtech.roboxremote.rootDataStructures.StatusData;
 import com.codahale.metrics.annotation.Timed;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -26,6 +30,14 @@ public class HighLevelAPI
     public HighLevelAPI()
     {
         printerRegistry = PrinterRegistry.getInstance();
+    }
+
+    @GET
+    @Timed
+    public StatusData getPrinterStatus(@PathParam("printerID") String printerID)
+    {
+        StatusData returnVal = new StatusData(printerRegistry.getRemotePrinters().get(printerID));
+        return returnVal;
     }
 
     @POST

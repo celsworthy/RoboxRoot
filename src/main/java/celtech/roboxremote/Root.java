@@ -1,5 +1,6 @@
 package celtech.roboxremote;
 
+import celtech.roboxbase.ApplicationFeature;
 import celtech.roboxbase.BaseLookup;
 import celtech.roboxbase.appManager.ConsoleSystemNotificationManager;
 import celtech.roboxbase.comms.DiscoveryAgentRemoteEnd;
@@ -10,8 +11,12 @@ import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import java.util.EnumSet;
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
 import libertysystems.stenographer.Stenographer;
 import libertysystems.stenographer.StenographerFactory;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 
 /**
  *
@@ -56,6 +61,7 @@ public class Root extends Application<RoboxRemoteConfiguration>
         });
 
         BaseConfiguration.initialise(Root.class);
+        BaseConfiguration.disableApplicationFeature(ApplicationFeature.AUTO_UPDATE_FIRMWARE);
         BaseLookup.setupDefaultValues();
         BaseLookup.setSystemNotificationHandler(new ConsoleSystemNotificationManager());
         BaseLookup.setTaskExecutor(new HeadlessTaskExecutor());
@@ -74,6 +80,18 @@ public class Root extends Application<RoboxRemoteConfiguration>
     public void run(RoboxRemoteConfiguration configuration,
             Environment environment)
     {
+        // Enable CORS headers
+        final FilterRegistration.Dynamic cors
+                = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
+
+        // Configure CORS parameters
+        cors.setInitParameter("allowedOrigins", "*");
+        cors.setInitParameter("allowedHeaders", "X-Requested-With,Content-Type,Accept,Origin");
+        cors.setInitParameter("allowedMethods", "OPTIONS,GET,PUT,POST,DELETE,HEAD");
+
+        // Add URL mapping
+        cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+
         final LowLevelAPI lowLevelAPI = new LowLevelAPI();
         final HighLevelAPI highLevelAPI = new HighLevelAPI();
         final DiscoveryAPI discoveryAPI = new DiscoveryAPI();
