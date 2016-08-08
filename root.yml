@@ -17,10 +17,10 @@ server:
 
     
 logging:
-  level: ERROR
+  level: INFO
   loggers:
     "io.dropwizard": 
-      level: ERROR
+      level: INFO
       additive: false
       appenders:
         - type: file
@@ -28,7 +28,7 @@ logging:
           archivedLogFilenamePattern: dw.log-%d.log.gz
           archivedFileCount: 5
     "org.hibernate.SQL":
-      level: ERROR
+      level: INFO
       additive: false
       appenders:
         - type: file
@@ -36,7 +36,7 @@ logging:
           archivedLogFilenamePattern: sql.log-%d.log.gz
           archivedFileCount: 5
     "org.eclipse.jetty.server":
-      level: ERROR
+      level: INFO
       additive: false
       appenders:
         - type: file

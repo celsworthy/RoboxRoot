@@ -1,6 +1,7 @@
 package celtech.roboxremote;
 
 import celtech.roboxbase.comms.remote.DiscoveryResponse;
+import celtech.roboxbase.configuration.BaseConfiguration;
 import com.codahale.metrics.annotation.Timed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -15,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 public class DiscoveryAPI
 {
+
     private final PrinterRegistry printerRegistry;
 
     public DiscoveryAPI()
@@ -26,6 +28,7 @@ public class DiscoveryAPI
     @Timed
     public DiscoveryResponse listPrinters()
     {
-        return new DiscoveryResponse(printerRegistry.getRemotePrinterIDs());
+        return new DiscoveryResponse(BaseConfiguration.getApplicationVersion(),
+                printerRegistry.getRemotePrinterIDs());
     }
 }

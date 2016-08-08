@@ -1,8 +1,6 @@
 package celtech.roboxremote;
 
 import celtech.roboxbase.comms.remote.Configuration;
-import celtech.roboxbase.comms.remote.DiscoveryResponse;
-import celtech.roboxbase.comms.rx.StatusResponse;
 import celtech.roboxbase.printerControl.model.PrinterException;
 import celtech.roboxremote.rootDataStructures.StatusData;
 import com.codahale.metrics.annotation.Timed;
@@ -47,7 +45,7 @@ public class HighLevelAPI
     {
         try
         {
-            printerRegistry.getRemotePrinters().get(printerID).homeAllAxes(false, null);
+            printerRegistry.getRemotePrinters().get(printerID).pause();
         } catch (PrinterException ex)
         {
             steno.error("Exception whilst homing");
@@ -59,6 +57,13 @@ public class HighLevelAPI
     @Path(Configuration.resumeService)
     public void resume(@PathParam("printerID") String printerID)
     {
+        try
+        {
+            printerRegistry.getRemotePrinters().get(printerID).resume();
+        } catch (PrinterException ex)
+        {
+            steno.error("Exception whilst homing");
+        }
     }
 
     @POST
@@ -66,5 +71,12 @@ public class HighLevelAPI
     @Path(Configuration.cancelService)
     public void cancel(@PathParam("printerID") String printerID)
     {
+        try
+        {
+            printerRegistry.getRemotePrinters().get(printerID).cancel(null);
+        } catch (PrinterException ex)
+        {
+            steno.error("Exception whilst homing");
+        }
     }
 }

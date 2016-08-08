@@ -12,10 +12,12 @@ import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import java.util.EnumSet;
+import javafx.embed.swing.JFXPanel;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import libertysystems.stenographer.Stenographer;
 import libertysystems.stenographer.StenographerFactory;
+import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 
 /**
@@ -29,9 +31,21 @@ public class Root extends Application<RoboxRemoteConfiguration>
     private RoboxCommsManager commsManager = null;
     private DiscoveryAgentRemoteEnd discoveryAgent = null;
 
+    private JFXPanel dummyJFXPanel_startsRuntime;
+
+    private static Root instance = null;
+
+    private boolean isStopping = false;
+
     public static void main(String[] args) throws Exception
     {
-        new Root().run(args);
+        instance = new Root();
+        instance.run(args);
+    }
+
+    public static Root getInstance()
+    {
+        return instance;
     }
 
     @Override
@@ -43,19 +57,19 @@ public class Root extends Application<RoboxRemoteConfiguration>
     @Override
     public void initialize(Bootstrap<RoboxRemoteConfiguration> bootstrap)
     {
+        //This horrible monstrosity is to get JavaFX to start
+        //Solution - remove all references to JavaFX in RoboxBase
+        dummyJFXPanel_startsRuntime = new JFXPanel();
+
         Runtime.getRuntime().addShutdownHook(new Thread()
         {
             @Override
             public void run()
             {
-                steno.info("Shutting Robox Remote down");
-                if (discoveryAgent != null)
+                if (!isStopping)
                 {
-                    discoveryAgent.shutdown();
-                }
-                if (commsManager != null)
-                {
-                    commsManager.shutdown();
+                    steno.info("Running stop hook");
+                    instance.stop();
                 }
             }
         });
@@ -80,6 +94,12 @@ public class Root extends Application<RoboxRemoteConfiguration>
     public void run(RoboxRemoteConfiguration configuration,
             Environment environment)
     {
+        environment.lifecycle().addServerLifecycleListener((Server server) ->
+        {
+            server.setStopAtShutdown(true);
+            server.setStopTimeout(500);
+        });
+
         // Enable CORS headers
         final FilterRegistration.Dynamic cors
                 = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
@@ -92,6 +112,7 @@ public class Root extends Application<RoboxRemoteConfiguration>
         // Add URL mapping
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
 
+        final AdminAPI adminAPI = new AdminAPI();
         final LowLevelAPI lowLevelAPI = new LowLevelAPI();
         final HighLevelAPI highLevelAPI = new HighLevelAPI();
         final DiscoveryAPI discoveryAPI = new DiscoveryAPI();
@@ -100,6 +121,7 @@ public class Root extends Application<RoboxRemoteConfiguration>
                 = new TemplateHealthCheck(configuration.getTemplate());
         environment.healthChecks().register("template", healthCheck);
 
+        environment.jersey().register(adminAPI);
         environment.jersey().register(lowLevelAPI);
         environment.jersey().register(highLevelAPI);
         environment.jersey().register(discoveryAPI);
@@ -107,5 +129,23 @@ public class Root extends Application<RoboxRemoteConfiguration>
         environment.admin().addTask(new AdminUpdateTask());
 
         commsManager.start();
+    }
+
+    public void stop()
+    {
+        isStopping = true;
+
+        steno.info("Asked to shutdown Root");
+
+        if (discoveryAgent != null)
+        {
+            discoveryAgent.shutdown();
+        }
+        if (commsManager != null)
+        {
+            commsManager.shutdown();
+        }
+
+        System.exit(0);
     }
 }
