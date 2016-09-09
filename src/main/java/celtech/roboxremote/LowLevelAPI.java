@@ -29,13 +29,9 @@ public class LowLevelAPI
 {
 
     private final Stenographer steno = StenographerFactory.getStenographer(LowLevelAPI.class.getName());
-    private final PrinterRegistry printerRegistry;
-    private final RoboxCommsManager commsManager;
 
     public LowLevelAPI()
     {
-        printerRegistry = PrinterRegistry.getInstance();
-        commsManager = RoboxCommsManager.getInstance();
     }
 
     @POST
@@ -67,29 +63,30 @@ public class LowLevelAPI
     {
         RoboxRxPacket rxPacket = null;
 
-        if (!printerRegistry.getRemotePrinterIDs().contains(printerID))
+        if (PrinterRegistry.getInstance() != null
+                && !PrinterRegistry.getInstance().getRemotePrinterIDs().contains(printerID))
         {
             rxPacket = RoboxRxPacketFactory.createPacket(RxPacketTypeEnum.PRINTER_NOT_FOUND);
         } else
         {
             if (remoteTx instanceof StatusRequest)
             {
-                rxPacket = printerRegistry.getRemotePrinters().get(printerID).getCommandInterface().getLastStatusResponse();
+                rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getCommandInterface().getLastStatusResponse();
             } else if (remoteTx instanceof ReportErrors)
             {
-                rxPacket = printerRegistry.getRemotePrinters().get(printerID).getCommandInterface().getLastErrorResponse();
+                rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getCommandInterface().getLastErrorResponse();
             } else
             {
                 try
                 {
-                    rxPacket = printerRegistry.getRemotePrinters().get(printerID).getCommandInterface().writeToPrinter(remoteTx, true);
+                    rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getCommandInterface().writeToPrinter(remoteTx, true);
                 } catch (RoboxCommsException ex)
                 {
                     steno.error("Failed whilst writing to local printer with ID" + printerID);
                 }
             }
         }
-        
+
         return rxPacket;
     }
 

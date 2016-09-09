@@ -12,7 +12,6 @@ server:
   - type: http
     port: 9001
   requestLog:
-    timeZone: UTC
     appenders: []
 
     
@@ -20,7 +19,7 @@ logging:
   level: INFO
   loggers:
     "io.dropwizard": 
-      level: INFO
+      level: DEBUG
       additive: false
       appenders:
         - type: file
@@ -36,7 +35,7 @@ logging:
           archivedLogFilenamePattern: sql.log-%d.log.gz
           archivedFileCount: 5
     "org.eclipse.jetty.server":
-      level: INFO
+      level: DEBUG
       additive: false
       appenders:
         - type: file

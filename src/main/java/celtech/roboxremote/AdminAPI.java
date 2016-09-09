@@ -40,4 +40,12 @@ public class AdminAPI
             }
         }.run();
     }
+
+    @POST
+    @Timed
+    @Path("/setServerName")
+    public void setServerName(String serverName)
+    {
+        PrinterRegistry.getInstance().setRegistryName(serverName);
+    }
 }

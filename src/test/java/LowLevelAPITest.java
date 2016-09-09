@@ -1,3 +1,4 @@
+
 import celtech.roboxbase.comms.tx.QueryFirmwareVersion;
 import celtech.roboxbase.comms.tx.RoboxTxPacketFactory;
 import celtech.roboxbase.comms.tx.TxPacketTypeEnum;
@@ -20,6 +21,7 @@ import javax.ws.rs.core.Response;
  */
 public class LowLevelAPITest
 {
+
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .setMapper(Jackson.newObjectMapper())
@@ -43,25 +45,14 @@ public class LowLevelAPITest
     }
 
     @Test
-    public void testGetPerson()
+    public void testWriteData()
     {
-        WebTarget target = resources.client().target("/123456/writeData");
-        
-        QueryFirmwareVersion fw = (QueryFirmwareVersion)RoboxTxPacketFactory.createPacket(TxPacketTypeEnum.QUERY_FIRMWARE_VERSION);
+        QueryFirmwareVersion fw = (QueryFirmwareVersion) RoboxTxPacketFactory.createPacket(TxPacketTypeEnum.QUERY_FIRMWARE_VERSION);
         fw.setSequenceNumber(33);
-        
+
         Entity requestEntity = Entity.entity(fw, MediaType.APPLICATION_JSON_TYPE);
         Invocation invocation = resources.client().target("/12345678/printerControl/writeData")
                 .request().buildPost(requestEntity);
-        try
-        {
-               
         Response response = invocation.invoke();
-        }
-        catch (Exception e)
-        {
-            System.out.println("Arrg");
-        }
-        System.out.println("hello");
     }
 }

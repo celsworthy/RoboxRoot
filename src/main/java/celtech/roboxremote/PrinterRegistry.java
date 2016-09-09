@@ -24,6 +24,7 @@ public class PrinterRegistry implements PrinterListChangesListener
 
     private final Stenographer steno = StenographerFactory.getStenographer(PrinterRegistry.class.getName());
     private static PrinterRegistry instance = null;
+    private String registryName = "Robox Root";
     private final Map<String, Printer> remotePrinters = new HashMap<>();
     private final List<String> remotePrinterIDs = new ArrayList<>();
 
@@ -123,5 +124,15 @@ public class PrinterRegistry implements PrinterListChangesListener
     @Override
     public void whenExtruderRemoved(Printer printer, int extruderIndex)
     {
+    }
+
+    public String getRegistryName()
+    {
+        return registryName;
+    }
+    
+    public void setRegistryName(String registryName)
+    {
+        this.registryName = registryName;
     }
 }
