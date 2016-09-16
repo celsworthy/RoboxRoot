@@ -1,5 +1,5 @@
 var hostname = window.location.hostname;
-var port = 8080;
+var port = 80;
 var connectedToServer = false;
 var isMobile = false; //initiate as false
 var connectedPrinterIDs = new Array();
