@@ -9,11 +9,8 @@ import celtech.roboxbase.utils.PrinterUtils;
 import celtech.roboxremote.rootDataStructures.StatusData;
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.jersey.params.BooleanParam;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -26,7 +23,6 @@ import libertysystems.stenographer.Stenographer;
 import libertysystems.stenographer.StenographerFactory;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import sun.font.EAttribute;
 
 /**
  *
@@ -38,6 +34,7 @@ public class HighLevelAPI
 {
 
     private final Stenographer steno = StenographerFactory.getStenographer(HighLevelAPI.class.getName());
+    private final Utils utils = new Utils();
 
     public HighLevelAPI()
     {
@@ -66,7 +63,7 @@ public class HighLevelAPI
         String uploadedFileLocation = BaseConfiguration.getPrintSpoolDirectory() + printerID + fileDetail.getFileName();
         steno.info("Printing gcode file " + uploadedFileLocation);
         // save it
-        writeToFile(uploadedInputStream, uploadedFileLocation);
+        utils.writeToFile(uploadedInputStream, uploadedFileLocation);
 
         try
         {
@@ -76,21 +73,6 @@ public class HighLevelAPI
             steno.exception("Exception whilst trying to print gcode file " + uploadedFileLocation, ex);
         }
         return Response.ok().build();
-    }
-
-    // save uploaded file to new location
-    private void writeToFile(InputStream uploadedInputStream, String uploadedFileLocation) throws IOException
-    {
-        int read;
-        final int BUFFER_LENGTH = 1024;
-        final byte[] buffer = new byte[BUFFER_LENGTH];
-        OutputStream out = new FileOutputStream(new File(uploadedFileLocation));
-        while ((read = uploadedInputStream.read(buffer)) != -1)
-        {
-            out.write(buffer, 0, read);
-        }
-        out.flush();
-        out.close();
     }
 
     @POST

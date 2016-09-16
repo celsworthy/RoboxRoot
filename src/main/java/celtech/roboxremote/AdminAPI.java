@@ -1,13 +1,22 @@
 package celtech.roboxremote;
 
 import celtech.roboxbase.comms.remote.Configuration;
+import celtech.roboxbase.configuration.BaseConfiguration;
+import celtech.roboxbase.printerControl.model.PrinterException;
 import com.codahale.metrics.annotation.Timed;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import libertysystems.stenographer.Stenographer;
 import libertysystems.stenographer.StenographerFactory;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 /**
  *
@@ -17,13 +26,14 @@ import libertysystems.stenographer.StenographerFactory;
 @Produces(MediaType.APPLICATION_JSON)
 public class AdminAPI
 {
-
+    
     private final Stenographer steno = StenographerFactory.getStenographer(AdminAPI.class.getName());
-
+    private final Utils utils = new Utils();
+    
     public AdminAPI()
     {
     }
-
+    
     @POST
     @Timed
     @Path(Configuration.shutdown)
@@ -40,12 +50,28 @@ public class AdminAPI
             }
         }.run();
     }
-
+    
     @POST
     @Timed
     @Path("/setServerName")
     public void setServerName(String serverName)
     {
         PrinterRegistry.getInstance().setRegistryName(serverName);
+    }
+    
+    @POST
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("updateSystem")
+    public Response updateSystem(
+            @FormDataParam("file") InputStream uploadedInputStream,
+            @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException
+    {
+        String uploadedFileLocation = System.getProperty("java.io.tmpdir") + fileDetail.getFileName();
+        steno.info("Upgrade file " + uploadedFileLocation + " has been uploaded");
+        // save it
+        utils.writeToFile(uploadedInputStream, uploadedFileLocation);
+        Root.getInstance().stop();
+        return Response.ok().build();
     }
 }
