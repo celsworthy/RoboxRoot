@@ -40,10 +40,17 @@ public class CoreManager implements Managed
 //            @Override
 //            public void run()
 //            {
-//                if (!isStopping)
+//        if (discoveryAgent != null)
+//        {
+//            discoveryAgent.shutdown();
+//        }
+//        if (commsManager != null)
+//        {
+//            commsManager.shutdown();
+//        }
+//        if (!isStopping)
 //                {
 //                    steno.info("Running stop hook");
-//                    instance.stop();
 //                }
 //            }
 //        });
@@ -66,20 +73,18 @@ public class CoreManager implements Managed
     @Override
     public void stop() throws Exception
     {
-        isStopping = true;
-
+//        isStopping = true;
+//
         steno.info("Asked to shutdown Root");
-
-        if (discoveryAgent != null)
-        {
-            discoveryAgent.shutdown();
-        }
-        if (commsManager != null)
-        {
-            commsManager.shutdown();
-        }
-        
-        Platform.exit();
+//
+//        if (discoveryAgent != null)
+//        {
+//            discoveryAgent.shutdown();
+//        }
+//        if (commsManager != null)
+//        {
+//            commsManager.shutdown();
+//        }
     }
 
 }
