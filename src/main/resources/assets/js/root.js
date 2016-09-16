@@ -256,6 +256,27 @@ function configurePrinterButtons(printerID, printerData)
     }
 }
 
+function rootUpgrade()
+{
+    event.preventDefault();
+    var formData = new FormData($('#rootUpgrade')[0]);
+
+    $.ajax({
+        url: 'http://' + hostname + ':' + port + '/api/updateSystem/',
+        type: 'POST',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (returndata) {
+            alert(returndata);
+        },
+        error: function () {
+            alert("error in ajax form submission");
+        }
+    });
+}
+
 function updateAndDisplayPrinterStatus(printerID)
 {
     getPrinterStatus(printerID, function (printerData) {
