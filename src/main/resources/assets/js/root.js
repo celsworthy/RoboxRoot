@@ -5,6 +5,19 @@ var isMobile = false; //initiate as false
 var connectedPrinterIDs = new Array();
 var connectedPrinters = new Array();
 
+var statusDisplayTag = "_statusDisplay";
+var etcRowTag = "_etcRow";
+var etcDisplayTag = "_etcDisplay";
+var headNameDisplayTag = "_headNameDisplay";
+var bedTemperatureDisplayTag = "_bedTemperatureDisplay";
+var materialRowTag = "_materialRow";
+var materialDisplayTag = "_materialDisplay";
+var materialEjectButtonTag = "_materialEjectButton";
+var nozzleTemperatureRowTag = "_nozzleTemperatureRow";
+var nozzleTemperatureDisplayTag = "_nozzleTemperatureDisplay";
+var errorRowTag = "_errorRow";
+var errorDisplayTag = "_errorDisplay";
+
 function id2Index(tabsId, srcId)
 {
     var index = -1;
@@ -58,12 +71,7 @@ function addPrinter(printerID)
 
     getPrinterStatus(printerID, function (data) {
         connectedPrinters.push(null);
-        var numberOfNozzles = 0;
-        if (data.nozzleTemperature !== null)
-        {
-            numberOfNozzles = data.nozzleTemperature.length;
-        }
-        addCollapsible(printerID, numberOfNozzles);
+        addCollapsible(printerID);
     });
 }
 
@@ -76,9 +84,8 @@ function deletePrinter(printerID)
     removeCollapsible(printerID);
 }
 
-function createPrinterDataTable(printerID, numberOfNozzles)
+function createPrinterDataTable(printerID)
 {
-    var rowCounter = 1;
     var printerStatusTable = "<table data-role=\"table\" data-mode=\"reflow\" class=\"status-table ui-responsive\"> \
     <thead> \
   <tr> \
@@ -91,30 +98,82 @@ function createPrinterDataTable(printerID, numberOfNozzles)
     <td class=\"title\">Status</td>\
     <td id='"
             + printerID
-            + "_statusDisplay'>?</td>\
-  </tr>";
-    for (var nozzleNumber = 0; nozzleNumber < numberOfNozzles; nozzleNumber++)
-    {
-        rowCounter++;
-        printerStatusTable += "<tr>\
-    <td class=\"title\">Nozzle " + nozzleNumber + " Temperature</td>\
+            + statusDisplayTag + "'>?</td>\
+  </tr>\
+  <tr id='"
+            + printerID
+            + etcRowTag + "'>\
+    <td class=\"title\">Estimated Time to Complete Print</td>\
     <td id='"
-                + printerID
-                + "_nozzle" + nozzleNumber + "TemperatureDisplay'></td>\
+            + printerID
+            + etcDisplayTag + "'>?</td>\
+  </tr>\
+  <tr>\
+    <td class=\"title\">Head</td>\
+    <td id='"
+            + printerID
+            + headNameDisplayTag + "'>?</td>\
+  </tr>\
+    <tr id='" + printerID + nozzleTemperatureRowTag + "1'>\
+    <td class=\"title\">Nozzle 1 Temperature</td>\
+    <td id='" + printerID + nozzleTemperatureDisplayTag + "1'></td>\
+  </tr>\
+    <tr id='" + printerID + nozzleTemperatureRowTag + "2'>\
+    <td class=\"title\">Nozzle 2 Temperature</td>\
+    <td id='" + printerID + nozzleTemperatureDisplayTag + "2'></td>\
+  </tr>\
+    <tr>\
+    <td class=\"title\">Bed Temperature</td>\
+    <td id='" + printerID + bedTemperatureDisplayTag + "'></td>\
+  </tr>\
+    <tr id='" + printerID + materialRowTag + "1'>\
+    <td class=\"title\">Material 1</td>\
+    <td>\
+    <span id='" + printerID
+            + materialDisplayTag
+            + "1'></span>\
+    <button id='" + printerID
+            + materialEjectButtonTag
+            + "1'\
+       class=\"ui-shadow ui-btn ui-corner-all ui-mini ui-btn-inline\" \
+       onClick=\"eject(\'" + printerID + "\', \'1\')\">Eject</button>\
+    </td>\
+  </tr>\
+    <tr id='" + printerID + materialRowTag + "2'>\
+    <td class=\"title\">Material 2</td>\
+    <td>\
+    <div style=\"display: inline\">\
+    <span id='" + printerID
+            + materialDisplayTag
+            + "2'></span>\
+        <button id='" + printerID
+            + materialEjectButtonTag
+            + "2'\
+       class=\"ui-shadow ui-btn ui-corner-all ui-mini ui-btn-inline\" \
+       onClick=\"eject(\'" + printerID + "\', \'2\')\">Eject</button>\
+    </div>\
+</td>\
+  </tr>\
+  <tr id='" + printerID
+            + errorRowTag
+            + "'>\
+    <td class=\"title\">Errors</td>\
+    <td id='" + printerID
+            + errorDisplayTag
+            + "'></td>\
   </tr>";
-    }
 
     printerStatusTable += "</tbody></table>";
 
     return printerStatusTable;
 }
 
-function addCollapsible(tab_name, numberOfNozzles)
+function addCollapsible(tab_name)
 {
     var newCollapsible = "<div id=\"printerCollapsible_" + tab_name + "\" data-role=\"collapsible\">"
             + "<h4 id=\"printerTabTop_" + tab_name + "\">" + tab_name + "</h4>"
             + "<div id='printerTab_" + tab_name + "'>"
-            + createPrinterDataTable(tab_name, numberOfNozzles)
+            + createPrinterDataTable(tab_name)
             + "<div id='printerTabButtons_" + tab_name + "'/>"
             + "</div></div></div>";
 
@@ -143,23 +202,12 @@ function conditionallyCreateButton(createButton, divToAddButtonTo, buttonText, o
                 + onClickFunction.name + '(\'' + printerID + '\')">'
                 + buttonText
                 + '</button>');
-//        divToAddButtonTo.append('<div align="center">'
-//                + '<button class="ui-shadow ui-btn ui-corner-all ui-btn-inline" onClick="'
-//                + onClickFunction.name + '(\'' + printerID + '\')">'
-//                + buttonText
-//                + '</button>'
-//                + '</div>');
     }
 }
 
 function printGCodeFile(printerID)
 {
-//    var filename = $('#fileInput_' + printerID).val().split('\\').pop();
-
     var data = new FormData($('#fileInput_' + printerID).val());
-//    jQuery.each(jQuery('#file')[0].files, function (i, file) {
-//        data.append('file-' + i, file);
-//    });
     jQuery.ajax({
         url: 'http://' + hostname + ':' + port + '/api/' + printerID + '/remoteControl/upload/',
         data: data,
@@ -201,6 +249,11 @@ function removeHead(printerID)
 function purgeHead(printerID)
 {
     postCommandToRoot(printerID, "purge", null, safetiesOn().toString());
+}
+
+function eject(printerID, materialNumber)
+{
+    postCommandToRoot(printerID, "ejectFilament", null, materialNumber);
 }
 
 function configurePrinterButtons(printerID, printerData)
@@ -277,16 +330,150 @@ function rootUpgrade()
     });
 }
 
+function secondsToHMS(secondsInput)
+{
+    var minutes = Math.floor(secondsInput / 60);
+    var hours = Math.floor(minutes / 60);
+    minutes = minutes - (60 * hours);
+    var seconds = secondsInput - (minutes * 60) - (hours * 3600);
+
+    if (hours > 0)
+    {
+        return hours + ":" + minutes + ":" + seconds;
+    }
+    else if (minutes > 0)
+    {
+        return minutes + ":" + seconds;
+    }
+    else
+    {
+        return seconds + " seconds";
+    }
+}
+
 function updateAndDisplayPrinterStatus(printerID)
 {
     getPrinterStatus(printerID, function (printerData) {
-        $('#printerTabTop_' + printerID + " a").text(printerData.printerName + " - " + printerData.printerStatusString);
-        $('#printerTab_' + printerID).find('#' + printerID + '_statusDisplay').text(printerData.printerStatusString);
-        for (var nozzleNum = 0; nozzleNum < printerData.nozzleTemperature.length;
-                nozzleNum++
-                )
+        var statusText = printerData.printerStatusString;
+
+        if (printerData.printerStatusString.match("^Printing"))
         {
-            $('#printerTab_' + printerID).find('#' + printerID + '_nozzle' + nozzleNum + 'TemperatureDisplay').text(printerData.nozzleTemperature[nozzleNum]);
+            statusText += " " + printerData.printJobName;
+            $('#printerTab_' + printerID).find('#' + printerID + etcRowTag).show();
+            $('#printerTab_' + printerID).find('#' + printerID + etcDisplayTag).text(secondsToHMS(printerData.etcSeconds));
+        }
+        else
+        {
+            $('#printerTab_' + printerID).find('#' + printerID + etcRowTag).hide();
+        }
+
+        $('#printerTabTop_' + printerID + " a").text(printerData.printerName + " - " + statusText);
+        $('#printerTabTop_' + printerID + " a").css("background-color", printerData.printerWebColourString);
+
+        $('#printerTab_' + printerID).find('#' + printerID + statusDisplayTag).text(statusText);
+        $('#printerTab_' + printerID).find('#' + printerID + headNameDisplayTag).text(printerData.headName);
+
+        $('#printerTab_' + printerID).find('#' + printerID + bedTemperatureDisplayTag).text(printerData.bedTemperature + "˚C");
+
+        for (var nozzleNum = 1; nozzleNum <= printerData.nozzleTemperature.length; nozzleNum++)
+        {
+            $('#printerTab_' + printerID).find('#' + printerID + nozzleTemperatureDisplayTag + nozzleNum).text(printerData.nozzleTemperature[nozzleNum - 1] + "˚C");
+        }
+
+        var numberOfNozzleHeaters = 0;
+        if (printerData.nozzleTemperature !== null)
+        {
+            numberOfNozzleHeaters = printerData.nozzleTemperature.length;
+        }
+
+        switch (numberOfNozzleHeaters)
+        {
+            case 0:
+                $('#printerTab_' + printerID).find('#' + printerID + nozzleTemperatureRowTag + '1').hide();
+                $('#printerTab_' + printerID).find('#' + printerID + nozzleTemperatureRowTag + '2').hide();
+                break;
+            case 1:
+                $('#printerTab_' + printerID).find('#' + printerID + nozzleTemperatureRowTag + '1').show();
+                $('#printerTab_' + printerID).find('#' + printerID + nozzleTemperatureRowTag + '2').hide();
+                break;
+            case 2:
+                $('#printerTab_' + printerID).find('#' + printerID + nozzleTemperatureRowTag + '1').show();
+                $('#printerTab_' + printerID).find('#' + printerID + nozzleTemperatureRowTag + '2').show();
+                break;
+        }
+
+        for (var materialNum = 1; materialNum <= printerData.attachedFilamentNames.length; materialNum++)
+        {
+            var filamentNameOutput = "";
+            var showEjectButton = printerData.canEjectFilament;
+
+            if (printerData.attachedFilamentNames[materialNum - 1] !== null)
+            {
+                filamentNameOutput = printerData.attachedFilamentNames[materialNum - 1];
+                if (!printerData.materialLoaded[materialNum - 1])
+                {
+                    filamentNameOutput += " - not loaded";
+                    showEjectButton = false;
+                }
+            }
+            else
+            {
+                if (printerData.materialLoaded[materialNum - 1])
+                {
+                    filamentNameOutput = "Unknown";
+                }
+                else
+                {
+                    showEjectButton = false;
+                }
+            }
+
+            if (showEjectButton)
+            {
+                $('#printerTab_' + printerID).find('#' + printerID + materialEjectButtonTag + materialNum).show();
+            }
+            else
+            {
+                $('#printerTab_' + printerID).find('#' + printerID + materialEjectButtonTag + materialNum).hide();
+            }
+            $('#printerTab_' + printerID).find('#' + printerID + materialDisplayTag + materialNum).text(filamentNameOutput);
+        }
+
+        var numberOfMaterials = 0;
+        if (printerData.attachedFilamentNames !== null)
+        {
+            numberOfMaterials = printerData.attachedFilamentNames.length;
+        }
+
+        switch (numberOfMaterials)
+        {
+            case 0:
+                $('#printerTab_' + printerID).find('#' + printerID + materialRowTag + '1').hide();
+                $('#printerTab_' + printerID).find('#' + printerID + materialRowTag + '2').hide();
+                break;
+            case 1:
+                $('#printerTab_' + printerID).find('#' + printerID + materialRowTag + '1').show();
+                $('#printerTab_' + printerID).find('#' + printerID + materialRowTag + '2').hide();
+                break;
+            case 2:
+                $('#printerTab_' + printerID).find('#' + printerID + materialRowTag + '1').show();
+                $('#printerTab_' + printerID).find('#' + printerID + materialRowTag + '2').show();
+                break;
+        }
+
+        if (printerData.activeErrors !== null)
+        {
+            var allErrors;
+            for (var errorNum = 0; errorNum < printerData.activeErrors.length; errorNum++)
+            {
+                allErrors += errorString + '\n';
+            }
+            $('#printerTab_' + printerID).find('#' + printerID + errorDisplayTag).text(allErrors);
+            $('#printerTab_' + printerID).find('#' + printerID + errorRowTag).show();
+        }
+        else
+        {
+            $('#printerTab_' + printerID).find('#' + printerID + errorRowTag).hide();
         }
 
         configurePrinterButtons(printerID, printerData);

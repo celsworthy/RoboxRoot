@@ -9,13 +9,18 @@ import celtech.roboxbase.comms.rx.RoboxRxPacketFactory;
 import celtech.roboxbase.comms.rx.RxPacketTypeEnum;
 import celtech.roboxbase.comms.tx.ReportErrors;
 import celtech.roboxbase.comms.tx.StatusRequest;
+import celtech.roboxbase.configuration.BaseConfiguration;
+import celtech.roboxbase.postprocessor.PrintJobStatistics;
 import com.codahale.metrics.annotation.Timed;
+import java.io.File;
+import java.io.IOException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import libertysystems.stenographer.Stenographer;
 import libertysystems.stenographer.StenographerFactory;
 
@@ -90,17 +95,28 @@ public class LowLevelAPI
         return rxPacket;
     }
 
-//    @POST
-//    @Timed
-//    public void writeAndWaitForData(String remotePrinterID, RoboxTxPacket messageToWrite)
-//    {
-//        printerRegistry.getRemotePrinters().get(remotePrinterID).getCommandInterface().wr
-//    }
-//
-//    @POST
-//    @Timed
-//    public byte[] readData(String remotePrinterID, int bytesToRead)
-//    {
-//        return new byte[3];
-//    }
+    @POST
+    @Timed
+    @Path(Configuration.associateStatisticsService)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response associateStatisticsWithPrintJobID(@PathParam("printerID") String printerID,
+            PrintJobStatistics printJobStatistics)
+    {
+        try
+        {
+            String printJobDirectoryName = BaseConfiguration.
+                    getPrintSpoolDirectory() + printJobStatistics.getPrintJobID();
+            File printJobDirectory = new File(printJobDirectoryName);
+            printJobDirectory.mkdirs();
+            printJobStatistics.writeToFile(printJobDirectoryName
+                    + File.separator
+                    + printJobStatistics.getPrintJobID()
+                    + BaseConfiguration.statisticsFileExtension);
+        } catch (IOException ex)
+        {
+            steno.exception("Couldn't write statistics to file", ex);
+        }
+
+        return Response.ok().build();
+    }
 }

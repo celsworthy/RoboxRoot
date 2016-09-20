@@ -5,13 +5,9 @@ import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import java.util.EnumSet;
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterRegistration;
 import libertysystems.stenographer.Stenographer;
 import libertysystems.stenographer.StenographerFactory;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlets.CrossOriginFilter;
 
 /**
  *

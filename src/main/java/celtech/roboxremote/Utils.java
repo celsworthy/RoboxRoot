@@ -26,4 +26,13 @@ public class Utils
         out.flush();
         out.close();
     }
+    
+    public static String secondsToHoursMinutesSecondsString(int secondsInput)
+    {
+        int minutes = (int)(secondsInput / 60);
+        int hours = minutes / 60;
+        minutes = minutes - (60 * hours);
+        int seconds = secondsInput - (minutes * 60) - (hours * 3600);
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
 }

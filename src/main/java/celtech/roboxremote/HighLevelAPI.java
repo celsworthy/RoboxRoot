@@ -47,7 +47,8 @@ public class HighLevelAPI
         StatusData returnVal = null;
         if (PrinterRegistry.getInstance() != null)
         {
-            returnVal = new StatusData(PrinterRegistry.getInstance().getRemotePrinters().get(printerID));
+            returnVal = new StatusData();
+            returnVal.updateFromPrinterData(PrinterRegistry.getInstance().getRemotePrinters().get(printerID));
         }
         return returnVal;
     }
@@ -246,6 +247,37 @@ public class HighLevelAPI
             } catch (PrinterException ex)
             {
                 steno.error("Exception whilst removing head");
+            }
+        }
+    }
+    
+        @POST
+    @Timed
+    @Path("/clearErrors")
+    public void clearErrors(@PathParam("printerID") String printerID)
+    {
+        PrinterRegistry.getInstance().getRemotePrinters().get(printerID).clearAllErrors();
+    }
+    
+    /**
+     *
+     * Expects filament number to be 1 or 2
+     * @param printerID
+     * @param filamentNumber 
+     */
+    @POST
+    @Timed
+    @Path("/ejectFilament")
+    public void removeHead(@PathParam("printerID") String printerID, int filamentNumber)
+    {
+        if (PrinterRegistry.getInstance() != null)
+        {
+            try
+            {
+                PrinterRegistry.getInstance().getRemotePrinters().get(printerID).ejectFilament(filamentNumber - 1, null);
+            } catch (PrinterException ex)
+            {
+                steno.error("Exception whilst ejecting filament " + filamentNumber);
             }
         }
     }

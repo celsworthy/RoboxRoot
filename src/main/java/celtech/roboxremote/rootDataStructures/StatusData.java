@@ -1,9 +1,15 @@
 package celtech.roboxremote.rootDataStructures;
 
 import celtech.roboxbase.BaseLookup;
+import celtech.roboxbase.PrinterColourMap;
+import celtech.roboxbase.configuration.datafileaccessors.FilamentContainer;
+import celtech.roboxbase.postprocessor.PrintJobStatistics;
+import celtech.roboxbase.printerControl.PrinterStatus;
 import celtech.roboxbase.printerControl.model.Printer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.IOException;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -15,25 +21,54 @@ public class StatusData
     private String printerName;
     private String printerWebColourString;
     private String printerStatusString;
+
     private boolean canPrint;
     private boolean canPause;
     private boolean canResume;
     private boolean canPurgeHead;
     private boolean canRemoveHead;
     private boolean canOpenDoor;
+    private boolean canEjectFilament;
     private boolean canCancel;
     private boolean canCalibrateHead;
+
+    //Head
+    private String headName;
     private int[] nozzleTemperature;
+
+    //Bed
+    private int bedTemperature;
+
+    //Print info
+    private String printJobName;
+    private String printJobSettings;
+    private int etcSeconds;
+
+    //Material
+    private String[] attachedFilamentNames = null;
+    private boolean[] materialLoaded = null;
+
+    //Errors
+    private String[] activeErrors;
+
+    @JsonIgnore
+    private String lastPrintJobID = null;
 
     public StatusData()
     {
         // Jackson deserialization
     }
 
-    public StatusData(Printer printer)
+    public void updateFromPrinterData(Printer printer)
     {
         printerName = printer.getPrinterIdentity().printerFriendlyNameProperty().get();
-        printerWebColourString = printer.getPrinterIdentity().printerColourProperty().get().toString();
+        PrinterColourMap colourMap = PrinterColourMap.getInstance();
+        Color displayColour = colourMap.printerToDisplayColour(printer.getPrinterIdentity().printerColourProperty().get());
+
+        printerWebColourString = String.format("#%02X%02X%02X",
+                (int) (displayColour.getRed() * 255),
+                (int) (displayColour.getBlue() * 255),
+                (int) (displayColour.getGreen() * 255));
 
         boolean statusProcessed = false;
 
@@ -57,35 +92,116 @@ public class StatusData
                 case PAUSED:
                 case PAUSE_PENDING:
                 case RESUME_PENDING:
-                    printerStatusString = BaseLookup.i18n(printer.pauseStatusProperty().get().getI18nString());
+                    if (printer.printerStatusProperty().get() == PrinterStatus.PRINTING_PROJECT)
+                    {
+                        printerStatusString = PrinterStatus.PRINTING_PROJECT.getI18nString()
+                                + "/" + BaseLookup.i18n(printer.pauseStatusProperty().get().getI18nString());
+                    } else
+                    {
+                        printerStatusString = BaseLookup.i18n(printer.pauseStatusProperty().get().getI18nString());
+                    }
+                    statusProcessed = true;
                     break;
                 default:
                     break;
             }
         }
-        
+
         if (!statusProcessed)
         {
             printerStatusString = printer.printerStatusProperty().get().getI18nString();
         }
 
+        canPrint = printer.canPrintProperty().get();
+        canCalibrateHead = printer.canCalibrateHeadProperty().get();
+        canCancel = printer.canCancelProperty().get();
+        canOpenDoor = printer.canOpenDoorProperty().get();
+        //This should be a real value from the printer...
+        canEjectFilament = printer.canOpenDoorProperty().get();
+        canPause = printer.canPauseProperty().get();
+        canPurgeHead = printer.canPurgeHeadProperty().get();
+        canRemoveHead = printer.canRemoveHeadProperty().get();
+        canResume = printer.canResumeProperty().get();
+
+        //Head
         if (printer.headProperty().get() != null)
         {
+            headName = printer.headProperty().get().nameProperty().get();
+
             nozzleTemperature = new int[printer.headProperty().get().getNozzleHeaters().size()];
             for (int heaterNumber = 0; heaterNumber < printer.headProperty().get().getNozzleHeaters().size(); heaterNumber++)
             {
                 nozzleTemperature[heaterNumber] = printer.headProperty().get().getNozzleHeaters().get(heaterNumber).nozzleTemperatureProperty().get();
             }
+        } else
+        {
+            headName = "";
         }
-        
-        canPrint = printer.canPrintProperty().get();
-        canCalibrateHead = printer.canCalibrateHeadProperty().get();
-        canCancel = printer.canCancelProperty().get();
-        canOpenDoor = printer.canOpenDoorProperty().get();
-        canPause = printer.canPauseProperty().get();
-        canPurgeHead = printer.canPurgeHeadProperty().get();
-        canRemoveHead = printer.canRemoveHeadProperty().get();
-        canResume = printer.canResumeProperty().get();
+
+        //Bed
+        bedTemperature = printer.getPrinterAncillarySystems().bedTemperatureProperty().get();
+
+        //Print info
+        if (printer.printerStatusProperty().get() == PrinterStatus.PRINTING_PROJECT)
+        {
+            if (lastPrintJobID == null
+                    || lastPrintJobID.equals(printer.getPrintEngine().printJobProperty().get()))
+            {
+                lastPrintJobID = printer.getPrintEngine().printJobProperty().get().getJobUUID();
+                try
+                {
+                    PrintJobStatistics printJobStatistics = printer.getPrintEngine().printJobProperty().get().getStatistics();
+                    printJobName = printJobStatistics.getProjectName();
+                    printJobSettings = printJobStatistics.getProfileName();
+                } catch (IOException ex)
+                {
+                }
+            }
+
+            etcSeconds = printer.getPrintEngine().progressETCProperty().get();
+        } else
+        {
+            lastPrintJobID = null;
+        }
+
+        if (printer.extrudersProperty().get(1).isFittedProperty().get())
+        {
+            if (attachedFilamentNames == null)
+            {
+                attachedFilamentNames = new String[2];
+                materialLoaded = new boolean[2];
+            }
+            if (printer.effectiveFilamentsProperty().get(1) != FilamentContainer.UNKNOWN_FILAMENT)
+            {
+                attachedFilamentNames[1] = printer.effectiveFilamentsProperty()
+                        .get(1).getFriendlyFilamentName();
+            }
+
+            materialLoaded[1] = printer.extrudersProperty().get(1).filamentLoadedProperty().get();
+        } else
+        {
+            if (attachedFilamentNames == null)
+            {
+                attachedFilamentNames = new String[1];
+            }
+        }
+
+        if (printer.effectiveFilamentsProperty().get(0) != FilamentContainer.UNKNOWN_FILAMENT)
+        {
+            attachedFilamentNames[0] = printer.effectiveFilamentsProperty()
+                    .get(0).getFriendlyFilamentName();
+        }
+
+        materialLoaded[0] = printer.extrudersProperty().get(0).filamentLoadedProperty().get();
+
+        if (!printer.getActiveErrors().isEmpty())
+        {
+            activeErrors = new String[printer.getActiveErrors().size()];
+            for (int errorCounter = 0; errorCounter < printer.getActiveErrors().size(); errorCounter++)
+            {
+                activeErrors[errorCounter] = BaseLookup.i18n(printer.getActiveErrors().get(errorCounter).getErrorTitleKey());
+            }
+        }
     }
 
     @JsonProperty
@@ -164,6 +280,16 @@ public class StatusData
         this.canOpenDoor = canOpenDoor;
     }
 
+    public void setCanEjectFilament(boolean canEjectFilament)
+    {
+        this.canEjectFilament = canEjectFilament;
+    }
+
+    public boolean isCanEjectFilament()
+    {
+        return canEjectFilament;
+    }
+
     public boolean isCanPause()
     {
         return canPause;
@@ -203,7 +329,27 @@ public class StatusData
     {
         this.canResume = canResume;
     }
-    
+
+    public String getHeadName()
+    {
+        return headName;
+    }
+
+    public void setHeadName(String headName)
+    {
+        this.headName = headName;
+    }
+
+    public int getBedTemperature()
+    {
+        return bedTemperature;
+    }
+
+    public void setBedTemperature(int bedTemperature)
+    {
+        this.bedTemperature = bedTemperature;
+    }
+
     @JsonProperty
     public int[] getNozzleTemperature()
     {
@@ -224,5 +370,65 @@ public class StatusData
         {
             nozzleTemperature[nozzleIndex] = newNozzleTemperature;
         }
+    }
+
+    public String getPrintJobName()
+    {
+        return printJobName;
+    }
+
+    public void setPrintJobName(String printJobName)
+    {
+        this.printJobName = printJobName;
+    }
+
+    public int getEtcSeconds()
+    {
+        return etcSeconds;
+    }
+
+    public void setEtcSeconds(int etcSeconds)
+    {
+        this.etcSeconds = etcSeconds;
+    }
+
+    public String getPrintJobSettings()
+    {
+        return printJobSettings;
+    }
+
+    public void setPrintJobSettings(String printJobSettings)
+    {
+        this.printJobSettings = printJobSettings;
+    }
+
+    public String[] getAttachedFilamentNames()
+    {
+        return attachedFilamentNames;
+    }
+
+    public void setAttachedFilamentNames(String[] attachedFilamentNames)
+    {
+        this.attachedFilamentNames = attachedFilamentNames;
+    }
+
+    public boolean[] getMaterialLoaded()
+    {
+        return materialLoaded;
+    }
+
+    public void setMaterialLoaded(boolean[] materialLoaded)
+    {
+        this.materialLoaded = materialLoaded;
+    }
+
+    public String[] getActiveErrors()
+    {
+        return activeErrors;
+    }
+
+    public void setActiveErrors(String[] activeErrors)
+    {
+        this.activeErrors = activeErrors;
     }
 }
