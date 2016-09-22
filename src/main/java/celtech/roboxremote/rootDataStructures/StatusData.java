@@ -184,6 +184,8 @@ public class StatusData
             {
                 attachedFilamentNames = new String[1];
             }
+            
+            materialLoaded = new boolean[1];
         }
 
         if (printer.effectiveFilamentsProperty().get(0) != FilamentContainer.UNKNOWN_FILAMENT)
