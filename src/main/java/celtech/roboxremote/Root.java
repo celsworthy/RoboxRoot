@@ -1,5 +1,6 @@
 package celtech.roboxremote;
 
+import celtech.roboxbase.configuration.BaseConfiguration;
 import io.dropwizard.Application;
 import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.forms.MultiPartBundle;
@@ -94,6 +95,7 @@ public class Root extends Application<RoboxRemoteConfiguration>
 
     public void stop()
     {
+        BaseConfiguration.shutdown();
         System.exit(0);
     }
 }

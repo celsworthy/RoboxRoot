@@ -1,15 +1,12 @@
 package celtech.roboxremote;
 
 import celtech.roboxbase.comms.remote.Configuration;
-import celtech.roboxbase.configuration.BaseConfiguration;
-import celtech.roboxbase.printerControl.model.PrinterException;
 import com.codahale.metrics.annotation.Timed;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -58,7 +55,7 @@ public class AdminAPI
     @Path("/setServerName")
     public Response setServerName(String serverName)
     {
-        PrinterRegistry.getInstance().setRegistryName(serverName);
+        PrinterRegistry.getInstance().setServerName(serverName);
         return Response.ok().build();
     }
 

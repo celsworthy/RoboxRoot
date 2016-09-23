@@ -43,7 +43,7 @@ public class DiscoveryAPI
     {
         if (PrinterRegistry.getInstance() != null)
         {
-            return new WhoAreYouResponse(PrinterRegistry.getInstance().getRegistryName(),
+            return new WhoAreYouResponse(PrinterRegistry.getInstance().getServerName(),
                     BaseConfiguration.getApplicationVersion());
         } else
         {

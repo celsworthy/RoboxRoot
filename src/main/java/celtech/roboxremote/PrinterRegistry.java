@@ -1,6 +1,7 @@
 package celtech.roboxremote;
 
 import celtech.roboxbase.BaseLookup;
+import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxbase.printerControl.model.Head;
 import celtech.roboxbase.printerControl.model.Printer;
 import celtech.roboxbase.printerControl.model.PrinterListChangesListener;
@@ -24,7 +25,7 @@ public class PrinterRegistry implements PrinterListChangesListener
 
     private final Stenographer steno = StenographerFactory.getStenographer(PrinterRegistry.class.getName());
     private static PrinterRegistry instance = null;
-    private String registryName = "Robox Root";
+    private final String serverNameProperty = "ServerName";
     private final Map<String, Printer> remotePrinters = new HashMap<>();
     private final List<String> remotePrinterIDs = new ArrayList<>();
 
@@ -56,7 +57,7 @@ public class PrinterRegistry implements PrinterListChangesListener
     {
         return remotePrinterIDs;
     }
-    
+
     @Override
     public void whenPrinterAdded(Printer printer)
     {
@@ -126,13 +127,20 @@ public class PrinterRegistry implements PrinterListChangesListener
     {
     }
 
-    public String getRegistryName()
+    public String getServerName()
     {
-        return registryName;
+        String serverName = BaseConfiguration.getApplicationMemory(serverNameProperty);
+        if (serverName == null)
+        {
+            serverName = "Robox Root";
+            setServerName(serverName);
+        }
+        
+        return serverName;
     }
-    
-    public void setRegistryName(String registryName)
+
+    public void setServerName(String serverName)
     {
-        this.registryName = registryName;
+        BaseConfiguration.setApplicationMemory(serverNameProperty, serverName);
     }
 }

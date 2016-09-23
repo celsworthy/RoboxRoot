@@ -310,11 +310,14 @@ function rootRename()
     var printerURL = "http://" + hostname + ":" + port + "/api/admin/setServerName/";
     $.ajax({
         url: printerURL,
-        dataType: "xml/html/script/json", // expected format for response
+        cache: false,
+        processData: false,
         contentType: "application/json", // send as JSON
         type: 'POST',
-        data: JSON.stringify($(".server-name-entry").val())
-    }).complete();
+        data: $(".server-name-entry").val()
+    })  .done(function() {
+        getServerStatus();
+  });
 }
 
 function rootUpgrade()
