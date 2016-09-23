@@ -26,14 +26,14 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 @Produces(MediaType.APPLICATION_JSON)
 public class AdminAPI
 {
-    
+
     private final Stenographer steno = StenographerFactory.getStenographer(AdminAPI.class.getName());
     private final Utils utils = new Utils();
-    
+
     public AdminAPI()
     {
     }
-    
+
     @POST
     @Timed
     @Path(Configuration.shutdown)
@@ -50,15 +50,18 @@ public class AdminAPI
             }
         }.run();
     }
-    
+
     @POST
     @Timed
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("/setServerName")
-    public void setServerName(String serverName)
+    public Response setServerName(String serverName)
     {
         PrinterRegistry.getInstance().setRegistryName(serverName);
+        return Response.ok().build();
     }
-    
+
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)

@@ -71,12 +71,20 @@
                     <p id="serverOnline">Server...</p>
                     <p id="serverVersion">Server version:</p>
 
+                    <hr>
+                    <div style="display: inline;">
+                        <label class="ui-widget ui-widget-content ui-corner-all">Server name:</label>
+                        <input type="text" name="serverName" class="server-name-entry" value="">
+                        <button class="ui-button ui-widget ui-corner-all" onClick="javascript:rootRename();">Update</button>
+                    </div>
+                    <hr>
                     <fieldset>
                         <div data-role="fieldcontain">
                             <label for="safeties-switch" style="display: inline">Safety features enabled:</label>
                             <input data-role="flipswitch" id="safeties-switch" data-on-text="Yes" data-off-text="No" type="checkbox">
                         </div>
                     </fieldset>
+                    <hr>
                     <form id="rootUpgrade" enctype="multipart/form-data" action="javascript:rootUpgrade();">
                         <input type="submit" value="Upgrade Root" >'
                         <input id="rootUpgradeFile" type="file" name="file" required/>

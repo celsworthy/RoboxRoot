@@ -305,6 +305,18 @@ function configurePrinterButtons(printerID, printerData)
     }
 }
 
+function rootRename()
+{
+    var printerURL = "http://" + hostname + ":" + port + "/api/admin/setServerName/";
+    $.ajax({
+        url: printerURL,
+        dataType: "xml/html/script/json", // expected format for response
+        contentType: "application/json", // send as JSON
+        type: 'POST',
+        data: JSON.stringify($(".server-name-entry").val())
+    }).complete();
+}
+
 function rootUpgrade()
 {
     event.preventDefault();
@@ -541,12 +553,14 @@ function updateServerStatus(serverData)
         $('#serverVersion').text("");
         $(".serverStatusLine").text("");
         $(".server-name-title").text("");
+        $(".server-name-entry").val("");
     }
     else
     {
         $('#serverVersion').text('Server version: ' + serverData.serverVersion);
         $(".serverStatusLine").text(serverData.name);
         $(".server-name-title").text(serverData.name);
+        $(".server-name-entry").val(serverData.name);
     }
 }
 
