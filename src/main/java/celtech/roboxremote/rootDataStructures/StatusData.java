@@ -6,6 +6,7 @@ import celtech.roboxbase.configuration.datafileaccessors.FilamentContainer;
 import celtech.roboxbase.postprocessor.PrintJobStatistics;
 import celtech.roboxbase.printerControl.PrinterStatus;
 import celtech.roboxbase.printerControl.model.Printer;
+import celtech.roboxbase.utils.ColourStringConverter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.IOException;
@@ -17,7 +18,6 @@ import javafx.scene.paint.Color;
  */
 public class StatusData
 {
-
     private String printerName;
     private String printerWebColourString;
     private String printerStatusString;
@@ -65,11 +65,8 @@ public class StatusData
         PrinterColourMap colourMap = PrinterColourMap.getInstance();
         Color displayColour = colourMap.printerToDisplayColour(printer.getPrinterIdentity().printerColourProperty().get());
 
-        printerWebColourString = String.format("#%02X%02X%02X",
-                (int) (displayColour.getRed() * 255),
-                (int) (displayColour.getBlue() * 255),
-                (int) (displayColour.getGreen() * 255));
-
+        printerWebColourString = "#" + ColourStringConverter.colourToString(displayColour);
+        
         boolean statusProcessed = false;
 
         switch (printer.busyStatusProperty().get())

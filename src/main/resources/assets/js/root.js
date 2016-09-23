@@ -94,18 +94,10 @@ function createPrinterDataTable(printerID)
   </tr> \
   </thead> \
   <tbody> \
-  <tr>\
-    <td class=\"title\">Status</td>\
-    <td id='"
-            + printerID
-            + statusDisplayTag + "'>?</td>\
-  </tr>\
-  <tr id='"
-            + printerID
+  <tr id='" + printerID
             + etcRowTag + "'>\
     <td class=\"title\">Estimated Time to Complete Print</td>\
-    <td id='"
-            + printerID
+    <td id='" + printerID
             + etcDisplayTag + "'>?</td>\
   </tr>\
   <tr>\
@@ -128,29 +120,31 @@ function createPrinterDataTable(printerID)
   </tr>\
     <tr id='" + printerID + materialRowTag + "1'>\
     <td class=\"title\">Material 1</td>\
-    <td>\
-    <span id='" + printerID
-            + materialDisplayTag
-            + "1'></span>\
+    <td style=\"vertical-align:middle\">\
+    <div style=\"display: inline\">\
     <button id='" + printerID
             + materialEjectButtonTag
             + "1'\
-       class=\"ui-shadow ui-btn ui-corner-all ui-mini ui-btn-inline\" \
+       class=\"align-right ui-shadow ui-btn ui-corner-all ui-mini ui-btn-inline\" \
        onClick=\"eject(\'" + printerID + "\', \'1\')\">Eject</button>\
-    </td>\
+    <span id='" + printerID
+            + materialDisplayTag
+            + "1'></span> \
+    </div>\
+</td>\
   </tr>\
     <tr id='" + printerID + materialRowTag + "2'>\
     <td class=\"title\">Material 2</td>\
-    <td>\
+    <td style=\"vertical-align:middle\">\
     <div style=\"display: inline\">\
-    <span id='" + printerID
-            + materialDisplayTag
-            + "2'></span>\
-        <button id='" + printerID
+    <button id='" + printerID
             + materialEjectButtonTag
             + "2'\
-       class=\"ui-shadow ui-btn ui-corner-all ui-mini ui-btn-inline\" \
+       class=\"align-right ui-shadow ui-btn ui-corner-all ui-mini ui-btn-inline\" \
        onClick=\"eject(\'" + printerID + "\', \'2\')\">Eject</button>\
+    <span id='" + printerID
+            + materialDisplayTag
+            + "2'></span> \
     </div>\
 </td>\
   </tr>\
@@ -174,6 +168,8 @@ function addCollapsible(tab_name)
             + "<h4 id=\"printerTabTop_" + tab_name + "\">" + tab_name + "</h4>"
             + "<div id='printerTab_" + tab_name + "'>"
             + createPrinterDataTable(tab_name)
+            + "<hr>"
+            + "<p>Printer Controls</p>"
             + "<div id='printerTabButtons_" + tab_name + "'/>"
             + "</div></div></div>";
 
@@ -370,14 +366,13 @@ function updateAndDisplayPrinterStatus(printerID)
         $('#printerTabTop_' + printerID + " a").text(printerData.printerName + " - " + statusText);
         $('#printerTabTop_' + printerID + " a").css("background-color", printerData.printerWebColourString);
 
-        $('#printerTab_' + printerID).find('#' + printerID + statusDisplayTag).text(statusText);
         $('#printerTab_' + printerID).find('#' + printerID + headNameDisplayTag).text(printerData.headName);
 
-        $('#printerTab_' + printerID).find('#' + printerID + bedTemperatureDisplayTag).text(printerData.bedTemperature + "˚C");
+        $('#printerTab_' + printerID).find('#' + printerID + bedTemperatureDisplayTag).text(printerData.bedTemperature + '\xB0' + "C");
 
         for (var nozzleNum = 1; nozzleNum <= printerData.nozzleTemperature.length; nozzleNum++)
         {
-            $('#printerTab_' + printerID).find('#' + printerID + nozzleTemperatureDisplayTag + nozzleNum).text(printerData.nozzleTemperature[nozzleNum - 1] + "˚C");
+            $('#printerTab_' + printerID).find('#' + printerID + nozzleTemperatureDisplayTag + nozzleNum).text(printerData.nozzleTemperature[nozzleNum - 1] + '\xB0' + "C");
         }
 
         var numberOfNozzleHeaters = 0;
@@ -415,12 +410,16 @@ function updateAndDisplayPrinterStatus(printerID)
                     filamentNameOutput += " - not loaded";
                     showEjectButton = false;
                 }
+                else
+                {
+                    filamentNameOutput += " - loaded";
+                }
             }
             else
             {
                 if (printerData.materialLoaded[materialNum - 1])
                 {
-                    filamentNameOutput = "Unknown";
+                    filamentNameOutput = "Unknown - loaded";
                 }
                 else
                 {
@@ -521,19 +520,34 @@ function updatePrinterStatuses()
     {
         $("#no-printers-connected-text").hide();
         var printerID = connectedPrinterIDs[printerIndex];
-//                    console.log("Updating printer " + printerID);
         updateAndDisplayPrinterStatus(printerID);
     }
 
     if (connectedPrinterIDs.length === 0)
     {
         $("#no-printers-connected-text").show();
+        $(".numberOfPrintersDisplay").text("No Robox attached");
+    }
+    else
+    {
+        $(".numberOfPrintersDisplay").text(connectedPrinterIDs.length.valueOf() + " Robox attached");
     }
 }
 
-function updateServerStatus(serverVersion)
+function updateServerStatus(serverData)
 {
-    $('#serverVersion').text('Server version: ' + serverVersion);
+    if (serverData === null)
+    {
+        $('#serverVersion').text("");
+        $(".serverStatusLine").text("");
+        $(".server-name-title").text("");
+    }
+    else
+    {
+        $('#serverVersion').text('Server version: ' + serverData.serverVersion);
+        $(".serverStatusLine").text(serverData.name);
+        $(".server-name-title").text(serverData.name);
+    }
 }
 
 function getServerStatus()
@@ -544,14 +558,14 @@ function getServerStatus()
         type: 'GET',
         success: function (data, textStatus, jqXHR) {
             $('#serverOnline').text('Server ONLINE');
-            updateServerStatus(data.serverVersion);
+            updateServerStatus(data);
             connectedToServer = true;
         },
         error: function (xhr, ajaxOptions, thrownError) {
             connectedToServer = false;
             $('#serverOnline').text('Server OFFLINE');
             removeAllPrinterTabs();
-            updateServerStatus("-");
+            updateServerStatus(null);
         }
     });
 }

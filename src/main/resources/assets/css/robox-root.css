@@ -3,7 +3,7 @@
 /* Header */
 .robox-root .jqm-header {
     background: #fff;
-    border-top: 4px solid #3eb249;
+    /*border-top: 4px solid #3eb249;*/
     border-bottom-color: #eee;
 }
 .robox-root .jqm-header h2 {
@@ -787,6 +787,12 @@
     background-image: url("/robox-images/open_printer_door.png");
 }*/
 
+.status-table
+{
+    border-collapse: separate;
+    border-spacing: 5px;
+}
+
 .status-table thead th,
 .status-table tbody tr:last-child {
     border-bottom: 1px solid #d6d6d6; /* non-RGBA fallback */
@@ -807,4 +813,44 @@
     background-color: rgba(0,0,0,.04);
 }
 
- /*.ui-menu { width: 150px; }*/
+/*.ui-menu { width: 150px; }*/
+
+.align-left{
+    float: left;
+}
+
+.align-right{
+    float: right;
+}
+
+.server-name-title{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.header-banner
+{
+    margin: 0 1%;
+    font-size: 1em;
+    min-height: 1.1em;
+    display: block;
+    padding: .7em 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    outline: 0 !important;
+    position: relative;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 300 !important;
+    font-size: 36px;
+}
+
+.printer-colour-box {
+  float: left;
+  width: 20px;
+  height: 20px;
+  margin: 5px;
+  border: 1px solid rgba(0, 0, 0, .2);
+}
