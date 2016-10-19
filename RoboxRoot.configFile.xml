@@ -6,10 +6,10 @@
         <ApplicationShortName>Root</ApplicationShortName>
         <ApplicationDataStorageDirectory>$APPDATA_HOME$/#ApplicationConfiguration:AppFolderName#/</ApplicationDataStorageDirectory>
         <UserDataStorageDirectory>$USER_HOME$/</UserDataStorageDirectory>
-        <requiredFirmwareVersion>751</requiredFirmwareVersion>
+        <requiredFirmwareVersion>753</requiredFirmwareVersion>
         <DefaultMode>Normal</DefaultMode>
         <DefaultLocaleLanguageTag>en</DefaultLocaleLanguageTag>
-        <FakeInstallDirectory>C:/Program Files/Root/Root/</FakeInstallDirectory>
+        <FakeInstallDirectory>C:\Program Files\Root\Windows-x64\Root/</FakeInstallDirectory>
     </ApplicationConfiguration>
     <Stenographer>
         <logfilename>#ApplicationConfiguration:ApplicationDataStorageDirectory#/RoboxRoot.log</logfilename>
