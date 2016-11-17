@@ -70,9 +70,6 @@
 }
 
 /* Content */
-.robox-root .jqm-content {
-    padding-top: 3em;
-}
 .robox-root .jqm-content > h1,
 .robox-root .jqm-content > h2,
 .robox-root .jqm-content > h3,
@@ -823,20 +820,13 @@
     float: right;
 }
 
-.server-name-title{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
 .header-banner
 {
     margin: 0 1%;
     font-size: 1em;
     min-height: 1.1em;
     display: block;
-    padding: .7em 0;
+    padding: 5px 0 0 0;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;

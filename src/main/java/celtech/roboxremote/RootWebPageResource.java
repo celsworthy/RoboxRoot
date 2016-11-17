@@ -23,13 +23,13 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 @RolesAllowed("root")
 @Path(Configuration.adminAPIService)
 @Produces(MediaType.APPLICATION_JSON)
-public class AdminAPI
+public class RootWebPageResource
 {
 
-    private final Stenographer steno = StenographerFactory.getStenographer(AdminAPI.class.getName());
+    private final Stenographer steno = StenographerFactory.getStenographer(RootWebPageResource.class.getName());
     private final Utils utils = new Utils();
 
-    public AdminAPI()
+    public RootWebPageResource()
     {
     }
 
@@ -75,22 +75,5 @@ public class AdminAPI
         utils.writeToFile(uploadedInputStream, uploadedFileLocation);
         Root.getInstance().stop();
         return Response.ok().build();
-    }
-
-    @POST
-    @Timed
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/resetPIN")
-    public Response resetPIN(String printerSerial)
-    {
-        if (PrinterRegistry.getInstance().getRemotePrinterIDs().contains(printerSerial))
-        {
-            Root.getInstance().resetApplicationPINToDefault();
-            return Response.ok().build();
-        } else
-        {
-            return Response.serverError().build();
-        }
     }
 }

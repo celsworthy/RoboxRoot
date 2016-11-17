@@ -1,8 +1,12 @@
 package celtech.roboxremote;
 
 import celtech.roboxbase.configuration.BaseConfiguration;
+import celtech.roboxremote.custom_dropwizard.AuthenticatedAssetsBundle;
+import celtech.roboxremote.security.User;
+import celtech.roboxremote.security.RootAPIAuthenticator;
 import io.dropwizard.Application;
-import io.dropwizard.assets.AssetsBundle;
+import io.dropwizard.auth.AuthDynamicFeature;
+import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -21,6 +25,7 @@ public class Root extends Application<RoboxRemoteConfiguration>
 
     private static Root instance = null;
     private CoreManager coreManager = null;
+    private String applicationPIN = "";
 
     public static void main(String[] args) throws Exception
     {
@@ -45,13 +50,17 @@ public class Root extends Application<RoboxRemoteConfiguration>
         coreManager = new CoreManager();
 
         bootstrap.addBundle(new MultiPartBundle());
-        bootstrap.addBundle(new AssetsBundle("/assets", "/", "index.html"));
+        AuthenticatedAssetsBundle webControlAssetsBundle = new AuthenticatedAssetsBundle("/assets", "/", "index.html",
+                new RootAPIAuthenticator());
+        bootstrap.addBundle(webControlAssetsBundle);
     }
 
     @Override
     public void run(RoboxRemoteConfiguration configuration,
             Environment environment)
     {
+        applicationPIN = configuration.getApplicationPIN();
+
         environment.lifecycle().manage(coreManager);
 
         environment.lifecycle().addServerLifecycleListener((Server server) ->
@@ -59,11 +68,10 @@ public class Root extends Application<RoboxRemoteConfiguration>
             server.setStopAtShutdown(true);
             server.setStopTimeout(500);
         });
-        
+
         environment.jersey().setUrlPattern("/api/*");
 
 //        environment.jersey().register(MultiPartFeature.class);
-
 //        // Enable CORS headers
 //        final FilterRegistration.Dynamic cors
 //                = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
@@ -75,20 +83,24 @@ public class Root extends Application<RoboxRemoteConfiguration>
 //
 //        // Add URL mapping
 //        cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
-
         final AdminAPI adminAPI = new AdminAPI();
         final LowLevelAPI lowLevelAPI = new LowLevelAPI();
         final HighLevelAPI highLevelAPI = new HighLevelAPI();
         final DiscoveryAPI discoveryAPI = new DiscoveryAPI();
 
-        final TemplateHealthCheck healthCheck
-                = new TemplateHealthCheck(configuration.getTemplate());
+        final AppSetupHealthCheck healthCheck
+                = new AppSetupHealthCheck(configuration.getApplicationPIN());
         environment.healthChecks().register("template", healthCheck);
 
         environment.jersey().register(adminAPI);
         environment.jersey().register(lowLevelAPI);
         environment.jersey().register(highLevelAPI);
         environment.jersey().register(discoveryAPI);
+
+        environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
+                .setAuthenticator(new RootAPIAuthenticator())
+                .setRealm("Robox Root API")
+                .buildAuthFilter()));
 
         environment.admin().addTask(new AdminUpdateTask());
     }
@@ -97,5 +109,15 @@ public class Root extends Application<RoboxRemoteConfiguration>
     {
         BaseConfiguration.shutdown();
         System.exit(0);
+    }
+    
+    public String getApplicationPIN()
+    {
+        return applicationPIN;
+    }
+    
+    public void resetApplicationPINToDefault()
+    {
+        applicationPIN = "1111";
     }
 }

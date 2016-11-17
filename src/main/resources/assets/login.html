@@ -12,10 +12,9 @@
         <link rel="stylesheet" href="css/robox-root.css">
         <script src="js/jquery-2.2.4.min.js"></script>
         <script src="js/jquery.mobile-1.4.5.min.js"></script>
-        <script src="js/jquery.base64.js"></script>
-        
+
         <script src="js/core.js"></script>
-        <script src="js/startup.js"></script>
+        <script src="js/login.js"></script>
         <style id="inset-tablist">
             .tablist-left {
                 width: 60%;
@@ -44,7 +43,14 @@
                     <h2 class="server-name-title">Login</h2>
                 </div>
                 <div class="ui-body ui-body-a">
-                    <h2>Welcome to Robox Root</h2>
+                    <h2>Enter the PIN for this Root</h2>
+                    <span>Hint: The default PIN is 1111</span>
+                    <div style="display: inline;">
+                        <label class="ui-widget ui-widget-content ui-corner-all">PIN:</label>
+                        <input type="text" id="application-pin-value" name="applicationPIN" class="application-pin-entry" value=""/>
+                        <button class="ui-button ui-widget ui-corner-all" onClick="javascript:attemptLogin();">Go!</button>
+                        <button class="ui-button ui-widget ui-corner-all" onClick="javascript:goToPINReset();">Forgot PIN</button>
+                    </div>
                 </div>
             </div>
         </div>

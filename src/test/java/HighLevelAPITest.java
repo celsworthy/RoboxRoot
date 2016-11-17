@@ -2,13 +2,8 @@ import celtech.roboxremote.HighLevelAPI;
 import io.dropwizard.jackson.Jackson;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.ClassRule;
 import io.dropwizard.testing.junit.ResourceTestRule;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 /**
  *

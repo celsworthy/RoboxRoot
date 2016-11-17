@@ -14,6 +14,7 @@ import celtech.roboxbase.postprocessor.PrintJobStatistics;
 import com.codahale.metrics.annotation.Timed;
 import java.io.File;
 import java.io.IOException;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -28,6 +29,7 @@ import libertysystems.stenographer.StenographerFactory;
  *
  * @author Ian
  */
+@RolesAllowed("root")
 @Path("/{printerID}" + Configuration.lowLevelAPIService)
 @Produces(MediaType.APPLICATION_JSON)
 public class LowLevelAPI

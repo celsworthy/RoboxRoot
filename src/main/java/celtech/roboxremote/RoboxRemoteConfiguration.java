@@ -10,34 +10,18 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 public class RoboxRemoteConfiguration extends Configuration
 {
-
     @NotEmpty
-    private String template;
-
-    @NotEmpty
-    private String defaultName = "Stranger";
+    private String applicationPIN;
 
     @JsonProperty
-    public String getTemplate()
+    public String getApplicationPIN()
     {
-        return template;
+        return applicationPIN;
     }
 
     @JsonProperty
-    public void setTemplate(String template)
+    public void setApplicationPIN(String applicationPIN)
     {
-        this.template = template;
-    }
-
-    @JsonProperty
-    public String getDefaultName()
-    {
-        return defaultName;
-    }
-
-    @JsonProperty
-    public void setDefaultName(String name)
-    {
-        this.defaultName = name;
+        this.applicationPIN = applicationPIN;
     }
 }

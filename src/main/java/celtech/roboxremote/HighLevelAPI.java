@@ -11,6 +11,7 @@ import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.jersey.params.BooleanParam;
 import java.io.IOException;
 import java.io.InputStream;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -28,6 +29,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
  *
  * @author Ian
  */
+@RolesAllowed("root")
 @Path("/{printerID}/remoteControl")
 @Produces(MediaType.APPLICATION_JSON)
 public class HighLevelAPI
@@ -250,20 +252,21 @@ public class HighLevelAPI
             }
         }
     }
-    
-        @POST
+
+    @POST
     @Timed
     @Path("/clearErrors")
     public void clearErrors(@PathParam("printerID") String printerID)
     {
         PrinterRegistry.getInstance().getRemotePrinters().get(printerID).clearAllErrors();
     }
-    
+
     /**
      *
      * Expects filament number to be 1 or 2
+     *
      * @param printerID
-     * @param filamentNumber 
+     * @param filamentNumber
      */
     @POST
     @Timed

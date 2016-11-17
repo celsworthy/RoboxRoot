@@ -1,5 +1,3 @@
-var hostname = window.location.hostname;
-var port = 8080;
 var connectedToServer = false;
 var isMobile = false; //initiate as false
 var connectedPrinterIDs = new Array();
@@ -204,8 +202,12 @@ function conditionallyCreateButton(createButton, divToAddButtonTo, buttonText, o
 function printGCodeFile(printerID)
 {
     var data = new FormData($('#fileInput_' + printerID).val());
+    var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
     jQuery.ajax({
         url: 'http://' + hostname + ':' + port + '/api/' + printerID + '/remoteControl/upload/',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
+        },
         data: data,
         cache: false,
         contentType: false,
@@ -284,8 +286,13 @@ function configurePrinterButtons(printerID, printerData)
                 event.preventDefault();
                 var formData = new FormData($(this)[0]);
 
+                var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
+
                 $.ajax({
                     url: 'http://' + hostname + ':' + port + '/api/' + printerID + '/remoteControl/printGCodeFile/',
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
+                    },
                     type: 'POST',
                     data: formData,
                     cache: false,
@@ -308,25 +315,34 @@ function configurePrinterButtons(printerID, printerData)
 function rootRename()
 {
     var printerURL = "http://" + hostname + ":" + port + "/api/admin/setServerName/";
+    var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
+
     $.ajax({
         url: printerURL,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
+        },
         cache: false,
         processData: false,
         contentType: "application/json", // send as JSON
         type: 'POST',
         data: $(".server-name-entry").val()
-    })  .done(function() {
+    }).done(function () {
         getServerStatus();
-  });
+    });
 }
 
 function rootUpgrade()
 {
     event.preventDefault();
     var formData = new FormData($('#rootUpgrade')[0]);
+    var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
 
     $.ajax({
         url: 'http://' + hostname + ':' + port + '/api/updateSystem/',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
+        },
         type: 'POST',
         data: formData,
         cache: false,
@@ -499,8 +515,13 @@ function updateAndDisplayPrinterStatus(printerID)
 function postCommandToRoot(printerID, service, successCallback, dataToSend)
 {
     var printerURL = "http://" + hostname + ":" + port + "/api/" + printerID + "/remoteControl/" + service;
+    var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
+
     $.ajax({
         url: printerURL,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
+        },
         dataType: "xml/html/script/json", // expected format for response
         contentType: "application/json", // send as JSON
         type: 'POST',
@@ -519,8 +540,13 @@ function postCommandToRoot(printerID, service, successCallback, dataToSend)
 function getPrinterStatus(printerID, callback)
 {
     var printerURL = "http://" + hostname + ":" + port + "/api/" + printerID + "/remoteControl";
+    var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
+
     $.ajax({
         url: printerURL,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
+        },
         dataType: 'json',
         type: 'GET',
     }).done(function (data)
@@ -569,8 +595,13 @@ function updateServerStatus(serverData)
 
 function getServerStatus()
 {
+    var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
+
     $.ajax({
         url: 'http://' + hostname + ':' + port + '/api/discovery/whoareyou',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
+        },
         dataType: 'json',
         type: 'GET',
         success: function (data, textStatus, jqXHR) {
@@ -589,7 +620,12 @@ function getServerStatus()
 
 function getPrinters()
 {
+    var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
+
     $.ajax({
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
+        },
         url: 'http://' + hostname + ':' + port + '/api/discovery/listPrinters',
         dataType: 'json',
         type: 'GET',
@@ -632,6 +668,8 @@ $(document).ready(function () {
     {
         isMobile = true;
     }
+
+    $("#application-pin-value").val(localStorage.getItem(applicationPINVar));
 
     getServerStatus();
     setInterval(getStatus, 2000);

@@ -4,6 +4,7 @@ import celtech.roboxbase.comms.remote.ListPrintersResponse;
 import celtech.roboxbase.comms.remote.WhoAreYouResponse;
 import celtech.roboxbase.configuration.BaseConfiguration;
 import com.codahale.metrics.annotation.Timed;
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -22,6 +23,15 @@ public class DiscoveryAPI
     {
     }
 
+    @RolesAllowed("root")
+    @GET
+    @Timed
+    @Path("/testConnectivity")
+    public void testConnectivity()
+    {
+    }
+
+    @RolesAllowed("root")
     @GET
     @Timed
     @Path("/listPrinters")

@@ -1,6 +1,4 @@
-## YAML Template.
-template: Hello, %s!
-defaultName: Stranger
+applicationPIN: 1111
 
 server:
   rootPath: /api/*
@@ -8,33 +6,21 @@ server:
   applicationConnectors:
   - type: http
     port: 8080
-  adminConnectors:
-  - type: http
-    port: 9001
+    
   requestLog:
     appenders: []
     
 logging:
-  level: INFO
+  level: ERROR
   loggers:
-    "io.dropwizard": 
-      level: DEBUG
+    "io.dropwizard":
       additive: false
       appenders:
         - type: file
           currentLogFilename: dw.log
           archivedLogFilenamePattern: dw.log-%d.log.gz
           archivedFileCount: 5
-    "org.hibernate.SQL":
-      level: INFO
-      additive: false
-      appenders:
-        - type: file
-          currentLogFilename: sql.log
-          archivedLogFilenamePattern: sql.log-%d.log.gz
-          archivedFileCount: 5
     "org.eclipse.jetty.server":
-      level: DEBUG
       additive: false
       appenders:
         - type: file
