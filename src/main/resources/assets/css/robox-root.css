@@ -844,3 +844,41 @@
   margin: 5px;
   border: 1px solid rgba(0, 0, 0, .2);
 }
+
+.inline-form {}
+
+.inline-form .wrapper {
+  float: left;
+  width: 100%;
+}
+
+.inline-form .wrapper .content {
+  margin: 0 75px 0 30px;
+  /* 0 RC 0 LC */
+}
+
+.inline-form .left {
+  float: left;
+  width: 30px;
+  /* LC */
+  margin-left: -100%;
+}
+
+.inline-form .text {
+  padding-top: 0.7em;
+  padding-bottom: 0.7em;
+  display: block;
+  font-size: 16px;
+}
+
+.inline-form .right {
+  float: left;
+  width: 75px;
+  /* RC */
+  margin-left: -75px;
+  /* -RC */
+}
+
+.inline-form .footer {
+  clear: left;
+}
