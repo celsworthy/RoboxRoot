@@ -1,6 +1,5 @@
 package celtech.roboxremote.security;
 
-import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxremote.Root;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;

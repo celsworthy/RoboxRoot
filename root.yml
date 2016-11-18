@@ -1,4 +1,4 @@
-applicationPIN: 1111
+defaultPIN: 1111
 
 server:
   rootPath: /api/*

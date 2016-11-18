@@ -1,6 +1,7 @@
 package celtech.roboxremote;
 
 import celtech.roboxbase.comms.remote.Configuration;
+import celtech.roboxbase.printerControl.model.Printer;
 import com.codahale.metrics.annotation.Timed;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +21,6 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
  *
  * @author Ian
  */
-@RolesAllowed("root")
 @Path(Configuration.adminAPIService)
 @Produces(MediaType.APPLICATION_JSON)
 public class AdminAPI
@@ -33,6 +33,7 @@ public class AdminAPI
     {
     }
 
+    @RolesAllowed("root")
     @POST
     @Timed
     @Path(Configuration.shutdown)
@@ -50,6 +51,7 @@ public class AdminAPI
         }.run();
     }
 
+    @RolesAllowed("root")
     @POST
     @Timed
     @Consumes(MediaType.APPLICATION_JSON)
@@ -61,6 +63,7 @@ public class AdminAPI
         return Response.ok().build();
     }
 
+    @RolesAllowed("root")
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
@@ -77,6 +80,18 @@ public class AdminAPI
         return Response.ok().build();
     }
 
+    @RolesAllowed("root")
+    @POST
+    @Timed
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/updatePIN")
+    public Response updatePIN(String newPIN)
+    {
+        Root.getInstance().setApplicationPIN(newPIN);
+        return Response.ok().build();
+    }
+
     @POST
     @Timed
     @Consumes(MediaType.APPLICATION_JSON)
@@ -84,7 +99,22 @@ public class AdminAPI
     @Path("/resetPIN")
     public Response resetPIN(String printerSerial)
     {
-        if (PrinterRegistry.getInstance().getRemotePrinterIDs().contains(printerSerial))
+
+        boolean serialMatches = false;
+
+        if (printerSerial != null)
+        {
+            for (Printer printer : PrinterRegistry.getInstance().getRemotePrinters().values())
+            {
+                if (printer.getPrinterIdentity().printerUniqueIDProperty().get().toLowerCase().endsWith(printerSerial.toLowerCase()))
+                {
+                    serialMatches = true;
+                    break;
+                }
+            }
+        }
+        
+        if (serialMatches)
         {
             Root.getInstance().resetApplicationPINToDefault();
             return Response.ok().build();

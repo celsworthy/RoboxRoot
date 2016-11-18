@@ -1,5 +1,6 @@
 package celtech.roboxremote.custom_dropwizard;
 
+import celtech.roboxremote.security.RootAPIUnauthorisedHandler;
 import celtech.roboxremote.security.User;
 import io.dropwizard.servlets.assets.ByteRange;
 import io.dropwizard.servlets.assets.ResourceURL;
@@ -27,11 +28,12 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkArgument;
 import io.dropwizard.auth.AuthenticationException;
 import io.dropwizard.auth.Authenticator;
-import io.dropwizard.auth.Authorizer;
+import io.dropwizard.auth.UnauthorizedHandler;
 import io.dropwizard.auth.basic.BasicCredentials;
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 import java.util.StringTokenizer;
+import javax.ws.rs.core.Response;
 import libertysystems.stenographer.Stenographer;
 import libertysystems.stenographer.StenographerFactory;
 import org.apache.commons.codec.binary.Base64;
@@ -139,8 +141,9 @@ public class AuthenticatedAssetServlet extends HttpServlet
     protected void doGet(HttpServletRequest req,
             HttpServletResponse resp) throws ServletException, IOException
     {
-        if (req.getPathInfo().equals("/siteContent.html"))
+        if (req.getPathInfo().startsWith("/rootMenu.html"))
         {
+            String referrer = req.getHeader("referer");
             String authHeader = req.getHeader("Authorization");
 
             boolean authenticatedOK = false;
@@ -190,8 +193,16 @@ public class AuthenticatedAssetServlet extends HttpServlet
 
             if (!authenticatedOK)
             {
-                //Didn't get any auth data
-                resp.sendRedirect("/login.html");
+                if (referrer == null)
+                {
+                    //Didn't get any auth data
+                    resp.sendRedirect("/login.html");
+                } else
+                {
+                    //Didn't get any auth data
+                    resp.addHeader("WWW-Authenticate", RootAPIUnauthorisedHandler.getAuthenticationString());
+                    resp.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                }
                 return;
             }
         }

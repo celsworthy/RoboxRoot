@@ -11,17 +11,17 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class RoboxRemoteConfiguration extends Configuration
 {
     @NotEmpty
-    private String applicationPIN;
+    private String defaultPIN;
 
     @JsonProperty
-    public String getApplicationPIN()
+    public String getDefaultPIN()
     {
-        return applicationPIN;
+        return defaultPIN;
     }
 
     @JsonProperty
-    public void setApplicationPIN(String applicationPIN)
+    public void setDefaultPIN(String defaultPIN)
     {
-        this.applicationPIN = applicationPIN;
+        this.defaultPIN = defaultPIN;
     }
 }

@@ -2,6 +2,7 @@ package celtech.roboxremote;
 
 import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxremote.custom_dropwizard.AuthenticatedAssetsBundle;
+import celtech.roboxremote.security.RootAPIAuthFilter;
 import celtech.roboxremote.security.User;
 import celtech.roboxremote.security.RootAPIAuthenticator;
 import io.dropwizard.Application;
@@ -25,7 +26,8 @@ public class Root extends Application<RoboxRemoteConfiguration>
 
     private static Root instance = null;
     private CoreManager coreManager = null;
-    private String applicationPIN = "";
+    private String defaultApplicationPIN = "";
+    private static final String accessPINKey = "AccessPIN";
 
     public static void main(String[] args) throws Exception
     {
@@ -59,7 +61,7 @@ public class Root extends Application<RoboxRemoteConfiguration>
     public void run(RoboxRemoteConfiguration configuration,
             Environment environment)
     {
-        applicationPIN = configuration.getApplicationPIN();
+        defaultApplicationPIN = configuration.getDefaultPIN();
 
         environment.lifecycle().manage(coreManager);
 
@@ -89,7 +91,7 @@ public class Root extends Application<RoboxRemoteConfiguration>
         final DiscoveryAPI discoveryAPI = new DiscoveryAPI();
 
         final AppSetupHealthCheck healthCheck
-                = new AppSetupHealthCheck(configuration.getApplicationPIN());
+                = new AppSetupHealthCheck(configuration.getDefaultPIN());
         environment.healthChecks().register("template", healthCheck);
 
         environment.jersey().register(adminAPI);
@@ -97,7 +99,7 @@ public class Root extends Application<RoboxRemoteConfiguration>
         environment.jersey().register(highLevelAPI);
         environment.jersey().register(discoveryAPI);
 
-        environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
+        environment.jersey().register(new AuthDynamicFeature(new RootAPIAuthFilter.Builder<User>()
                 .setAuthenticator(new RootAPIAuthenticator())
                 .setRealm("Robox Root API")
                 .buildAuthFilter()));
@@ -110,14 +112,25 @@ public class Root extends Application<RoboxRemoteConfiguration>
         BaseConfiguration.shutdown();
         System.exit(0);
     }
-    
+
+    public void setApplicationPIN(String applicationPIN)
+    {
+        BaseConfiguration.setApplicationMemory(accessPINKey, applicationPIN);
+    }
+
     public String getApplicationPIN()
     {
-        return applicationPIN;
+        String pin = BaseConfiguration.getApplicationMemory(accessPINKey);
+        if (pin == null)
+        {
+            resetApplicationPINToDefault();
+            pin = getApplicationPIN();
+        }
+        return pin;
     }
-    
+
     public void resetApplicationPINToDefault()
     {
-        applicationPIN = "1111";
+        setApplicationPIN(defaultApplicationPIN);
     }
 }
