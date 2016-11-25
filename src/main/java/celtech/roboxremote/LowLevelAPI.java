@@ -44,20 +44,19 @@ public class LowLevelAPI
     @POST
     @Timed
     @Path(Configuration.connectService)
-    public boolean connect(@PathParam("printerID") String printerID)
+    public Response connect(@PathParam("printerID") String printerID)
     {
-//        printerRegistry.getRemotePrinters().get(printerID).getCommandInterface().operateRemotely(true);
         steno.info("Was asked to connect to " + printerID);
-        return true;
+        return Response.ok().build();
     }
 
     @POST
     @Timed
     @Path(Configuration.disconnectService)
-    public void disconnect(@PathParam("printerID") String printerID)
+    public Response disconnect(@PathParam("printerID") String printerID)
     {
         steno.info("Was asked to disconnect from " + printerID);
-//        printerRegistry.getRemotePrinters().get(printerID).getCommandInterface().operateRemotely(false);
+        return Response.ok().build();
     }
 
     @POST

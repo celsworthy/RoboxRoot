@@ -6,13 +6,14 @@ function attemptLogin()
     if (enteredPIN !== "")
     {
         localStorage.setItem(applicationPINVar, enteredPIN);
-        location.href = 'http://' + hostname + ':' + port + '/';
+        console.log("Hello " + localStorage.getItem(applicationPINVar));
+        location.href = '/';
     }
 }
 
 function goToPINReset()
 {
-    location.href = 'http://' + hostname + ':' + port + '/pinReset.html';
+    location.href = '/pinReset.html';
 }
 
 $(document).ready(function ()

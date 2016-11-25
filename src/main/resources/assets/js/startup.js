@@ -9,7 +9,7 @@ $(document).ready(function () {
     {
         var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + enteredPIN);
         $.ajax({
-            url: 'http://' + hostname + ':' + port + contentPage,
+            url: contentPage,
             dataType: 'html',
             cache: false,
             beforeSend: function (xhr) {

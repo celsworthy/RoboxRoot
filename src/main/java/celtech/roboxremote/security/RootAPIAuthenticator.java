@@ -26,7 +26,7 @@ public class RootAPIAuthenticator implements Authenticator<BasicCredentials, Use
         String rootPIN = Root.getInstance().getApplicationPIN();
         if (VALID_USERS.containsKey(credentials.getUsername()) && rootPIN.equals(credentials.getPassword()))
         {
-            return Optional.of(new User(credentials.getUsername(), VALID_USERS.get(credentials.getUsername())));
+            return Optional.of(new User(credentials.getUsername()));
         }
         return Optional.empty();
     }

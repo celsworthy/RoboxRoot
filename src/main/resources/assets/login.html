@@ -45,10 +45,9 @@
                 <div class="ui-body ui-body-a">
                     <h2>Enter the PIN for this Root</h2>
                     <span>Hint: The default PIN is 1111</span>
-                    <form accept-charset="UTF-8" action="/car_makes/4/car_models" class="new_car_model" id="new_car_model" method="post">
+                    <form id="pinInputForm" accept-charset="UTF-8" onSubmit="return attemptLogin()">
                         <div style="margin:0;padding:0;display:inline">
                             <input name="utf8" type="hidden" value="&#x2713;" />
-                            <input name="authenticity_token" type="hidden" value="4PeeDJ62LAhnJoUGDlcKaPlusNbaf9r+bcEXmdbSIBE=" />
                         </div>
                         <div class="inline-form">
                             <div class="wrapper">
@@ -62,7 +61,7 @@
                             </div>
 
                             <div class="right">
-                                <input data-icon="check" data-inline="true" data-mini="true" name="commit" type="submit" value="Go!" onClick="javascript:attemptLogin();"/>
+                                <input id="pinInputButton" data-icon="check" data-inline="true" data-mini="true" name="commit" type="submit" value="Go!"/>
                             </div>
 
                             <div class="footer"></div>

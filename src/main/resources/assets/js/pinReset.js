@@ -3,7 +3,7 @@ var isMobile = false; //initiate as false
 
 function resetPIN()
 {
-    var printerURL = "http://" + hostname + ":" + port + "/api/admin/resetPIN/";
+    var printerURL = "/api/admin/resetPIN/";
 
     $.ajax({
         url: printerURL,

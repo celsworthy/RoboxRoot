@@ -141,6 +141,7 @@ public class AuthenticatedAssetServlet extends HttpServlet
     protected void doGet(HttpServletRequest req,
             HttpServletResponse resp) throws ServletException, IOException
     {
+        steno.info("Serving " + req.getScheme() + req.getPathInfo());
         if (req.getPathInfo().startsWith("/rootMenu.html"))
         {
             String referrer = req.getHeader("referer");
