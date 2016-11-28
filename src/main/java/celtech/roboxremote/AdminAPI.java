@@ -3,6 +3,7 @@ package celtech.roboxremote;
 import celtech.roboxbase.comms.remote.Configuration;
 import celtech.roboxbase.printerControl.model.Printer;
 import com.codahale.metrics.annotation.Timed;
+import io.dropwizard.jersey.params.BooleanParam;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.annotation.security.RolesAllowed;
@@ -113,7 +114,7 @@ public class AdminAPI
                 }
             }
         }
-        
+
         if (serialMatches)
         {
             Root.getInstance().resetApplicationPINToDefault();
@@ -122,5 +123,28 @@ public class AdminAPI
         {
             return Response.serverError().build();
         }
+    }
+
+    @POST
+    @Timed
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/testWiFiConnection")
+    public Response testWifiConnection()
+    {
+        steno.info("Asked to test wifi connection");
+
+        return Response.ok().build();
+    }
+
+    @POST
+    @Timed
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/setWiFiCredentials")
+    public Response setWiFiCredentials(String ssidAndPassword)
+    {
+        steno.info("Asked to change wifi credentials to " + ssidAndPassword);
+        return Response.ok().build();
     }
 }

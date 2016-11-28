@@ -84,50 +84,25 @@
                             <p id="serverVersion">Server version:</p>
 
                             <hr>
-                            <form id="pinInputForm" accept-charset="UTF-8" onSubmit="return updatePIN()">
-                                <div style="margin:0;padding:0;display:inline">
-                                    <input name="utf8" type="hidden" value="&#x2713;" />
-                                </div>
-                                <div class="inline-form">
-                                    <div class="wrapper">
-                                        <div class="content">
-                                            <input data-mini="true" id="pin-update-value" class="application-pin-entry" size="30" type="text" />
-                                        </div>
-                                    </div>
-
-                                    <div class="left text">
-                                        PIN:
-                                    </div>
-
-                                    <div class="right">
-                                        <input id="pinInputButton" data-icon="check" data-inline="true" data-mini="true" name="commit" type="submit" value="Update"/>
-                                    </div>
-
-                                    <div class="footer"></div>
-                                </div>
-                            </form>
-                            <form id="pinInputForm" accept-charset="UTF-8" onSubmit="return rootRename()">
-                                <div style="margin:0;padding:0;display:inline">
-                                    <input name="utf8" type="hidden" value="&#x2713;" />
-                                </div>
-                                <div class="inline-form">
-                                    <div class="wrapper">
-                                        <div class="content">
-                                            <input data-mini="true" id="pin-update-value" class="server-name-entry" size="30" type="text" />
-                                        </div>
-                                    </div>
-
-                                    <div class="left text">
-                                        Name:
-                                    </div>
-
-                                    <div class="right">
-                                        <input id="pinInputButton" data-icon="check" data-inline="true" data-mini="true" name="commit" type="submit" value="Update"/>
-                                    </div>
-
-                                    <div class="footer"></div>
-                                </div>
-                            </form>
+                            <div class="inline-block">
+                                Name:
+                            </div>
+                            <div class="inline-block">
+                                <input type="text" data-mini="true" id="server-name-input" class="server-name-entry" />
+                            </div>
+                            <div class="inline-block">
+                                <button class="ui-btn ui-btn-inline" onClick="javascript:rootRename()">Update</button>
+                            </div>
+                            <hr>
+                            <div class="inline-block">
+                                PIN:
+                            </div>
+                            <div class="inline-block">
+                                <input type="text" data-mini="true" id="pin-update-value" />
+                            </div>
+                            <div class="inline-block">
+                                <button class="ui-btn ui-btn-inline" onClick="javascript:updatePIN()">Update</button>
+                            </div>
                             <hr>
                             <fieldset>
                                 <div data-role="fieldcontain">
@@ -137,7 +112,30 @@
                             </fieldset>
                         </div>
                         <div id="fragment-2">
-                            <p>This is the content of the tab 'Two', with the id fragment-2.</p>
+                            <p><span>IP Address: </span><span class="server-ip-address"></span></p>
+                            <fieldset>
+                                <div data-role="fieldcontain">
+                                    <label for="wifi-enabled-switch" style="display: inline; width: auto;">Wifi enabled:</label>
+                                    <input data-role="flipswitch" id="wifi-enabled-switch" data-on-text="Yes" data-off-text="No" type="checkbox"/>
+                                </div>
+
+                                <div class="inline-block">
+                                    SSID:
+                                </div>
+                                <div class="inline-block">
+                                    <input type="text" id="wifi-ssid">
+                                </div>
+                                <div>
+                                    <div class="inline-block">
+                                        Password:
+                                    </div>
+                                    <div class="inline-block">
+                                        <input type="password" id="wifi-password">
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <button class="ui-btn" onClick="javascript:setWiFiCredentials()">Update WiFi settings</button>
+                            <button class="ui-btn" onClick="javascript:testWiFiConnection()">Test WiFi connection</button>
                         </div>
                         <div id="fragment-3">
                             <form id="rootUpgrade" enctype="multipart/form-data" action="javascript:rootUpgrade();">

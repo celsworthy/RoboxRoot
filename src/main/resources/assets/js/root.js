@@ -221,37 +221,37 @@ function printGCodeFile(printerID)
 
 function openDoor(printerID)
 {
-    postCommandToRoot(printerID, "openDoor", null, safetiesOn().toString());
+    postCommandToPrinter(printerID, "openDoor", null, safetiesOn().toString());
 }
 
 function pausePrint(printerID)
 {
-    postCommandToRoot(printerID, "pause", null, null);
+    postCommandToPrinter(printerID, "pause", null, null);
 }
 
 function resumePrint(printerID)
 {
-    postCommandToRoot(printerID, "resume", null, null);
+    postCommandToPrinter(printerID, "resume", null, null);
 }
 
 function cancelPrint(printerID)
 {
-    postCommandToRoot(printerID, "cancel", null, null);
+    postCommandToPrinter(printerID, "cancel", null, null);
 }
 
 function removeHead(printerID)
 {
-    postCommandToRoot(printerID, "removeHead", null, null);
+    postCommandToPrinter(printerID, "removeHead", null, null);
 }
 
 function purgeHead(printerID)
 {
-    postCommandToRoot(printerID, "purge", null, safetiesOn().toString());
+    postCommandToPrinter(printerID, "purge", null, safetiesOn().toString());
 }
 
 function eject(printerID, materialNumber)
 {
-    postCommandToRoot(printerID, "ejectFilament", null, materialNumber);
+    postCommandToPrinter(printerID, "ejectFilament", null, materialNumber);
 }
 
 function configurePrinterButtons(printerID, printerData)
@@ -345,7 +345,7 @@ function rootRename()
         processData: false,
         contentType: "application/json", // send as JSON
         type: 'POST',
-        data: $(".server-name-entry").val()
+        data: $("#server-name-input").val()
     }).done(function () {
         getServerStatus();
     });
@@ -531,7 +531,7 @@ function updateAndDisplayPrinterStatus(printerID)
     });
 }
 
-function postCommandToRoot(printerID, service, successCallback, dataToSend)
+function postCommandToPrinter(printerID, service, successCallback, dataToSend)
 {
     var printerURL = "http://" + hostname + ":" + port + "/api/" + printerID + "/remoteControl/" + service;
     var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
@@ -554,7 +554,28 @@ function postCommandToRoot(printerID, service, successCallback, dataToSend)
     }).complete();
 }
 
+function postCommandToRoot(service, successCallback, dataToSend)
+{
+    var printerURL = "http://" + hostname + ":" + port + "/api/" + service + "/";
+    var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
 
+    $.ajax({
+        url: printerURL,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
+        },
+        dataType: "xml/html/script/json", // expected format for response
+        contentType: "application/json", // send as JSON
+        type: 'POST',
+        data: JSON.stringify(dataToSend)
+    }).done(function (data)
+    {
+        if (successCallback !== null)
+        {
+            successCallback(data);
+        }
+    }).complete();
+}
 
 function getPrinterStatus(printerID, callback)
 {
@@ -601,14 +622,16 @@ function updateServerStatus(serverData)
         $('#serverVersion').text("");
         $(".serverStatusLine").text("");
         $(".server-name-title").text("");
-        $(".server-name-entry").val("");
+        $("#server-name-input").val("");
+        $(".server-ip-address").val("");
     }
     else
     {
         $('#serverVersion').text('Server version: ' + serverData.serverVersion);
         $(".serverStatusLine").text(serverData.name);
         $(".server-name-title").text(serverData.name);
-        $(".server-name-entry").val(serverData.name);
+        $("#server-name-input").val(serverData.name);
+        $(".server-ip-address").text(hostname);
     }
 }
 
@@ -681,12 +704,22 @@ function safetiesOn()
     return safetyStatus;
 }
 
+function testWiFiConnection()
+{
+    postCommandToRoot("admin/testWiFiConnection", null, null);
+}
+
+function setWiFiCredentials()
+{
+    postCommandToRoot("admin/setWiFiCredentials", null, $("#wifi-ssid").val() + ":" + $("#wifi-password").val());
+}
+
 $(document).ready(function ()
 {
     checkForMobileBrowser();
 
     $("#pin-update-value").val(localStorage.getItem(applicationPINVar));
-
+    
     getServerStatus()
     getPrinters();
 

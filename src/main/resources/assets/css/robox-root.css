@@ -859,7 +859,7 @@
 
 .inline-form .left {
   float: left;
-  width: 30px;
+  width: 50px;
   /* LC */
   margin-left: -100%;
 }
@@ -873,12 +873,27 @@
 
 .inline-form .right {
   float: left;
-  width: 100px;
+  width: 75px;
   /* RC */
-  margin-left: -10px;
+  margin-left: -100px;
   /* -RC */
 }
 
 .inline-form .footer {
   clear: left;
+}
+
+.inline-block
+{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ui-inputgrid-a, .ui-inputgrid-b, .ui-inputgrid-c {
+    background-color: lightgray;
+    border: 1px solid black;
+    height: 100px;
+    font-weight: bold;
+    text-align: center;
+    padding: 30px;
 }

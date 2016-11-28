@@ -4,6 +4,8 @@ import celtech.roboxbase.comms.remote.ListPrintersResponse;
 import celtech.roboxbase.comms.remote.WhoAreYouResponse;
 import celtech.roboxbase.configuration.BaseConfiguration;
 import com.codahale.metrics.annotation.Timed;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
