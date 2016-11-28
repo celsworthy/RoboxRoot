@@ -53,7 +53,7 @@
                 <div style="text-align: center; vertical-align: middle;" data-role="footer" data-position="fixed" class="ui-grid-b jqm-footer ui-footer ui-bar-inherit ui-footer-fixed slideup">
                     <div class="ui-block-a"><span>Robox Root Manager </span><span class="jqm-version">0.1</span></div>
                     <div class="ui-block-b"><span><a href="#printer-status-page" class="ui-btn ui-icon-home ui-btn-icon-notext ui-corner-all">No text</a></span><span><a href="#server-status-page" class="ui-btn ui-icon-gear ui-btn-icon-notext ui-corner-all">No text</a></span></div>
-                    <div class="ui-block-c"><span class="serverStatusLine"></span> --- <span class="numberOfPrintersDisplay"></span></div>
+                    <div class="ui-block-c"><span class="numberOfPrintersDisplay"></span></div>
                 </div>
             </div>
         </div>
@@ -71,41 +71,87 @@
                 </div>
                 <div class="ui-body ui-body-a">
                     <h2>Admin</h2>
-                    <div>
-                        <p id="serverOnline">Server...</p>
-                        <p id="serverVersion">Server version:</p>
+                    <div data-role="tabs">
+                        <div data-role="navbar">
+                            <ul>
+                                <li><a href="#fragment-1" class="ui-btn-active">Identity</a></li>
+                                <li><a href="#fragment-2">Network</a></li>
+                                <li><a href="#fragment-3">Upgrade</a></li>
+                            </ul>
+                        </div>
+                        <div id="fragment-1">
+                            <p id="serverOnline">Server...</p>
+                            <p id="serverVersion">Server version:</p>
 
-                        <hr>
-                        <div style="display: inline;">
-                            <label>PIN:</label>
-                            <input type="text" id="pin-update-value" name="applicationPIN" class="application-pin-entry" value=""/>
-                            <button onClick="javascript:updatePIN();">Update</button>
+                            <hr>
+                            <form id="pinInputForm" accept-charset="UTF-8" onSubmit="return updatePIN()">
+                                <div style="margin:0;padding:0;display:inline">
+                                    <input name="utf8" type="hidden" value="&#x2713;" />
+                                </div>
+                                <div class="inline-form">
+                                    <div class="wrapper">
+                                        <div class="content">
+                                            <input data-mini="true" id="pin-update-value" class="application-pin-entry" size="30" type="text" />
+                                        </div>
+                                    </div>
+
+                                    <div class="left text">
+                                        PIN:
+                                    </div>
+
+                                    <div class="right">
+                                        <input id="pinInputButton" data-icon="check" data-inline="true" data-mini="true" name="commit" type="submit" value="Update"/>
+                                    </div>
+
+                                    <div class="footer"></div>
+                                </div>
+                            </form>
+                            <form id="pinInputForm" accept-charset="UTF-8" onSubmit="return rootRename()">
+                                <div style="margin:0;padding:0;display:inline">
+                                    <input name="utf8" type="hidden" value="&#x2713;" />
+                                </div>
+                                <div class="inline-form">
+                                    <div class="wrapper">
+                                        <div class="content">
+                                            <input data-mini="true" id="pin-update-value" class="server-name-entry" size="30" type="text" />
+                                        </div>
+                                    </div>
+
+                                    <div class="left text">
+                                        Name:
+                                    </div>
+
+                                    <div class="right">
+                                        <input id="pinInputButton" data-icon="check" data-inline="true" data-mini="true" name="commit" type="submit" value="Update"/>
+                                    </div>
+
+                                    <div class="footer"></div>
+                                </div>
+                            </form>
+                            <hr>
+                            <fieldset>
+                                <div data-role="fieldcontain">
+                                    <label for="safeties-switch" style="display: inline; width: auto;">Safety features enabled:</label>
+                                    <input data-role="flipswitch" id="safeties-switch" data-on-text="Yes" data-off-text="No" type="checkbox"/>
+                                </div>
+                            </fieldset>
                         </div>
-                        <div style="display: inline;">
-                            <label class="ui-widget ui-widget-content ui-corner-all">Server name:</label>
-                            <input type="text" name="serverName" class="server-name-entry" value=""/>
-                            <button class="ui-button ui-widget ui-corner-all" onClick="javascript:rootRename();">Update</button>
+                        <div id="fragment-2">
+                            <p>This is the content of the tab 'Two', with the id fragment-2.</p>
                         </div>
-                        <hr>
-                        <fieldset>
-                            <div data-role="fieldcontain">
-                                <label for="safeties-switch" style="display: inline">Safety features enabled:</label>
-                                <input data-role="flipswitch" id="safeties-switch" data-on-text="Yes" data-off-text="No" type="checkbox"/>
-                            </div>
-                        </fieldset>
-                        <hr>
-                        <form id="rootUpgrade" enctype="multipart/form-data" action="javascript:rootUpgrade();">
-                            <input type="submit" value="Upgrade Root" />
-                            <input id="rootUpgradeFile" type="file" name="file" required/>
-                        </form>
-                    </div> 
+                        <div id="fragment-3">
+                            <form id="rootUpgrade" enctype="multipart/form-data" action="javascript:rootUpgrade();">
+                                <input type="submit" value="Upgrade Root" />
+                                <input id="rootUpgradeFile" type="file" name="file" required/>
+                            </form>                        </div>
+                    </div>
                 </div>
             </div>
 
             <div style="text-align: center; vertical-align: middle;" data-role="footer" data-position="fixed" class="ui-grid-b jqm-footer ui-footer ui-bar-inherit ui-footer-fixed slideup">
                 <div class="ui-block-a"><span>Robox Root Manager </span><span class="jqm-version">0.1</span></div>
                 <div class="ui-block-b"><span><a href="#printer-status-page" class="ui-btn ui-icon-home ui-btn-icon-notext ui-corner-all">No text</a></span><span><a href="#server-status-page" class="ui-btn ui-icon-gear ui-btn-icon-notext ui-corner-all">No text</a></span></div>
-                <div class="ui-block-c"><span class="serverStatusLine"></span> --- <span class="numberOfPrintersDisplay"></span></div>
+                <div class="ui-block-c"><span class="numberOfPrintersDisplay"></span></div>
             </div>
         </div>
     </body>

@@ -853,7 +853,7 @@
 }
 
 .inline-form .wrapper .content {
-  margin: 0 75px 0 30px;
+  margin: 0 100px 0 50px;
   /* 0 RC 0 LC */
 }
 
@@ -873,9 +873,9 @@
 
 .inline-form .right {
   float: left;
-  width: 75px;
+  width: 100px;
   /* RC */
-  margin-left: -75px;
+  margin-left: -10px;
   /* -RC */
 }
 
