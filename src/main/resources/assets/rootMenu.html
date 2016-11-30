@@ -115,10 +115,16 @@
                             <p><span>IP Address: </span><span class="server-ip-address"></span></p>
                             <fieldset>
                                 <div data-role="fieldcontain">
-                                    <label for="wifi-enabled-switch" style="display: inline; width: auto;">Wifi enabled:</label>
-                                    <input data-role="flipswitch" id="wifi-enabled-switch" data-on-text="Yes" data-off-text="No" type="checkbox"/>
+                                    <label for="wifi-enabled-switch" style="display: inline; width: auto;">Wifi:</label>
+                                    <select name="toggle" id="wifi-enabled-switch" data-role="slider">
+                                        <option value="false">Off</option>                                        
+                                        <option value="true">On</option>                                        
+                                    </select>
                                 </div>
+                            </fieldset>
 
+                            <hr>
+                            <div id="wifi-data-block">
                                 <div class="inline-block">
                                     SSID:
                                 </div>
@@ -133,9 +139,9 @@
                                         <input type="password" id="wifi-password">
                                     </div>
                                 </div>
-                            </fieldset>
-                            <button class="ui-btn" onClick="javascript:setWiFiCredentials()">Update WiFi settings</button>
-                            <button class="ui-btn" onClick="javascript:testWiFiConnection()">Test WiFi connection</button>
+                                <button class="ui-btn" onClick="javascript:setWiFiCredentials()">Update WiFi settings</button>
+                                <hr>
+                            </div>
                         </div>
                         <div id="fragment-3">
                             <form id="rootUpgrade" enctype="multipart/form-data" action="javascript:rootUpgrade();">

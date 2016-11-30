@@ -202,56 +202,48 @@ function conditionallyCreateButton(createButton, divToAddButtonTo, buttonText, o
 function printGCodeFile(printerID)
 {
     var data = new FormData($('#fileInput_' + printerID).val());
-    var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
-    jQuery.ajax({
-        url: 'http://' + hostname + ':' + port + '/api/' + printerID + '/remoteControl/upload/',
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
-        },
-        data: data,
-        cache: false,
-        contentType: false,
-        processData: false,
-        type: 'POST',
-        success: function (data) {
-            alert(data);
-        }
-    });
+
+    sendPostCommandToRoot(printerID + '/remoteControl/upload',
+            function (data) {
+                alert(data);
+            },
+            null,
+            data);
 }
 
 function openDoor(printerID)
 {
-    postCommandToPrinter(printerID, "openDoor", null, safetiesOn().toString());
+    sendPostCommandToRoot(printerID + "/remoteControl/openDoor", null, null, safetiesOn().toString());
 }
 
 function pausePrint(printerID)
 {
-    postCommandToPrinter(printerID, "pause", null, null);
+    sendPostCommandToRoot(printerID + "/remoteControl/pause", null, null, null);
 }
 
 function resumePrint(printerID)
 {
-    postCommandToPrinter(printerID, "resume", null, null);
+    sendPostCommandToRoot(printerID + "/remoteControl/resume", null, null, null);
 }
 
 function cancelPrint(printerID)
 {
-    postCommandToPrinter(printerID, "cancel", null, null);
+    sendPostCommandToRoot(printerID + "/remoteControl/cancel", null, null, null);
 }
 
 function removeHead(printerID)
 {
-    postCommandToPrinter(printerID, "removeHead", null, null);
+    sendPostCommandToRoot(printerID + "/remoteControl/removeHead", null, null, null);
 }
 
 function purgeHead(printerID)
 {
-    postCommandToPrinter(printerID, "purge", null, safetiesOn().toString());
+    sendPostCommandToPrinter(printerID + "/remoteControl/purge", null, null, safetiesOn().toString());
 }
 
 function eject(printerID, materialNumber)
 {
-    postCommandToPrinter(printerID, "ejectFilament", null, materialNumber);
+    sendPostCommandToPrinter(printerID + "/remoteControl/ejectFilament", null, null, materialNumber);
 }
 
 function configurePrinterButtons(printerID, printerData)
@@ -314,41 +306,21 @@ function configurePrinterButtons(printerID, printerData)
 
 function updatePIN()
 {
-    var printerURL = "http://" + hostname + ":" + port + "/api/admin/updatePIN/";
-    var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
-
-    $.ajax({
-        url: printerURL,
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
-        },
-        cache: false,
-        processData: false,
-        contentType: "application/json", // send as JSON
-        type: 'POST',
-        data: $("#pin-update-value").val()
-    }).done(function () {
-        logout();
-    });
+    sendPostCommandToRoot('admin/updatePIN',
+            function () {
+                logout();
+            },
+            null,
+            $("#pin-update-value").val());
 }
 function rootRename()
 {
-    var printerURL = "http://" + hostname + ":" + port + "/api/admin/setServerName/";
-    var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
-
-    $.ajax({
-        url: printerURL,
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
-        },
-        cache: false,
-        processData: false,
-        contentType: "application/json", // send as JSON
-        type: 'POST',
-        data: $("#server-name-input").val()
-    }).done(function () {
-        getServerStatus();
-    });
+    sendPostCommandToRoot('admin/setServerName',
+            function () {
+                getServerStatus();
+            },
+            null,
+            $("#server-name-input").val());
 }
 
 function rootUpgrade()
@@ -531,68 +503,15 @@ function updateAndDisplayPrinterStatus(printerID)
     });
 }
 
-function postCommandToPrinter(printerID, service, successCallback, dataToSend)
-{
-    var printerURL = "http://" + hostname + ":" + port + "/api/" + printerID + "/remoteControl/" + service;
-    var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
-
-    $.ajax({
-        url: printerURL,
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
-        },
-        dataType: "xml/html/script/json", // expected format for response
-        contentType: "application/json", // send as JSON
-        type: 'POST',
-        data: JSON.stringify(dataToSend)
-    }).done(function (data)
-    {
-        if (successCallback !== null)
-        {
-            successCallback(data);
-        }
-    }).complete();
-}
-
-function postCommandToRoot(service, successCallback, dataToSend)
-{
-    var printerURL = "http://" + hostname + ":" + port + "/api/" + service + "/";
-    var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
-
-    $.ajax({
-        url: printerURL,
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
-        },
-        dataType: "xml/html/script/json", // expected format for response
-        contentType: "application/json", // send as JSON
-        type: 'POST',
-        data: JSON.stringify(dataToSend)
-    }).done(function (data)
-    {
-        if (successCallback !== null)
-        {
-            successCallback(data);
-        }
-    }).complete();
-}
-
 function getPrinterStatus(printerID, callback)
 {
-    var printerURL = "http://" + hostname + ":" + port + "/api/" + printerID + "/remoteControl";
-    var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
-
-    $.ajax({
-        url: printerURL,
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
-        },
-        dataType: 'json',
-        type: 'GET',
-    }).done(function (data)
-    {
-        callback(data);
-    }).complete();
+    sendGetCommandToRoot(printerID + '/remoteControl',
+            function (data)
+            {
+                callback(data);
+            },
+            null,
+            null);
 }
 
 function updatePrinterStatuses()
@@ -637,52 +556,36 @@ function updateServerStatus(serverData)
 
 function getServerStatus()
 {
-    var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
-
-    $.ajax({
-        url: 'http://' + hostname + ':' + port + '/api/discovery/whoareyou',
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
-        },
-        dataType: 'json',
-        type: 'GET',
-        success: function (data, textStatus, jqXHR) {
-            $('#serverOnline').text('Server ONLINE');
-            updateServerStatus(data);
-            connectedToServer = true;
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-            connectedToServer = false;
-            $('#serverOnline').text('Server OFFLINE');
-            removeAllPrinterTabs();
-            updateServerStatus(null);
-        }
-    });
+    sendGetCommandToRoot('discovery/whoareyou',
+            function (data) {
+                $('#serverOnline').text('Server ONLINE');
+                updateServerStatus(data);
+                connectedToServer = true;
+            },
+            function (data) {
+                connectedToServer = false;
+                $('#serverOnline').text('Server OFFLINE');
+                removeAllPrinterTabs();
+                updateServerStatus(null);
+            },
+            null);
 }
 
 function getPrinters()
 {
-    var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
-
-    $.ajax({
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
-        },
-        url: 'http://' + hostname + ':' + port + '/api/discovery/listPrinters',
-        dataType: 'json',
-        type: 'GET',
-        success: function (data, textStatus, jqXHR) {
-            processAddedAndRemovedPrinters(data.printerIDs);
-            updatePrinterStatuses();
-            connectedToServer = true;
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-            connectedToServer = false;
-            $('#serverOnline').text('Server OFFLINE');
-            removeAllPrinterTabs();
-            logout();
-        }
-    });
+    sendGetCommandToRoot('discovery/listPrinters',
+            function (data) {
+                processAddedAndRemovedPrinters(data.printerIDs);
+                updatePrinterStatuses();
+                connectedToServer = true;
+            },
+            function (data) {
+                connectedToServer = false;
+                $('#serverOnline').text('Server OFFLINE');
+                removeAllPrinterTabs();
+                logout();
+            },
+            null);
 }
 
 function getStatus()
@@ -704,22 +607,59 @@ function safetiesOn()
     return safetyStatus;
 }
 
-function testWiFiConnection()
+function enableWifi(state)
 {
-    postCommandToRoot("admin/testWiFiConnection", null, null);
+    sendPostCommandToRoot("admin/enableDisableWifi", null, null, state);
 }
 
 function setWiFiCredentials()
 {
-    postCommandToRoot("admin/setWiFiCredentials", null, $("#wifi-ssid").val() + ":" + $("#wifi-password").val());
+    sendPostCommandToRoot("admin/setWiFiCredentials", null, null, $("#wifi-ssid").val() + ":" + $("#wifi-password").val());
+}
+
+function updateCurrentWifiState()
+{
+    sendPostCommandToRoot("admin/getCurrentWifiState",
+            function (data) {
+                if (data.power == "on")
+                {
+                    $("#wifi-enabled-switch").val("true")
+                    $("#wifi-data-block").removeClass("visuallyhidden");
+                    if (data.associated == "yes")
+                    {
+                        $("#wifi-ssid").val(data.ssid);
+                    }
+                    else
+                    {
+                        $("#wifi-ssid").val("Not associated");
+                    }
+                }
+                else
+                {
+                    $("#wifi-enabled-switch").val("false")
+                    $("#wifi-ssid").val("");
+                    $("#wifi-data-block").addClass("visuallyhidden");
+                }
+            },
+            null,
+            null);
 }
 
 $(document).ready(function ()
 {
     checkForMobileBrowser();
 
+    updateCurrentWifiState();
+
+    $("#wifi-enabled-switch").change(function () {
+        enableWifi($("#wifi-enabled-switch").val());
+        setTimeout(function () {
+            updateCurrentWifiState();
+        }, 3000);
+    });
+
     $("#pin-update-value").val(localStorage.getItem(applicationPINVar));
-    
+
     getServerStatus()
     getPrinters();
 

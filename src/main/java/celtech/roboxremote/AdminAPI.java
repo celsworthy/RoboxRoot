@@ -3,7 +3,6 @@ package celtech.roboxremote;
 import celtech.roboxbase.comms.remote.Configuration;
 import celtech.roboxbase.printerControl.model.Printer;
 import com.codahale.metrics.annotation.Timed;
-import io.dropwizard.jersey.params.BooleanParam;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.annotation.security.RolesAllowed;
@@ -128,23 +127,29 @@ public class AdminAPI
     @POST
     @Timed
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/testWiFiConnection")
-    public Response testWifiConnection()
+    @Path("/setWiFiCredentials")
+    public Response setWiFiCredentials(String ssidAndPassword)
     {
-        steno.info("Asked to test wifi connection");
-
+        WifiControl.setupWiFiCredentials(ssidAndPassword.replaceAll("\"", ""));
         return Response.ok().build();
     }
 
     @POST
     @Timed
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/setWiFiCredentials")
-    public Response setWiFiCredentials(String ssidAndPassword)
+    @Path("/enableDisableWifi")
+    public Response enableDisableWifi(boolean enableWifi)
     {
-        steno.info("Asked to change wifi credentials to " + ssidAndPassword);
+        WifiControl.enableWifi(enableWifi);
         return Response.ok().build();
+    }
+
+    @POST
+    @Timed
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/getCurrentWifiState")
+    public Response getCurrentWifiSSID()
+    {
+        return Response.ok(WifiControl.getCurrentWifiState()).build();
     }
 }

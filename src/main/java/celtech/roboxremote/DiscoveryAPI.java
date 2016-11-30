@@ -4,14 +4,12 @@ import celtech.roboxbase.comms.remote.ListPrintersResponse;
 import celtech.roboxbase.comms.remote.WhoAreYouResponse;
 import celtech.roboxbase.configuration.BaseConfiguration;
 import com.codahale.metrics.annotation.Timed;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 /**
  *
@@ -30,6 +28,7 @@ public class DiscoveryAPI
     @GET
     @Timed
     @Path("/listPrinters")
+    @Consumes(MediaType.APPLICATION_JSON)
     public ListPrintersResponse listPrinters()
     {
         if (PrinterRegistry.getInstance() != null)
@@ -44,6 +43,7 @@ public class DiscoveryAPI
     @GET
     @Timed
     @Path("/whoareyou")
+    @Consumes(MediaType.APPLICATION_JSON)
     public WhoAreYouResponse getFingerprint()
     {
         if (PrinterRegistry.getInstance() != null)

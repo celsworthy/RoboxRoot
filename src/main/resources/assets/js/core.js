@@ -47,6 +47,42 @@ function goToContent()
     {
         logout();
     }
+}
 
+function sendGetCommandToRoot(service, successCallback, errorCallback, dataToSend)
+{
+    sendCommandToRoot('GET', service, successCallback, errorCallback, dataToSend);
+}
+function sendPostCommandToRoot(service, successCallback, errorCallback, dataToSend)
+{
+    sendCommandToRoot('POST', service, successCallback, errorCallback, dataToSend);
+}
+
+function sendCommandToRoot(requestType, service, successCallback, errorCallback, dataToSend)
+{
+    var printerURL = "http://" + hostname + ":" + port + "/api/" + service + "/";
+    var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
+
+    $.ajax({
+        url: printerURL,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
+        },
+        contentType: "application/json", // send as JSON
+        type: requestType,
+        dataType: 'json',
+        data: JSON.stringify(dataToSend)
+    }).success(function (data, textStatus, jqXHR)
+    {
+        if (successCallback !== null)
+        {
+            successCallback(data);
+        }
+    }).error(function (jqXHR, textStatus, errorThrown) {
+        if (errorCallback !== null)
+        {
+            errorCallback(data);
+        }
+    });
 }
 
