@@ -72,11 +72,11 @@ public class AdminAPI
             @FormDataParam("file") InputStream uploadedInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException
     {
-        String uploadedFileLocation = System.getProperty("java.io.tmpdir") + fileDetail.getFileName();
+        String uploadedFileLocation = "/tmp/" + fileDetail.getFileName();
         steno.info("Upgrade file " + uploadedFileLocation + " has been uploaded");
         // save it
         utils.writeToFile(uploadedInputStream, uploadedFileLocation);
-        Root.getInstance().stop();
+        Root.getInstance().restart();
         return Response.ok().build();
     }
 
@@ -124,16 +124,19 @@ public class AdminAPI
         }
     }
 
+    @RolesAllowed("root")
     @POST
     @Timed
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/setWiFiCredentials")
     public Response setWiFiCredentials(String ssidAndPassword)
     {
+        steno.info("Asked to change wifi creds to " + ssidAndPassword);
         WifiControl.setupWiFiCredentials(ssidAndPassword.replaceAll("\"", ""));
         return Response.ok().build();
     }
 
+    @RolesAllowed("root")
     @POST
     @Timed
     @Consumes(MediaType.APPLICATION_JSON)
@@ -144,6 +147,7 @@ public class AdminAPI
         return Response.ok().build();
     }
 
+    @RolesAllowed("root")
     @POST
     @Timed
     @Produces(MediaType.APPLICATION_JSON)

@@ -325,27 +325,18 @@ function rootRename()
 
 function rootUpgrade()
 {
-    event.preventDefault();
     var formData = new FormData($('#rootUpgrade')[0]);
-    var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
 
-    $.ajax({
-        url: 'http://' + hostname + ':' + port + '/api/updateSystem/',
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
-        },
-        type: 'POST',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (returndata) {
-            alert(returndata);
-        },
-        error: function () {
-            alert("error in ajax form submission");
-        }
-    });
+    submitFormToRoot('admin/updateSystem',
+            function (returndata) {
+                alert('success ' + returndata);
+            },
+            function (returndata) {
+                alert('error ' + returndata);
+            },
+            formData);
+
+//    event.preventDefault();
 }
 
 function secondsToHMS(secondsInput)
@@ -550,7 +541,7 @@ function updateServerStatus(serverData)
         $(".serverStatusLine").text(serverData.name);
         $(".server-name-title").text(serverData.name);
         $("#server-name-input").val(serverData.name);
-        $(".server-ip-address").text(hostname);
+        $(".server-ip-address").text(serverData.serverIP);
     }
 }
 

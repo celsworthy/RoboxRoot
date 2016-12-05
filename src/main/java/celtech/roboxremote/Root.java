@@ -15,7 +15,10 @@ import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.management.ManagementFactory;
 import java.security.Principal;
 import libertysystems.stenographer.Stenographer;
 import libertysystems.stenographer.StenographerFactory;
@@ -31,56 +34,56 @@ import org.jose4j.keys.HmacKey;
  */
 public class Root extends Application<RoboxRemoteConfiguration>
 {
-
+    
     private final Stenographer steno = StenographerFactory.getStenographer(Root.class.getName());
-
+    
     private static Root instance = null;
     private CoreManager coreManager = null;
     private String defaultApplicationPIN = "";
     private static final String accessPINKey = "AccessPIN";
-
+    
     public static void main(String[] args) throws Exception
     {
         instance = new Root();
         instance.run(args);
     }
-
+    
     public static Root getInstance()
     {
         return instance;
     }
-
+    
     @Override
     public String getName()
     {
         return "printerControl";
     }
-
+    
     @Override
     public void initialize(Bootstrap<RoboxRemoteConfiguration> bootstrap)
     {
         coreManager = new CoreManager();
-
+        
         bootstrap.addBundle(new MultiPartBundle());
         AuthenticatedAssetsBundle webControlAssetsBundle = new AuthenticatedAssetsBundle("/assets", "/", "index.html",
                 new RootAPIAuthenticator());
         bootstrap.addBundle(webControlAssetsBundle);
     }
-
+    
     @Override
     public void run(RoboxRemoteConfiguration configuration,
             Environment environment)
     {
         defaultApplicationPIN = configuration.getDefaultPIN();
-
+        
         environment.lifecycle().manage(coreManager);
-
+        
         environment.lifecycle().addServerLifecycleListener((Server server) ->
         {
             server.setStopAtShutdown(true);
             server.setStopTimeout(500);
         });
-
+        
         environment.jersey().setUrlPattern("/api/*");
 //
 //        try
@@ -135,25 +138,40 @@ public class Root extends Application<RoboxRemoteConfiguration>
         environment.jersey().register(lowLevelAPI);
         environment.jersey().register(highLevelAPI);
         environment.jersey().register(discoveryAPI);
-
+        
         environment.jersey().register(new AuthDynamicFeature(new RootAPIAuthFilter.Builder<User>()
                 .setAuthenticator(new RootAPIAuthenticator())
                 .setRealm("Robox Root API")
                 .buildAuthFilter()));
         environment.admin().addTask(new AdminUpdateTask());
     }
-
+    
     public void stop()
     {
         BaseConfiguration.shutdown();
         System.exit(0);
     }
-
+    
+    public void restart()
+    {
+        StringBuilder restartCommand = new StringBuilder();
+        restartCommand.append(BaseConfiguration.getApplicationInstallDirectory(null));
+        restartCommand.append("runRoot.sh");
+        try
+        {
+            Runtime.getRuntime().exec(restartCommand.toString());
+            stop();
+        } catch (IOException ex)
+        {
+            steno.exception("Unable to restart application", ex);
+        }
+    }
+    
     public void setApplicationPIN(String applicationPIN)
     {
         BaseConfiguration.setApplicationMemory(accessPINKey, applicationPIN);
     }
-
+    
     public String getApplicationPIN()
     {
         String pin = BaseConfiguration.getApplicationMemory(accessPINKey);
@@ -164,7 +182,7 @@ public class Root extends Application<RoboxRemoteConfiguration>
         }
         return pin;
     }
-
+    
     public void resetApplicationPINToDefault()
     {
         setApplicationPIN(defaultApplicationPIN);

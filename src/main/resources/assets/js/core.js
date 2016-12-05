@@ -81,7 +81,36 @@ function sendCommandToRoot(requestType, service, successCallback, errorCallback,
     }).error(function (jqXHR, textStatus, errorThrown) {
         if (errorCallback !== null)
         {
-            errorCallback(data);
+            errorCallback(textStatus);
+        }
+    });
+}
+
+function submitFormToRoot(service, successCallback, errorCallback, formData)
+{
+    var printerURL = "http://" + hostname + ":" + port + "/api/" + service + "/";
+    var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
+
+    $.ajax({
+        url: printerURL,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
+        },
+        type: 'POST',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false
+    }).success(function (data, textStatus, jqXHR)
+    {
+        if (successCallback !== null)
+        {
+            successCallback(data);
+        }
+    }).error(function (jqXHR, textStatus, errorThrown) {
+        if (errorCallback !== null)
+        {
+            errorCallback(textStatus);
         }
     });
 }
