@@ -9,7 +9,7 @@
         <requiredFirmwareVersion>753</requiredFirmwareVersion>
         <DefaultMode>Normal</DefaultMode>
         <DefaultLocaleLanguageTag>en</DefaultLocaleLanguageTag>
-        <FakeInstallDirectory>/Users/ianhudson/Development/Root/MacOSX/Root/</FakeInstallDirectory>
+        <FakeInstallDirectory>C:\Program Files\CEL2.02\AutoMaker/</FakeInstallDirectory>
     </ApplicationConfiguration>
     <Stenographer>
         <logfilename>#ApplicationConfiguration:ApplicationDataStorageDirectory#/RoboxRoot.log</logfilename>

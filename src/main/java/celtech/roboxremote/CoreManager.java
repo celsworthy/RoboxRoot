@@ -34,7 +34,6 @@ public class CoreManager implements Managed
         //Solution - remove all references to JavaFX in RoboxBase
         dummyJFXPanel_startsRuntime = new JFXPanel();
 
-        BaseConfiguration.initialise(Root.class);
         BaseConfiguration.disableApplicationFeature(ApplicationFeature.AUTO_UPDATE_FIRMWARE);
         BaseLookup.setupDefaultValues();
         BaseLookup.setSystemNotificationHandler(new ConsoleSystemNotificationManager());
