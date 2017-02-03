@@ -95,29 +95,4 @@ public class LowLevelAPI
 
         return rxPacket;
     }
-
-    @POST
-    @Timed
-    @Path(Configuration.associateStatisticsService)
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response associateStatisticsWithPrintJobID(@PathParam("printerID") String printerID,
-            PrintJobStatistics printJobStatistics)
-    {
-        try
-        {
-            String printJobDirectoryName = BaseConfiguration.
-                    getPrintSpoolDirectory() + printJobStatistics.getPrintJobID();
-            File printJobDirectory = new File(printJobDirectoryName);
-            printJobDirectory.mkdirs();
-            printJobStatistics.writeToFile(printJobDirectoryName
-                    + File.separator
-                    + printJobStatistics.getPrintJobID()
-                    + BaseConfiguration.statisticsFileExtension);
-        } catch (IOException ex)
-        {
-            steno.exception("Couldn't write statistics to file", ex);
-        }
-
-        return Response.ok().build();
-    }
 }
