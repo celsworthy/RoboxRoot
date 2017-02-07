@@ -1,4 +1,4 @@
-import celtech.roboxremote.HighLevelAPI;
+import celtech.roboxremote.PublicPrinterControlAPI;
 import io.dropwizard.jackson.Jackson;
 import org.junit.After;
 import org.junit.Before;
@@ -14,7 +14,7 @@ public class HighLevelAPITest
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()
             .setMapper(Jackson.newObjectMapper())
-            .addResource(new HighLevelAPI())
+            .addResource(new PublicPrinterControlAPI())
             .build();
 
     @Before

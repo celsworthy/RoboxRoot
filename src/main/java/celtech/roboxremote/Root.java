@@ -122,7 +122,7 @@ public class Root extends Application<RoboxRemoteConfiguration>
 //        cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
         final AdminAPI adminAPI = new AdminAPI();
         final LowLevelAPI lowLevelAPI = new LowLevelAPI();
-        final HighLevelAPI highLevelAPI = new HighLevelAPI();
+        final PublicPrinterControlAPI highLevelAPI = new PublicPrinterControlAPI();
         final DiscoveryAPI discoveryAPI = new DiscoveryAPI();
 
 //        final AppSetupHealthCheck healthCheck

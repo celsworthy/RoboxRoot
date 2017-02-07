@@ -1,7 +1,7 @@
 package celtech.roboxremote;
 
-import celtech.roboxbase.comms.remote.ListPrintersResponse;
-import celtech.roboxbase.comms.remote.WhoAreYouResponse;
+import celtech.roboxbase.comms.remote.clear.ListPrintersResponse;
+import celtech.roboxbase.comms.remote.clear.WhoAreYouResponse;
 import celtech.roboxbase.configuration.BaseConfiguration;
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -9,7 +9,6 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.Enumeration;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;

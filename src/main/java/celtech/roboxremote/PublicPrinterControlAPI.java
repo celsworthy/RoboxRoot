@@ -32,13 +32,13 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 @RolesAllowed("root")
 @Path("/{printerID}/remoteControl")
 @Produces(MediaType.APPLICATION_JSON)
-public class HighLevelAPI
+public class PublicPrinterControlAPI
 {
 
-    private final Stenographer steno = StenographerFactory.getStenographer(HighLevelAPI.class.getName());
+    private final Stenographer steno = StenographerFactory.getStenographer(PublicPrinterControlAPI.class.getName());
     private final Utils utils = new Utils();
 
-    public HighLevelAPI()
+    public PublicPrinterControlAPI()
     {
     }
 

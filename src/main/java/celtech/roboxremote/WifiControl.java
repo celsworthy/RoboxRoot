@@ -1,6 +1,7 @@
 package celtech.roboxremote;
 
 import celtech.roboxbase.configuration.BaseConfiguration;
+import celtech.roboxbase.configuration.MachineType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -64,7 +65,16 @@ public class WifiControl
 
     public static String getCurrentWifiState()
     {
-        return runScript("getCurrentWifiState.sh");
+        final String SCRIPT_BASE="getCurrentWifiState";
+        
+        if (BaseConfiguration.getMachineType() == MachineType.WINDOWS)
+        {
+            return runScript(SCRIPT_BASE + ".bat");
+        }
+        else
+        {
+            return runScript(SCRIPT_BASE + ".sh");            
+        }
     }
 
     public static void setupWiFiCredentials(String ssidAndPassword)
