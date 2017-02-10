@@ -2,8 +2,10 @@ var connectedToServer = false;
 var isMobile = false; //initiate as false
 var connectedPrinterIDs = new Array();
 var connectedPrinters = new Array();
-
+var selectedPrinterID
+var nameDisplayTag = "_nameDisplay";
 var statusDisplayTag = "_statusDisplay";
+var jobDisplayTag = "_jobDisplay";
 var etcRowTag = "_etcRow";
 var etcDisplayTag = "_etcDisplay";
 var headNameDisplayTag = "_headNameDisplay";
@@ -11,11 +13,10 @@ var bedTemperatureDisplayTag = "_bedTemperatureDisplay";
 var materialRowTag = "_materialRow";
 var materialDisplayTag = "_materialDisplay";
 var materialEjectButtonTag = "_materialEjectButton";
-var nozzleTemperatureRowTag = "_nozzleTemperatureRow";
+var nozzleTemperatureTag = "_nozzleTemperature";
 var nozzleTemperatureDisplayTag = "_nozzleTemperatureDisplay";
 var errorRowTag = "_errorRow";
 var errorDisplayTag = "_errorDisplay";
-
 function id2Index(tabsId, srcId)
 {
     var index = -1;
@@ -36,14 +37,12 @@ function processAddedAndRemovedPrinters(printerIDs)
 {
     var printersToDelete = new Array();
     var printersToAdd = new Array();
-
     for (var printerIDIndex = 0; printerIDIndex < connectedPrinterIDs.length; printerIDIndex++)
     {
         var printerIDToConsider = connectedPrinterIDs[printerIDIndex];
-
         if (printerIDs.indexOf(printerIDToConsider) < 0)
         {
-            //Not in the list of discovered printers - we need to delete it
+//Not in the list of discovered printers - we need to delete it
             printersToDelete.push(printerIDToConsider);
         }
     }
@@ -51,133 +50,41 @@ function processAddedAndRemovedPrinters(printerIDs)
     for (var printerIDIndex = 0; printerIDIndex < printerIDs.length; printerIDIndex++)
     {
         var printerIDToConsider = printerIDs[printerIDIndex];
-
         if (connectedPrinterIDs.indexOf(printerIDToConsider) < 0)
         {
-            //Not in the list - we need to add it
+//Not in the list - we need to add it
             printersToAdd.push(printerIDToConsider);
         }
     }
 
     printersToDelete.forEach(deletePrinter);
     printersToAdd.forEach(addPrinter);
+    var printerListChanged = false;
+    if (printersToDelete.length > 0
+            || printersToAdd.length > 0)
+    {
+        printerListChanged = true;
+    }
+
+    return printerListChanged;
 }
 
 function addPrinter(printerID)
 {
+    console.log("Adding printer " + printerID);
     connectedPrinterIDs.push(printerID);
-
     getPrinterStatus(printerID, function (data) {
-        connectedPrinters.push(null);
-        addCollapsible(printerID);
+        connectedPrinters.push(data);
+        updatePrinterSelector();
     });
 }
 
 function deletePrinter(printerID)
 {
     var indexToDelete = connectedPrinterIDs.indexOf(printerID);
-
     connectedPrinterIDs.splice(indexToDelete, 1);
     connectedPrinters.splice(indexToDelete, 1);
-    removeCollapsible(printerID);
-}
-
-function createPrinterDataTable(printerID)
-{
-    var printerStatusTable = "<table data-role=\"table\" data-mode=\"reflow\" class=\"status-table ui-responsive\"> \
-    <thead> \
-  <tr> \
-    <th data-priority=\"1\"></th>\
-    <th data-priority=\"2\"></th>\
-  </tr> \
-  </thead> \
-  <tbody> \
-  <tr id='" + printerID
-            + etcRowTag + "'>\
-    <td class=\"title\">Estimated Time to Complete Print</td>\
-    <td id='" + printerID
-            + etcDisplayTag + "'>?</td>\
-  </tr>\
-  <tr>\
-    <td class=\"title\">Head</td>\
-    <td id='"
-            + printerID
-            + headNameDisplayTag + "'>?</td>\
-  </tr>\
-    <tr id='" + printerID + nozzleTemperatureRowTag + "1'>\
-    <td class=\"title\">Nozzle 1 Temperature</td>\
-    <td id='" + printerID + nozzleTemperatureDisplayTag + "1'></td>\
-  </tr>\
-    <tr id='" + printerID + nozzleTemperatureRowTag + "2'>\
-    <td class=\"title\">Nozzle 2 Temperature</td>\
-    <td id='" + printerID + nozzleTemperatureDisplayTag + "2'></td>\
-  </tr>\
-    <tr>\
-    <td class=\"title\">Bed Temperature</td>\
-    <td id='" + printerID + bedTemperatureDisplayTag + "'></td>\
-  </tr>\
-    <tr id='" + printerID + materialRowTag + "1'>\
-    <td class=\"title\">Material 1</td>\
-    <td style=\"vertical-align:middle\">\
-    <div style=\"display: inline\">\
-    <button id='" + printerID
-            + materialEjectButtonTag
-            + "1'\
-       class=\"align-right ui-shadow ui-btn ui-corner-all ui-mini ui-btn-inline\" \
-       onClick=\"eject(\'" + printerID + "\', \'1\')\">Eject</button>\
-    <span id='" + printerID
-            + materialDisplayTag
-            + "1'></span> \
-    </div>\
-</td>\
-  </tr>\
-    <tr id='" + printerID + materialRowTag + "2'>\
-    <td class=\"title\">Material 2</td>\
-    <td style=\"vertical-align:middle\">\
-    <div style=\"display: inline\">\
-    <button id='" + printerID
-            + materialEjectButtonTag
-            + "2'\
-       class=\"align-right ui-shadow ui-btn ui-corner-all ui-mini ui-btn-inline\" \
-       onClick=\"eject(\'" + printerID + "\', \'2\')\">Eject</button>\
-    <span id='" + printerID
-            + materialDisplayTag
-            + "2'></span> \
-    </div>\
-</td>\
-  </tr>\
-  <tr id='" + printerID
-            + errorRowTag
-            + "'>\
-    <td class=\"title\">Errors</td>\
-    <td id='" + printerID
-            + errorDisplayTag
-            + "'></td>\
-  </tr>";
-
-    printerStatusTable += "</tbody></table>";
-
-    return printerStatusTable;
-}
-
-function addCollapsible(tab_name)
-{
-    var newCollapsible = "<div id=\"printerCollapsible_" + tab_name + "\" data-role=\"collapsible\">"
-            + "<h4 id=\"printerTabTop_" + tab_name + "\">" + tab_name + "</h4>"
-            + "<div id='printerTab_" + tab_name + "'>"
-            + createPrinterDataTable(tab_name)
-            + "<hr>"
-            + "<p>Printer Controls</p>"
-            + "<div id='printerTabButtons_" + tab_name + "'/>"
-            + "</div></div></div>";
-
-    $("#printerTabs").append(newCollapsible).collapsibleset('refresh');
-}
-
-function removeCollapsible(tab_name)
-{
-    $('#printerCollapsible_' + tab_name).remove();
-    $("#printerTabs").append(content).collapsibleset('refresh');
+    updatePrinterSelector();
 }
 
 function removeAllPrinterTabs()
@@ -188,22 +95,10 @@ function removeAllPrinterTabs()
     });
 }
 
-function conditionallyCreateButton(createButton, divToAddButtonTo, buttonText, onClickFunction, printerID)
+function printGCodeFile()
 {
-    if (createButton)
-    {
-        divToAddButtonTo.append('<button class="ui-shadow ui-btn ui-corner-all ui-mini ui-btn-inline" onClick="'
-                + onClickFunction.name + '(\'' + printerID + '\')">'
-                + buttonText
-                + '</button>');
-    }
-}
-
-function printGCodeFile(printerID)
-{
-    var data = new FormData($('#fileInput_' + printerID).val());
-
-    sendPostCommandToRoot(printerID + '/remoteControl/upload',
+    var data = new FormData($('#fileInput').val());
+    sendPostCommandToRoot(selectedPrinterID + '/remoteControl/upload',
             function (data) {
                 alert(data);
             },
@@ -211,46 +106,45 @@ function printGCodeFile(printerID)
             data);
 }
 
-function openDoor(printerID)
+function openDoor()
 {
-    sendPostCommandToRoot(printerID + "/remoteControl/openDoor", null, null, safetiesOn().toString());
+    sendPostCommandToRoot(selectedPrinterID + "/remoteControl/openDoor", null, null, safetiesOn().toString());
 }
 
-function pausePrint(printerID)
+function pausePrint()
 {
-    sendPostCommandToRoot(printerID + "/remoteControl/pause", null, null, null);
+    sendPostCommandToRoot(selectedPrinterID + "/remoteControl/pause", null, null, null);
 }
 
-function resumePrint(printerID)
+function resumePrint()
 {
-    sendPostCommandToRoot(printerID + "/remoteControl/resume", null, null, null);
+    sendPostCommandToRoot(selectedPrinterID + "/remoteControl/resume", null, null, null);
 }
 
-function cancelPrint(printerID)
+function cancelPrint()
 {
-    sendPostCommandToRoot(printerID + "/remoteControl/cancel", null, null, null);
+    sendPostCommandToRoot(selectedPrinterID + "/remoteControl/cancel", null, null, null);
 }
 
-function removeHead(printerID)
+function removeHead()
 {
-    sendPostCommandToRoot(printerID + "/remoteControl/removeHead", null, null, null);
+    sendPostCommandToRoot(selectedPrinterID + "/remoteControl/removeHead", null, null, null);
 }
 
-function purgeHead(printerID)
+function purgeHead()
 {
-    sendPostCommandToPrinter(printerID + "/remoteControl/purge", null, null, safetiesOn().toString());
+    sendPostCommandToPrinter(selectedPrinterID + "/remoteControl/purge", null, null, safetiesOn().toString());
 }
 
-function eject(printerID, materialNumber)
+function eject(materialNumber)
 {
-    sendPostCommandToPrinter(printerID + "/remoteControl/ejectFilament", null, null, materialNumber);
+    sendPostCommandToPrinter(selectedPrinterID + "/remoteControl/ejectFilament", null, null, materialNumber);
 }
 
 function configurePrinterButtons(printerID, printerData)
 {
     var lastPrinterData = connectedPrinters[connectedPrinterIDs.indexOf(printerID)];
-
-    if (lastPrinterData === null
+    if ((lastPrinterData === null)
             || printerData.canPause !== lastPrinterData.canPause
             || printerData.canResume !== lastPrinterData.canResume
             || printerData.canRemoveHead !== lastPrinterData.canRemoveHead
@@ -259,49 +153,49 @@ function configurePrinterButtons(printerID, printerData)
             || printerData.canCalibrateHead !== lastPrinterData.canCalibrateHead
             || printerData.canPurgeHead !== lastPrinterData.canPurgeHead)
     {
-        $("div#printerTabButtons_" + printerID).empty();
-
-        conditionallyCreateButton(printerData.canPause, $("div#printerTabButtons_" + printerID), "Pause", pausePrint, printerID);
-        conditionallyCreateButton(printerData.canResume, $("div#printerTabButtons_" + printerID), "Resume", resumePrint, printerID);
-        conditionallyCreateButton(printerData.canCancel, $("div#printerTabButtons_" + printerID), "Cancel", cancelPrint, printerID);
-        conditionallyCreateButton(printerData.canOpenDoor, $("div#printerTabButtons_" + printerID), "Open Door", openDoor, printerID);
-        conditionallyCreateButton(printerData.canRemoveHead, $("div#printerTabButtons_" + printerID), "Remove Head", removeHead, printerID);
-        conditionallyCreateButton(printerData.canPurgeHead, $("div#printerTabButtons_" + printerID), "Purge Head", purgeHead, printerID);
-
-        if (!isMobile && printerData.canPrint)
-        {
-            $("div#printerTabButtons_" + printerID).append('<form id="fileUpload_' + printerID + '" enctype="multipart/form-data">'
-                    + '<input type="submit" value="Send GCode to printer">'
-                    + '<input id="fileInput_' + printerID + '" type="file" name="file" required/></form>');
-
-            $('#fileUpload_' + printerID).submit(function (event) {
-                event.preventDefault();
-                var formData = new FormData($(this)[0]);
-
-                var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
-
-                $.ajax({
-                    url: 'http://' + hostname + ':' + port + '/api/' + printerID + '/remoteControl/printGCodeFile/',
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
-                    },
-                    type: 'POST',
-                    data: formData,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function (returndata) {
-                        alert(returndata);
-                    },
-                    error: function () {
-                        alert("error in ajax form submission");
-                    }
-                });
-
-                return false;
-            });
-        }
+        setButtonVisibility(printerData.canPause, "printer-control-pause");
+        setButtonVisibility(printerData.canPause, "printer-control-resume");
+        setButtonVisibility(printerData.canPause, "printer-control-cancel");
+        setButtonVisibility(printerData.canPause, "printer-control-open-door");
+        setButtonVisibility(printerData.canPause, "printer-control-remove-head");
+        setButtonVisibility(!isMobile && printerData.canPrint, "fileUpload");
+        
+        lastPrinterData = printerData;
     }
+}
+
+function setButtonVisibility(test, buttonID)
+{
+    if (test === true)
+    {
+        $('#' + buttonID).show();
+    } else
+    {
+        $('#' + buttonID).show();
+    }
+}
+
+function firmwareUpdateSubmit(event) {
+    event.preventDefault();
+    var formData = new FormData($(this)[0]);
+    var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
+    $.ajax({
+        url: 'http://' + hostname + ':' + port + '/api/' + printerID + '/remoteControl/printGCodeFile/',
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
+        },
+        type: 'POST',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (returndata) {
+            alert(returndata);
+        },
+        error: function () {
+            alert("error in ajax form submission");
+        }
+    });
 }
 
 function updatePIN()
@@ -326,7 +220,6 @@ function rootRename()
 function rootUpgrade()
 {
     var formData = new FormData($('#rootUpgrade')[0]);
-
     submitFormToRoot('admin/updateSystem',
             function (returndata) {
                 alert('success ' + returndata);
@@ -335,7 +228,6 @@ function rootUpgrade()
                 alert('error ' + returndata);
             },
             formData);
-
 //    event.preventDefault();
 }
 
@@ -345,16 +237,13 @@ function secondsToHMS(secondsInput)
     var hours = Math.floor(minutes / 60);
     minutes = minutes - (60 * hours);
     var seconds = secondsInput - (minutes * 60) - (hours * 3600);
-
     if (hours > 0)
     {
         return hours + ":" + minutes + ":" + seconds;
-    }
-    else if (minutes > 0)
+    } else if (minutes > 0)
     {
         return minutes + ":" + seconds;
-    }
-    else
+    } else
     {
         return seconds + " seconds";
     }
@@ -363,58 +252,183 @@ function secondsToHMS(secondsInput)
 function updateAndDisplayPrinterStatus(printerID)
 {
     getPrinterStatus(printerID, function (printerData) {
-        var statusText = printerData.printerStatusString;
 
+        if (printerID === selectedPrinterID)
+        {
+            var statusText = printerData.printerStatusString;
+//            $('#printer-select-button').css("background-color", printerData.printerWebColourString);
+
+            if (printerData.printerStatusString.match("^Printing"))
+            {
+                statusText += " " + printerData.printJobName;
+                $('#printer-details-panel').find('#' + etcRowTag).show();
+                $('#printer-details-panel').find('#' + etcDisplayTag).text(secondsToHMS(printerData.etcSeconds));
+            } else
+            {
+                $('#printer-details-panel').find('#' + etcRowTag).hide();
+            }
+
+            $('#printer-details-panel').find('#' + nameDisplayTag).text(printerData.printerName);
+            $('#printer-details-panel').find('#' + headNameDisplayTag).text(printerData.headName);
+            $('#printer-details-panel').find('#' + bedTemperatureDisplayTag).text(printerData.bedTemperature + '\xB0' + "C");
+            if (printerData.nozzleTemperature)
+            {
+                for (var nozzleNum = 1; nozzleNum <= printerData.nozzleTemperature.length; nozzleNum++)
+                {
+                    if (printerData.nozzleTemperature[nozzleNum - 1] !== null)
+                    {
+                        $('#printer-details-panel').find('#' + nozzleTemperatureDisplayTag + nozzleNum).text(printerData.nozzleTemperature[nozzleNum - 1] + '\xB0' + "C");
+                    }
+                }
+            }
+
+            var numberOfNozzleHeaters = 0;
+            if (printerData.nozzleTemperature !== null)
+            {
+                numberOfNozzleHeaters = printerData.nozzleTemperature.length;
+            }
+
+            switch (numberOfNozzleHeaters)
+            {
+                case 0:
+                    $('#printer-details-panel').find('.' + nozzleTemperatureTag + '1').hide();
+                    $('#printer-details-panel').find('.' + nozzleTemperatureTag + '2').hide();
+                    break;
+                case 1:
+                    $('#printer-details-panel').find('.' + nozzleTemperatureTag + '1').show();
+                    $('#printer-details-panel').find('.' + nozzleTemperatureTag + '2').hide();
+                    break;
+                case 2:
+                    $('#printer-details-panel').find('.' + nozzleTemperatureTag + '1').show();
+                    $('#printer-details-panel').find('.' + nozzleTemperatureTag + '2').show();
+                    break;
+            }
+
+            for (var materialNum = 1; materialNum <= printerData.attachedFilamentNames.length; materialNum++)
+            {
+                var filamentNameOutput = "";
+                var showEjectButton = printerData.canEjectFilament;
+                if (printerData.attachedFilamentNames[materialNum - 1] !== null)
+                {
+                    filamentNameOutput = printerData.attachedFilamentNames[materialNum - 1];
+                    if (!printerData.materialLoaded[materialNum - 1])
+                    {
+                        filamentNameOutput += " - not loaded";
+                        showEjectButton = false;
+                    } else
+                    {
+                        filamentNameOutput += " - loaded";
+                    }
+                } else
+                {
+                    if (printerData.materialLoaded[materialNum - 1])
+                    {
+                        filamentNameOutput = "Unknown - loaded";
+                    } else
+                    {
+                        showEjectButton = false;
+                    }
+                }
+
+                if (showEjectButton)
+                {
+                    $('#printer-details-panel').find('#' + materialEjectButtonTag + materialNum).show();
+                } else
+                {
+                    $('#printer-details-panel').find('#' + materialEjectButtonTag + materialNum).hide();
+                }
+                $('#printer-details-panel').find('#' + materialDisplayTag + materialNum).text(filamentNameOutput);
+            }
+
+            var numberOfMaterials = 0;
+            if (printerData.attachedFilamentNames !== null)
+            {
+                numberOfMaterials = printerData.attachedFilamentNames.length;
+            }
+
+            switch (numberOfMaterials)
+            {
+                case 0:
+                    $('#printer-details-panel').find('#' + materialRowTag + '1').hide();
+                    $('#printer-details-panel').find('#' + materialRowTag + '2').hide();
+                    break;
+                case 1:
+                    $('#printer-details-panel').find('#' + materialRowTag + '1').show();
+                    $('#printer-details-panel').find('#' + materialRowTag + '2').hide();
+                    break;
+                case 2:
+                    $('#printer-details-panel').find('#' + materialRowTag + '1').show();
+                    $('#printer-details-panel').find('#' + materialRowTag + '2').show();
+                    break;
+            }
+
+            if (printerData.activeErrors !== null)
+            {
+                var allErrors;
+                for (var errorNum = 0; errorNum < printerData.activeErrors.length; errorNum++)
+                {
+                    allErrors += errorString + '\n';
+                }
+                $('#printer-details-panel').find('#' + errorDisplayTag).text(allErrors);
+                $('#printer-details-panel').find('#' + errorRowTag).show();
+            } else
+            {
+                $('#printer-details-panel').find('#' + errorRowTag).hide();
+            }
+
+            configurePrinterButtons(printerID, printerData);
+            //connectedPrinters.splice(connectedPrinterIDs.indexOf(printerID), 1, printerData);
+        }
+
+        var statusText = printerData.printerStatusString;
+        $('#' + printerID + nameDisplayTag).text(printerData.printerName);
+        $('#' + printerID + statusDisplayTag).text(statusText);
+        $('#' + printerID + "_row").css("background-color", printerData.printerWebColourString);
         if (printerData.printerStatusString.match("^Printing"))
         {
-            statusText += " " + printerData.printJobName;
-            $('#printerTab_' + printerID).find('#' + printerID + etcRowTag).show();
-            $('#printerTab_' + printerID).find('#' + printerID + etcDisplayTag).text(secondsToHMS(printerData.etcSeconds));
-        }
-        else
-        {
-            $('#printerTab_' + printerID).find('#' + printerID + etcRowTag).hide();
+            $('#' + printerID + jobDisplayTag).text(printerData.printJobName);
+            $('#' + printerID + etcDisplayTag).text(secondsToHMS(printerData.etcSeconds));
         }
 
-        $('#printerTabTop_' + printerID + " a").text(printerData.printerName + " - " + statusText);
-        $('#printerTabTop_' + printerID + " a").css("background-color", printerData.printerWebColourString);
-
-        $('#printerTab_' + printerID).find('#' + printerID + headNameDisplayTag).text(printerData.headName);
-
-        $('#printerTab_' + printerID).find('#' + printerID + bedTemperatureDisplayTag).text(printerData.bedTemperature + '\xB0' + "C");
-
-        for (var nozzleNum = 1; nozzleNum <= printerData.nozzleTemperature.length; nozzleNum++)
-        {
-            $('#printerTab_' + printerID).find('#' + printerID + nozzleTemperatureDisplayTag + nozzleNum).text(printerData.nozzleTemperature[nozzleNum - 1] + '\xB0' + "C");
-        }
-
-        var numberOfNozzleHeaters = 0;
-        if (printerData.nozzleTemperature !== null)
-        {
-            numberOfNozzleHeaters = printerData.nozzleTemperature.length;
-        }
-
-        switch (numberOfNozzleHeaters)
-        {
-            case 0:
-                $('#printerTab_' + printerID).find('#' + printerID + nozzleTemperatureRowTag + '1').hide();
-                $('#printerTab_' + printerID).find('#' + printerID + nozzleTemperatureRowTag + '2').hide();
-                break;
-            case 1:
-                $('#printerTab_' + printerID).find('#' + printerID + nozzleTemperatureRowTag + '1').show();
-                $('#printerTab_' + printerID).find('#' + printerID + nozzleTemperatureRowTag + '2').hide();
-                break;
-            case 2:
-                $('#printerTab_' + printerID).find('#' + printerID + nozzleTemperatureRowTag + '1').show();
-                $('#printerTab_' + printerID).find('#' + printerID + nozzleTemperatureRowTag + '2').show();
-                break;
-        }
+//        $('#' + printerID + headNameDisplayTag).text(printerData.headName);
+//        $('#' + printerID + bedTemperatureDisplayTag).text(printerData.bedTemperature + '\xB0' + "C");
+//        if (printerData.nozzleTemperature)
+//        {
+//            for (var nozzleNum = 1; nozzleNum <= printerData.nozzleTemperature.length; nozzleNum++)
+//            {
+//                if (printerData.nozzleTemperature[nozzleNum - 1] !== null)
+//                {
+//                    $('#printer-details').find('#' + nozzleTemperatureDisplayTag + nozzleNum).text(printerData.nozzleTemperature[nozzleNum - 1] + '\xB0' + "C");
+//                }
+//            }
+//        }
+//
+//        var numberOfNozzleHeaters = 0;
+//        if (printerData.nozzleTemperature !== null)
+//        {
+//            numberOfNozzleHeaters = printerData.nozzleTemperature.length;
+//        }
+//
+//        switch (numberOfNozzleHeaters)
+//        {
+//            case 0:
+//                $('#printer-details').find('.' + nozzleTemperatureTag + '1').hide();
+//                $('#printer-details').find('.' + nozzleTemperatureTag + '2').hide();
+//                break;
+//            case 1:
+//                $('#printer-details').find('.' + nozzleTemperatureTag + '1').show();
+//                $('#printer-details').find('.' + nozzleTemperatureTag + '2').hide();
+//                break;
+//            case 2:
+//                $('#printer-details').find('.' + nozzleTemperatureTag + '1').show();
+//                $('#printer-details').find('.' + nozzleTemperatureTag + '2').show();
+//                break;
+//        }
 
         for (var materialNum = 1; materialNum <= printerData.attachedFilamentNames.length; materialNum++)
         {
             var filamentNameOutput = "";
             var showEjectButton = printerData.canEjectFilament;
-
             if (printerData.attachedFilamentNames[materialNum - 1] !== null)
             {
                 filamentNameOutput = printerData.attachedFilamentNames[materialNum - 1];
@@ -422,33 +436,22 @@ function updateAndDisplayPrinterStatus(printerID)
                 {
                     filamentNameOutput += " - not loaded";
                     showEjectButton = false;
-                }
-                else
+                } else
                 {
                     filamentNameOutput += " - loaded";
                 }
-            }
-            else
+            } else
             {
                 if (printerData.materialLoaded[materialNum - 1])
                 {
                     filamentNameOutput = "Unknown - loaded";
-                }
-                else
+                } else
                 {
                     showEjectButton = false;
                 }
             }
 
-            if (showEjectButton)
-            {
-                $('#printerTab_' + printerID).find('#' + printerID + materialEjectButtonTag + materialNum).show();
-            }
-            else
-            {
-                $('#printerTab_' + printerID).find('#' + printerID + materialEjectButtonTag + materialNum).hide();
-            }
-            $('#printerTab_' + printerID).find('#' + printerID + materialDisplayTag + materialNum).text(filamentNameOutput);
+            $('#' + printerID + materialDisplayTag + materialNum).text(filamentNameOutput);
         }
 
         var numberOfMaterials = 0;
@@ -460,37 +463,32 @@ function updateAndDisplayPrinterStatus(printerID)
         switch (numberOfMaterials)
         {
             case 0:
-                $('#printerTab_' + printerID).find('#' + printerID + materialRowTag + '1').hide();
-                $('#printerTab_' + printerID).find('#' + printerID + materialRowTag + '2').hide();
+                $('#' + printerID + materialRowTag + '1').hide();
+                $('#' + printerID + materialRowTag + '2').hide();
                 break;
             case 1:
-                $('#printerTab_' + printerID).find('#' + printerID + materialRowTag + '1').show();
-                $('#printerTab_' + printerID).find('#' + printerID + materialRowTag + '2').hide();
+                $('#' + printerID + materialRowTag + '1').show();
+                $('#' + printerID + materialRowTag + '2').hide();
                 break;
             case 2:
-                $('#printerTab_' + printerID).find('#' + printerID + materialRowTag + '1').show();
-                $('#printerTab_' + printerID).find('#' + printerID + materialRowTag + '2').show();
+                $('#' + printerID + materialRowTag + '1').show();
+                $('#' + printerID + materialRowTag + '2').show();
                 break;
         }
 
-        if (printerData.activeErrors !== null)
-        {
-            var allErrors;
-            for (var errorNum = 0; errorNum < printerData.activeErrors.length; errorNum++)
-            {
-                allErrors += errorString + '\n';
-            }
-            $('#printerTab_' + printerID).find('#' + printerID + errorDisplayTag).text(allErrors);
-            $('#printerTab_' + printerID).find('#' + printerID + errorRowTag).show();
-        }
-        else
-        {
-            $('#printerTab_' + printerID).find('#' + printerID + errorRowTag).hide();
-        }
-
-        configurePrinterButtons(printerID, printerData);
-
-        connectedPrinters.splice(connectedPrinterIDs.indexOf(printerID), 1, printerData);
+//        if (printerData.activeErrors !== null)
+//        {
+//            var allErrors;
+//            for (var errorNum = 0; errorNum < printerData.activeErrors.length; errorNum++)
+//            {
+//                allErrors += errorString + '\n';
+//            }
+//            $('#printer-details').find('#' + errorDisplayTag).text(allErrors);
+//            $('#printer-details').find('#' + errorRowTag).show();
+//        } else
+//        {
+//            $('#printer-details').find('#' + errorRowTag).hide();
+//        }
     });
 }
 
@@ -505,8 +503,44 @@ function getPrinterStatus(printerID, callback)
             null);
 }
 
+function updatePrinterSelector()
+{
+    var selectorHTML = "";
+    for (var connPrinterIndex = 0; connPrinterIndex < connectedPrinters.length; connPrinterIndex++)
+    {
+        var printerID = connectedPrinters[connPrinterIndex].printerID;
+        selectorHTML += "<tr id=\"" + printerID + "_row" + "\" class=\"ui-link\">";
+        selectorHTML += "<th id=\"" + printerID + nameDisplayTag + "\"></th>";
+        selectorHTML += "<td id=\"" + printerID + statusDisplayTag + "\"></td>";
+        selectorHTML += "<td id=\"" + printerID + etcDisplayTag + "\"></td>";
+        selectorHTML += "<td id=\"" + printerID + jobDisplayTag + "\"></td>";
+        selectorHTML += "<td id=\"" + printerID + materialDisplayTag + "1\"></td>";
+        selectorHTML += "<td id=\"" + printerID + materialDisplayTag + "2\"></td>";
+        selectorHTML += "</tr>\n";
+    }
+
+    $("#printer-status-body").html(selectorHTML);
+    $("#printer-status").table("refresh");
+    for (var connPrinterIndex = 0; connPrinterIndex < connectedPrinters.length; connPrinterIndex++)
+    {
+        var printerID = connectedPrinters[connPrinterIndex].printerID;
+        $('#' + printerID + "_row").click(function () {
+            selectPrinter(printerID);
+        });
+    }
+
+
+//    if (!selectedPrinterID)
+//    {
+//        $('#printer-select option[value=' + printerID + ']').attr('selected', 'true');
+//        $("#printer-select").selectmenu("refresh", true);
+//        selectPrinter(printerID);
+//    }
+}
+
 function updatePrinterStatuses()
 {
+
     for (var printerIndex = 0; printerIndex < connectedPrinterIDs.length; printerIndex++)
     {
         $("#no-printers-connected-text").hide();
@@ -518,8 +552,7 @@ function updatePrinterStatuses()
     {
         $("#no-printers-connected-text").show();
         $(".numberOfPrintersDisplay").text("No Robox attached");
-    }
-    else
+    } else
     {
         $(".numberOfPrintersDisplay").text(connectedPrinterIDs.length.valueOf() + " Robox attached");
     }
@@ -534,8 +567,7 @@ function updateServerStatus(serverData)
         $(".server-name-title").text("");
         $("#server-name-input").val("");
         $(".server-ip-address").val("");
-    }
-    else
+    } else
     {
         $('#serverVersion').text('Server version: ' + serverData.serverVersion);
         $(".serverStatusLine").text(serverData.name);
@@ -584,8 +616,7 @@ function getStatus()
     if (!connectedToServer)
     {
         getServerStatus();
-    }
-    else
+    } else
     {
         getPrinters();
     }
@@ -594,7 +625,6 @@ function getStatus()
 function safetiesOn()
 {
     var safetyStatus = $("#safeties-switch").prop("checked") ? true : false;
-
     return safetyStatus;
 }
 
@@ -619,13 +649,11 @@ function updateCurrentWifiState()
                     if (data.associated == "yes")
                     {
                         $("#wifi-ssid").val(data.ssid);
-                    }
-                    else
+                    } else
                     {
                         $("#wifi-ssid").val("Not associated");
                     }
-                }
-                else
+                } else
                 {
                     $("#wifi-enabled-switch").val("false")
                     $("#wifi-ssid").val("");
@@ -636,26 +664,62 @@ function updateCurrentWifiState()
             null);
 }
 
+function updateLocalisation()
+{
+    $('language-label').localize();
+}
+
+function selectPrinter(printerID)
+{
+    selectedPrinterID = printerID;
+    updateAndDisplayPrinterStatus(selectedPrinterID);
+    $("#printer-details-panel").panel("open");
+}
+
 $(document).ready(function ()
 {
+    i18next.use(i18nextXHRBackend).init({
+        debug: true,
+        fallbackLng: 'en',
+        backend: {
+            loadPath: '/locales/{{lng}}/translation.json'
+        }
+    }, function (t) {
+        jqueryI18next.init(i18next, $, {
+            tName: 't', // --> appends $.t = i18next.t
+            i18nName: 'i18n', // --> appends $.i18n = i18next
+            handleName: 'localize', // --> appends $(selector).localize(opts);
+            selectorAttr: 'data-i18n', // selector for translating elements
+            targetAttr: 'i18n-target', // data-() attribute to grab target element to translate (if diffrent then itself)
+            optionsAttr: 'i18n-options', // data-() attribute that contains options, will load/set if useOptionsAttr = true
+            useOptionsAttr: false, // see optionsAttr
+            parseDefaultValueFromContent: true // parses default values from content ele.val or ele.text
+        });
+        updateLocalisation();
+    });
+    $('#printer-select').change(function () {
+        var optionSelected = $(this).find('option:selected');
+        var optValueSelected = optionSelected.val();
+        if (optValueSelected)
+        {
+            selectPrinter(optValueSelected);
+        }
+    });
     checkForMobileBrowser();
-
     updateCurrentWifiState();
-
     $("#wifi-enabled-switch").change(function () {
         enableWifi($("#wifi-enabled-switch").val());
         setTimeout(function () {
             updateCurrentWifiState();
         }, 3000);
     });
-
     $("#pin-update-value").val(localStorage.getItem(applicationPINVar));
-
     getServerStatus()
     getPrinters();
-
     setInterval(getStatus, 2000);
     $('#printerTabs').tabs({
         active: 1
     });
-});
+    refreshStatusTable();
+}
+);

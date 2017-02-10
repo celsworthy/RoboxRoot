@@ -7,6 +7,7 @@ import celtech.roboxbase.postprocessor.PrintJobStatistics;
 import celtech.roboxbase.printerControl.PrinterStatus;
 import celtech.roboxbase.printerControl.model.Printer;
 import celtech.roboxbase.utils.ColourStringConverter;
+import celtech.roboxremote.PrinterRegistry;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import javafx.scene.paint.Color;
  */
 public class StatusData
 {
+    private String printerID;
     private String printerName;
     private String printerWebColourString;
     private String printerStatusString;
@@ -59,8 +61,10 @@ public class StatusData
         // Jackson deserialization
     }
 
-    public void updateFromPrinterData(Printer printer)
+    public void updateFromPrinterData(String printerID)
     {
+        this.printerID = printerID;
+        Printer printer = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
         printerName = printer.getPrinterIdentity().printerFriendlyNameProperty().get();
         PrinterColourMap colourMap = PrinterColourMap.getInstance();
         Color displayColour = colourMap.printerToDisplayColour(printer.getPrinterIdentity().printerColourProperty().get());
@@ -201,6 +205,18 @@ public class StatusData
                 activeErrors[errorCounter] = BaseLookup.i18n(printer.getActiveErrors().get(errorCounter).getErrorTitleKey());
             }
         }
+    }
+
+    @JsonProperty
+    public String getPrinterID()
+    {
+        return printerID;
+    }
+
+    @JsonProperty
+    public void setPrinterID(String printerID)
+    {
+        this.printerID = printerID;
     }
 
     @JsonProperty

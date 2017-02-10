@@ -50,7 +50,7 @@ public class PublicPrinterControlAPI
         if (PrinterRegistry.getInstance() != null)
         {
             returnVal = new StatusData();
-            returnVal.updateFromPrinterData(PrinterRegistry.getInstance().getRemotePrinters().get(printerID));
+            returnVal.updateFromPrinterData(printerID);
         }
         return returnVal;
     }

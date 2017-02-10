@@ -42,8 +42,7 @@ function goToContent()
                 logout();
             }
         });
-    }
-    else
+    } else
     {
         logout();
     }
@@ -115,3 +114,10 @@ function submitFormToRoot(service, successCallback, errorCallback, formData)
     });
 }
 
+function refreshStatusTable()
+{
+    $("table#printer-status")
+            .table("refresh")
+            // Trigger if the new injected markup contain links or buttons that need to be enhanced
+            .trigger("create");
+}

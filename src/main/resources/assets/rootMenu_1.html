@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="ui-mobile">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
@@ -33,103 +33,81 @@
         </style>
     </head>
 
-    <body>
+    <body id="ui-page-top" class="ui-mobile-viewport ui-overlay-a">
 
-        <div data-role="page" id="printer-status-page" style="padding-bottom: 63px;" class="robox-root">
-            <div role="banner" data-role="header" data-position="fixed" class="header-banner jqm-header ui-bar-inherit">
+        <div data-role="page" id="printer-status-page" style="padding-bottom: 63px;" class="robox-root ui-page ui-page-theme-a ui-page-footer-fixed ui-page-active" data-quicklinks="true">
+
+            <div role="banner" data-role="header" class="header-banner jqm-header ui-bar-inherit">
                 <img class="align-right" src="/css/themes/default/images/RootLogo.png" alt="Robox"/>
                 <img src="/css/themes/default/images/RoboxLogo.png" alt="Robox"/>
             </div>
-            <div class="ui-panel-wrapper">
+
+            <div class="ui-corner-all custom-corners">
                 <div style="text-align: center;" class="ui-bar ui-bar-a">
                     <h2>Printer Status - <span class="server-name-title">Server Name</span></h2>
                 </div>
-                <div role="main" class="ui-content">
-                    <table id="printer-status" data-role="table" data-mode="columntoggle" class="status-table ui-responsive ui-shadow gk-decorate table-stroke" data-column-btn-mini='true' data-column-btn-text='Columns to Display'>
-                        <thead>
-                            <tr>
-                                <th width="100px">Name</th>
-                                <th width="80px">Status</th>
-                                <th>ETC</th>
-                                <th>Job</th>
-                                <th data-priority="3">Material 1</th>
-                                <th data-priority="3">Material 2</th>
-                            </tr>
-                        </thead>
-                        <tbody id="printer-status-body">
-                        </tbody>
-                    </table>
-                    <a href="#printer-details-panel">Details</a>
+                <div class="ui-body ui-body-a">
+                    <div class="ui-field-contain">
+                        <select name="printer-select" id="printer-select" data-mini="true">
+                        </select>
+                    </div>
+                    <p id="no-printers-connected-text">No printers connected</p>
+                    <div id="printer-details">
+                        <table class="status-table">
+                            <thead>
+                                <tr>
+                                    <th width="30%"></th>
+                                    <th width="70%"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!--                                <tr id='_etcRow'>
+                                                                    <th class="detail-title">Estimated Time to Complete Print</th>
+                                                                    <td class="detail-data" id='_etcDisplay'>?</td>
+                                                                </tr>-->
+                                <tr>
+                                    <th class="detail-title">Head</th>
+                                    <td class="detail-data" id='_headNameDisplay'>?</td>
+                                </tr>
+                                <tr>
+                                    <th class="detail-title">Temperature</th>
+                                    <td>
+                                        <table class="status-table">
+                                            <thead>
+                                                <tr>
+                                                    <th class="_nozzleTemperature1 detail-subtitle">Nozzle 1</th>
+                                                    <th class="_nozzleTemperature2 detail-subtitle">Nozzle 2</th>
+                                                    <th class="detail-subtitle">Bed</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="_nozzleTemperature1 detail-data" id='_nozzleTemperatureDisplay1'></td>
+                                                    <td class="_nozzleTemperature2 detail-data" id='_nozzleTemperatureDisplay2'></td>
+                                                    <td class="detail-data" id='_bedTemperatureDisplay'></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr >
+                                    <th class="detail-title">Material 1</th>
+                                    <td class="detail-data" id='_materialDisplay1'></td>
+                                </tr>
+                                <tr>
+                                    <th class="detail-title">Material 2</th>
+                                    <td class="detail-data" id='_materialDisplay2'></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-            <div data-role="panel" id="printer-details-panel">
-                <table>
-                    <thead>
-                        <tr>
-                            <th width="100px"></th>
-                            <th width="200px"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!--                        <tr id='_etcRow'>
-                                                    <th class="detail-title">Estimated Time to Complete Print</th>
-                                                    <td class="detail-data" id='_etcDisplay'>?</td>
-                                                </tr>-->
-                        <tr>
-                            <th class="detail-title">Name</th>
-                            <td class="detail-data" id='_nameDisplay'>?</td>
-                        </tr>
-                        <tr>
-                            <th class="detail-title">Head</th>
-                            <td class="detail-data" id='_headNameDisplay'>?</td>
-                        </tr>
-                        <tr >
-                            <th class="detail-title">Material 1</th>
-                            <td class="detail-data" id='_materialDisplay1'></td>
-                        </tr>
-                        <tr>
-                            <th class="detail-title">Material 2</th>
-                            <td class="detail-data" id='_materialDisplay2'></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="_nozzleTemperature1 detail-title" width="100px">Nozzle 1</th>
-                            <th class="_nozzleTemperature2 detail-title" width="100px">Nozzle 2</th>
-                            <th class="detail-title" width="100px">Bed</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="_nozzleTemperature1 detail-data" id='_nozzleTemperatureDisplay1'></td>
-                            <td class="_nozzleTemperature2 detail-data" id='_nozzleTemperatureDisplay2'></td>
-                            <td class="detail-data" id='_bedTemperatureDisplay'></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <hr>
-                <div style="display: flex; padding-bottom: 5px;">
-                    <button id="printer-control-pause" class="ui-btn ui-btn-inline ui-mini centre-button" onclick="pausePrint()">Pause</button>
-                    <button id="printer-control-resume" class="ui-btn ui-btn-inline ui-mini centre-button" onclick="resumePrint()">Resume</button>
-                    <button id="printer-control-cancel" class="ui-btn ui-btn-inline ui-mini centre-button" onclick="resumePrint()">Cancel</button>
-                </div>
-                <div style="display: flex;">
-                    <button id="printer-control-open-door" class="ui-btn ui-btn-inline ui-mini centre-button" onclick="openDoor()">Open Door</button>
-                    <button id="printer-control-remove-head" class="ui-btn ui-btn-inline ui-mini centre-button" onclick="removeHead()">Remove Head</button>
-                </div>
-                <form id="fileUpload" enctype="multipart/form-data" class="ui-btn ui-btn-inline ui-mini">
-                    <input type="submit" value="Send GCode to printer">
-                    <input id="fileInput" type="file" name="file" required/>
-                </form>
-            </div>
 
-            <div class="jqm-footer ui-footer ui-bar-inherit ui-footer-fixed slideup">
-                <div class="ui-grid-b" style="height:50px">
-                    <div class="ui-block-a footer"><span>Root Manager </span><span class="jqm-version">0.1</span></div>
-                    <div class="ui-block-b footer"><span><a href="#printer-status-page" class="ui-btn ui-icon-home ui-btn-icon-notext ui-corner-all">No text</a></span><span><a href="#server-status-page" class="ui-btn ui-icon-gear ui-btn-icon-notext ui-corner-all">No text</a></span></div>
-                    <div class="ui-block-c footer"><span class="numberOfPrintersDisplay"></span></div>
+                <!--<div data-role="footer" data-position="fixed" class="footer-container jqm-footer ui-footer ui-bar-inherit ui-footer-fixed slideup">-->
+                <div class="jqm-footer ui-footer ui-bar-inherit ui-footer-fixed slideup">
+                    <div class="footer"><span>Root Manager </span><span class="jqm-version">0.1</span></div>
+                    <div class="footer"><span><a href="#printer-status-page" class="ui-btn ui-icon-home ui-btn-icon-notext ui-corner-all">No text</a></span><span><a href="#server-status-page" class="ui-btn ui-icon-gear ui-btn-icon-notext ui-corner-all">No text</a></span></div>
+                    <div class="footer"><span class="numberOfPrintersDisplay"></span></div>
                 </div>
             </div>
         </div>
@@ -238,12 +216,10 @@
                 </div>
             </div>
 
-            <div data-role="footer" data-position="fixed">
-                <div class="ui-grid-b" style="height:95px">
-                    <div class="ui-block-a" style="height:100%"><span>Root Manager </span><span class="jqm-version">0.1</span></div>
-                    <div class="ui-block-b" style="height:100%"><span><a href="#printer-status-page" class="ui-btn ui-icon-home ui-btn-icon-notext ui-corner-all">No text</a></span><span><a href="#server-status-page" class="ui-btn ui-icon-gear ui-btn-icon-notext ui-corner-all">No text</a></span></div>
-                    <div class="ui-block-c" style="height:100%"><span class="numberOfPrintersDisplay"></span></div>
-                </div>
+            <div style="text-align: center; display: inline-flex;" data-role="footer" data-position="fixed" class="ui-grid-b jqm-footer ui-footer ui-bar-inherit ui-footer-fixed slideup">
+                <div class="ui-block-a"><span>Root Manager </span><span class="jqm-version">0.1</span></div>
+                <div class="ui-block-b"><span><a href="#printer-status-page" class="ui-btn ui-icon-home ui-btn-icon-notext ui-corner-all">No text</a></span><span><a href="#server-status-page" class="ui-btn ui-icon-gear ui-btn-icon-notext ui-corner-all">No text</a></span></div>
+                <div class="ui-block-c"><span class="numberOfPrintersDisplay"></span></div>
             </div>
         </div>
     </body>
