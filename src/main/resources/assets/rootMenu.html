@@ -37,8 +37,8 @@
 
         <div data-role="page" id="printer-status-page" style="padding-bottom: 63px;" class="robox-root">
             <div role="banner" data-role="header" data-position="fixed" class="header-banner jqm-header ui-bar-inherit">
-                <img class="align-right" src="/css/themes/default/images/RootLogo.png" alt="Robox"/>
-                <img src="/css/themes/default/images/RoboxLogo.png" alt="Robox"/>
+                <img class="align-right" src="/css/themes/default/images/RootLogo.png" alt="Robox" style="padding:5px;"/>
+                <img src="/css/themes/default/images/RoboxLogo.png" alt="Robox" style="padding:5px;"/>
             </div>
             <div class="ui-panel-wrapper">
                 <div style="text-align: center;" class="ui-bar ui-bar-a">
@@ -111,6 +111,10 @@
                 </table>
                 <hr>
                 <div style="display: flex; padding-bottom: 5px;">
+                    <button id="printer-control-eject-1" class="ui-btn ui-btn-inline ui-mini centre-button" onclick="eject(1)">Eject Material 1</button>
+                    <button id="printer-control-eject-2" class="ui-btn ui-btn-inline ui-mini centre-button" onclick="eject(2)">Eject Material 2</button>
+                </div>
+                <div style="display: flex; padding-bottom: 5px;">
                     <button id="printer-control-pause" class="ui-btn ui-btn-inline ui-mini centre-button" onclick="pausePrint()">Pause</button>
                     <button id="printer-control-resume" class="ui-btn ui-btn-inline ui-mini centre-button" onclick="resumePrint()">Resume</button>
                     <button id="printer-control-cancel" class="ui-btn ui-btn-inline ui-mini centre-button" onclick="resumePrint()">Cancel</button>
@@ -136,9 +140,9 @@
 
         <div data-role="page" id="server-status-page" style="padding-bottom: 63px;" class="robox-root ui-page ui-page-theme-a ui-page-footer-fixed" data-quicklinks="true">
 
-            <div role="banner" data-role="header" class="header-banner jqm-header ui-bar-inherit">
-                <img class="align-right" src="/css/themes/default/images/RootLogo.png" alt="Robox"/>
-                <img src="/css/themes/default/images/RoboxLogo.png" alt="Robox"/>
+            <div role="banner" data-role="header" data-position="fixed" class="header-banner jqm-header ui-bar-inherit">
+                <img class="align-right" src="/css/themes/default/images/RootLogo.png" alt="Robox" style="padding:5px;"/>
+                <img src="/css/themes/default/images/RoboxLogo.png" alt="Robox" style="padding:5px;"/>
             </div>
 
             <div class="ui-corner-all custom-corners">
@@ -238,11 +242,11 @@
                 </div>
             </div>
 
-            <div data-role="footer" data-position="fixed">
-                <div class="ui-grid-b" style="height:95px">
-                    <div class="ui-block-a" style="height:100%"><span>Root Manager </span><span class="jqm-version">0.1</span></div>
-                    <div class="ui-block-b" style="height:100%"><span><a href="#printer-status-page" class="ui-btn ui-icon-home ui-btn-icon-notext ui-corner-all">No text</a></span><span><a href="#server-status-page" class="ui-btn ui-icon-gear ui-btn-icon-notext ui-corner-all">No text</a></span></div>
-                    <div class="ui-block-c" style="height:100%"><span class="numberOfPrintersDisplay"></span></div>
+            <div class="jqm-footer ui-footer ui-bar-inherit ui-footer-fixed slideup">
+                <div class="ui-grid-b" style="height:50px">
+                    <div class="ui-block-a footer"><span>Root Manager </span><span class="jqm-version">0.1</span></div>
+                    <div class="ui-block-b footer"><span><a href="#printer-status-page" class="ui-btn ui-icon-home ui-btn-icon-notext ui-corner-all">No text</a></span><span><a href="#server-status-page" class="ui-btn ui-icon-gear ui-btn-icon-notext ui-corner-all">No text</a></span></div>
+                    <div class="ui-block-c footer"><span class="numberOfPrintersDisplay"></span></div>
                 </div>
             </div>
         </div>

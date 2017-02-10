@@ -280,7 +280,7 @@ public class PublicPrinterControlAPI
                 PrinterRegistry.getInstance().getRemotePrinters().get(printerID).ejectFilament(filamentNumber - 1, null);
             } catch (PrinterException ex)
             {
-                steno.error("Exception whilst ejecting filament " + filamentNumber);
+                steno.error("Exception whilst ejecting filament " + filamentNumber + ": " + ex);
             }
         }
     }

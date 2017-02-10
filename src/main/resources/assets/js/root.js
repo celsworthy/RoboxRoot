@@ -2,7 +2,8 @@ var connectedToServer = false;
 var isMobile = false; //initiate as false
 var connectedPrinterIDs = new Array();
 var connectedPrinters = new Array();
-var selectedPrinterID
+var lastPrinterData = null;
+var selectedPrinterID = null;
 var nameDisplayTag = "_nameDisplay";
 var statusDisplayTag = "_statusDisplay";
 var jobDisplayTag = "_jobDisplay";
@@ -133,17 +134,16 @@ function removeHead()
 
 function purgeHead()
 {
-    sendPostCommandToPrinter(selectedPrinterID + "/remoteControl/purge", null, null, safetiesOn().toString());
+    sendPostCommandToRoot(selectedPrinterID + "/remoteControl/purge", null, null, safetiesOn().toString());
 }
 
 function eject(materialNumber)
 {
-    sendPostCommandToPrinter(selectedPrinterID + "/remoteControl/ejectFilament", null, null, materialNumber);
+    sendPostCommandToRoot(selectedPrinterID + "/remoteControl/ejectFilament", null, null, materialNumber);
 }
 
-function configurePrinterButtons(printerID, printerData)
+function configurePrinterButtons(printerData)
 {
-    var lastPrinterData = connectedPrinters[connectedPrinterIDs.indexOf(printerID)];
     if ((lastPrinterData === null)
             || printerData.canPause !== lastPrinterData.canPause
             || printerData.canResume !== lastPrinterData.canResume
@@ -159,9 +159,9 @@ function configurePrinterButtons(printerID, printerData)
         setButtonVisibility(printerData.canPause, "printer-control-open-door");
         setButtonVisibility(printerData.canPause, "printer-control-remove-head");
         setButtonVisibility(!isMobile && printerData.canPrint, "fileUpload");
-        
-        lastPrinterData = printerData;
     }
+    lastPrinterData = printerData;
+
 }
 
 function setButtonVisibility(test, buttonID)
@@ -171,7 +171,7 @@ function setButtonVisibility(test, buttonID)
         $('#' + buttonID).show();
     } else
     {
-        $('#' + buttonID).show();
+        $('#' + buttonID).hide();
     }
 }
 
@@ -332,10 +332,10 @@ function updateAndDisplayPrinterStatus(printerID)
 
                 if (showEjectButton)
                 {
-                    $('#printer-details-panel').find('#' + materialEjectButtonTag + materialNum).show();
+                    $('#printer-control-eject-' + materialNum).show();
                 } else
                 {
-                    $('#printer-details-panel').find('#' + materialEjectButtonTag + materialNum).hide();
+                    $('#printer-control-eject-' + materialNum).hide();
                 }
                 $('#printer-details-panel').find('#' + materialDisplayTag + materialNum).text(filamentNameOutput);
             }
@@ -376,8 +376,7 @@ function updateAndDisplayPrinterStatus(printerID)
                 $('#printer-details-panel').find('#' + errorRowTag).hide();
             }
 
-            configurePrinterButtons(printerID, printerData);
-            //connectedPrinters.splice(connectedPrinterIDs.indexOf(printerID), 1, printerData);
+            configurePrinterButtons(printerData);
         }
 
         var statusText = printerData.printerStatusString;
@@ -524,18 +523,11 @@ function updatePrinterSelector()
     for (var connPrinterIndex = 0; connPrinterIndex < connectedPrinters.length; connPrinterIndex++)
     {
         var printerID = connectedPrinters[connPrinterIndex].printerID;
+        $('#' + printerID + "_row").data("printerID", printerID);
         $('#' + printerID + "_row").click(function () {
-            selectPrinter(printerID);
+            selectPrinter($(this).data("printerID"));
         });
     }
-
-
-//    if (!selectedPrinterID)
-//    {
-//        $('#printer-select option[value=' + printerID + ']').attr('selected', 'true');
-//        $("#printer-select").selectmenu("refresh", true);
-//        selectPrinter(printerID);
-//    }
 }
 
 function updatePrinterStatuses()
@@ -672,6 +664,7 @@ function updateLocalisation()
 function selectPrinter(printerID)
 {
     selectedPrinterID = printerID;
+    lastPrinterData = null;
     updateAndDisplayPrinterStatus(selectedPrinterID);
     $("#printer-details-panel").panel("open");
 }
@@ -697,14 +690,7 @@ $(document).ready(function ()
         });
         updateLocalisation();
     });
-    $('#printer-select').change(function () {
-        var optionSelected = $(this).find('option:selected');
-        var optValueSelected = optionSelected.val();
-        if (optValueSelected)
-        {
-            selectPrinter(optValueSelected);
-        }
-    });
+
     checkForMobileBrowser();
     updateCurrentWifiState();
     $("#wifi-enabled-switch").change(function () {
