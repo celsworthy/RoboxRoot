@@ -1,7 +1,9 @@
 var isMobile = false; //initiate as false
 
-$(document).ready(function () {
+function page_initialiser() {
 
+    createHeader("has-login-header", "login");
+    
     checkForMobileBrowser();
 
     var enteredPIN = localStorage.getItem(applicationPINVar);
@@ -9,7 +11,7 @@ $(document).ready(function () {
     {
         var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + enteredPIN);
         $.ajax({
-            url: contentPage,
+            url: printerStatusPage,
             dataType: 'html',
             cache: false,
             beforeSend: function (xhr) {
@@ -17,15 +19,14 @@ $(document).ready(function () {
             },
             type: 'GET',
             success: function (data, textStatus, jqXHR) {
-                goToContent();
+                goToPrinterStatusPage();
             },
             error: function (data, textStatus, jqXHR) {
                 logout();
             }
         });
-    }
-    else
+    } else
     {
         logout();
     }
-});
+}

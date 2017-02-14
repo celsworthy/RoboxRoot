@@ -1,8 +1,8 @@
 package celtech.roboxremote;
 
+import celtech.roboxbase.comms.remote.clear.WifiStatusResponse;
 import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxbase.configuration.MachineType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,13 +20,15 @@ public class WifiControl
 
     private static Stenographer steno = StenographerFactory.getStenographer(WifiControl.class.getName());
 
-    private static String runScript(String scriptAndParameters)
+    private static String runScript(String scriptName, String... parameters)
     {
         List<String> command = new ArrayList<>();
-        String commandLine = BaseConfiguration.getBinariesDirectory() + scriptAndParameters;
-        for (String subcommand : commandLine.split(" "))
+        String commandLine = BaseConfiguration.getBinariesDirectory() + scriptName;
+        command.add(commandLine);
+
+        for (String param : parameters)
         {
-            command.add(subcommand);
+            command.add(param);
         }
 
         ProcessBuilder builder = new ProcessBuilder(command);
@@ -60,26 +62,46 @@ public class WifiControl
     public static void enableWifi(boolean enableWifi)
     {
         String wifiControl = (enableWifi == true) ? "on" : "off";
-        String output = runScript("enableDisableWifi.sh " + wifiControl);
+        String output = runScript("enableDisableWifi.sh", wifiControl);
     }
 
-    public static String getCurrentWifiState()
+    public static WifiStatusResponse getCurrentWifiState()
     {
-        final String SCRIPT_BASE="getCurrentWifiState";
-        
+        final String SCRIPT_BASE = "getCurrentWifiState";
+        String scriptOutput;
         if (BaseConfiguration.getMachineType() == MachineType.WINDOWS)
         {
-            return runScript(SCRIPT_BASE + ".bat");
-        }
-        else
+            scriptOutput = runScript(SCRIPT_BASE + ".bat");
+        } else
         {
-            return runScript(SCRIPT_BASE + ".sh");            
+            scriptOutput = runScript(SCRIPT_BASE + ".sh");
         }
+
+        WifiStatusResponse response = null;
+
+        //Expects <on|off> <yes|no> [ssid]
+        String[] outputParts = scriptOutput.split(" ");
+        boolean powered = false;
+        boolean associated = false;
+        String ssid = "";
+
+        if (outputParts.length >= 2)
+        {
+            powered = outputParts[0].equalsIgnoreCase("on");
+            associated = outputParts[1].equalsIgnoreCase("yes");
+        }
+
+        if (outputParts.length == 3)
+        {
+            ssid = outputParts[2];
+        }
+        response = new WifiStatusResponse(powered, associated, ssid);
+        return response;
     }
 
     public static void setupWiFiCredentials(String ssidAndPassword)
     {
-        String output = runScript("setupWifi.sh " + ssidAndPassword);
+        String output = runScript("setupWifi.sh", ssidAndPassword);
         steno.info(output);
     }
 }

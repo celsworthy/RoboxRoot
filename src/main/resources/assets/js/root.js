@@ -72,7 +72,6 @@ function processAddedAndRemovedPrinters(printerIDs)
 
 function addPrinter(printerID)
 {
-    console.log("Adding printer " + printerID);
     connectedPrinterIDs.push(printerID);
     getPrinterStatus(printerID, function (data) {
         connectedPrinters.push(data);
@@ -98,13 +97,24 @@ function removeAllPrinterTabs()
 
 function printGCodeFile()
 {
-    var data = new FormData($('#fileInput').val());
-    sendPostCommandToRoot(selectedPrinterID + '/remoteControl/upload',
-            function (data) {
-                alert(data);
+    var formData = new FormData($('#printGCodeFile')[0]);
+    submitFormToRoot(selectedPrinterID + '/remoteControl/upload',
+            function (returndata) {
+                alert('success ' + returndata);
             },
-            null,
-            data);
+            function (returndata) {
+                alert('error ' + returndata);
+            },
+            formData);
+//
+//
+//    var data = new FormData($('#printGCodeFile').val());
+//    sendPostCommandToRoot(selectedPrinterID + '/remoteControl/upload',
+//            function (data) {
+//                alert(data);
+//            },
+//            null,
+//            data);
 }
 
 function openDoor()
@@ -198,39 +208,6 @@ function firmwareUpdateSubmit(event) {
     });
 }
 
-function updatePIN()
-{
-    sendPostCommandToRoot('admin/updatePIN',
-            function () {
-                logout();
-            },
-            null,
-            $("#pin-update-value").val());
-}
-function rootRename()
-{
-    sendPostCommandToRoot('admin/setServerName',
-            function () {
-                getServerStatus();
-            },
-            null,
-            $("#server-name-input").val());
-}
-
-function rootUpgrade()
-{
-    var formData = new FormData($('#rootUpgrade')[0]);
-    submitFormToRoot('admin/updateSystem',
-            function (returndata) {
-                alert('success ' + returndata);
-            },
-            function (returndata) {
-                alert('error ' + returndata);
-            },
-            formData);
-//    event.preventDefault();
-}
-
 function secondsToHMS(secondsInput)
 {
     var minutes = Math.floor(secondsInput / 60);
@@ -269,6 +246,7 @@ function updateAndDisplayPrinterStatus(printerID)
             }
 
             $('#printer-details-panel').find('#' + nameDisplayTag).text(printerData.printerName);
+            $('#printer-details-panel').find('#' + statusDisplayTag).text(statusText);
             $('#printer-details-panel').find('#' + headNameDisplayTag).text(printerData.headName);
             $('#printer-details-panel').find('#' + bedTemperatureDisplayTag).text(printerData.bedTemperature + '\xB0' + "C");
             if (printerData.nozzleTemperature)
@@ -313,17 +291,17 @@ function updateAndDisplayPrinterStatus(printerID)
                     filamentNameOutput = printerData.attachedFilamentNames[materialNum - 1];
                     if (!printerData.materialLoaded[materialNum - 1])
                     {
-                        filamentNameOutput += " - not loaded";
+                        filamentNameOutput += " - " + i18next.t("not-loaded");
                         showEjectButton = false;
                     } else
                     {
-                        filamentNameOutput += " - loaded";
+                        filamentNameOutput += " - " + i18next.t("loaded");
                     }
                 } else
                 {
                     if (printerData.materialLoaded[materialNum - 1])
                     {
-                        filamentNameOutput = "Unknown - loaded";
+                        filamentNameOutput = i18next.t("unknown") + " - " + i18next.t("loaded");
                     } else
                     {
                         showEjectButton = false;
@@ -433,17 +411,17 @@ function updateAndDisplayPrinterStatus(printerID)
                 filamentNameOutput = printerData.attachedFilamentNames[materialNum - 1];
                 if (!printerData.materialLoaded[materialNum - 1])
                 {
-                    filamentNameOutput += " - not loaded";
+                    filamentNameOutput += " - " + i18next.t("not-loaded");
                     showEjectButton = false;
                 } else
                 {
-                    filamentNameOutput += " - loaded";
+                    filamentNameOutput += " - " + i18next.t("loaded");
                 }
             } else
             {
                 if (printerData.materialLoaded[materialNum - 1])
                 {
-                    filamentNameOutput = "Unknown - loaded";
+                    filamentNameOutput = i18next.t("unknown") + " - " + i18next.t("loaded");
                 } else
                 {
                     showEjectButton = false;
@@ -508,7 +486,7 @@ function updatePrinterSelector()
     for (var connPrinterIndex = 0; connPrinterIndex < connectedPrinters.length; connPrinterIndex++)
     {
         var printerID = connectedPrinters[connPrinterIndex].printerID;
-        selectorHTML += "<tr id=\"" + printerID + "_row" + "\" class=\"ui-link\">";
+        selectorHTML += "<tr id=\"" + printerID + "_row" + "\" class=\"ui-link printer-selector\">";
         selectorHTML += "<th id=\"" + printerID + nameDisplayTag + "\"></th>";
         selectorHTML += "<td id=\"" + printerID + statusDisplayTag + "\"></td>";
         selectorHTML += "<td id=\"" + printerID + etcDisplayTag + "\"></td>";
@@ -527,6 +505,17 @@ function updatePrinterSelector()
         $('#' + printerID + "_row").click(function () {
             selectPrinter($(this).data("printerID"));
         });
+        $('#' + printerID + "_row").hover(function () {
+            $(this).addClass('selector-highlight');
+        }, function () {
+            $(this).removeClass('selector-highlight');
+        });
+        $('#' + printerID + "_row").mousedown(function () {
+            $(this).addClass('selector-press');
+        }, function () {
+            $(this).removeClass('selector-press');
+        });
+
     }
 }
 
@@ -543,29 +532,10 @@ function updatePrinterStatuses()
     if (connectedPrinterIDs.length === 0)
     {
         $("#no-printers-connected-text").show();
-        $(".numberOfPrintersDisplay").text("No Robox attached");
+        $(".numberOfPrintersDisplay").text(i18next.t("no") + " " + i18next.t("robox-attached"));
     } else
     {
-        $(".numberOfPrintersDisplay").text(connectedPrinterIDs.length.valueOf() + " Robox attached");
-    }
-}
-
-function updateServerStatus(serverData)
-{
-    if (serverData === null)
-    {
-        $('#serverVersion').text("");
-        $(".serverStatusLine").text("");
-        $(".server-name-title").text("");
-        $("#server-name-input").val("");
-        $(".server-ip-address").val("");
-    } else
-    {
-        $('#serverVersion').text('Server version: ' + serverData.serverVersion);
-        $(".serverStatusLine").text(serverData.name);
-        $(".server-name-title").text(serverData.name);
-        $("#server-name-input").val(serverData.name);
-        $(".server-ip-address").text(serverData.serverIP);
+        $(".numberOfPrintersDisplay").text(connectedPrinterIDs.length.valueOf() + " " + i18next.t("robox-attached"));
     }
 }
 
@@ -573,13 +543,13 @@ function getServerStatus()
 {
     sendGetCommandToRoot('discovery/whoareyou',
             function (data) {
-                $('#serverOnline').text('Server ONLINE');
+                $('#serverOnline').text(i18next.t('online'));
                 updateServerStatus(data);
                 connectedToServer = true;
             },
             function (data) {
                 connectedToServer = false;
-                $('#serverOnline').text('Server OFFLINE');
+                $('#serverOnline').text(i18next.t('offline'));
                 removeAllPrinterTabs();
                 updateServerStatus(null);
             },
@@ -599,6 +569,83 @@ function getPrinters()
                 $('#serverOnline').text('Server OFFLINE');
                 removeAllPrinterTabs();
                 logout();
+            },
+            null);
+}
+
+function selectPrinter(printerID)
+{
+    selectedPrinterID = printerID;
+    lastPrinterData = null;
+    updateAndDisplayPrinterStatus(selectedPrinterID);
+    $("#printer-details-panel").panel("open");
+}
+
+function updatePIN()
+{
+    sendPostCommandToRoot('admin/updatePIN',
+            function () {
+                logout();
+            },
+            null,
+            $("#pin-update-value").val());
+}
+function rootRename()
+{
+    sendPostCommandToRoot('admin/setServerName',
+            function () {
+                getServerStatus();
+            },
+            null,
+            $("#server-name-input").val());
+}
+
+function rootUpgrade()
+{
+    var formData = new FormData($('#rootUpgrade')[0]);
+    submitFormToRoot('admin/updateSystem',
+            function (returndata) {
+                alert('success ' + returndata);
+            },
+            function (returndata) {
+                alert('error ' + returndata);
+            },
+            formData);
+//    event.preventDefault();
+}
+
+function updateServerStatus(serverData)
+{
+    if (serverData === null)
+    {
+        $('#serverVersion').text("");
+        $(".serverStatusLine").text("");
+        $(".server-name-title").text("");
+        $("#server-name-input").val("");
+        $(".server-ip-address").val("");
+    } else
+    {
+        $('#serverVersion').text(serverData.serverVersion);
+        $(".serverStatusLine").text(serverData.name);
+        $(".server-name-title").text(serverData.name);
+        $("#server-name-input").val(serverData.name);
+        $(".server-ip-address").text(serverData.serverIP);
+    }
+}
+
+function getServerStatus()
+{
+    sendGetCommandToRoot('discovery/whoareyou',
+            function (data) {
+                $('#serverOnline').text(i18next.t('online'));
+                updateServerStatus(data);
+                connectedToServer = true;
+            },
+            function (data) {
+                connectedToServer = false;
+                $('#serverOnline').text(i18next.t('offline'));
+                removeAllPrinterTabs();
+                updateServerStatus(null);
             },
             null);
 }
@@ -634,11 +681,11 @@ function updateCurrentWifiState()
 {
     sendPostCommandToRoot("admin/getCurrentWifiState",
             function (data) {
-                if (data.power == "on")
+                if (data.poweredOn === true)
                 {
                     $("#wifi-enabled-switch").val("true")
                     $("#wifi-data-block").removeClass("visuallyhidden");
-                    if (data.associated == "yes")
+                    if (data.associated === true)
                     {
                         $("#wifi-ssid").val(data.ssid);
                     } else
@@ -656,56 +703,41 @@ function updateCurrentWifiState()
             null);
 }
 
-function updateLocalisation()
-{
-    $('language-label').localize();
-}
+$(document).on("pageinit", "#server-status-page", function () {
+    $('div[data-role="tabs"] [data-role="navbar"] a').click(function (e) {
+        e.preventDefault();
+        $('div[data-role="tabs"] [data-role="navbar"] .ui-btn-active').removeClass('ui-btn-active ui-state-persist');
+        $(this).addClass('ui-btn-active ui-state-persist');
+    });
+});
 
-function selectPrinter(printerID)
+function page_initialiser()
 {
-    selectedPrinterID = printerID;
-    lastPrinterData = null;
-    updateAndDisplayPrinterStatus(selectedPrinterID);
-    $("#printer-details-panel").panel("open");
-}
+    createHeader("has-printer-status-header", "printer-status");
+    createHeader("has-admin-header", "admin");
+    createFooter();
 
-$(document).ready(function ()
-{
-    i18next.use(i18nextXHRBackend).init({
-        debug: true,
-        fallbackLng: 'en',
-        backend: {
-            loadPath: '/locales/{{lng}}/translation.json'
+    $('#printer-select').change(function () {
+        var optionSelected = $(this).find('option:selected');
+        var optValueSelected = optionSelected.val();
+        if (optValueSelected)
+        {
+            selectPrinter(optValueSelected);
         }
-    }, function (t) {
-        jqueryI18next.init(i18next, $, {
-            tName: 't', // --> appends $.t = i18next.t
-            i18nName: 'i18n', // --> appends $.i18n = i18next
-            handleName: 'localize', // --> appends $(selector).localize(opts);
-            selectorAttr: 'data-i18n', // selector for translating elements
-            targetAttr: 'i18n-target', // data-() attribute to grab target element to translate (if diffrent then itself)
-            optionsAttr: 'i18n-options', // data-() attribute that contains options, will load/set if useOptionsAttr = true
-            useOptionsAttr: false, // see optionsAttr
-            parseDefaultValueFromContent: true // parses default values from content ele.val or ele.text
-        });
-        updateLocalisation();
     });
 
-    checkForMobileBrowser();
     updateCurrentWifiState();
+
     $("#wifi-enabled-switch").change(function () {
         enableWifi($("#wifi-enabled-switch").val());
         setTimeout(function () {
             updateCurrentWifiState();
         }, 3000);
     });
+
     $("#pin-update-value").val(localStorage.getItem(applicationPINVar));
+
     getServerStatus()
     getPrinters();
     setInterval(getStatus, 2000);
-    $('#printerTabs').tabs({
-        active: 1
-    });
-    refreshStatusTable();
 }
-);

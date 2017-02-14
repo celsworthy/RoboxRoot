@@ -1,6 +1,7 @@
 package celtech.roboxremote;
 
 import celtech.roboxbase.comms.remote.Configuration;
+import celtech.roboxbase.comms.remote.clear.WifiStatusResponse;
 import celtech.roboxbase.printerControl.model.Printer;
 import com.codahale.metrics.annotation.Timed;
 import java.io.IOException;
@@ -55,18 +56,16 @@ public class AdminAPI
     @POST
     @Timed
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("/setServerName")
     public Response setServerName(String serverName)
     {
-        PrinterRegistry.getInstance().setServerName(serverName);
+        PrinterRegistry.getInstance().setServerName(Utils.cleanInboundJSONString(serverName));
         return Response.ok().build();
     }
 
     @RolesAllowed("root")
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("updateSystem")
     public Response updateSystem(
             @FormDataParam("file") InputStream uploadedInputStream,
@@ -84,29 +83,28 @@ public class AdminAPI
     @POST
     @Timed
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("/updatePIN")
     public Response updatePIN(String newPIN)
     {
-        Root.getInstance().setApplicationPIN(newPIN);
+        Root.getInstance().setApplicationPIN(Utils.cleanInboundJSONString(newPIN));
         return Response.ok().build();
     }
 
     @POST
     @Timed
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("/resetPIN")
     public Response resetPIN(String printerSerial)
     {
 
         boolean serialMatches = false;
 
-        if (printerSerial != null)
+        String serialToUse = Utils.cleanInboundJSONString(printerSerial);
+        if (serialToUse != null)
         {
             for (Printer printer : PrinterRegistry.getInstance().getRemotePrinters().values())
             {
-                if (printer.getPrinterIdentity().printerUniqueIDProperty().get().toLowerCase().endsWith(printerSerial.toLowerCase()))
+                if (printer.getPrinterIdentity().printerUniqueIDProperty().get().toLowerCase().endsWith(serialToUse.toLowerCase()))
                 {
                     serialMatches = true;
                     break;
@@ -132,7 +130,7 @@ public class AdminAPI
     public Response setWiFiCredentials(String ssidAndPassword)
     {
         steno.info("Asked to change wifi creds to " + ssidAndPassword);
-        WifiControl.setupWiFiCredentials(ssidAndPassword.replaceAll("\"", ""));
+        WifiControl.setupWiFiCredentials(Utils.cleanInboundJSONString(ssidAndPassword));
         return Response.ok().build();
     }
 
@@ -150,10 +148,9 @@ public class AdminAPI
     @RolesAllowed("root")
     @POST
     @Timed
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("/getCurrentWifiState")
-    public Response getCurrentWifiSSID()
+    public WifiStatusResponse getCurrentWifiSSID()
     {
-        return Response.ok(WifiControl.getCurrentWifiState()).build();
+        return WifiControl.getCurrentWifiState();
     }
 }

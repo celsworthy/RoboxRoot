@@ -35,4 +35,12 @@ public class Utils
         int seconds = secondsInput - (minutes * 60) - (hours * 3600);
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
+    
+    public static String cleanInboundJSONString(String input)
+    {
+        String output = input.replaceAll("^\"", "");
+        output = output.replaceAll("\"$", "");
+        
+        return output;
+    }
 }

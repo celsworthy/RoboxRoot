@@ -12,6 +12,11 @@
         <link rel="stylesheet" href="css/robox-root.css">
         <script src="js/jquery-2.2.4.min.js"></script>
         <script src="js/jquery.mobile-1.4.5.min.js"></script>
+        <script src="js/jquery.base64.js"></script>
+        <script src="js/i18next.min.js"></script>
+        <script src="js/i18nextBrowserLanguageDetector.min.js"></script>
+        <script src="js/i18nextXHRBackend.min.js"></script>
+        <script src="js/jquery-i18next.min.js"></script>
 
         <script src="js/core.js"></script>
         <script src="js/pinReset.js"></script>
@@ -31,28 +36,22 @@
 
     <body id="ui-page-top" class="ui-mobile-viewport ui-overlay-a">
 
-        <div data-role="page" id="printer-status-page" style="padding-bottom: 63px;" class="robox-root ui-page ui-page-theme-a ui-page-footer-fixed ui-page-active" data-quicklinks="true">
-
-            <div role="banner" data-role="header" class="header-banner jqm-header ui-bar-inherit">
-                <img class="align-right" src="/css/themes/default/images/RootLogo.png" alt="Robox"/>
-                <img src="/css/themes/default/images/RoboxLogo.png" alt="Robox"/>
-            </div>
-
+        <div data-role="page" id="printer-status-page" style="padding-bottom: 63px;" class="robox-root ui-page ui-page-theme-a ui-page-footer-fixed ui-page-active has-pin-reset-header" data-quicklinks="true">
             <div class="ui-corner-all custom-corners">
                 <div style="text-align: center;" class="ui-bar ui-bar-a">
-                    <h2 class="server-name-title">PIN Reset</h2>
+                    <h2 class="server-name-title localised" data-i18n="pin-reset">PIN Reset</h2>
                 </div>
                 <div class="ui-body ui-body-a">
-                    <p>Enter the last 6 digits of the Serial Number of any Robox attached to this Root<p>
-                    <p>Don't include dashes</p>
-                    <p>E.g. 101234</p>
+                    <p class="localised" data-i18n="pin-instructions-1">Enter the last 6 digits of the Serial Number of any Robox attached to this Root<p>
+                    <p class="localised" data-i18n="pin-instructions-2">Don't include dashes</p>
+                    <p class="localised" data-i18n="pin-instructions-3">E.g. 101234</p>
                     <div style="display: inline;">
                         <input type="text" id="printer-serial" value=""/>
-                        <button class="ui-button ui-widget ui-corner-all" onClick="javascript:resetPIN();">Reset PIN to default</button>
+                        <button class="ui-button ui-widget ui-corner-all localised" onClick="javascript:resetPIN();" data-i18n="pin-reset-go">Reset PIN to default</button>
                     </div>
                 </div>
             </div>
         </div>
-
+        <div id="footer-container"></div>
     </body>
 </html>

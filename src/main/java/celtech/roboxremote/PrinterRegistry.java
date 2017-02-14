@@ -135,7 +135,7 @@ public class PrinterRegistry implements PrinterListChangesListener
             serverName = "Robox Root";
             setServerName(serverName);
         }
-        
+
         return serverName;
     }
 

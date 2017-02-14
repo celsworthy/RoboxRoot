@@ -4,7 +4,8 @@ var port = 8080;
 var defaultUser = "root"
 var applicationPINVar = "applicationPIN"
 var loginPage = "/login.html"
-var contentPage = "/rootMenu.html"
+var printerStatusPage = "/root.html"
+var locationificator_initialised = false;
 
 function checkForMobileBrowser()
 {
@@ -22,21 +23,21 @@ function logout()
     location.href = 'http://' + hostname + ':' + port + loginPage;
 }
 
-function goToContent()
+function goToPrinterStatusPage()
 {
     var enteredPIN = localStorage.getItem(applicationPINVar);
     if (enteredPIN !== null && enteredPIN !== "")
     {
         var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + enteredPIN);
         $.ajax({
-            url: 'http://' + hostname + ':' + port + contentPage,
+            url: 'http://' + hostname + ':' + port + printerStatusPage,
             cache: true,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
             },
             type: 'GET',
             success: function (data, textStatus, jqXHR) {
-                location.href = 'http://' + hostname + ':' + port + contentPage;
+                location.href = 'http://' + hostname + ':' + port + printerStatusPage;
             },
             error: function (data, textStatus, jqXHR) {
                 logout();
@@ -69,7 +70,7 @@ function sendCommandToRoot(requestType, service, successCallback, errorCallback,
         },
         contentType: "application/json", // send as JSON
         type: requestType,
-        dataType: 'json',
+//        dataType: 'json',
         data: JSON.stringify(dataToSend)
     }).success(function (data, textStatus, jqXHR)
     {
@@ -121,3 +122,112 @@ function refreshStatusTable()
             // Trigger if the new injected markup contain links or buttons that need to be enhanced
             .trigger("create");
 }
+
+function updateLocalisation()
+{
+    if (locationificator_initialised)
+    {
+        $('.localised').each(function ()
+        {
+            $(this).localize();
+        });
+        
+        $(".language-selector").val(i18next.language);
+    }
+}
+
+function createHeader(header_class_tag, header_i18n)
+{
+//        var headerHTML = '<div role="banner" data-role="header" data-position="fixed" class="header-banner jqm-header ui-bar-inherit robox-root"><img class="align-right" src="/css/themes/default/images/RootLogo.png" alt="Robox" style="padding:5px;"/><img src="/css/themes/default/images/RoboxLogo.png" alt="Robox" style="padding:5px;"/></div><div class="ui-bar ui-bar-a ui-grid-b" style="padding: 0;"><div class="ui-block-a footer"></div><div class="ui-block-b footer"><h2 class="server-name-title localised" data-i18n="' + header_i18n + '"></h2></div><div class="ui-block-c footer"><form style="height: .8em; width: 150px;"><select name="language-selector" id="language-selector" data-mini="true"><option value="en">English</option><option value="fr">Français</option></select></form></div></div>';
+
+    var headerHTML = "<div id=\"header-banner\" role=\"banner\" data-role=\"header\" data-position=\"fixed\" class=\"header-banner jqm-header ui-bar-inherit robox-root\">"
+            + "<img class=\"align-right\" src=\"/css/themes/default/images/RootLogo.png\" alt=\"Robox\"/>"
+            + "<img src=\"/css/themes/default/images/RoboxLogo.png\" alt=\"Robox\"/>"
+            + "</div>"
+            + "<div class=\"ui-bar ui-bar-a ui-grid-b\" style=\"padding: 0;\">"
+            + "<div class=\"ui-block-a footer\">"
+            + "</div>"
+            + "<div class=\"ui-block-b footer\"><h2 class=\"server-name-title localised\" data-i18n=\"" + header_i18n + "\"></h2></div>"
+            + "<div class=\"ui-block-c footer\">"
+            + "<form style=\"height: .8em; width: 150px;\">"
+            + "<select name=\"language-selector\" class=\"language-selector\" data-mini=\"true\">"
+            + "<option value=\"en\">English</option>"
+            + "<option value=\"fr\">Français</option>"
+            + "</select>"
+            + "</form>"
+            + "</div>"
+            + "</div>";
+
+//            + "<form style=\"height: .8em; width: 150px;\">"
+//            + "<div class=\"ui-select ui-mini\"><div id=\"select-20-button\" class=\"ui-btn ui-icon-carat-d ui-btn-icon-right ui-corner-all ui-shadow\">"
+//            + "<span class=\"language-selector\">English</span><select name=\"language-selector\" class=\"language-selector\" data-mini=\"true\">"
+//            + "<option value=\"en\">English</option>"
+//            + "<option value=\"fr\">Français</option>"
+//            + "</select>"
+//            + "</div>"
+//            + "</div>"
+//            + "</form>"
+
+    $('.' + header_class_tag).prepend(headerHTML);
+
+    $(".language-selector").change(function () {
+        i18next.changeLanguage($(this).val(), (err, t) => {
+            updateLocalisation();
+        });
+    });
+
+    updateLocalisation();
+}
+
+function createFooter()
+{
+//    var footerHTML = '<div id="footer" class="jqm-footer ui-footer ui-bar-inherit ui-footer-fixed slideup"><div id="footer-grid" class="ui-grid-b" style="height:50px"><div class="ui-block-a footer"><span>Root Manager </span><span class="jqm-version">0.1</span></div><div class="ui-block-b footer"><span><a href="printerStatus.html" class="ui-btn ui-icon-home ui-btn-icon-notext ui-corner-all">No text</a></span><span><a href="admin.html" class="ui-btn ui-icon-gear ui-btn-icon-notext ui-corner-all">No text</a></span></div><div class="ui-block-c footer"><span class="numberOfPrintersDisplay"></span></div></div></div>';
+    var footerHTML = "<div id=\"footer\" class=\"jqm-footer ui-footer ui-bar-inherit ui-footer-fixed slideup\">"
+            + "<div id=\"footer-grid\" class=\"ui-grid-b\" style=\"height:50px\">"
+            + "<div class=\"ui-block-a footer\"><span>Root Manager </span><span class=\"jqm-version\">0.1</span></div>"
+            + "<div class=\"ui-block-b footer\"><span><a href=\"#printer-status-page\" data-transition=\"slide\" class=\"ui-btn ui-icon-home ui-btn-icon-notext ui-corner-all\">No text</a></span><span><a href=\"#server-status-page\" data-transition=\"slide\" class=\"ui-btn ui-icon-gear ui-btn-icon-notext ui-corner-all\">No text</a></span></div>"
+            + "<div class=\"ui-block-c footer\"><span class=\"numberOfPrintersDisplay\"></span></div>"
+            + "</div>"
+            + "</div>";
+    $('.footer-container').append(footerHTML);
+}
+
+//$(document).on('pagechange', function () {
+//    if (typeof page_primer === "function")
+//    {
+//        page_primer();
+//    }
+//});
+
+$(document).ready(function () {
+    i18next.use(i18nextBrowserLanguageDetector)
+            .use(i18nextXHRBackend)
+            .init({
+                debug: true,
+                fallbackLng: 'en',
+                backend: {
+                    loadPath: '/locales/{{lng}}/translation.json'
+                }
+            }, function (t) {
+                jqueryI18next.init(i18next, $, {
+                    tName: 't', // --> appends $.t = i18next.t
+                    i18nName: 'i18n', // --> appends $.i18n = i18next
+                    handleName: 'localize', // --> appends $(selector).localize(opts);
+                    selectorAttr: 'data-i18n', // selector for translating elements
+                    targetAttr: 'i18n-target', // data-() attribute to grab target element to translate (if diffrent then itself)
+                    optionsAttr: 'i18n-options', // data-() attribute that contains options, will load/set if useOptionsAttr = true
+                    useOptionsAttr: false, // see optionsAttr
+                });
+                locationificator_initialised = true;
+                updateLocalisation();
+
+                checkForMobileBrowser();
+
+                if (typeof page_initialiser === "function")
+                {
+                    page_initialiser();
+                    updateLocalisation();
+                }
+
+            });
+});

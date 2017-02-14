@@ -20,7 +20,8 @@
 
         <script src="js/core.js"></script>
         <script src="js/root.js"></script>
-        <style id="inset-tablist">
+
+<!--        <style id="inset-tablist">
             .tablist-left {
                 width: 60%;
                 display: inline-block;
@@ -31,20 +32,12 @@
                 vertical-align: top;
                 margin-left: 5%;
             }
-        </style>
+        </style>-->
     </head>
 
     <body>
-
-        <div data-role="page" id="printer-status-page" style="padding-bottom: 63px;" class="robox-root">
-            <div role="banner" data-role="header" data-position="fixed" class="header-banner jqm-header ui-bar-inherit">
-                <img class="align-right" src="/css/themes/default/images/RootLogo.png" alt="Robox" style="padding:5px;"/>
-                <img src="/css/themes/default/images/RoboxLogo.png" alt="Robox" style="padding:5px;"/>
-            </div>
+        <div data-role="page" id="printer-status-page" style="padding-bottom: 63px;" class="ui-page-active robox-root has-printer-status-header">
             <div class="ui-panel-wrapper">
-                <div style="text-align: center;" class="ui-bar ui-bar-a">
-                    <h2><span class="localised" data-i18n="printer-status">Printer Status</span> - <span class="server-name-title">Server Name</span></h2>
-                </div>
                 <div role="main" class="ui-content">
                     <table id="printer-status" data-role="table" data-mode="columntoggle" class="status-table ui-responsive ui-shadow gk-decorate table-stroke" data-column-btn-mini='true' data-column-btn-text='Columns to Display'>
                         <thead>
@@ -132,31 +125,15 @@
                     <input type="submit" class="localised" data-i18n="send-gcode-to-printer" value="Send GCode to printer">
                 </form>
             </div>
-
-            <div class="jqm-footer ui-footer ui-bar-inherit ui-footer-fixed slideup">
-                <div class="ui-grid-b" style="height:50px">
-                    <div class="ui-block-a footer"><span>Root Manager </span><span class="jqm-version">0.1</span></div>
-                    <div class="ui-block-b footer"><span><a href="#printer-status-page" class="ui-btn ui-icon-home ui-btn-icon-notext ui-corner-all">No text</a></span><span><a href="#server-status-page" class="ui-btn ui-icon-gear ui-btn-icon-notext ui-corner-all">No text</a></span></div>
-                    <div class="ui-block-c footer"><span class="numberOfPrintersDisplay"></span></div>
-                </div>
-            </div>
+            <div class="footer-container"></div>
         </div>
 
-        <div data-role="page" id="server-status-page" style="padding-bottom: 63px;" class="robox-root ui-page ui-page-theme-a ui-page-footer-fixed" data-quicklinks="true">
-
-            <div role="banner" data-role="header" data-position="fixed" class="header-banner jqm-header ui-bar-inherit">
-                <img class="align-right" src="/css/themes/default/images/RootLogo.png" alt="Robox" style="padding:5px;"/>
-                <img src="/css/themes/default/images/RoboxLogo.png" alt="Robox" style="padding:5px;"/>
-            </div>
-
+        <div data-role="page" id="server-status-page" style="padding-bottom: 63px;" class="robox-root ui-page ui-page-theme-a ui-page-footer-fixed has-admin-header" data-quicklinks="true">
             <div class="ui-corner-all custom-corners">
-                <div style="text-align: center;" class="ui-bar ui-bar-a">
-                    <h2><span class="localised" data-i18n="admin">Admin</span> - <span class="server-name-title">Server Name</span></h2>
-                </div>
                 <div class="ui-body ui-body-a">
-                    <div data-role="tabs">
+                    <div data-role="tabs" id="admin-tabs">
                         <div data-role="navbar">
-                            <ul>
+                            <ul id='custom-navbar'>
                                 <li><a href="#fragment-1" class="ui-btn-active localised" data-i18n="identity">Identity</a></li>
                                 <li><a href="#fragment-2" class="localised" data-i18n="network">Network</a></li>
                                 <li><a href="#fragment-3" class="localised" data-i18n="upgrade">Upgrade</a></li>
@@ -235,14 +212,7 @@
                     </div>
                 </div>
             </div>
-
-            <div class="jqm-footer ui-footer ui-bar-inherit ui-footer-fixed slideup">
-                <div class="ui-grid-b" style="height:50px">
-                    <div class="ui-block-a footer"><span>Root Manager </span><span class="jqm-version">0.1</span></div>
-                    <div class="ui-block-b footer"><span><a href="#printer-status-page" class="ui-btn ui-icon-home ui-btn-icon-notext ui-corner-all">No text</a></span><span><a href="#server-status-page" class="ui-btn ui-icon-gear ui-btn-icon-notext ui-corner-all">No text</a></span></div>
-                    <div class="ui-block-c footer"><span class="numberOfPrintersDisplay"></span></div>
-                </div>
-            </div>
+            <div class="footer-container"></div>
         </div>
     </body>
 </html>

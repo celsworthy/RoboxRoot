@@ -16,17 +16,16 @@ function goToPINReset()
     location.href = '/pinReset.html';
 }
 
-$(document).ready(function ()
+function page_initialiser()
 {
-    checkForMobileBrowser();
-
+    createHeader("has-login-header", "login");
+    createFooter();
+    
     var enteredPIN = localStorage.getItem(applicationPINVar);
     $("#application-pin-value").val(enteredPIN);
-
     if (enteredPIN !== null
             && enteredPIN !== "")
     {
         attemptLogin();
     }
-
-});
+}
