@@ -7,7 +7,7 @@ function attemptLogin()
     {
         localStorage.setItem(applicationPINVar, enteredPIN);
         console.log("Hello " + localStorage.getItem(applicationPINVar));
-        location.href = '/';
+        goToPrinterStatusPage();
     }
 }
 
