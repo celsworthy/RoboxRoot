@@ -16,10 +16,14 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.EnumSet;
 import java.util.Enumeration;
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
 import libertysystems.stenographer.Stenographer;
 import libertysystems.stenographer.StenographerFactory;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 
 /**
  *
@@ -109,17 +113,18 @@ public class Root extends Application<RoboxRemoteConfiguration>
 //            steno.info("Exception whilst setting up security");
 //        }
 //        environment.jersey().register(MultiPartFeature.class);
-//        // Enable CORS headers
-//        final FilterRegistration.Dynamic cors
-//                = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
+        // Enable CORS headers
+        final FilterRegistration.Dynamic cors
+                = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
 //
-//        // Configure CORS parameters
-//        cors.setInitParameter("allowedOrigins", "*");
-//        cors.setInitParameter("allowedHeaders", "X-Requested-With,Content-Type,Accept,Origin");
-//        cors.setInitParameter("allowedMethods", "OPTIONS,GET,PUT,POST,DELETE,HEAD");
+        // Configure CORS parameters
+        cors.setInitParameter("allowedOrigins", "*");
+        cors.setInitParameter("allowedHeaders", "X-Requested-With,Content-Type,Accept,Origin");
+        cors.setInitParameter("allowedMethods", "GET");
 //
 //        // Add URL mapping
-//        cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+        cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+        
         final AdminAPI adminAPI = new AdminAPI();
         final LowLevelAPI lowLevelAPI = new LowLevelAPI();
         final PublicPrinterControlAPI highLevelAPI = new PublicPrinterControlAPI();
