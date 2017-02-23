@@ -66,7 +66,7 @@ public class AdminAPI
         return Response.ok().build();
     }
 
-//    @RolesAllowed("root")
+    @RolesAllowed("root")
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Path("updateSystem")
