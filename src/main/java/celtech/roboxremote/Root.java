@@ -1,6 +1,7 @@
 package celtech.roboxremote;
 
 import celtech.roboxbase.configuration.BaseConfiguration;
+import celtech.roboxbase.configuration.MachineType;
 import celtech.roboxbase.utils.ApplicationUtils;
 import celtech.roboxremote.custom_dropwizard.AuthenticatedAssetsBundle;
 import celtech.roboxremote.security.RootAPIAuthFilter;
@@ -124,7 +125,7 @@ public class Root extends Application<RoboxRemoteConfiguration>
 //
 //        // Add URL mapping
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
-        
+
         final AdminAPI adminAPI = new AdminAPI();
         final LowLevelAPI lowLevelAPI = new LowLevelAPI();
         final PublicPrinterControlAPI highLevelAPI = new PublicPrinterControlAPI();
@@ -184,11 +185,23 @@ public class Root extends Application<RoboxRemoteConfiguration>
     public void restart()
     {
         StringBuilder restartCommand = new StringBuilder();
-        restartCommand.append(BaseConfiguration.getApplicationInstallDirectory(null));
-        restartCommand.append("runRoot.sh");
+        String installDir = BaseConfiguration.getApplicationInstallDirectory(null);
+
+        if (BaseConfiguration.getMachineType() == MachineType.WINDOWS)
+        {
+            restartCommand.append(installDir);
+            restartCommand.append("runRoot.bat");
+        } else
+        {
+            restartCommand.append("nohup ");
+            restartCommand.append(installDir);
+            restartCommand.append("runRoot.sh &");
+        }
+        
         try
         {
-            Runtime.getRuntime().exec(restartCommand.toString());
+            ProcessBuilder processBuilder = new ProcessBuilder(restartCommand.toString());
+            processBuilder.start();
             stop();
         } catch (IOException ex)
         {

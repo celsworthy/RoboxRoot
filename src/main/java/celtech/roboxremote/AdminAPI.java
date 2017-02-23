@@ -1,7 +1,10 @@
 package celtech.roboxremote;
 
+import celtech.roboxbase.BaseLookup;
 import celtech.roboxbase.comms.remote.Configuration;
 import celtech.roboxbase.comms.remote.clear.WifiStatusResponse;
+import celtech.roboxbase.configuration.BaseConfiguration;
+import celtech.roboxbase.configuration.MachineType;
 import celtech.roboxbase.printerControl.model.Printer;
 import com.codahale.metrics.annotation.Timed;
 import java.io.IOException;
@@ -63,20 +66,50 @@ public class AdminAPI
         return Response.ok().build();
     }
 
-    @RolesAllowed("root")
+//    @RolesAllowed("root")
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Path("updateSystem")
     public Response updateSystem(
-            @FormDataParam("file") InputStream uploadedInputStream,
-            @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException
+            @FormDataParam("name") InputStream uploadedInputStream,
+            @FormDataParam("name") FormDataContentDisposition fileDetail) throws IOException
     {
-        String uploadedFileLocation = "/tmp/" + fileDetail.getFileName();
-        steno.info("Upgrade file " + uploadedFileLocation + " has been uploaded");
-        // save it
-        utils.writeToFile(uploadedInputStream, uploadedFileLocation);
-        Root.getInstance().restart();
-        return Response.ok().build();
+        Response response = Response.serverError().build();
+
+        try
+        {
+            String fileName = fileDetail.getFileName();
+            steno.info("Asked to upgrade using file " + fileName);
+
+            String uploadedFileLocation;
+            if (BaseConfiguration.getMachineType() != MachineType.WINDOWS)
+            {
+                uploadedFileLocation = "/tmp/" + fileName;
+            } else
+            {
+                uploadedFileLocation = BaseConfiguration.getUserTempDirectory() + fileName;
+            }
+            steno.info("Upgrade file " + uploadedFileLocation + " has been uploaded");
+            
+            // save it
+            utils.writeToFile(uploadedInputStream, uploadedFileLocation);
+            
+            //Shut down - but allow the response to go back to the requester first
+            BaseLookup.getTaskExecutor().runOnBackgroundThread(() ->
+            {
+                try
+                {
+                    Thread.sleep(2000);
+                    Root.getInstance().restart();
+                } catch (InterruptedException ex)
+                {
+                }
+            });
+            response = Response.ok().build();
+        } catch (IOException ex)
+        {
+        }
+        return response;
     }
 
     @RolesAllowed("root")
