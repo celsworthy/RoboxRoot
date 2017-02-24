@@ -1,6 +1,5 @@
 package celtech.roboxremote;
 
-import celtech.roboxbase.comms.RoboxCommsManager;
 import celtech.roboxbase.comms.remote.Configuration;
 import celtech.roboxbase.comms.rx.RoboxRxPacket;
 import celtech.roboxbase.comms.tx.RoboxTxPacket;
@@ -9,11 +8,7 @@ import celtech.roboxbase.comms.rx.RoboxRxPacketFactory;
 import celtech.roboxbase.comms.rx.RxPacketTypeEnum;
 import celtech.roboxbase.comms.tx.ReportErrors;
 import celtech.roboxbase.comms.tx.StatusRequest;
-import celtech.roboxbase.configuration.BaseConfiguration;
-import celtech.roboxbase.postprocessor.PrintJobStatistics;
 import com.codahale.metrics.annotation.Timed;
-import java.io.File;
-import java.io.IOException;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
