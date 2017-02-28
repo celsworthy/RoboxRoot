@@ -7,8 +7,18 @@ import celtech.roboxbase.comms.exceptions.RoboxCommsException;
 import celtech.roboxbase.comms.rx.RoboxRxPacketFactory;
 import celtech.roboxbase.comms.rx.RxPacketTypeEnum;
 import celtech.roboxbase.comms.tx.ReportErrors;
+import celtech.roboxbase.comms.tx.SendDataFileChunk;
+import celtech.roboxbase.comms.tx.SendDataFileEnd;
+import celtech.roboxbase.comms.tx.SendDataFileStart;
 import celtech.roboxbase.comms.tx.StatusRequest;
+import celtech.roboxbase.configuration.BaseConfiguration;
+import celtech.roboxbase.postprocessor.PrintJobStatistics;
+import celtech.roboxbase.printerControl.PrintJob;
 import com.codahale.metrics.annotation.Timed;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -19,6 +29,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import libertysystems.stenographer.Stenographer;
 import libertysystems.stenographer.StenographerFactory;
+import org.parboiled.common.FileUtils;
 
 /**
  *
@@ -78,6 +89,26 @@ public class LowLevelAPI
                 rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getCommandInterface().getLastErrorResponse();
             } else
             {
+//                if (remoteTx instanceof SendDataFileStart)
+//                {
+//                    steno.info("Receiving print job " + remoteTx.getMessagePayload());
+//                } else if (remoteTx instanceof SendDataFileChunk)
+//                {
+//                    String payload = remoteTx.getMessagePayload();
+//                    steno.info("Got chunk " + payload);
+//                    String[] payloadParts = payload.split("\n");
+//                    for (String payloadPart : payloadParts)
+//                    {
+//                        if (payloadPart.startsWith(PrintJobStatistics.DATA_PREFIX_IN_FILE))
+//                        {
+//                            reconstructedStatistics.get(printerID).updateValueFromStatsString(payloadPart);
+//                        }
+//                    }
+//                } else if (remoteTx instanceof SendDataFileEnd)
+//                {
+//                    steno.info("End of print job");
+//                }
+
                 try
                 {
                     rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getCommandInterface().writeToPrinter(remoteTx, true);
@@ -89,5 +120,46 @@ public class LowLevelAPI
         }
 
         return rxPacket;
+    }
+
+    @RolesAllowed("root")
+    @POST
+    @Timed
+    @Path(Configuration.sendStatisticsService)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response provideStatistics(@PathParam("printerID") String printerID,
+            PrintJobStatistics statistics)
+    {
+        Response response;
+        String statsFileLocation = BaseConfiguration.getPrintSpoolDirectory() + statistics.getPrintJobID() + File.separator + statistics.getPrintJobID() + BaseConfiguration.statisticsFileExtension;
+        try
+        {
+            statistics.writeStatisticsToFile(statsFileLocation);
+            response = Response.ok().build();
+        } catch (IOException ex)
+        {
+            response = Response.serverError().build();
+        }
+        return response;
+    }
+
+    @RolesAllowed("root")
+    @POST
+    @Timed
+    @Path(Configuration.retrieveStatisticsService)
+    @Produces(MediaType.APPLICATION_JSON)
+    public PrintJobStatistics retrieveStatistics(@PathParam("printerID") String printerID,
+            String printJobID)
+    {
+        PrintJobStatistics statistics = null;
+        try
+        {
+            statistics = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getPrintEngine().printJobProperty().get().getStatistics();
+        } catch (IOException ex)
+        {
+
+        }
+
+        return statistics;
     }
 }
