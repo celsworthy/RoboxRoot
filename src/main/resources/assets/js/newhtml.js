@@ -1,4 +1,0 @@
-function page_initialiser()
-{
-}
-
