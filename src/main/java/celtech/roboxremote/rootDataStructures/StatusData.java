@@ -19,6 +19,7 @@ import javafx.scene.paint.Color;
  */
 public class StatusData
 {
+
     private String printerID;
     private String printerName;
     private String printerWebColourString;
@@ -70,7 +71,7 @@ public class StatusData
         Color displayColour = colourMap.printerToDisplayColour(printer.getPrinterIdentity().printerColourProperty().get());
 
         printerWebColourString = "#" + ColourStringConverter.colourToString(displayColour);
-        
+
         boolean statusProcessed = false;
 
         switch (printer.busyStatusProperty().get())
@@ -93,14 +94,7 @@ public class StatusData
                 case PAUSED:
                 case PAUSE_PENDING:
                 case RESUME_PENDING:
-                    if (printer.printerStatusProperty().get() == PrinterStatus.PRINTING_PROJECT)
-                    {
-                        printerStatusString = PrinterStatus.PRINTING_PROJECT.getI18nString()
-                                + "/" + BaseLookup.i18n(printer.pauseStatusProperty().get().getI18nString());
-                    } else
-                    {
-                        printerStatusString = BaseLookup.i18n(printer.pauseStatusProperty().get().getI18nString());
-                    }
+                    printerStatusString = BaseLookup.i18n(printer.pauseStatusProperty().get().getI18nString());
                     statusProcessed = true;
                     break;
                 default:
@@ -185,7 +179,7 @@ public class StatusData
             {
                 attachedFilamentNames = new String[1];
             }
-            
+
             materialLoaded = new boolean[1];
         }
 

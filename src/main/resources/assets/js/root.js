@@ -740,4 +740,6 @@ function page_initialiser()
     getServerStatus()
     getPrinters();
     setInterval(getStatus, 2000);
+    
+    $('body').enhanceWithin();
 }

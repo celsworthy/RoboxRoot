@@ -7,18 +7,12 @@ import celtech.roboxbase.comms.exceptions.RoboxCommsException;
 import celtech.roboxbase.comms.rx.RoboxRxPacketFactory;
 import celtech.roboxbase.comms.rx.RxPacketTypeEnum;
 import celtech.roboxbase.comms.tx.ReportErrors;
-import celtech.roboxbase.comms.tx.SendDataFileChunk;
-import celtech.roboxbase.comms.tx.SendDataFileEnd;
-import celtech.roboxbase.comms.tx.SendDataFileStart;
 import celtech.roboxbase.comms.tx.StatusRequest;
 import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxbase.postprocessor.PrintJobStatistics;
-import celtech.roboxbase.printerControl.PrintJob;
 import com.codahale.metrics.annotation.Timed;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -29,7 +23,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import libertysystems.stenographer.Stenographer;
 import libertysystems.stenographer.StenographerFactory;
-import org.parboiled.common.FileUtils;
 
 /**
  *

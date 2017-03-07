@@ -3,6 +3,7 @@ package celtech.roboxremote;
 import celtech.roboxbase.comms.remote.clear.WifiStatusResponse;
 import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxbase.configuration.MachineType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -79,23 +80,15 @@ public class WifiControl
 
         WifiStatusResponse response = null;
 
-        //Expects <on|off> <yes|no> [ssid]
-        String[] outputParts = scriptOutput.split(" ");
-        boolean powered = false;
-        boolean associated = false;
-        String ssid = "";
-
-        if (outputParts.length >= 2)
+        ObjectMapper mapper = new ObjectMapper();
+        try
         {
-            powered = outputParts[0].equalsIgnoreCase("on");
-            associated = outputParts[1].equalsIgnoreCase("yes");
+            response = mapper.readValue(scriptOutput, WifiStatusResponse.class);
+        } catch (IOException ex)
+        {
+            steno.error("Unable to decipher wifi status response");
         }
 
-        if (outputParts.length == 3)
-        {
-            ssid = outputParts[2];
-        }
-        response = new WifiStatusResponse(powered, associated, ssid);
         return response;
     }
 

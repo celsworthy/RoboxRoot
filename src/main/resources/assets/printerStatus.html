@@ -22,7 +22,7 @@
         <script src="js/jquery-i18next.min.js"></script>
         <script src="js/jquery.base64.js"></script>
         <script src="js/core.js"></script> 
-        <script src="js/login.js"></script> 
+        <script src="js/printerStatus.js"></script> 
         <script src="js/bootstrap.min.js"></script> 
 
         <title>Robox Root Manager</title>
@@ -49,31 +49,23 @@
     </head>
 
     <body>
-        <div class="main-container">
-            <script type="text/javascript">var titlei18n = "login";</script>
-            <script type="text/javascript" src="js/header.js"></script>
+        <script type="text/javascript">var titlei18n = "printer-status";</script>
+        <script type="text/javascript" src="js/header.js"></script>
 
-            <div class='content-container'>
-                <div class="alert alert-info" role="alert">
-                    <p data-i18n="enter-the-pin h2">Enter the PIN for this Root</p>
-                    <p data-i18n="enter-the-pin-hint">Hint: The default PIN is 1111</p>
-                </div>
-
-                <div class="input-group">
-                    <span class="input-group-addon" id="sizing-addon1" data-i18n="PIN">PIN:</span>
-                    <input id="application-pin-value" type="text" class="form-control" placeholder="PIN..." aria-describedby="sizing-addon1">
-                    <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" data-i18n="go" onClick="javascript:attemptLogin();">Go!</button>
-                    </span>
-                </div>
-
-                <div class="text-center top-gap">
-                    <button type="button" class="btn btn-default btn-lg" data-i18n="forgot-pin">Forgot PIN</button>
-                </div>
-            </div>
-            <div class='footer-box'>
-                <script type="text/javascript" src="js/languageSelector.js"></script>
-            </div>
+        <div class='content-container'>
+            <table id="printer-status" class="table">
+                <thead class="thead-default">
+                    <tr>
+                        <th height="50px" width="20px" class="h4"></th>
+                        <th height="50px" width="130px" class="localised h4" data-i18n="name">Name</th>
+                        <th height="50px" width="100px" class="localised h4" data-i18n="status">Status</th>
+                        <th height="50px" width="70px" class="h4"></th>
+                    </tr>
+                </thead>
+                <tbody id="printer-status-body">
+                </tbody>
+            </table>
         </div>
+        <script type='text/javascript' src='js/footer.js'></script>
     </body>
 </html>

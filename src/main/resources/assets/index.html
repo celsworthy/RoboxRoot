@@ -1,48 +1,58 @@
 <!DOCTYPE html>
-<html class="ui-mobile">
+<html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
-        <title>Robox Root Manager</title>
-        <link rel="shortcut icon" href="favicon.ico">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" href="../../favicon.ico">
+
         <link rel="stylesheet" href="css/themes/Root.css" />
-        <link rel="stylesheet" href="css/themes/jquery.mobile.icons.min.css" />
-        <link rel="stylesheet" href="css/themes/default/jquery.mobile-1.4.5.min.css">
         <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+        <link href="css/grid.css" rel="stylesheet">
+        <link href="css/sticky-header.css" rel="stylesheet">
+        <link href="css/sticky-footer.css" rel="stylesheet">
         <link rel="stylesheet" href="css/robox-root.css">
         <script src="js/jquery-2.2.4.min.js"></script>
-        <script src="js/jquery.mobile-1.4.5.min.js"></script>
-        <script src="js/jquery.base64.js"></script>
         <script src="js/i18next.min.js"></script>
         <script src="js/i18nextBrowserLanguageDetector.min.js"></script>
         <script src="js/i18nextXHRBackend.min.js"></script>
         <script src="js/jquery-i18next.min.js"></script>
+        <script src="js/jquery.base64.js"></script>
+        <script src="js/core.js"></script> 
+        <script src="js/startup.js"></script> 
 
-        <script src="js/core.js"></script>
-        <script src="js/startup.js"></script>
-        <style id="inset-tablist">
-            .tablist-left {
-                width: 60%;
-                display: inline-block;
-            }
-            .tablist-content {
-                width: 40%;
-                display: inline-block;
-                vertical-align: top;
-                margin-left: 5%;
-            }
-        </style>
+        <title>Robox Root Manager</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <!-- Bootstrap theme -->
+        <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+        <!-- Custom styles for this template -->
+        <!--<link href="css/theme.css" rel="stylesheet">-->
+
+        <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+        <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+        <script src="js/ie-emulation-modes-warning.js"></script>
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
     </head>
 
-    <body id="ui-page-top" class="ui-mobile-viewport ui-overlay-a">
+    <body>
+        <script type="text/javascript">var titlei18n = "admin";</script>
+        <script type="text/javascript" src="js/header.js"></script>
 
-        <div data-role="page" id="printer-status-page" style="padding-bottom: 63px;" class="robox-root ui-page ui-page-theme-a ui-page-footer-fixed ui-page-active has-login-header" data-quicklinks="true">
-            <div class="ui-corner-all custom-corners">
-                <div class="ui-body ui-body-a">
-                    <h2 class="localised" data-i18n="welcome">Welcome to Robox Root</h2>
-                </div>
-            </div>
+        <div class='footer-box'>
+            <script type="text/javascript" src="js/languageSelector.js"></script>
         </div>
-
     </body>
 </html>

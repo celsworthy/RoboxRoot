@@ -2,8 +2,6 @@ var isMobile = false; //initiate as false
 
 function page_initialiser() {
 
-    createHeader("has-login-header", "login");
-    
     checkForMobileBrowser();
 
     var enteredPIN = localStorage.getItem(applicationPINVar);

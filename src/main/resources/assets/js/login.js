@@ -1,4 +1,7 @@
 var isMobile = false; //initiate as false
+var applicationPINVar = "applicationPIN";
+var defaultUser = "root";
+var printerStatusPage = "/printerStatus.html";
 
 function attemptLogin()
 {
@@ -18,9 +21,6 @@ function goToPINReset()
 
 function page_initialiser()
 {
-    createHeader("has-login-header", "login");
-    createFooter();
-    
     var enteredPIN = localStorage.getItem(applicationPINVar);
     $("#application-pin-value").val(enteredPIN);
     if (enteredPIN !== null
@@ -28,4 +28,10 @@ function page_initialiser()
     {
         attemptLogin();
     }
+    
+    $("#application-pin-value").on('keyup', function (e) {
+        if (e.keyCode === 13) {
+            attemptLogin();
+        }
+    });
 }
