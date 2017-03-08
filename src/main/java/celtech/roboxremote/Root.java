@@ -121,7 +121,7 @@ public class Root extends Application<RoboxRemoteConfiguration>
         // Configure CORS parameters
         cors.setInitParameter("allowedOrigins", "*");
         cors.setInitParameter("allowedHeaders", "X-Requested-With,Content-Type,Accept,Origin");
-        cors.setInitParameter("allowedMethods", "GET");
+        cors.setInitParameter("allowedMethods", "OPTIONS,GET,POST,HEAD");
 //
 //        // Add URL mapping
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
