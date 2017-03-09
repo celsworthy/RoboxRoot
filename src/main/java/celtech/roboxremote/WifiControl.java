@@ -86,7 +86,7 @@ public class WifiControl
             response = mapper.readValue(scriptOutput, WifiStatusResponse.class);
         } catch (IOException ex)
         {
-            steno.error("Unable to decipher wifi status response");
+            steno.exception("Unable to decipher wifi status response", ex);
         }
 
         return response;
