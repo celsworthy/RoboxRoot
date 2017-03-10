@@ -193,9 +193,8 @@ public class Root extends Application<RoboxRemoteConfiguration>
             restartCommand.append("runRoot.bat");
         } else
         {
-            restartCommand.append("/usr/bin/nohup ");
             restartCommand.append(installDir);
-            restartCommand.append("runRoot.sh &");
+            restartCommand.append("restartRoot.sh &");
         }
         
         try
