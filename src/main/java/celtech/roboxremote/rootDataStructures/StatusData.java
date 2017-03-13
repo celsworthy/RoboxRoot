@@ -31,7 +31,7 @@ public class StatusData
     private boolean canPurgeHead;
     private boolean canRemoveHead;
     private boolean canOpenDoor;
-    private boolean canEjectFilament;
+    private boolean[] canEjectFilament;
     private boolean canCancel;
     private boolean canCalibrateHead;
 
@@ -111,8 +111,20 @@ public class StatusData
         canCalibrateHead = printer.canCalibrateHeadProperty().get();
         canCancel = printer.canCancelProperty().get();
         canOpenDoor = printer.canOpenDoorProperty().get();
-        //This should be a real value from the printer...
-        canEjectFilament = printer.canOpenDoorProperty().get();
+
+        int numberOfExtruders = 1;
+        if (printer.extrudersProperty().size() == 2
+                && printer.extrudersProperty().get(1) != null
+                && printer.extrudersProperty().get(1).isFittedProperty().get())
+        {
+            numberOfExtruders = 2;
+        }
+        canEjectFilament = new boolean[numberOfExtruders];
+        for (int extruderNumber = 0; extruderNumber < numberOfExtruders; extruderNumber++)
+        {
+            canEjectFilament[extruderNumber] = printer.extrudersProperty().get(extruderNumber) != null && printer.extrudersProperty().get(extruderNumber).isFittedProperty().get() && printer.extrudersProperty().get(extruderNumber).canEjectProperty().get();
+        }
+
         canPause = printer.canPauseProperty().get();
         canPurgeHead = printer.canPurgeHeadProperty().get();
         canRemoveHead = printer.canRemoveHeadProperty().get();
@@ -166,6 +178,7 @@ public class StatusData
                 attachedFilamentNames = new String[2];
                 materialLoaded = new boolean[2];
             }
+
             if (printer.effectiveFilamentsProperty().get(1) != FilamentContainer.UNKNOWN_FILAMENT)
             {
                 attachedFilamentNames[1] = printer.effectiveFilamentsProperty()
@@ -289,12 +302,14 @@ public class StatusData
         this.canOpenDoor = canOpenDoor;
     }
 
-    public void setCanEjectFilament(boolean canEjectFilament)
+    @JsonProperty
+    public void setCanEjectFilament(boolean[] canEjectFilament)
     {
         this.canEjectFilament = canEjectFilament;
     }
 
-    public boolean isCanEjectFilament()
+    @JsonProperty
+    public boolean[] getCanEjectFilament()
     {
         return canEjectFilament;
     }

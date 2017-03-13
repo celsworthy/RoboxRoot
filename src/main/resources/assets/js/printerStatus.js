@@ -67,6 +67,7 @@ function processAddedAndRemovedPrinters(printerIDs)
             || printersToAdd.length > 0)
     {
         printerListChanged = true;
+        createPrinterSelector();
     }
 
     return printerListChanged;
@@ -75,10 +76,9 @@ function processAddedAndRemovedPrinters(printerIDs)
 function addPrinter(printerID)
 {
     connectedPrinterIDs.push(printerID);
-    getPrinterStatus(printerID, function (data) {
-        connectedPrinters.push(data);
-        updatePrinterSelector();
-    });
+//    getPrinterStatus(printerID, function (data) {
+//        connectedPrinters.push(data);
+//    });
 }
 
 function deletePrinter(printerID)
@@ -86,7 +86,6 @@ function deletePrinter(printerID)
     var indexToDelete = connectedPrinterIDs.indexOf(printerID);
     connectedPrinterIDs.splice(indexToDelete, 1);
     connectedPrinters.splice(indexToDelete, 1);
-    updatePrinterSelector();
 }
 
 function removeAllPrinterTabs()
@@ -192,12 +191,12 @@ function getPrinterStatus(printerID, callback)
             null);
 }
 
-function updatePrinterSelector()
+function createPrinterSelector()
 {
     var selectorHTML = "";
-    for (var connPrinterIndex = 0; connPrinterIndex < connectedPrinters.length; connPrinterIndex++)
+    for (var connectedPrinterIndex = 0; connectedPrinterIndex < connectedPrinterIDs.length; connectedPrinterIndex++)
     {
-        var printerID = connectedPrinters[connPrinterIndex].printerID;
+        var printerID = connectedPrinterIDs[connectedPrinterIndex];
         selectorHTML += "<tr id=\"" + printerID + "_row" + "\" class=\"printer-selector\">";
         selectorHTML += "<td id=\"" + printerID + colourDisplayTag + "\" class=\"printer-selector\"></th>";
         selectorHTML += "<td id=\"" + printerID + nameDisplayTag + "\" class=\"printer-selector\"></th>";
@@ -207,9 +206,9 @@ function updatePrinterSelector()
     }
 
     $("#printer-status-body").html(selectorHTML);
-    for (var connPrinterIndex = 0; connPrinterIndex < connectedPrinters.length; connPrinterIndex++)
+    for (var connPrinterIndex = 0; connPrinterIndex < connectedPrinterIDs.length; connPrinterIndex++)
     {
-        var printerID = connectedPrinters[connPrinterIndex].printerID;
+        var printerID = connectedPrinterIDs[connPrinterIndex];
         $('#' + printerID + "_row").data("printerID", printerID);
 
         $('#' + printerID + colourDisplayTag).data("printerID", printerID);
@@ -311,6 +310,7 @@ function updateServerStatus(serverData)
         $(".server-name-title").text("");
         $("#server-name-input").val("");
         $(".server-ip-address").val("");
+        localStorage.setItem(serverNameVar, "");
     } else
     {
         $('#serverVersion').text(serverData.serverVersion);
@@ -318,6 +318,7 @@ function updateServerStatus(serverData)
         $(".server-name-title").text(serverData.name);
         $("#server-name-input").val(serverData.name);
         $(".server-ip-address").text(serverData.serverIP);
+        localStorage.setItem(serverNameVar, serverData.name);
     }
 }
 
@@ -349,55 +350,13 @@ function getStatus()
     }
 }
 
-function safetiesOn()
-{
-    var safetyStatus = $("#safeties-switch").prop("checked") ? true : false;
-    return safetyStatus;
-}
-
-function enableWifi(state)
-{
-    sendPostCommandToRoot("admin/enableDisableWifi", null, null, state);
-}
-
-function setWiFiCredentials()
-{
-    sendPostCommandToRoot("admin/setWiFiCredentials", null, null, $("#wifi-ssid").val() + ":" + $("#wifi-password").val());
-}
-
-function updateCurrentWifiState()
-{
-    sendPostCommandToRoot("admin/getCurrentWifiState",
-            function (data) {
-                if (data.poweredOn === true)
-                {
-                    $("#wifi-enabled-switch").val("true")
-                    $("#wifi-data-block").removeClass("visuallyhidden");
-                    if (data.associated === true)
-                    {
-                        $("#wifi-ssid").val(data.ssid);
-                    } else
-                    {
-                        $("#wifi-ssid").val("Not associated");
-                    }
-                } else
-                {
-                    $("#wifi-enabled-switch").val("false")
-                    $("#wifi-ssid").val("");
-                    $("#wifi-data-block").addClass("visuallyhidden");
-                }
-            },
-            null,
-            null);
-}
-
-$(document).on("pageinit", "#server-status-page", function () {
-    $('div[data-role="tabs"] [data-role="navbar"] a').click(function (e) {
-        e.preventDefault();
-        $('div[data-role="tabs"] [data-role="navbar"] .ui-btn-active').removeClass('ui-btn-active ui-state-persist');
-        $(this).addClass('ui-btn-active ui-state-persist');
-    });
-});
+//$(document).on("pageinit", "#server-status-page", function () {
+//    $('div[data-role="tabs"] [data-role="navbar"] a').click(function (e) {
+//        e.preventDefault();
+//        $('div[data-role="tabs"] [data-role="navbar"] .ui-btn-active').removeClass('ui-btn-active ui-state-persist');
+//        $(this).addClass('ui-btn-active ui-state-persist');
+//    });
+//});
 
 function page_initialiser()
 {
@@ -410,18 +369,9 @@ function page_initialiser()
         }
     });
 
-    updateCurrentWifiState();
-
-    $("#wifi-enabled-switch").change(function () {
-        enableWifi($("#wifi-enabled-switch").val());
-        setTimeout(function () {
-            updateCurrentWifiState();
-        }, 3000);
-    });
-
     $("#pin-update-value").val(localStorage.getItem(applicationPINVar));
 
     getServerStatus()
     getPrinters();
-    setInterval(getStatus, 2000);
+//    setInterval(getStatus, 2000);
 }

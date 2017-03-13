@@ -183,7 +183,6 @@ function updateAndDisplayPrinterStatus(printerID)
         if (printerID !== null)
         {
             var statusText = printerData.printerStatusString;
-//            $('#printer-select-button').css("background-color", printerData.printerWebColourString);
 
             if (printerData.printerStatusString.match("^Printing"))
             {
@@ -219,23 +218,24 @@ function updateAndDisplayPrinterStatus(printerID)
             switch (numberOfNozzleHeaters)
             {
                 case 0:
-                    $('#printer-details-panel').find('.' + nozzleTemperatureTag + '1').hide();
-                    $('#printer-details-panel').find('.' + nozzleTemperatureTag + '2').hide();
+                    $('#nozzle1-div').hide();
+                    $('#nozzle2-div').hide();
                     break;
                 case 1:
-                    $('#printer-details-panel').find('.' + nozzleTemperatureTag + '1').show();
-                    $('#printer-details-panel').find('.' + nozzleTemperatureTag + '2').hide();
+                    $('#nozzle1-div').show();
+                    $('#nozzle2-div').hide();
                     break;
                 case 2:
-                    $('#printer-details-panel').find('.' + nozzleTemperatureTag + '1').show();
-                    $('#printer-details-panel').find('.' + nozzleTemperatureTag + '2').show();
+                    $('#nozzle1-div').show();
+                    $('#nozzle2-div').show();
                     break;
             }
 
             for (var materialNum = 1; materialNum <= printerData.attachedFilamentNames.length; materialNum++)
             {
                 var filamentNameOutput = "";
-                var showEjectButton = printerData.canEjectFilament;
+                var showEjectButton = printerData.canEjectFilament[materialNum - 1];
+
                 if (printerData.attachedFilamentNames[materialNum - 1] !== null)
                 {
                     filamentNameOutput = printerData.attachedFilamentNames[materialNum - 1];
@@ -254,6 +254,7 @@ function updateAndDisplayPrinterStatus(printerID)
                         filamentNameOutput = i18next.t("unknown") + " - " + i18next.t("loaded");
                     } else
                     {
+                        filamentNameOutput = i18next.t("not-loaded");
                         showEjectButton = false;
                     }
                 }
@@ -274,20 +275,12 @@ function updateAndDisplayPrinterStatus(printerID)
                 numberOfMaterials = printerData.attachedFilamentNames.length;
             }
 
-            switch (numberOfMaterials)
+            if (numberOfMaterials == 2)
             {
-                case 0:
-                    $('#printer-details-panel').find('#' + materialRowTag + '1').hide();
-                    $('#printer-details-panel').find('#' + materialRowTag + '2').hide();
-                    break;
-                case 1:
-                    $('#printer-details-panel').find('#' + materialRowTag + '1').show();
-                    $('#printer-details-panel').find('#' + materialRowTag + '2').hide();
-                    break;
-                case 2:
-                    $('#printer-details-panel').find('#' + materialRowTag + '1').show();
-                    $('#printer-details-panel').find('#' + materialRowTag + '2').show();
-                    break;
+                $('.material-display-2').show();
+            } else
+            {
+                $('.material-display-2').hide();
             }
 
             if (printerData.activeErrors !== null)
@@ -312,111 +305,6 @@ function updateAndDisplayPrinterStatus(printerID)
         $('#' + printerID + nameDisplayTag).text(printerData.printerName);
         $('#' + printerID + statusDisplayTag).text(statusText);
         $('#' + printerID + colourDisplayTag).css("background-color", printerData.printerWebColourString);
-//        if (printerData.printerStatusString.match("^Printing"))
-//        {
-//            $('#' + printerID + jobDisplayTag).text(printerData.printJobName);
-//            $('#' + printerID + etcDisplayTag).text(secondsToHMS(printerData.etcSeconds));
-//        }
-
-//        $('#' + printerID + headNameDisplayTag).text(printerData.headName);
-//        $('#' + printerID + bedTemperatureDisplayTag).text(printerData.bedTemperature + '\xB0' + "C");
-//        if (printerData.nozzleTemperature)
-//        {
-//            for (var nozzleNum = 1; nozzleNum <= printerData.nozzleTemperature.length; nozzleNum++)
-//            {
-//                if (printerData.nozzleTemperature[nozzleNum - 1] !== null)
-//                {
-//                    $('#printer-details').find('#' + nozzleTemperatureDisplayTag + nozzleNum).text(printerData.nozzleTemperature[nozzleNum - 1] + '\xB0' + "C");
-//                }
-//            }
-//        }
-//
-//        var numberOfNozzleHeaters = 0;
-//        if (printerData.nozzleTemperature !== null)
-//        {
-//            numberOfNozzleHeaters = printerData.nozzleTemperature.length;
-//        }
-//
-//        switch (numberOfNozzleHeaters)
-//        {
-//            case 0:
-//                $('#printer-details').find('.' + nozzleTemperatureTag + '1').hide();
-//                $('#printer-details').find('.' + nozzleTemperatureTag + '2').hide();
-//                break;
-//            case 1:
-//                $('#printer-details').find('.' + nozzleTemperatureTag + '1').show();
-//                $('#printer-details').find('.' + nozzleTemperatureTag + '2').hide();
-//                break;
-//            case 2:
-//                $('#printer-details').find('.' + nozzleTemperatureTag + '1').show();
-//                $('#printer-details').find('.' + nozzleTemperatureTag + '2').show();
-//                break;
-//        }
-
-//        for (var materialNum = 1; materialNum <= printerData.attachedFilamentNames.length; materialNum++)
-//        {
-//            var filamentNameOutput = "";
-//            var showEjectButton = printerData.canEjectFilament;
-//            if (printerData.attachedFilamentNames[materialNum - 1] !== null)
-//            {
-//                filamentNameOutput = printerData.attachedFilamentNames[materialNum - 1];
-//                if (!printerData.materialLoaded[materialNum - 1])
-//                {
-//                    filamentNameOutput += " - " + i18next.t("not-loaded");
-//                    showEjectButton = false;
-//                } else
-//                {
-//                    filamentNameOutput += " - " + i18next.t("loaded");
-//                }
-//            } else
-//            {
-//                if (printerData.materialLoaded[materialNum - 1])
-//                {
-//                    filamentNameOutput = i18next.t("unknown") + " - " + i18next.t("loaded");
-//                } else
-//                {
-//                    showEjectButton = false;
-//                }
-//            }
-//
-//            $('#' + printerID + materialDisplayTag + materialNum).text(filamentNameOutput);
-//        }
-
-//        var numberOfMaterials = 0;
-//        if (printerData.attachedFilamentNames !== null)
-//        {
-//            numberOfMaterials = printerData.attachedFilamentNames.length;
-//        }
-//
-//        switch (numberOfMaterials)
-//        {
-//            case 0:
-//                $('#' + printerID + materialRowTag + '1').hide();
-//                $('#' + printerID + materialRowTag + '2').hide();
-//                break;
-//            case 1:
-//                $('#' + printerID + materialRowTag + '1').show();
-//                $('#' + printerID + materialRowTag + '2').hide();
-//                break;
-//            case 2:
-//                $('#' + printerID + materialRowTag + '1').show();
-//                $('#' + printerID + materialRowTag + '2').show();
-//                break;
-//        }
-
-//        if (printerData.activeErrors !== null)
-//        {
-//            var allErrors;
-//            for (var errorNum = 0; errorNum < printerData.activeErrors.length; errorNum++)
-//            {
-//                allErrors += errorString + '\n';
-//            }
-//            $('#printer-details').find('#' + errorDisplayTag).text(allErrors);
-//            $('#printer-details').find('#' + errorRowTag).show();
-//        } else
-//        {
-//            $('#printer-details').find('#' + errorRowTag).hide();
-//        }
     });
 }
 
@@ -429,7 +317,7 @@ function getPrinterStatus(printerID, callback)
             },
             function ()
             {
-//                goToPrinterStatusPage();
+                goToPrinterStatusPage();
             },
             null);
 }
@@ -448,6 +336,8 @@ function getStatus()
 
 function page_initialiser()
 {
+    $(".server-name-title").text(localStorage.getItem(serverNameVar));
+
     $(document).on('change', ':file', function () {
         var input = $(this),
                 numFiles = input.get(0).files ? input.get(0).files.length : 1,

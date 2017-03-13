@@ -123,3 +123,8 @@ tr.selector-press {
     background-color: lightgray;
     z-index: 9999;
 }
+
+.footer-display
+{
+    width: 33%;
+}
