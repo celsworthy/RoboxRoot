@@ -94,15 +94,18 @@ public class LowLevelAPI
                     PrintJobPersister.getInstance().writeSegment(payload);
                 } else if (remoteTx instanceof SendDataFileEnd)
                 {
+                    String completedTransferPrintJob = PrintJobPersister.getInstance().getPrintJobID();
                     PrintJobPersister.getInstance().closeFile(remoteTx.getMessagePayload());
-                }
-
-                try
+                    PrinterRegistry.getInstance().getRemotePrinters().get(printerID).reprintJob(completedTransferPrintJob);
+                } else
                 {
-                    rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getCommandInterface().writeToPrinter(remoteTx, true);
-                } catch (RoboxCommsException ex)
-                {
-                    steno.error("Failed whilst writing to local printer with ID" + printerID);
+                    try
+                    {
+                        rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getCommandInterface().writeToPrinter(remoteTx, true);
+                    } catch (RoboxCommsException ex)
+                    {
+                        steno.error("Failed whilst writing to local printer with ID" + printerID);
+                    }
                 }
             }
         }

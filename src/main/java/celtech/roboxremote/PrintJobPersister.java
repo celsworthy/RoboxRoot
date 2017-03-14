@@ -100,4 +100,9 @@ public class PrintJobPersister
             steno.error("Unable to process end of remote file - no local file open.");
         }
     }
+    
+    public String getPrintJobID()
+    {
+        return printJobIDBeingPersisted;
+    }
 }
