@@ -54,5 +54,7 @@
     "temperature": "Temperature",
     "printer": "Printer",
     "choose-file": "Choose file",
+    "reprint": "Reprint",
+    "duration": "Duration",
     "status": "Status"
 }

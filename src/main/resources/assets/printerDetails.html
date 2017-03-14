@@ -22,7 +22,8 @@
         <script src="js/jquery-i18next.min.js"></script>
         <script src="js/jquery.base64.js"></script>
         <script src="js/printerDetails.js"></script>
-        <script src="js/bootstrap.min.js"></script> 
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/eModal.min.js"></script>
         <script src="js/core.js"></script> 
 
         <title>Robox Root Manager</title>
@@ -115,6 +116,8 @@
                                 <div class="w-100"></div>
                                 <button id="printer-control-open-door" class="btn btn-default col-xs-4 localised" data-i18n="open-door" onclick="openDoor()">Open Door</button>
                                 <button id="printer-control-remove-head" class="btn btn-default col-xs-4 localised" data-i18n="remove-head" onclick="removeHead()">Remove Head</button>
+                                <!--                                <button id="printer-control-reprint" class="btn btn-default col-xs-4 localised" data-i18n="reprint" onclick="showReprintDialog()">Reprint</button>-->
+                                <a id="printer-control-reprint" class="btn btn-default" onclick="populateReprintDialog()" href="#reprint-dialog" data-toggle="modal"><span class="localised" data-i18n="reprint"><i class="fa fa-soundcloud"></i> Client Reports</span></a>
                                 <!--<div class="w-100"></div>-->
                                 <!--<span class="localised" data-i18n="send-gcode-to-printer">Send GCode</span>-->
                                 <!--<div class="w-100"></div>-->
@@ -132,6 +135,31 @@
                             </div>
                         </div>
                     </div>
+                    <div class="modal fade" id="reprint-dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header modal-header-primary">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                    <h3 class="localised" data-i18n="reprint"><i class="fa fa-bar-chart-o"></i>Reprint</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <table class="table">
+                                        <thead class="thead-default">
+                                            <tr>
+                                                <th height="50px" width="130px" class="localised h4" data-i18n="name">Name</th>
+                                                <th height="50px" width="100px" class="localised h4" data-i18n="duration">Duration</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="reprint-table-body">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                                </div>
+                            </div><!-- /.modal-content -->
+                        </div><!-- /.modal-dialog -->
+                    </div><!-- /.modal -->
                 </div>
             </div>
         </div>

@@ -54,5 +54,7 @@
     "temperature": "FRTemperature",
     "printer": "FRPrinter",
     "choose-file": "FRChoose file",
+    "reprint": "FRReprint",
+    "duration": "FRDuration",
     "status": "FRStatus"
 }

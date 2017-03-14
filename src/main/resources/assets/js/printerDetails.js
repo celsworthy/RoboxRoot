@@ -6,6 +6,7 @@ var lastPrinterData = null;
 var colourDisplayTag = "_colourDisplay";
 var nameDisplayTag = "_nameDisplay";
 var statusDisplayTag = "_statusDisplay";
+var durationDisplayTag = "_durationDisplay";
 var jobDisplayTag = "_jobDisplay";
 var etcRowTag = "_etcRow";
 var etcDisplayTag = "_etcDisplay";
@@ -18,21 +19,6 @@ var nozzleTemperatureTag = "_nozzleTemperature";
 var nozzleTemperatureDisplayTag = "_nozzleTemperatureDisplay";
 var errorRowTag = "_errorRow";
 var errorDisplayTag = "_errorDisplay";
-function id2Index(tabsId, srcId)
-{
-    var index = -1;
-    var i = 0, tbH = $(tabsId).find("li a");
-    var lntb = tbH.length;
-    if (lntb > 0) {
-        for (i = 0; i < lntb; i++) {
-            o = tbH[i];
-            if (o.href.search(srcId) > 0) {
-                index = i;
-            }
-        }
-    }
-    return index;
-}
 
 function safetiesOn()
 {
@@ -102,9 +88,58 @@ function eject(materialNumber)
     sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/ejectFilament", null, null, materialNumber);
 }
 
+function reprintJob(printJobID)
+{
+    sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/reprintJob", null, null, printJobID);
+}
+
+function populateReprintDialog()
+{
+    sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/listReprintableJobs", function (suitablePrintJobs) {
+        var selectorHTML = "";
+        for (var printJobIndex = 0; printJobIndex < suitablePrintJobs.length; printJobIndex++)
+        {
+            var printJobID = suitablePrintJobs[printJobIndex].printJobID;
+            console.log(suitablePrintJobs[printJobIndex].printJobID);
+            console.log(suitablePrintJobs[printJobIndex].printJobName);
+            console.log(suitablePrintJobs[printJobIndex].printProfileName);
+            console.log(suitablePrintJobs[printJobIndex].durationInSeconds);
+            console.log(suitablePrintJobs[printJobIndex].eVolume);
+            console.log(suitablePrintJobs[printJobIndex].dVolume);
+            selectorHTML += "<tr id=\"" + printJobID + "_row" + "\">";
+            selectorHTML += "<td>" + suitablePrintJobs[printJobIndex].printJobName + "</td>";
+            selectorHTML += "<td>" + secondsToHMS(suitablePrintJobs[printJobIndex].durationInSeconds) + "</td>";
+            selectorHTML += "</tr>\n";
+
+            $("#reprint-table-body").html(selectorHTML);
+        }
+        for (var printJobIndex = 0; printJobIndex < suitablePrintJobs.length; printJobIndex++)
+        {
+            var printJobID = suitablePrintJobs[printJobIndex].printJobID;
+            $('#' + printJobID + "_row").data("printJobID", printJobID);
+            $('#' + printJobID + "_row").click(function () {
+                $('#reprint-dialog').modal('hide');
+                reprintJob($(this).data("printJobID"));
+            });
+
+            $('#' + printJobID + "_row").hover(function () {
+                $(this).addClass('selector-highlight');
+            }, function () {
+                $(this).removeClass('selector-highlight');
+            });
+            $('#' + printJobID + "_row").mousedown(function () {
+                $(this).addClass('selector-press');
+            }, function () {
+                $(this).removeClass('selector-press');
+            });
+        }
+    }, null, null);
+}
+
 function configurePrinterButtons(printerData)
 {
     if ((lastPrinterData === null)
+            || printerData.canPrint !== lastPrinterData.canPrint
             || printerData.canPause !== lastPrinterData.canPause
             || printerData.canResume !== lastPrinterData.canResume
             || printerData.canRemoveHead !== lastPrinterData.canRemoveHead
@@ -113,6 +148,7 @@ function configurePrinterButtons(printerData)
             || printerData.canCalibrateHead !== lastPrinterData.canCalibrateHead
             || printerData.canPurgeHead !== lastPrinterData.canPurgeHead)
     {
+        setButtonVisibility(printerData.canPrint, "printer-control-reprint");
         setButtonVisibility(printerData.canPause, "printer-control-pause");
         setButtonVisibility(printerData.canResume, "printer-control-resume");
         setButtonVisibility(printerData.canCancel, "printer-control-cancel");
@@ -166,13 +202,13 @@ function secondsToHMS(secondsInput)
     var seconds = secondsInput - (minutes * 60) - (hours * 3600);
     if (hours > 0)
     {
-        return hours + ":" + minutes + ":" + seconds;
+        return hours + ":" + minutes + ":" + Math.trunc(seconds);
     } else if (minutes > 0)
     {
-        return minutes + ":" + seconds;
+        return "00:" + minutes + ":" + Math.trunc(seconds);
     } else
     {
-        return seconds + " seconds";
+        return Math.trunc(seconds) + " seconds";
     }
 }
 

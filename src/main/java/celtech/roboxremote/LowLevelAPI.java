@@ -7,6 +7,9 @@ import celtech.roboxbase.comms.exceptions.RoboxCommsException;
 import celtech.roboxbase.comms.rx.RoboxRxPacketFactory;
 import celtech.roboxbase.comms.rx.RxPacketTypeEnum;
 import celtech.roboxbase.comms.tx.ReportErrors;
+import celtech.roboxbase.comms.tx.SendDataFileChunk;
+import celtech.roboxbase.comms.tx.SendDataFileEnd;
+import celtech.roboxbase.comms.tx.SendPrintFileStart;
 import celtech.roboxbase.comms.tx.StatusRequest;
 import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxbase.postprocessor.PrintJobStatistics;
@@ -82,25 +85,17 @@ public class LowLevelAPI
                 rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getCommandInterface().getLastErrorResponse();
             } else
             {
-//                if (remoteTx instanceof SendDataFileStart)
-//                {
-//                    steno.info("Receiving print job " + remoteTx.getMessagePayload());
-//                } else if (remoteTx instanceof SendDataFileChunk)
-//                {
-//                    String payload = remoteTx.getMessagePayload();
-//                    steno.info("Got chunk " + payload);
-//                    String[] payloadParts = payload.split("\n");
-//                    for (String payloadPart : payloadParts)
-//                    {
-//                        if (payloadPart.startsWith(PrintJobStatistics.DATA_PREFIX_IN_FILE))
-//                        {
-//                            reconstructedStatistics.get(printerID).updateValueFromStatsString(payloadPart);
-//                        }
-//                    }
-//                } else if (remoteTx instanceof SendDataFileEnd)
-//                {
-//                    steno.info("End of print job");
-//                }
+                if (remoteTx instanceof SendPrintFileStart)
+                {
+                    PrintJobPersister.getInstance().startFile(remoteTx.getMessagePayload());
+                } else if (remoteTx instanceof SendDataFileChunk)
+                {
+                    String payload = remoteTx.getMessagePayload();
+                    PrintJobPersister.getInstance().writeSegment(payload);
+                } else if (remoteTx instanceof SendDataFileEnd)
+                {
+                    PrintJobPersister.getInstance().closeFile(remoteTx.getMessagePayload());
+                }
 
                 try
                 {

@@ -7,10 +7,12 @@ import celtech.roboxbase.printerControl.model.Printer;
 import celtech.roboxbase.printerControl.model.PrinterException;
 import celtech.roboxbase.utils.PrinterUtils;
 import celtech.roboxremote.rootDataStructures.StatusData;
+import celtech.roboxbase.comms.remote.clear.SuitablePrintJob;
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.jersey.params.BooleanParam;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -283,5 +285,39 @@ public class PublicPrinterControlAPI
                 steno.error("Exception whilst ejecting filament " + filamentNumber + ": " + ex);
             }
         }
+    }
+
+    @POST
+    @Timed
+    @Path("/listReprintableJobs")
+    public List<SuitablePrintJob> listReprintableJobs(@PathParam("printerID") String printerID)
+    {
+        List<SuitablePrintJob>  returnVal = null;
+        if (PrinterRegistry.getInstance() != null)
+        {
+            Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+            returnVal = printerToUse.listJobsReprintableByMe();
+        }
+        return returnVal;
+    }
+
+    @POST
+    @Timed
+    @Path("/reprintJob")
+    public Response reprintJob(@PathParam("printerID") String printerID, String printJobID)
+    {
+        boolean submittedOK = false;
+        if (PrinterRegistry.getInstance() != null)
+        {
+            Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+            submittedOK = printerToUse.reprintJob(Utils.cleanInboundJSONString(printJobID));
+        }
+        
+        Response response = Response.ok().build();
+        if (!submittedOK)
+        {
+            response = Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        }
+        return response;
     }
 }
