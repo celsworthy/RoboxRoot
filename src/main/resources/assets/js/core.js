@@ -146,7 +146,7 @@ function updateHeaderi18String(i18nString)
 
 function selectLanguage(language)
 {
-    i18next.changeLanguage(language, (err, t) => {
+    i18next.changeLanguage(language, function(err, t){
         updateLocalisation();
     });
 }
