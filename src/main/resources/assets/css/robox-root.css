@@ -120,11 +120,17 @@ tr.selector-press {
     left: 0;
     right: 0;
     height: 64px;
-    background-color: lightgray;
+    background-color: black;
     z-index: 9999;
 }
 
 .footer-display
 {
     width: 33%;
+    color: white;
+}
+
+.footer-btn
+{
+    background-color: #333333;
 }

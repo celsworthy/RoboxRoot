@@ -111,7 +111,6 @@ function getServerStatus()
 function getStatus()
 {
     getServerStatus();
-    updateCurrentWifiState();
 }
 
 function enableWifi(state)
@@ -172,9 +171,9 @@ function page_initialiser()
         if (suppressWifiToggleAction === false)
         {
             enableWifi($("#wifi-enabled-switch").val());
-            setTimeout(function () {
-                updateCurrentWifiState();
-            }, 3000);
+//            setTimeout(function () {
+//                updateCurrentWifiState();
+//            }, 3000);
         }
     });
 
