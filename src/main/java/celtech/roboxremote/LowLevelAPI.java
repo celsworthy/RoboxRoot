@@ -79,10 +79,10 @@ public class LowLevelAPI
         {
             if (remoteTx instanceof StatusRequest)
             {
-                rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getCommandInterface().getLastStatusResponse();
+                rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getLastStatusResponse();
             } else if (remoteTx instanceof ReportErrors)
             {
-                rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getCommandInterface().getLastErrorResponse();
+                rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getLastErrorResponse();
             } else
             {
                 if (remoteTx instanceof SendPrintFileStart)

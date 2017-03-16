@@ -2,6 +2,7 @@ package celtech.roboxremote.rootDataStructures;
 
 import celtech.roboxbase.BaseLookup;
 import celtech.roboxbase.PrinterColourMap;
+import celtech.roboxbase.comms.rx.PrinterIDResponse;
 import celtech.roboxbase.configuration.datafileaccessors.FilamentContainer;
 import celtech.roboxbase.postprocessor.PrintJobStatistics;
 import celtech.roboxbase.printerControl.PrinterStatus;
@@ -66,9 +67,10 @@ public class StatusData
     {
         this.printerID = printerID;
         Printer printer = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
-        printerName = printer.getPrinterIdentity().printerFriendlyNameProperty().get();
+        PrinterIDResponse printerIDResponse = printer.getLastIdentityResponse();
+        printerName = printerIDResponse.getPrinterFriendlyName();
         PrinterColourMap colourMap = PrinterColourMap.getInstance();
-        Color displayColour = colourMap.printerToDisplayColour(printer.getPrinterIdentity().printerColourProperty().get());
+        Color displayColour = colourMap.printerToDisplayColour(Color.web(printerIDResponse.getPrinterColour()));
 
         printerWebColourString = "#" + ColourStringConverter.colourToString(displayColour);
 
