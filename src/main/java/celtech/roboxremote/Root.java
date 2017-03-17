@@ -17,8 +17,10 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Enumeration;
+import java.util.List;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import libertysystems.stenographer.Stenographer;
@@ -184,22 +186,22 @@ public class Root extends Application<RoboxRemoteConfiguration>
 
     public void restart()
     {
-        StringBuilder restartCommand = new StringBuilder();
+        List<String> restartCommands = new ArrayList<String>();
+        
         String installDir = BaseConfiguration.getApplicationInstallDirectory(null);
 
         if (BaseConfiguration.getMachineType() == MachineType.WINDOWS)
         {
-            restartCommand.append(installDir);
-            restartCommand.append("runRoot.bat");
+            restartCommands.add(installDir + "runRoot.bat");
         } else
         {
-            restartCommand.append(installDir);
-            restartCommand.append("restartRoot.sh &");
+            restartCommands.add(installDir + "restartRoot.sh");
+            restartCommands.add("&");
         }
         
         try
         {
-            ProcessBuilder processBuilder = new ProcessBuilder(restartCommand.toString());
+            ProcessBuilder processBuilder = new ProcessBuilder(restartCommands);
             processBuilder.start();
             stop();
         } catch (IOException ex)
