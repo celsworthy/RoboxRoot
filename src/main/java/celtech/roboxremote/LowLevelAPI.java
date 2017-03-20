@@ -88,15 +88,18 @@ public class LowLevelAPI
                 if (remoteTx instanceof SendPrintFileStart)
                 {
                     PrintJobPersister.getInstance().startFile(remoteTx.getMessagePayload());
+                    rxPacket = RoboxRxPacketFactory.createPacket(RxPacketTypeEnum.ACK_WITH_ERRORS);
                 } else if (remoteTx instanceof SendDataFileChunk)
                 {
                     String payload = remoteTx.getMessagePayload();
                     PrintJobPersister.getInstance().writeSegment(payload);
+                    rxPacket = RoboxRxPacketFactory.createPacket(RxPacketTypeEnum.ACK_WITH_ERRORS);
                 } else if (remoteTx instanceof SendDataFileEnd)
                 {
                     String completedTransferPrintJob = PrintJobPersister.getInstance().getPrintJobID();
                     PrintJobPersister.getInstance().closeFile(remoteTx.getMessagePayload());
                     PrinterRegistry.getInstance().getRemotePrinters().get(printerID).reprintJob(completedTransferPrintJob);
+                    rxPacket = RoboxRxPacketFactory.createPacket(RxPacketTypeEnum.ACK_WITH_ERRORS);
                 } else
                 {
                     try
