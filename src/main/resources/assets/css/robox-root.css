@@ -62,7 +62,8 @@ tr.selector-press {
 
 .printer-selector
 {
-    height: 50px;
+    height: 65px;
+    font-size: 1.2em;
 }
 
 .table > tbody > tr > td {
@@ -138,4 +139,19 @@ tr.selector-press {
 .footer-btn :hover
 {
     background-color: #333333 !important;
+}
+
+.no-margin
+{
+    margin: 0;
+}
+
+.no-padding
+{
+    padding: 0 !important;
+}
+
+.status-title
+{
+    font-size: 1.65em;
 }
