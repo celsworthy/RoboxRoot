@@ -16,6 +16,7 @@ import celtech.roboxbase.postprocessor.PrintJobStatistics;
 import com.codahale.metrics.annotation.Timed;
 import java.io.File;
 import java.io.IOException;
+import javafx.application.Platform;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
