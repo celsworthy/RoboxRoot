@@ -164,7 +164,7 @@ function updateControlButtons(printerData)
     }
     if (printerData.canCancel)
     {
-        $('#' + printerData.printerID + controlsDisplayTag).append("<button type='button' class='btn btn-default' onclick='stopPressed($(this))' data-printerid='" + printerData.printerID + "'><span class='glyphicon glyphicon-stop'></span></button>");
+        $('#' + printerData.printerID + controlsDisplayTag).append("<button type='button' class='btn btn-default' onclick='cancelPressed($(this))' data-printerid='" + printerData.printerID + "'><span class='glyphicon glyphicon-stop'></span></button>");
     }
 }
 
