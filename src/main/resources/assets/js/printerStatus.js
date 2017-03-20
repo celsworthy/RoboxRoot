@@ -157,14 +157,14 @@ function updateControlButtons(printerData)
     $('#' + printerData.printerID + controlsDisplayTag).html("");
     if (printerData.canPause)
     {
-        $('#' + printerData.printerID + controlsDisplayTag).append("<button type='button' class='btn btn-default' onclick='pausePressed($(this))' data-printerid='" + printerData.printerID + "'><span class='glyphicon glyphicon-pause'></span></button>");
+        $('#' + printerData.printerID + controlsDisplayTag).append("<a class='btn no-padding' onclick='pausePressed($(this))' data-printerid='" + printerData.printerID + "'><img class='img-fluid' alt='Pause' src='robox-images/pause.png' height='50'></a>");
     } else if (printerData.canResume)
     {
-        $('#' + printerData.printerID + controlsDisplayTag).append("<button type='button' class='btn btn-default' onclick='resumePressed($(this))' data-printerid='" + printerData.printerID + "'><span class='glyphicon glyphicon-play'></span></button>");
+        $('#' + printerData.printerID + controlsDisplayTag).append("<a class='btn no-padding' onclick='resumePressed($(this))' data-printerid='" + printerData.printerID + "'><img class='img-fluid' alt='Pause' src='robox-images/resume.png' height='50'></a>");
     }
     if (printerData.canCancel)
     {
-        $('#' + printerData.printerID + controlsDisplayTag).append("<button type='button' class='btn btn-default' onclick='cancelPressed($(this))' data-printerid='" + printerData.printerID + "'><span class='glyphicon glyphicon-stop'></span></button>");
+        $('#' + printerData.printerID + controlsDisplayTag).append("<a class='btn no-padding' onclick='cancelPressed($(this))' data-printerid='" + printerData.printerID + "'><img class='img-fluid' alt='Pause' src='robox-images/cancel.png' height='50'></a>");
     }
 }
 
