@@ -9,6 +9,7 @@ import celtech.roboxbase.comms.rx.RxPacketTypeEnum;
 import celtech.roboxbase.comms.tx.ReportErrors;
 import celtech.roboxbase.comms.tx.SendDataFileChunk;
 import celtech.roboxbase.comms.tx.SendDataFileEnd;
+import celtech.roboxbase.comms.tx.SendDataFileStart;
 import celtech.roboxbase.comms.tx.SendPrintFileStart;
 import celtech.roboxbase.comms.tx.StatusRequest;
 import celtech.roboxbase.configuration.BaseConfiguration;
@@ -86,7 +87,8 @@ public class LowLevelAPI
                 rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getLastErrorResponse();
             } else
             {
-                if (remoteTx instanceof SendPrintFileStart)
+                if (remoteTx instanceof SendPrintFileStart
+                        || remoteTx instanceof SendDataFileStart)
                 {
                     PrintJobPersister.getInstance().startFile(remoteTx.getMessagePayload());
                     rxPacket = RoboxRxPacketFactory.createPacket(RxPacketTypeEnum.ACK_WITH_ERRORS);
@@ -99,7 +101,10 @@ public class LowLevelAPI
                 {
                     String completedTransferPrintJob = PrintJobPersister.getInstance().getPrintJobID();
                     PrintJobPersister.getInstance().closeFile(remoteTx.getMessagePayload());
-                    PrinterRegistry.getInstance().getRemotePrinters().get(printerID).reprintJob(completedTransferPrintJob);
+                    Platform.runLater(() ->
+                    {
+                        PrinterRegistry.getInstance().getRemotePrinters().get(printerID).reprintJob(completedTransferPrintJob);
+                    });
                     rxPacket = RoboxRxPacketFactory.createPacket(RxPacketTypeEnum.ACK_WITH_ERRORS);
                 } else
                 {
