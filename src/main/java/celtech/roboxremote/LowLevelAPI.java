@@ -97,12 +97,7 @@ public class LowLevelAPI
                     PrintJobPersister.getInstance().writeSegment(payload);
                 } else if (remoteTx instanceof SendDataFileEnd)
                 {
-                    String completedTransferPrintJob = PrintJobPersister.getInstance().getPrintJobID();
                     PrintJobPersister.getInstance().closeFile(remoteTx.getMessagePayload());
-//                    Platform.runLater(() ->
-//                    {
-//                        PrinterRegistry.getInstance().getRemotePrinters().get(printerID).reprintJob(completedTransferPrintJob);
-//                    });
                 }
 
                 try
