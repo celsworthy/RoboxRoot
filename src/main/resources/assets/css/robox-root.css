@@ -81,13 +81,6 @@ tr.selector-press {
     padding-bottom: 5px;
 }
 
-.low-padding-panel
-{
-    padding-bottom: 0px !important;
-    padding-left: 5px;
-    padding-right: 5px;
-}
-
 .low-padding-cell
 {
     padding-left: 5px;
@@ -154,4 +147,46 @@ tr.selector-press {
 .status-title
 {
     font-size: 1.65em;
+}
+
+.printer-swatch
+{
+    width: 20px;
+    margin-left: 5px;
+    margin-right: 5px;
+    border: 1px;
+    border-color: black;
+    border-style: solid;
+}
+
+.centred-grid-box
+{
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.row
+{
+    margin-bottom: 5px !important;
+}
+
+.panel-body
+{
+    padding-top: 5px !important;
+    padding-bottom: 0px !important;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+}
+
+.noresize {
+  resize: none; 
+}
+
+.btn-colorselector
+{
+   width: 100% !important;
+   height: 34px !important;
+   margin-top: 0px !important;
 }

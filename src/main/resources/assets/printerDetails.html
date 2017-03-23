@@ -23,6 +23,7 @@
         <script src="js/jquery.base64.js"></script>
         <script src="js/printerDetails.js"></script>
         <script src="js/bootstrap.min.js"></script>
+        <script src="js/bootstrap-colorselector.min.js"></script>
         <script src="js/eModal.min.js"></script>
         <script src="js/core.js"></script> 
 
@@ -30,6 +31,7 @@
 
         <!-- Bootstrap core CSS -->
         <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/bootstrap-colorselector.min.css" rel="stylesheet">
         <!-- Bootstrap theme -->
         <link href="css/bootstrap-theme.min.css" rel="stylesheet">
         <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
@@ -54,17 +56,30 @@
         <script type="text/javascript" src="js/header.js"></script>
 
         <div id="printer-details-panel" class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title"><span class="localised" data-i18n="printer">Printer</span>: <span id='_nameDisplay'></span></h3>
+            <div class="panel-heading" style="display: flex;">
+                <div class="panel-title" style="display: flex;"><div class="printer-swatch" onclick="showIDPanel()"></div><span id='_nameDisplay'></span></div>
             </div>
             <div class="panel-body low-padding-panel">
                 <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-xs-3  borderless white-background"><span class="localised" data-i18n="status">Status</span><span>:</span></div>
-                        <div class="col-xs-9  borderless white-background" id='_statusDisplay'></div>
-                        <div class="w-100"></div>
-                        <div class="col-xs-3  borderless white-background"><span class="localised" data-i18n="head">Head</span><span>:</span></div>
-                        <div class="col-xs-9  borderless white-background" id='_headNameDisplay'></div>
+                    <div class="row centred-grid-box">
+                        <div class="col-xs-8 borderless white-background">
+                            <div class="container-fluid">
+                                <div class="row centred-grid-box">
+                                    <div class="col-xs-3 borderless white-background"><span class="localised" data-i18n="status">Status</span><span>:</span></div>
+                                    <div class="col-xs-9 borderless white-background" id='_statusDisplay'></div>
+                                </div>
+                                <div class="row centred-grid-box">
+                                    <div class="col-xs-3 borderless white-background"><span class="localised" data-i18n="head">Head</span><span>:</span></div>
+                                    <div class="col-xs-9 borderless white-background" id='_headNameDisplay'></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 borderless white-background" style='padding-right: 0px !important; padding-left: 9px !important;'>
+                            <div class="borderless white-background">
+                                <a class='btn no-padding' id="pauseResumeButton"><img class='img-fluid' alt='Pause/Resume' src='robox-images/resume.png' height='50'></a>
+                                <a class='btn no-padding' onclick='cancelPrint()' id="cancelButton"><img class='img-fluid' alt='Cancel' src='robox-images/cancel.png' height='50'></a>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div id="printer-details-panel" class="panel panel-primary">
@@ -72,13 +87,16 @@
                         <h3 class="panel-title localised" data-i18n="material">Material</h3>
                     </div>
                     <div class="panel-body low-padding-panel">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-xs-3 borderless white-background"><span class="localised" data-i18n="material-1">Material 1</span><span>:</span></div>
-                                <div class="col-xs-9 borderless white-background" id='_materialDisplay1'></div>
-                                <div class="w-100"></div>
-                                <div class="col-xs-3 borderless white-background material-display-2"><span class="localised" data-i18n="material-2">Material 2</span><span>:</span></div>
-                                <div class="col-xs-9 borderless white-background material-display-2" id='_materialDisplay2'></div>
+                        <div class="container-fluid">
+                            <div class="row centred-grid-box">
+                                <div class="col-xs-1 borderless white-background"><span class="localised" data-i18n="material-1">Material 1</span><span></span></div>
+                                <div class="col-xs-8 borderless white-background" id='_materialDisplay1'></div>
+                                <div class="col-xs-2 borderless white-background"><a class='btn no-padding' onclick='eject(1)' id="_material1Eject"><img class='img-fluid' alt='Eject Filament 1' src='robox-images/eject.png' height='50'></a></div>
+                            </div>
+                            <div class="row centred-grid-box">
+                                <div class="col-xs-1 borderless white-background material-display-2"><span class="localised" data-i18n="material-2">Material 2</span><span></span></div>
+                                <div class="col-xs-8 borderless white-background material-display-2" id='_materialDisplay2'></div>
+                                <div class="col-xs-2 borderless white-background"><a class='btn no-padding' onclick='eject(2)' id="_material2Eject"><img class='img-fluid' alt='Eject Filament 2' src='robox-images/eject.png' height='50'></a></div>
                             </div>
                         </div>
                     </div>
@@ -105,63 +123,184 @@
                 </div>
                 <div id="printer-details-panel" class="panel panel-primary">
                     <div class="panel-body low-padding-panel">
-                        <div class="container">
-                            <div class="row">
-                                <button id="printer-control-eject-1" class="btn btn-default col-xs-4 localised" data-i18n="eject-material-1" onclick="eject(1)">Eject Material 1</button>
-                                <button id="printer-control-eject-2" class="btn btn-default col-xs-4 localised" data-i18n="eject-material-2" onclick="eject(2)">Eject Material 2</button>
-                                <div class="w-100"></div>
-                                <button id="printer-control-pause" class="btn btn-default col-xs-4 localised" data-i18n="pause" onclick="pausePrint()">Pause</button>
-                                <button id="printer-control-resume" class="btn btn-default col-xs-4 localised" data-i18n="resume" onclick="resumePrint()">Resume</button>
-                                <button id="printer-control-cancel" class="btn btn-default col-xs-4 localised" data-i18n="cancel" onclick="cancelPrint()">Cancel</button>
-                                <div class="w-100"></div>
-                                <button id="printer-control-open-door" class="btn btn-default col-xs-4 localised" data-i18n="open-door" onclick="openDoor()">Open Door</button>
-                                <button id="printer-control-remove-head" class="btn btn-default col-xs-4 localised" data-i18n="remove-head" onclick="removeHead()">Remove Head</button>
-                                <!--                                <button id="printer-control-reprint" class="btn btn-default col-xs-4 localised" data-i18n="reprint" onclick="showReprintDialog()">Reprint</button>-->
-                                <a id="printer-control-reprint" class="btn btn-default" onclick="populateReprintDialog()" href="#reprint-dialog" data-toggle="modal"><span class="localised" data-i18n="reprint"><i class="fa fa-soundcloud"></i> Client Reports</span></a>
-                                <!--<div class="w-100"></div>-->
-                                <!--<span class="localised" data-i18n="send-gcode-to-printer">Send GCode</span>-->
-                                <!--<div class="w-100"></div>-->
-                                <!--                                <div class="input-group">
-                                                                    <label class="input-group-btn">
-                                                                        <span class="btn btn-default" data-i18n="choose-file">
-                                                                            Choose file... <input id="printGCodeFile" type="file" style="display: none;">
-                                                                        </span>
-                                                                    </label>
-                                                                    <input type="text" class="form-control" readonly>
-                                                                    <span class="input-group-btn">
-                                                                        <button class="btn btn-default localised" data-i18n="go" type="button" onclick="printGCodeFile()">Go!</button>
-                                                                    </span>
-                                                                </div>-->
+                        <div class="container-fluid">
+                            <div class="row centred-grid-box">
+                                <div class="col-xs-3 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='showModalPanel("gcode-dialog")' id="sendGCodeButton"><img class='img-fluid' alt='Enter GCode' src='robox-images/gcode.png' height='50'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='showModalPanel("jog-dialog")' id="jogHeadButton"><img class='img-fluid' alt='Jog Head' src='robox-images/move.png' height='50'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='showIDPanel()' id="changeColourNameButton"><img class='img-fluid' alt='Eject Filament 1' src='robox-images/colour_name.png' height='50'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='showModalPanel("printjob-file-dialog")' id="printJobButton"><img class='img-fluid' alt='Print File' src='robox-images/open.png' height='50'></a></div>
+                            </div>
+                            <div class="row centred-grid-box">
+                                <div class="col-xs-4 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='populateReprintDialog()' id="reprintButton"><img class='img-fluid' alt='Reprint' src='robox-images/reprint.png' height='50'></a></div>
+                                <div class="col-xs-4 borderless white-background centred-grid-box"><a class='btn no-padding disabled' onclick='eject(1)' id="purgeButton"><img class='img-fluid' alt='Purge' src='robox-images/purge.png' height='50'></a></div>
+                                <div class="col-xs-4 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='removeHead()' id="removeHeadButton"><img class='img-fluid' alt='Remove Head' src='robox-images/remove_head.png' height='50'></a></div>
                             </div>
                         </div>
+                        <!--<div class="w-100"></div>-->
+                        <!--<span class="localised" data-i18n="send-gcode-to-printer">Send GCode</span>-->
+                        <!--<div class="w-100"></div>-->
+                        <!--                                <div class="input-group">
+                                                            <label class="input-group-btn">
+                                                                <span class="btn btn-default" data-i18n="choose-file">
+                                                                    Choose file... <input id="printGCodeFile" type="file" style="display: none;">
+                                                                </span>
+                                                            </label>
+                                                            <input type="text" class="form-control" readonly>
+                                                            <span class="input-group-btn">
+                                                                <button class="btn btn-default localised" data-i18n="go" type="button" onclick="printGCodeFile()">Go!</button>
+                                                            </span>
+                                                        </div>-->
                     </div>
-                    <div class="modal fade" id="reprint-dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header modal-header-primary">
-                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                    <h3 class="localised" data-i18n="reprint"><i class="fa fa-bar-chart-o"></i>Reprint</h3>
-                                </div>
-                                <div class="modal-body">
-                                    <table class="table">
-                                        <thead class="thead-default">
-                                            <tr>
-                                                <th height="50px" width="130px" class="localised h4" data-i18n="name">Name</th>
-                                                <th height="50px" width="100px" class="localised h4" data-i18n="duration">Duration</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="reprint-table-body">
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                                </div>
-                            </div><!-- /.modal-content -->
-                        </div><!-- /.modal-dialog -->
-                    </div><!-- /.modal -->
                 </div>
             </div>
+            <div class="modal fade" id="reprint-dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header modal-header-primary">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3 class="localised" data-i18n="reprint"><i class="fa fa-bar-chart-o"></i>Reprint</h3>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table">
+                                <thead class="thead-default">
+                                    <tr>
+                                        <th height="50px" width="130px" class="localised h4" data-i18n="name">Name</th>
+                                        <th height="50px" width="100px" class="localised h4" data-i18n="duration">Duration</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="reprint-table-body">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left btn-block" data-dismiss="modal">Close</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            <div class="modal fade" id="gcode-dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header modal-header-primary">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3 class="localised" data-i18n="gcodeEntry"><i class="fa fa-bar-chart-o"></i>GCode</h3>
+                        </div>
+                        <div class="modal-body container-fluid">
+                            <textarea rows='10' id='gcode-output' class="col-xs-12 form-control noresize" readonly></textarea>
+                            <div class="input-group">
+                                <input id="gcode-input" class="server-name-entry form-control" type="text" placeholder="" aria-describedby="sizing-addon1">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default localised" type="button" data-i18n="sendGcode" onClick="sendGCode()">Send GCode</button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left btn-block" data-dismiss="modal">Close</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            <div class="modal fade" id="jog-dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header modal-header-primary">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3 class="localised" data-i18n="jogHead"><i class="fa fa-bar-chart-o"></i>Jog Head</h3>
+                        </div>
+                        <div class="modal-body container-fluid">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left btn-block" data-dismiss="modal">Close</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            <div class="modal fade" id="id-dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header modal-header-primary">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3 class="localised" data-i18n="identity"><i class="fa fa-bar-chart-o"></i>Identity</h3>
+                        </div>
+                        <div class="modal-body container-fluid">
+                            <div class="input-group">
+                                <span class="input-group-addon localised" id="sizing-addon1" data-i18n="name">Name</span>
+                                <input id="printer-name-input" class="server-name-entry form-control" type="text" placeholder="" aria-describedby="sizing-addon1">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" data-i18n="update" onClick="renamePrinter()">Update</button>
+                                </span>
+                            </div>
+                            <div class="input-group" style="padding-top: 10px;">
+                                <span class="input-group-addon localised" id="sizing-addon2" data-i18n="colour">Colour</span>
+                                <select id="colourselector" data-colorsPerRow="6">
+                                    <option value="1" data-color="#7F0000"></option>
+                                    <option value="2" data-color="#FF0000"></option>
+                                    <option value="3" data-color="#FF7F7F"></option>
+                                    <option value="4" data-color="#FF00FF"></option>
+                                    <option value="5" data-color="#FFFF00"></option>
+                                    <option value="6" data-color="#FF7F00"></option>
+                                    <option value="7" data-color="#FFFF00"></option>                                    
+                                    <option value="8" data-color="#007F00"></option>
+                                    <option value="9" data-color="#00FF00"></option>
+                                    <option value="10" data-color="#7FFF7F"></option>
+                                    <option value="11" data-color="#7FFF00"></option>
+                                    <option value="12" data-color="#00FF96"></option>
+                                    <option value="13" data-color="#7F7F7F"></option>
+                                    <option value="14" data-color="#00007F"></option>
+                                    <option value="15" data-color="#0000FF"></option>
+                                    <option value="16" data-color="#00FFFF"></option>
+                                    <option value="17" data-color="#7F7FFF"></option>
+                                    <option value="18" data-color="#7F00FF"></option>
+                                </select>
+
+                                <script>
+                                    $('#colourselector').colorselector();
+//                                    $('#colourselector').data('colorsPerRow', 6);
+                                </script>
+                                <!--<input id="printer-colour-input" class="server-name-entry form-control" type="text" placeholder="" aria-describedby="sizing-addon2">-->
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" data-i18n="update" onClick="changePrinterColour()">Update</button>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left btn-block" data-dismiss="modal">Close</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            <div class="modal fade" id="printjob-file-dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header modal-header-primary">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3 class="localised" data-i18n="printJobFile"><i class="fa fa-bar-chart-o"></i>Print Job File</h3>
+                        </div>
+                        <div class="modal-body container-fluid">
+                            <div class="input-group">
+                                <!--<span class="input-group-addon localised" id="sizing-addon1" data-i18n="name">Name:</span>-->
+                                <span class="btn btn-default btn-file"><span class="localised" data-i18n="fileName">Choose file</span><input type="file" /></span>
+                                <input id="printer-name-input" class="server-name-entry form-control" type="text" placeholder="" aria-describedby="sizing-addon1">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" data-i18n="update" onClick="renamePrinter()">Update</button>
+                                </span>
+                            </div>
+
+
+                            <label class="btn btn-default btn-file">
+                                Browse <input type="file" hidden>
+                            </label>
+                            <div class="fileinput fileinput-new" data-provides="fileinput">
+                                <span class="btn btn-default btn-file"><span>Choose file</span><input type="file" /></span>
+                                <span class="fileinput-filename"></span><span class="fileinput-new">No file chosen</span>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left btn-block" data-dismiss="modal">Close</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
         </div>
         <script type="text/javascript" src="js/footer.js"></script>
     </body>

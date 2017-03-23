@@ -93,6 +93,37 @@ function reprintJob(printJobID)
     sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/reprintJob", null, null, printJobID);
 }
 
+function showModalPanel(name)
+{
+    $('#' + name).modal('show');
+}
+
+function sendGCode()
+{
+    var gcodeToSend = $('#gcode-input').val().toUpperCase();
+    sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/executeGCode", null, null, gcodeToSend);
+    $('#gcode-output').val($('#gcode-output').val() + '\n' + gcodeToSend);
+}
+
+function showIDPanel()
+{
+    $('#id-dialog').modal('show');
+    $('#printer-name-input').val(lastPrinterData.printerName);
+    $('#colourselector').colorselector('setColor', lastPrinterData.printerWebColourString);
+}
+
+function renamePrinter()
+{
+    var newName = $('#printer-name-input').val();
+    sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/renamePrinter", null, null, newName);
+}
+
+function changePrinterColour()
+{
+    var newColour = $('#colourselector').find(":selected").data('color');
+    sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/changePrinterColour", null, null, newColour);
+}
+
 function populateReprintDialog()
 {
     sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/listReprintableJobs", function (suitablePrintJobs) {
@@ -133,6 +164,7 @@ function populateReprintDialog()
                 $(this).removeClass('selector-press');
             });
         }
+        $('#reprint-dialog').modal('show');
     }, null, null);
 }
 
@@ -148,19 +180,36 @@ function configurePrinterButtons(printerData)
             || printerData.canCalibrateHead !== lastPrinterData.canCalibrateHead
             || printerData.canPurgeHead !== lastPrinterData.canPurgeHead)
     {
-        setButtonVisibility(printerData.canPrint, "printer-control-reprint");
-        setButtonVisibility(printerData.canPause, "printer-control-pause");
-        setButtonVisibility(printerData.canResume, "printer-control-resume");
-        setButtonVisibility(printerData.canCancel, "printer-control-cancel");
-        setButtonVisibility(printerData.canOpenDoor, "printer-control-open-door");
-        setButtonVisibility(printerData.canRemoveHead, "printer-control-remove-head");
-        setButtonVisibility(!isMobile && printerData.canPrint, "fileUpload");
+        if (printerData.canResume === true)
+        {
+            $('#pauseResumeButton').show();
+            $('#pauseResumeButton').click(resumePrint());
+            $('#pauseResumeButton > img').attr('src', 'robox-images/resume.png');
+        } else if (printerData.canPause === true)
+        {
+            $('#pauseResumeButton').show();
+            $('#pauseResumeButton').click(pausePrint());
+            $('#pauseResumeButton > img').attr('src', 'robox-images/pause.png');
+        } else
+        {
+            $('#pauseResumeButton').hide();
+        }
+
+        setElementVisibility(printerData.canCancel, "cancelButton");
+
+//        setElementDisabled(printerData.canPrint, "sendGCodeButton");
+//        setElementDisabled(printerData.canPrint, "jogHeadButton");
+//        setElementDisabled(printerData.canPrint, "printJobButton");
+        setElementDisabled(printerData.canPrint, "reprintButton");
+//        setElementDisabled(printerData.canPrint, "purgeButton");
+        setElementDisabled(printerData.canRemoveHead, "removeHeadButton");
+//        setElementDisabled(!isMobile && printerData.canPrint, "fileUpload");
     }
     lastPrinterData = printerData;
 
 }
 
-function setButtonVisibility(test, buttonID)
+function setElementVisibility(test, buttonID)
 {
     if (test === true)
     {
@@ -168,6 +217,17 @@ function setButtonVisibility(test, buttonID)
     } else
     {
         $('#' + buttonID).hide();
+    }
+}
+
+function setElementDisabled(test, buttonID)
+{
+    if (test === true)
+    {
+        $('#' + buttonID).removeClass("disabled");
+    } else
+    {
+        $('#' + buttonID).addClass("disabled");
     }
 }
 
@@ -218,6 +278,8 @@ function updateAndDisplayPrinterStatus(printerID)
 
         if (printerID !== null)
         {
+            $('.printer-swatch').css('background-color', printerData.printerWebColourString);
+
             var statusText = printerData.printerStatusString;
 
             if (printerData.printerStatusString.match("^Printing"))
@@ -272,36 +334,24 @@ function updateAndDisplayPrinterStatus(printerID)
                 var filamentNameOutput = "";
                 var showEjectButton = printerData.canEjectFilament[materialNum - 1];
 
+                if (showEjectButton === true)
+                {
+                    $('#_material' + materialNum + 'Eject').removeClass('disabled');
+                } else
+                {
+                    $('#_material' + materialNum + 'Eject').addClass('disabled');
+                }
                 if (printerData.attachedFilamentNames[materialNum - 1] !== null)
                 {
                     filamentNameOutput = printerData.attachedFilamentNames[materialNum - 1];
-                    if (!printerData.materialLoaded[materialNum - 1])
-                    {
-                        filamentNameOutput += " - " + i18next.t("not-loaded");
-                        showEjectButton = false;
-                    } else
-                    {
-                        filamentNameOutput += " - " + i18next.t("loaded");
-                    }
                 } else
                 {
                     if (printerData.materialLoaded[materialNum - 1])
                     {
-                        filamentNameOutput = i18next.t("unknown") + " - " + i18next.t("loaded");
-                    } else
-                    {
-                        filamentNameOutput = i18next.t("not-loaded");
-                        showEjectButton = false;
+                        filamentNameOutput = i18next.t("unknown");
                     }
                 }
 
-                if (showEjectButton)
-                {
-                    $('#printer-control-eject-' + materialNum).show();
-                } else
-                {
-                    $('#printer-control-eject-' + materialNum).hide();
-                }
                 $('#printer-details-panel').find('#' + materialDisplayTag + materialNum).text(filamentNameOutput);
             }
 
@@ -393,6 +443,13 @@ function page_initialiser()
                 alert(log);
         }
 
+    });
+
+    $('#gcode-input').keypress(function (event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            $(this).parent().find('button').click();
+        }
     });
 
     $('.numberOfPrintersDisplay').text(i18next.t('printer-status'));

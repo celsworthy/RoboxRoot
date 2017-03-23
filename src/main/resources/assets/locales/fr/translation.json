@@ -4,8 +4,8 @@
     "job": "FRJob",
     "head": "FRHead",
     "material": "FRMaterial",
-    "material-1": "FRMaterial 1",
-    "material-2": "FRMaterial 2",
+    "material-1": "FR1",
+    "material-2": "FR2",
     "nozzle-1": "FRNozzle 1",
     "nozzle-2": "FRNozzle 2",
     "bed": "FRBed",
@@ -56,5 +56,12 @@
     "choose-file": "FRChoose file",
     "reprint": "FRReprint",
     "duration": "FRDuration",
+    "gcodeEntry": "FRGCode Entry",
+    "sendGCode": "FRSend GCode",
+    "jogHead": "FRJog Head",
+    "identity": "FRIdentity",
+    "printJobFile": "FRPrint Job File",
+    "fileName": "FRFile name",
+    "colour": "FRColour",
     "status": "FRStatus"
 }

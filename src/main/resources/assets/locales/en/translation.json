@@ -4,8 +4,8 @@
     "job": "Job",
     "head": "Head",
     "material": "Material",
-    "material-1": "Material 1",
-    "material-2": "Material 2",
+    "material-1": "1",
+    "material-2": "2",
     "nozzle-1": "Nozzle 1",
     "nozzle-2": "Nozzle 2",
     "bed": "Bed",
@@ -56,5 +56,12 @@
     "choose-file": "Choose file",
     "reprint": "Reprint",
     "duration": "Duration",
+    "gcodeEntry": "GCode Entry",
+    "sendGCode": "Send GCode",
+    "jogHead": "Jog Head",
+    "identity": "Identity",
+    "printJobFile": "Print Job File",
+    "fileName": "File name",
+    "colour": "Colour",
     "status": "Status"
 }

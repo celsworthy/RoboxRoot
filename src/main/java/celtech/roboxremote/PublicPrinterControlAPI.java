@@ -13,6 +13,7 @@ import io.dropwizard.jersey.params.BooleanParam;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import javafx.scene.paint.Color;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -292,7 +293,7 @@ public class PublicPrinterControlAPI
     @Path("/listReprintableJobs")
     public List<SuitablePrintJob> listReprintableJobs(@PathParam("printerID") String printerID)
     {
-        List<SuitablePrintJob>  returnVal = null;
+        List<SuitablePrintJob> returnVal = null;
         if (PrinterRegistry.getInstance() != null)
         {
             Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
@@ -312,9 +313,78 @@ public class PublicPrinterControlAPI
             Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
             submittedOK = printerToUse.reprintJob(Utils.cleanInboundJSONString(printJobID));
         }
-        
+
         Response response = Response.ok().build();
         if (!submittedOK)
+        {
+            response = Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        }
+        return response;
+    }
+
+    @POST
+    @Timed
+    @Path("/executeGCode")
+    public Response executeGCode(@PathParam("printerID") String printerID, String gcode)
+    {
+        if (PrinterRegistry.getInstance() != null)
+        {
+            Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+            printerToUse.sendRawGCode(Utils.cleanInboundJSONString(gcode), false);
+        }
+
+        Response response = Response.ok().build();
+        return response;
+    }
+
+    @POST
+    @Timed
+    @Path("/renamePrinter")
+    public Response renamePrinter(@PathParam("printerID") String printerID, String newName)
+    {
+        boolean success = false;
+        if (PrinterRegistry.getInstance() != null)
+        {
+            Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+            try
+            {
+                printerToUse.updatePrinterName(Utils.cleanInboundJSONString(newName));
+                success = true;
+            } catch (PrinterException ex)
+            {
+
+            }
+        }
+
+        Response response = Response.ok().build();
+        if (!success)
+        {
+            response = Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        }
+        return response;
+    }
+
+    @POST
+    @Timed
+    @Path("/changePrinterColour")
+    public Response changePrinterColour(@PathParam("printerID") String printerID, String newWebColour)
+    {
+        boolean success = false;
+        if (PrinterRegistry.getInstance() != null)
+        {
+            Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+            try
+            {
+                printerToUse.updatePrinterDisplayColour(Color.web(Utils.cleanInboundJSONString(newWebColour)));
+                success = true;
+            } catch (PrinterException ex)
+            {
+
+            }
+        }
+
+        Response response = Response.ok().build();
+        if (!success)
         {
             response = Response.status(Response.Status.NOT_ACCEPTABLE).build();
         }
