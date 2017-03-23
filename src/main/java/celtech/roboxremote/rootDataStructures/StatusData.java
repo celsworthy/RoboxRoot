@@ -6,6 +6,7 @@ import celtech.roboxbase.comms.rx.PrinterIDResponse;
 import celtech.roboxbase.configuration.datafileaccessors.FilamentContainer;
 import celtech.roboxbase.postprocessor.PrintJobStatistics;
 import celtech.roboxbase.printerControl.PrinterStatus;
+import celtech.roboxbase.printerControl.model.Head;
 import celtech.roboxbase.printerControl.model.Printer;
 import celtech.roboxbase.utils.ColourStringConverter;
 import celtech.roboxremote.PrinterRegistry;
@@ -38,6 +39,7 @@ public class StatusData
 
     //Head
     private String headName;
+    private boolean dualMaterialHead;
     private int[] nozzleTemperature;
 
     //Bed
@@ -136,6 +138,7 @@ public class StatusData
         if (printer.headProperty().get() != null)
         {
             headName = printer.headProperty().get().nameProperty().get();
+            dualMaterialHead = printer.headProperty().get().headTypeProperty().get() == Head.HeadType.DUAL_MATERIAL_HEAD;
 
             nozzleTemperature = new int[printer.headProperty().get().getNozzleHeaters().size()];
             for (int heaterNumber = 0; heaterNumber < printer.headProperty().get().getNozzleHeaters().size(); heaterNumber++)
@@ -366,6 +369,17 @@ public class StatusData
         this.headName = headName;
     }
 
+    public boolean isDualMaterialHead()
+    {
+        return dualMaterialHead;
+    }
+
+    public void setDualMaterialHead(boolean dualMaterialHead)
+    {
+        this.dualMaterialHead = dualMaterialHead;
+    }
+
+    
     public int getBedTemperature()
     {
         return bedTemperature;

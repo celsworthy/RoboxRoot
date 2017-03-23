@@ -19,6 +19,8 @@ var nozzleTemperatureTag = "_nozzleTemperature";
 var nozzleTemperatureDisplayTag = "_nozzleTemperatureDisplay";
 var errorRowTag = "_errorRow";
 var errorDisplayTag = "_errorDisplay";
+var nozzleOpen = true;
+var nozzle0Selected = true;
 
 function safetiesOn()
 {
@@ -98,10 +100,20 @@ function showModalPanel(name)
     $('#' + name).modal('show');
 }
 
-function sendGCode()
+function sendGCode(gcodeToSend)
+{
+    sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/executeGCode", null, null, gcodeToSend);
+}
+
+function runMacroFile(macroFilePrefix)
+{
+    sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/runMacroFile", null, null, macroFilePrefix);
+}
+
+function sendGCodeFrunMacroromDialog()
 {
     var gcodeToSend = $('#gcode-input').val().toUpperCase();
-    sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/executeGCode", null, null, gcodeToSend);
+    sendGCode(gcodeToSend);
     $('#gcode-output').val($('#gcode-output').val() + '\n' + gcodeToSend);
 }
 
@@ -124,6 +136,112 @@ function changePrinterColour()
     sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/changePrinterColour", null, null, newColour);
 }
 
+function jogZUp()
+{
+    sendGCode("G91");
+    sendGCode("G0 Z20");
+    sendGCode("G90");
+}
+
+function jogZDown()
+{
+    sendGCode("G91");
+    sendGCode("G0 Z-20");
+    sendGCode("G90");
+}
+
+function jogYForward()
+{
+    sendGCode("G91");
+    sendGCode("G0 Y10");
+    sendGCode("G90");
+}
+
+function jogYBack()
+{
+    sendGCode("G91");
+    sendGCode("G0 Y-10");
+    sendGCode("G90");
+}
+
+function jogXLeft()
+{
+    sendGCode("G91");
+    sendGCode("G0 X-10");
+    sendGCode("G90");
+}
+
+function jogXRight()
+{
+    sendGCode("G91");
+    sendGCode("G0 X10");
+    sendGCode("G90");
+}
+
+function jogExtruder1Out()
+{
+    sendGCode("G91");
+    sendGCode("G1 E-20 F400");
+    sendGCode("G90");
+}
+
+function jogExtruder1In()
+{
+    sendGCode("G91");
+    sendGCode("G1 E20 F400");
+    sendGCode("G90");
+}
+
+function jogExtruder2Out()
+{
+    sendGCode("G91");
+    sendGCode("G1 D-20 F400");
+    sendGCode("G90");
+}
+
+function jogExtruder2In()
+{
+    sendGCode("G91");
+    sendGCode("G1 D20 F400");
+    sendGCode("G90");
+}
+
+function homeXYZ()
+{
+    runMacroFile("Home_all");
+}
+
+function switchNozzles()
+{
+    if (nozzle0Selected)
+    {
+        sendGCode("T1");
+        nozzle0Selected = false;
+    } else
+    {
+        sendGCode("T0");
+        nozzle0Selected = true;
+    }
+}
+
+function openCloseNozzle()
+{
+    if (nozzleOpen)
+    {
+        sendGCode("G0 B0");
+        nozzleOpen = false;
+    } else
+    {
+        sendGCode("G0 B1");
+        nozzleOpen = true;
+    }
+}
+
+function purgeHead()
+{
+    runMacroFile("Mote_PurgeMaterial");
+}
+
 function populateReprintDialog()
 {
     sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/listReprintableJobs", function (suitablePrintJobs) {
@@ -139,6 +257,7 @@ function populateReprintDialog()
             console.log(suitablePrintJobs[printJobIndex].dVolume);
             selectorHTML += "<tr id=\"" + printJobID + "_row" + "\">";
             selectorHTML += "<td>" + suitablePrintJobs[printJobIndex].printJobName + "</td>";
+            selectorHTML += "<td>" + suitablePrintJobs[printJobIndex].creationDate + "</td>";
             selectorHTML += "<td>" + secondsToHMS(suitablePrintJobs[printJobIndex].durationInSeconds) + "</td>";
             selectorHTML += "</tr>\n";
 
@@ -178,7 +297,8 @@ function configurePrinterButtons(printerData)
             || printerData.canOpenDoor !== lastPrinterData.canOpenDoor
             || printerData.canCancel !== lastPrinterData.canCancel
             || printerData.canCalibrateHead !== lastPrinterData.canCalibrateHead
-            || printerData.canPurgeHead !== lastPrinterData.canPurgeHead)
+            || printerData.canPurgeHead !== lastPrinterData.canPurgeHead
+            || printerData.dualMaterialHead !== lastPrinterData.dualMaterialHead)
     {
         if (printerData.canResume === true)
         {
@@ -197,13 +317,12 @@ function configurePrinterButtons(printerData)
 
         setElementVisibility(printerData.canCancel, "cancelButton");
 
-//        setElementDisabled(printerData.canPrint, "sendGCodeButton");
-//        setElementDisabled(printerData.canPrint, "jogHeadButton");
-//        setElementDisabled(printerData.canPrint, "printJobButton");
+        setElementDisabled(printerData.canPrint, "sendGCodeButton");
+        setElementDisabled(printerData.canPrint, "jogHeadButton");
+        setElementDisabled(printerData.canPrint, "printJobButton");
         setElementDisabled(printerData.canPrint, "reprintButton");
-//        setElementDisabled(printerData.canPrint, "purgeButton");
+        setElementDisabled(printerData.canPurgeHead, "purgeButton");
         setElementDisabled(printerData.canRemoveHead, "removeHeadButton");
-//        setElementDisabled(!isMobile && printerData.canPrint, "fileUpload");
     }
     lastPrinterData = printerData;
 

@@ -12,6 +12,9 @@ import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.jersey.params.BooleanParam;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import javafx.scene.paint.Color;
 import javax.annotation.security.RolesAllowed;
@@ -331,6 +334,50 @@ public class PublicPrinterControlAPI
         {
             Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
             printerToUse.sendRawGCode(Utils.cleanInboundJSONString(gcode), false);
+        }
+
+        Response response = Response.ok().build();
+        return response;
+    }
+
+    @POST
+    @Timed
+    @Path("/runMacroFile")
+    public Response runMacroFile(@PathParam("printerID") String printerID, String macroFilePrefix)
+    {
+        if (PrinterRegistry.getInstance() != null)
+        {
+            String macroFilePrefixCleaned = Utils.cleanInboundJSONString(macroFilePrefix);
+            Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+            String gcodeFileWithPathApp = BaseConfiguration.getCommonApplicationDirectory() + BaseConfiguration.macroFileSubpath + macroFilePrefixCleaned + ".gcode";
+            String gcodeFileWithPathUser = BaseConfiguration.getUserStorageDirectory() + BaseConfiguration.macroFileSubpath + macroFilePrefixCleaned + ".gcode";
+            String gcodeFileToUse = null;
+
+            java.nio.file.Path userPath = Paths.get(URI.create("file://" + gcodeFileWithPathUser));
+            java.nio.file.Path appPath = Paths.get(URI.create("file://" + gcodeFileWithPathApp));
+
+            if (Files.exists(userPath))
+            {
+                gcodeFileToUse = gcodeFileWithPathUser;
+            } else if (Files.exists(appPath))
+            {
+                gcodeFileToUse = gcodeFileWithPathApp;
+            }
+
+            //See if we can run a macro
+            if (printerToUse != null && gcodeFileToUse != null)
+            {
+                try
+                {
+                    printerToUse.executeGCodeFile(gcodeFileToUse, false);
+                } catch (PrinterException ex)
+                {
+                    steno.error("Failed to run macro: " + macroFilePrefixCleaned);
+                }
+            } else
+            {
+                steno.error("Can't run requested macro: " + macroFilePrefixCleaned);
+            }
         }
 
         Response response = Response.ok().build();

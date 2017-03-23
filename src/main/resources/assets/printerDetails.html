@@ -126,14 +126,14 @@
                         <div class="container-fluid">
                             <div class="row centred-grid-box">
                                 <div class="col-xs-3 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='showModalPanel("gcode-dialog")' id="sendGCodeButton"><img class='img-fluid' alt='Enter GCode' src='robox-images/gcode.png' height='50'></a></div>
-                                <div class="col-xs-3 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='showModalPanel("jog-dialog")' id="jogHeadButton"><img class='img-fluid' alt='Jog Head' src='robox-images/move.png' height='50'></a></div>
+                                <div class="col-xs-6 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='showModalPanel("jog-dialog")' id="jogHeadButton"><img class='img-fluid' alt='Jog Head' src='robox-images/move.png' height='50'></a></div>
                                 <div class="col-xs-3 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='showIDPanel()' id="changeColourNameButton"><img class='img-fluid' alt='Eject Filament 1' src='robox-images/colour_name.png' height='50'></a></div>
-                                <div class="col-xs-3 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='showModalPanel("printjob-file-dialog")' id="printJobButton"><img class='img-fluid' alt='Print File' src='robox-images/open.png' height='50'></a></div>
+                                <!--<div class="col-xs-3 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='showModalPanel("printjob-file-dialog")' id="printJobButton"><img class='img-fluid' alt='Print File' src='robox-images/open.png' height='50'></a></div>-->
                             </div>
                             <div class="row centred-grid-box">
-                                <div class="col-xs-4 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='populateReprintDialog()' id="reprintButton"><img class='img-fluid' alt='Reprint' src='robox-images/reprint.png' height='50'></a></div>
-                                <div class="col-xs-4 borderless white-background centred-grid-box"><a class='btn no-padding disabled' onclick='eject(1)' id="purgeButton"><img class='img-fluid' alt='Purge' src='robox-images/purge.png' height='50'></a></div>
-                                <div class="col-xs-4 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='removeHead()' id="removeHeadButton"><img class='img-fluid' alt='Remove Head' src='robox-images/remove_head.png' height='50'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='populateReprintDialog()' id="reprintButton"><img class='img-fluid' alt='Reprint' src='robox-images/reprint.png' height='50'></a></div>
+                                <div class="col-xs-6 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='purgeHead()' id="purgeButton"><img class='img-fluid' alt='Purge' src='robox-images/purge.png' height='50'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='removeHead()' id="removeHeadButton"><img class='img-fluid' alt='Remove Head' src='robox-images/remove_head.png' height='50'></a></div>
                             </div>
                         </div>
                         <!--<div class="w-100"></div>-->
@@ -165,15 +165,13 @@
                                 <thead class="thead-default">
                                     <tr>
                                         <th height="50px" width="130px" class="localised h4" data-i18n="name">Name</th>
+                                        <th height="50px" width="100px" class="localised h4" data-i18n="created">Created</th>
                                         <th height="50px" width="100px" class="localised h4" data-i18n="duration">Duration</th>
                                     </tr>
                                 </thead>
                                 <tbody id="reprint-table-body">
                                 </tbody>
                             </table>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default pull-left btn-block" data-dismiss="modal">Close</button>
                         </div>
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
@@ -190,12 +188,9 @@
                             <div class="input-group">
                                 <input id="gcode-input" class="server-name-entry form-control" type="text" placeholder="" aria-describedby="sizing-addon1">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-default localised" type="button" data-i18n="sendGcode" onClick="sendGCode()">Send GCode</button>
+                                    <button class="btn btn-default localised" type="button" data-i18n="sendGCode" onClick="sendGCodeFromDialog()">Send GCode</button>
                                 </span>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default pull-left btn-block" data-dismiss="modal">Close</button>
                         </div>
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
@@ -208,9 +203,42 @@
                             <h3 class="localised" data-i18n="jogHead"><i class="fa fa-bar-chart-o"></i>Jog Head</h3>
                         </div>
                         <div class="modal-body container-fluid">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default pull-left btn-block" data-dismiss="modal">Close</button>
+                            <div class="no-margin no-padding row centred-grid-box">
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding jog-button' onclick='jogZUp()' id="zUpButton"><img class='img-fluid' alt='Z Up' src='robox-images/joghead/Move_A1.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless extruder1-control jog-button' onclick='jogExtruder1Out()'><img class='img-fluid' alt='Reel 1 Out' src='robox-images/joghead/Move_B2.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Image of Reel 1' src='robox-images/joghead/Move_C2.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless extruder1-control jog-button' onclick='jogExtruder1In()'><img class='img-fluid' alt='Reel 1 Out' src='robox-images/joghead/Move_D2.png'></a></div>
+                            </div>
+                            <div class="no-margin no-padding row centred-grid-box">
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_A2.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless extruder2-control jog-button' onclick='jogExtruder2Out()'><img class='img-fluid' alt='Reel 2 Out' src='robox-images/joghead/Move_B3.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Z Up' src='robox-images/joghead/Move_C3.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless extruder2-control jog-button' onclick='jogExtruder2In()'><img class='img-fluid' alt='Reel 2 In' src='robox-images/joghead/Move_D3.png'></a></div>
+                            </div>
+                            <div class="no-margin no-padding row centred-grid-box">
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='jogZDown()'><img class='img-fluid' alt='Z Down' src='robox-images/joghead/Move_A3.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"></div>
+                            </div>
+                            <div class="no-margin no-padding row centred-grid-box">
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='jogYBack()'><img class='img-fluid' alt='Y Back' src='robox-images/joghead/Move_A4.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='jogXLeft()'><img class='img-fluid' alt='X Left' src='robox-images/joghead/Move_B4.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_C4.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='jogXRight()'><img class='img-fluid' alt='X Right' src='robox-images/joghead/Move_D4.png'></a></div>
+                            </div>
+                            <div class="no-margin no-padding row centred-grid-box">
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_A5.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='homeXYZ()'><img class='img-fluid' alt='Home XYZ' src='robox-images/joghead/Move_B5.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='switchNozzles()'><img class='img-fluid' alt='Switch nozzles' src='robox-images/joghead/Move_C5.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='openCloseNozzle()'><img class='img-fluid' alt='Open/Close nozzle' src='robox-images/joghead/Move_D5.png'></a></div>
+                            </div>
+                            <div class="no-margin no-padding row centred-grid-box">
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='jogYForward()'><img class='img-fluid' alt='Y Forward' src='robox-images/joghead/Move_A6.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_B6.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_C6.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_D6.png'></a></div>
+                            </div>
                         </div>
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
@@ -255,16 +283,11 @@
 
                                 <script>
                                     $('#colourselector').colorselector();
-//                                    $('#colourselector').data('colorsPerRow', 6);
                                 </script>
-                                <!--<input id="printer-colour-input" class="server-name-entry form-control" type="text" placeholder="" aria-describedby="sizing-addon2">-->
                                 <span class="input-group-btn">
                                     <button class="btn btn-default" type="button" data-i18n="update" onClick="changePrinterColour()">Update</button>
                                 </span>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default pull-left btn-block" data-dismiss="modal">Close</button>
                         </div>
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
@@ -294,9 +317,6 @@
                                 <span class="btn btn-default btn-file"><span>Choose file</span><input type="file" /></span>
                                 <span class="fileinput-filename"></span><span class="fileinput-new">No file chosen</span>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default pull-left btn-block" data-dismiss="modal">Close</button>
                         </div>
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->

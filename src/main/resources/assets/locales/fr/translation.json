@@ -63,5 +63,6 @@
     "printJobFile": "FRPrint Job File",
     "fileName": "FRFile name",
     "colour": "FRColour",
+    "created": "FRCreated",
     "status": "FRStatus"
 }

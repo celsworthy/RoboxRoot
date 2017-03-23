@@ -63,5 +63,6 @@
     "printJobFile": "Print Job File",
     "fileName": "File name",
     "colour": "Colour",
+    "created": "Created",
     "status": "Status"
 }
