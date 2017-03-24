@@ -87,10 +87,18 @@ public class LowLevelAPI
                 rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getLastErrorResponse();
             } else
             {
+                try
+                {
+                    rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getCommandInterface().writeToPrinter(remoteTx, true);
+                } catch (RoboxCommsException ex)
+                {
+                    steno.error("Failed whilst writing to local printer with ID" + printerID);
+                }
                 if (remoteTx instanceof SendPrintFileStart
                         || remoteTx instanceof SendDataFileStart)
                 {
                     PrintJobPersister.getInstance().startFile(remoteTx.getMessagePayload());
+                    PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getPrintEngine().takingItThroughTheBackDoor(true);
                 } else if (remoteTx instanceof SendDataFileChunk)
                 {
                     String payload = remoteTx.getMessagePayload();
@@ -98,14 +106,7 @@ public class LowLevelAPI
                 } else if (remoteTx instanceof SendDataFileEnd)
                 {
                     PrintJobPersister.getInstance().closeFile(remoteTx.getMessagePayload());
-                }
-
-                try
-                {
-                    rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getCommandInterface().writeToPrinter(remoteTx, true);
-                } catch (RoboxCommsException ex)
-                {
-                    steno.error("Failed whilst writing to local printer with ID" + printerID);
+                    PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getPrintEngine().takingItThroughTheBackDoor(false);
                 }
             }
         }
