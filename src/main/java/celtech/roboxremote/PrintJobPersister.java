@@ -49,7 +49,7 @@ public class PrintJobPersister
 
 //                        steno.info("Receiving print job " + remoteTx.getMessagePayload());
             printJobIDBeingPersisted = printJobID;
-            PrintJob pj = PrintJob.readJobFromDirectory(printJobIDBeingPersisted);
+            PrintJob pj = new PrintJob(printJobIDBeingPersisted);
 
             FileUtils.forceMkdir(new File(pj.getRoboxisedFileLocation()).getParentFile());
             FileWriter fw = new FileWriter(pj.getRoboxisedFileLocation());

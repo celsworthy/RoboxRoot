@@ -10,11 +10,9 @@ import celtech.roboxremote.rootDataStructures.StatusData;
 import celtech.roboxbase.comms.remote.clear.SuitablePrintJob;
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.jersey.params.BooleanParam;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import javafx.scene.paint.Color;
 import javax.annotation.security.RolesAllowed;
@@ -343,25 +341,36 @@ public class PublicPrinterControlAPI
     @POST
     @Timed
     @Path("/runMacroFile")
-    public Response runMacroFile(@PathParam("printerID") String printerID, String macroFilePrefix)
+    public Response runMacroFile(@PathParam("printerID") String printerID, String macroTitleAndFilePrefix)
     {
         if (PrinterRegistry.getInstance() != null)
         {
-            String macroFilePrefixCleaned = Utils.cleanInboundJSONString(macroFilePrefix);
+            String macroTitleAndFilePrefixCleaned = Utils.cleanInboundJSONString(macroTitleAndFilePrefix);
+            String macroTitle = null;
+            String macroPrefix = null;
+            if (macroTitleAndFilePrefixCleaned.contains(":"))
+            {
+                String[] parts = macroTitleAndFilePrefixCleaned.split(":");
+                macroTitle = parts[0];
+                macroPrefix = parts[1];
+            } else
+            {
+                macroPrefix = macroTitleAndFilePrefixCleaned;
+            }
+
             Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
-            String gcodeFileWithPathApp = BaseConfiguration.getCommonApplicationDirectory() + BaseConfiguration.macroFileSubpath + macroFilePrefixCleaned + ".gcode";
-            String gcodeFileWithPathUser = BaseConfiguration.getUserStorageDirectory() + BaseConfiguration.macroFileSubpath + macroFilePrefixCleaned + ".gcode";
-            String gcodeFileToUse = null;
+            String gcodePathApp = BaseConfiguration.getCommonApplicationDirectory() + BaseConfiguration.macroFileSubpath + macroPrefix + ".gcode";
+            File gcodeFileApp = new File(gcodePathApp);
+            String gcodePathUser = BaseConfiguration.getUserStorageDirectory() + BaseConfiguration.macroFileSubpath + macroPrefix + ".gcode";
+            File gcodeFileUser = new File(gcodePathUser);
+            File gcodeFileToUse = null;
 
-            java.nio.file.Path userPath = Paths.get(URI.create("file://" + gcodeFileWithPathUser));
-            java.nio.file.Path appPath = Paths.get(URI.create("file://" + gcodeFileWithPathApp));
-
-            if (Files.exists(userPath))
+            if (gcodeFileUser.exists())
             {
-                gcodeFileToUse = gcodeFileWithPathUser;
-            } else if (Files.exists(appPath))
+                gcodeFileToUse = gcodeFileUser;
+            } else if (gcodeFileApp.exists())
             {
-                gcodeFileToUse = gcodeFileWithPathApp;
+                gcodeFileToUse = gcodeFileApp;
             }
 
             //See if we can run a macro
@@ -369,14 +378,20 @@ public class PublicPrinterControlAPI
             {
                 try
                 {
-                    printerToUse.executeGCodeFile(gcodeFileToUse, false);
+                    if (macroTitle != null)
+                    {
+                        printerToUse.executeGCodeFile(macroTitle, gcodeFileToUse.getAbsolutePath(), false);
+                    } else
+                    {
+                        printerToUse.executeGCodeFile(gcodeFileToUse.getAbsolutePath(), false);
+                    }
                 } catch (PrinterException ex)
                 {
-                    steno.error("Failed to run macro: " + macroFilePrefixCleaned);
+                    steno.error("Failed to run macro: " + macroTitleAndFilePrefixCleaned);
                 }
             } else
             {
-                steno.error("Can't run requested macro: " + macroFilePrefixCleaned);
+                steno.error("Can't run requested macro: " + macroTitleAndFilePrefixCleaned);
             }
         }
 

@@ -105,12 +105,12 @@ function sendGCode(gcodeToSend)
     sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/executeGCode", null, null, gcodeToSend);
 }
 
-function runMacroFile(macroFilePrefix)
+function runMacroFile(macroTitle, macroFilePrefix)
 {
-    sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/runMacroFile", null, null, macroFilePrefix);
+    sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/runMacroFile", null, null, macroTitle + ":" + macroFilePrefix);
 }
 
-function sendGCodeFrunMacroromDialog()
+function sendGCodeFromDialog()
 {
     var gcodeToSend = $('#gcode-input').val().toUpperCase();
     sendGCode(gcodeToSend);
@@ -208,7 +208,7 @@ function jogExtruder2In()
 
 function homeXYZ()
 {
-    runMacroFile("Home_all");
+    runMacroFile("Home", "Home_all");
 }
 
 function switchNozzles()
@@ -239,7 +239,7 @@ function openCloseNozzle()
 
 function purgeHead()
 {
-    runMacroFile("Mote_PurgeMaterial");
+    runMacroFile("Purge", "Mote_PurgeMaterial");
 }
 
 function populateReprintDialog()
@@ -303,12 +303,14 @@ function configurePrinterButtons(printerData)
         if (printerData.canResume === true)
         {
             $('#pauseResumeButton').show();
-            $('#pauseResumeButton').click(resumePrint());
+            $('#pauseResumeButton').off('click');
+            $('#pauseResumeButton').on('click', function () {resumePrint()});
             $('#pauseResumeButton > img').attr('src', 'robox-images/resume.png');
         } else if (printerData.canPause === true)
         {
             $('#pauseResumeButton').show();
-            $('#pauseResumeButton').click(pausePrint());
+            $('#pauseResumeButton').off('click');
+            $('#pauseResumeButton').on('click', function () {pausePrint()});
             $('#pauseResumeButton > img').attr('src', 'robox-images/pause.png');
         } else
         {
@@ -317,7 +319,6 @@ function configurePrinterButtons(printerData)
 
         setElementVisibility(printerData.canCancel, "cancelButton");
 
-        setElementDisabled(printerData.canPrint, "sendGCodeButton");
         setElementDisabled(printerData.canPrint, "jogHeadButton");
         setElementDisabled(printerData.canPrint, "printJobButton");
         setElementDisabled(printerData.canPrint, "reprintButton");

@@ -130,7 +130,7 @@ public class StatusData
         }
 
         canPause = printer.canPauseProperty().get();
-        canPurgeHead = printer.canPurgeHeadProperty().get();
+        canPurgeHead = false;
         canRemoveHead = printer.canRemoveHeadProperty().get();
         canResume = printer.canResumeProperty().get();
 
@@ -139,6 +139,14 @@ public class StatusData
         {
             headName = printer.headProperty().get().nameProperty().get();
             dualMaterialHead = printer.headProperty().get().headTypeProperty().get() == Head.HeadType.DUAL_MATERIAL_HEAD;
+
+            if (dualMaterialHead)
+            {
+                canPurgeHead = printer.reelsProperty().containsKey(0) && printer.reelsProperty().containsKey(1) && printer.canPurgeHeadProperty().get();
+            } else
+            {
+                canPurgeHead = printer.reelsProperty().containsKey(0) && printer.canPurgeHeadProperty().get();
+            }
 
             nozzleTemperature = new int[printer.headProperty().get().getNozzleHeaters().size()];
             for (int heaterNumber = 0; heaterNumber < printer.headProperty().get().getNozzleHeaters().size(); heaterNumber++)
@@ -379,7 +387,6 @@ public class StatusData
         this.dualMaterialHead = dualMaterialHead;
     }
 
-    
     public int getBedTemperature()
     {
         return bedTemperature;
