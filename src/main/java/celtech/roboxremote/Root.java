@@ -186,28 +186,30 @@ public class Root extends Application<RoboxRemoteConfiguration>
 
     public void restart()
     {
-        List<String> restartCommands = new ArrayList<String>();
-        
-        String installDir = BaseConfiguration.getApplicationInstallDirectory(null);
-
-        if (BaseConfiguration.getMachineType() == MachineType.WINDOWS)
-        {
-            restartCommands.add(installDir + "runRoot.bat");
-        } else
-        {
-            restartCommands.add(installDir + "restartRoot.sh");
-            restartCommands.add("&");
-        }
-        
-        try
-        {
-            ProcessBuilder processBuilder = new ProcessBuilder(restartCommands);
-            processBuilder.start();
-            stop();
-        } catch (IOException ex)
-        {
-            steno.exception("Unable to restart application", ex);
-        }
+        //Rely on the system process manager to restart us...
+        stop();
+//        List<String> restartCommands = new ArrayList<String>();
+//        
+//        String installDir = BaseConfiguration.getApplicationInstallDirectory(null);
+//
+//        if (BaseConfiguration.getMachineType() == MachineType.WINDOWS)
+//        {
+//            restartCommands.add(installDir + "runRoot.bat");
+//        } else
+//        {
+//            restartCommands.add(installDir + "restartRoot.sh");
+//            restartCommands.add("&");
+//        }
+//        
+//        try
+//        {
+//            ProcessBuilder processBuilder = new ProcessBuilder(restartCommands);
+//            processBuilder.start();
+//            stop();
+//        } catch (IOException ex)
+//        {
+//            steno.exception("Unable to restart application", ex);
+//        }
     }
 
     public void setApplicationPIN(String applicationPIN)
