@@ -304,13 +304,17 @@ function configurePrinterButtons(printerData)
         {
             $('#pauseResumeButton').show();
             $('#pauseResumeButton').off('click');
-            $('#pauseResumeButton').on('click', function () {resumePrint()});
+            $('#pauseResumeButton').on('click', function () {
+                resumePrint()
+            });
             $('#pauseResumeButton > img').attr('src', 'robox-images/resume.png');
         } else if (printerData.canPause === true)
         {
             $('#pauseResumeButton').show();
             $('#pauseResumeButton').off('click');
-            $('#pauseResumeButton').on('click', function () {pausePrint()});
+            $('#pauseResumeButton').on('click', function () {
+                pausePrint()
+            });
             $('#pauseResumeButton > img').attr('src', 'robox-images/pause.png');
         } else
         {
@@ -481,12 +485,9 @@ function updateAndDisplayPrinterStatus(printerID)
                 numberOfMaterials = printerData.attachedFilamentNames.length;
             }
 
-            if (numberOfMaterials == 2)
+            if (numberOfMaterials != 2)
             {
-                $('.material-display-2').show();
-            } else
-            {
-                $('.material-display-2').hide();
+                $('#_material2Eject').addClass('disabled');
             }
 
             if (printerData.activeErrors !== null)

@@ -157,14 +157,14 @@ function updateControlButtons(printerData)
     $('#' + printerData.printerID + controlsDisplayTag).html("");
     if (printerData.canPause)
     {
-        $('#' + printerData.printerID + controlsDisplayTag).append("<a class='btn no-padding' onclick='pausePressed($(this))' data-printerid='" + printerData.printerID + "'><img class='img-fluid' alt='Pause' src='robox-images/pause.png' height='50'></a>");
+        $('#' + printerData.printerID + controlsDisplayTag).append("<a class='btn no-padding' onclick='pausePressed($(this))' data-printerid='" + printerData.printerID + "'><img class='img-fluid root-icon' alt='Pause' src='robox-images/pause.png'></a>");
     } else if (printerData.canResume)
     {
-        $('#' + printerData.printerID + controlsDisplayTag).append("<a class='btn no-padding' onclick='resumePressed($(this))' data-printerid='" + printerData.printerID + "'><img class='img-fluid' alt='Pause' src='robox-images/resume.png' height='50'></a>");
+        $('#' + printerData.printerID + controlsDisplayTag).append("<a class='btn no-padding' onclick='resumePressed($(this))' data-printerid='" + printerData.printerID + "'><img class='img-fluid root-icon' alt='Pause' src='robox-images/resume.png'></a>");
     }
     if (printerData.canCancel)
     {
-        $('#' + printerData.printerID + controlsDisplayTag).append("<a class='btn no-padding' onclick='cancelPressed($(this))' data-printerid='" + printerData.printerID + "'><img class='img-fluid' alt='Pause' src='robox-images/cancel.png' height='50'></a>");
+        $('#' + printerData.printerID + controlsDisplayTag).append("<a class='btn no-padding' onclick='cancelPressed($(this))' data-printerid='" + printerData.printerID + "'><img class='img-fluid root-icon' alt='Pause' src='robox-images/cancel.png'></a>");
     }
 }
 
@@ -286,9 +286,6 @@ function getPrinters()
             },
             function (data) {
                 connectedToServer = false;
-                $('#serverOnline').text('Server OFFLINE');
-                removeAllPrinterTabs();
-                logout();
             },
             null);
 }

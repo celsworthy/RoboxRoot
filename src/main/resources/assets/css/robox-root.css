@@ -62,7 +62,7 @@ tr.selector-press {
 
 .printer-selector
 {
-    height: 65px;
+    height: 64px;
     font-size: 1.2em;
 }
 
@@ -113,7 +113,7 @@ tr.selector-press {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 64px;
+    height: 74px;
     background-color: black;
     z-index: 9999;
 }
@@ -199,4 +199,9 @@ tr.selector-press {
 .btn.disabled
 {
     opacity: .3 !important;
+}
+
+.root-icon
+{
+    height: 60px;
 }

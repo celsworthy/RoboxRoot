@@ -75,8 +75,8 @@
                         </div>
                         <div class="col-xs-4 borderless white-background" style='padding-right: 0px !important; padding-left: 9px !important;'>
                             <div class="borderless white-background">
-                                <a class='btn no-padding' id="pauseResumeButton"><img class='img-fluid' alt='Pause/Resume' src='robox-images/resume.png' height='50'></a>
-                                <a class='btn no-padding' onclick='cancelPrint()' id="cancelButton"><img class='img-fluid' alt='Cancel' src='robox-images/cancel.png' height='50'></a>
+                                <a class='btn no-padding' id="pauseResumeButton"><img class='img-fluid root-icon' alt='Pause/Resume' src='robox-images/resume.png'></a>
+                                <a class='btn no-padding' onclick='cancelPrint()' id="cancelButton"><img class='img-fluid root-icon' alt='Cancel' src='robox-images/cancel.png'></a>
                             </div>
                         </div>
                     </div>
@@ -90,12 +90,12 @@
                             <div class="row centred-grid-box">
                                 <div class="col-xs-1 borderless white-background"><span class="localised" data-i18n="material-1">Material 1</span><span></span></div>
                                 <div class="col-xs-8 borderless white-background" id='_materialDisplay1'></div>
-                                <div class="col-xs-2 borderless white-background"><a class='btn no-padding' onclick='eject(1)' id="_material1Eject"><img class='img-fluid' alt='Eject Filament 1' src='robox-images/eject.png' height='50'></a></div>
+                                <div class="col-xs-2 borderless white-background"><a class='btn no-padding' onclick='eject(1)' id="_material1Eject"><img class='img-fluid root-icon' alt='Eject Filament 1' src='robox-images/eject.png'></a></div>
                             </div>
                             <div class="row centred-grid-box">
                                 <div class="col-xs-1 borderless white-background material-display-2"><span class="localised" data-i18n="material-2">Material 2</span><span></span></div>
                                 <div class="col-xs-8 borderless white-background material-display-2" id='_materialDisplay2'></div>
-                                <div class="col-xs-2 borderless white-background"><a class='btn no-padding' onclick='eject(2)' id="_material2Eject"><img class='img-fluid' alt='Eject Filament 2' src='robox-images/eject.png' height='50'></a></div>
+                                <div class="col-xs-2 borderless white-background"><a class='btn no-padding' onclick='eject(2)' id="_material2Eject"><img class='img-fluid root-icon' alt='Eject Filament 2' src='robox-images/eject.png'></a></div>
                             </div>
                         </div>
                     </div>
@@ -124,15 +124,15 @@
                     <div class="panel-body low-padding-panel">
                         <div class="container-fluid">
                             <div class="row centred-grid-box">
-                                <div class="col-xs-3 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='showModalPanel("gcode-dialog")' id="sendGCodeButton"><img class='img-fluid' alt='Enter GCode' src='robox-images/gcode.png' height='50'></a></div>
-                                <div class="col-xs-6 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='showModalPanel("jog-dialog")' id="jogHeadButton"><img class='img-fluid' alt='Jog Head' src='robox-images/move.png' height='50'></a></div>
-                                <div class="col-xs-3 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='showIDPanel()' id="changeColourNameButton"><img class='img-fluid' alt='Eject Filament 1' src='robox-images/colour_name.png' height='50'></a></div>
-                                <!--<div class="col-xs-3 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='showModalPanel("printjob-file-dialog")' id="printJobButton"><img class='img-fluid' alt='Print File' src='robox-images/open.png' height='50'></a></div>-->
+                                <div class="col-xs-3 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='showModalPanel("gcode-dialog")' id="sendGCodeButton"><img class='img-fluid root-icon' alt='Enter GCode' src='robox-images/gcode.png'></a></div>
+                                <div class="col-xs-6 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='showModalPanel("jog-dialog")' id="jogHeadButton"><img class='img-fluid root-icon' alt='Jog Head' src='robox-images/move.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='showIDPanel()' id="changeColourNameButton"><img class='img-fluid root-icon' alt='Eject Filament 1' src='robox-images/colour_name.png'></a></div>
+                                <!--<div class="col-xs-3 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='showModalPanel("printjob-file-dialog")' id="printJobButton"><img class='img-fluid' alt='Print File' src='robox-images/open.png'></a></div>-->
                             </div>
                             <div class="row centred-grid-box">
-                                <div class="col-xs-3 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='populateReprintDialog()' id="reprintButton"><img class='img-fluid' alt='Reprint' src='robox-images/reprint.png' height='50'></a></div>
-                                <div class="col-xs-6 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='purgeHead()' id="purgeButton"><img class='img-fluid' alt='Purge' src='robox-images/purge.png' height='50'></a></div>
-                                <div class="col-xs-3 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='removeHead()' id="removeHeadButton"><img class='img-fluid' alt='Remove Head' src='robox-images/remove_head.png' height='50'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='populateReprintDialog()' id="reprintButton"><img class='img-fluid root-icon' alt='Reprint' src='robox-images/reprint.png'></a></div>
+                                <div class="col-xs-6 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='purgeHead()' id="purgeButton"><img class='img-fluid root-icon' alt='Purge' src='robox-images/purge.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='removeHead()' id="removeHeadButton"><img class='img-fluid root-icon' alt='Remove Head' src='robox-images/remove_head.png'></a></div>
                             </div>
                         </div>
                         <!--<div class="w-100"></div>-->

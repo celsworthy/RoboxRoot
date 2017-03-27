@@ -1,7 +1,6 @@
 package celtech.roboxremote;
 
 import celtech.roboxbase.configuration.BaseConfiguration;
-import celtech.roboxbase.configuration.MachineType;
 import celtech.roboxbase.utils.ApplicationUtils;
 import celtech.roboxremote.custom_dropwizard.AuthenticatedAssetsBundle;
 import celtech.roboxremote.security.RootAPIAuthFilter;
@@ -12,15 +11,12 @@ import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Enumeration;
-import java.util.List;
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
 import libertysystems.stenographer.Stenographer;
@@ -187,30 +183,7 @@ public class Root extends Application<RoboxRemoteConfiguration>
     public void restart()
     {
         //Rely on the system process manager to restart us...
-        stop();
-//        List<String> restartCommands = new ArrayList<String>();
-//        
-//        String installDir = BaseConfiguration.getApplicationInstallDirectory(null);
-//
-//        if (BaseConfiguration.getMachineType() == MachineType.WINDOWS)
-//        {
-//            restartCommands.add(installDir + "runRoot.bat");
-//        } else
-//        {
-//            restartCommands.add(installDir + "restartRoot.sh");
-//            restartCommands.add("&");
-//        }
-//        
-//        try
-//        {
-//            ProcessBuilder processBuilder = new ProcessBuilder(restartCommands);
-//            processBuilder.start();
-//            stop();
-//        } catch (IOException ex)
-//        {
-//            steno.exception("Unable to restart application", ex);
-//        }
-    }
+        stop();    }
 
     public void setApplicationPIN(String applicationPIN)
     {
