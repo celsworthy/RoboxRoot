@@ -32,14 +32,6 @@ tr.selector-press {
     fieldset { display: table-cell; }
 }
 
-/*body
-{
-    padding-top: 10px;
-    padding-left: 5px;
-    padding-right: 5px;
-    padding-bottom: 0px;
-}*/
-
 .btn-file {
     position: relative;
     overflow: hidden;
@@ -204,4 +196,9 @@ tr.selector-press {
 .root-icon
 {
     height: 60px;
+}
+
+body
+{
+    font-size: 12pt !important;   
 }
