@@ -131,7 +131,7 @@ function updateCurrentWifiState()
                 var allOff = true;
 
                 if (lastWifiData === null
-                        || data.powerOn !== lastWifiData.poweredOn
+                        || data.poweredOn !== lastWifiData.poweredOn
                         || data.associated !== lastWifiData.associated
                         || data.ssid !== lastWifiData.ssid)
                 {
@@ -141,23 +141,26 @@ function updateCurrentWifiState()
                         $("#wifi-data-block").removeClass("visuallyhidden");
                         if (data.associated === true)
                         {
+                            $("#wifi-associated-tick").removeClass('visuallyhidden');
                             $("#wifi-ssid").val(data.ssid);
                         } else
                         {
+                            $("#wifi-associated-tick").addClass('visuallyhidden');
                             $("#wifi-ssid").val("Not associated");
                         }
                         allOff = false;
                     }
 
                     lastWifiData = data;
+
+                    if (allOff === true)
+                    {
+                        $("#wifi-enabled-switch").bootstrapToggle('off');
+                        $("#wifi-ssid").val("");
+                        $("#wifi-data-block").addClass("visuallyhidden");
+                    }
                 }
 
-                if (allOff === true)
-                {
-                    $("#wifi-enabled-switch").bootstrapToggle('off');
-                    $("#wifi-ssid").val("");
-                    $("#wifi-data-block").addClass("visuallyhidden");
-                }
                 suppressWifiToggleAction = false;
             },
             null,
@@ -172,7 +175,20 @@ function page_initialiser()
     $("#wifi-enabled-switch").change(function () {
         if (suppressWifiToggleAction === false)
         {
-            enableWifi($("#wifi-enabled-switch").val());
+            enableWifi($("#wifi-enabled-switch").prop('checked'));
+        }
+
+        if ($("#wifi-enabled-switch").prop('checked') === false)
+        {
+            $("#wifi-ssid-group").addClass("visuallyhidden");
+            $("#wifi-password-group").addClass("visuallyhidden");
+            $("#wifi-update-button").addClass("visuallyhidden");
+        }
+        else
+        {
+            $("#wifi-ssid-group").removeClass("visuallyhidden");
+            $("#wifi-password-group").removeClass("visuallyhidden");
+            $("#wifi-update-button").removeClass("visuallyhidden");
         }
     });
 
