@@ -129,7 +129,7 @@ function updateCurrentWifiState()
             function (data) {
                 suppressWifiToggleAction = true;
                 var allOff = true;
-                
+
                 if (lastWifiData === null
                         || data.powerOn !== lastWifiData.poweredOn
                         || data.associated !== lastWifiData.associated
@@ -148,6 +148,8 @@ function updateCurrentWifiState()
                         }
                         allOff = false;
                     }
+
+                    lastWifiData = data;
                 }
 
                 if (allOff === true)
@@ -171,9 +173,6 @@ function page_initialiser()
         if (suppressWifiToggleAction === false)
         {
             enableWifi($("#wifi-enabled-switch").val());
-//            setTimeout(function () {
-//                updateCurrentWifiState();
-//            }, 3000);
         }
     });
 
@@ -188,4 +187,7 @@ function page_initialiser()
 
     getServerStatus();
     setInterval(getStatus, 2000);
+    setInterval(function () {
+        updateCurrentWifiState();
+    }, 3000);
 }
