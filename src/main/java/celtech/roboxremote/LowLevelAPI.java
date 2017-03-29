@@ -4,6 +4,7 @@ import celtech.roboxbase.comms.remote.Configuration;
 import celtech.roboxbase.comms.rx.RoboxRxPacket;
 import celtech.roboxbase.comms.tx.RoboxTxPacket;
 import celtech.roboxbase.comms.exceptions.RoboxCommsException;
+import celtech.roboxbase.comms.rx.PrinterIDResponse;
 import celtech.roboxbase.comms.rx.RoboxRxPacketFactory;
 import celtech.roboxbase.comms.rx.RxPacketTypeEnum;
 import celtech.roboxbase.comms.tx.ReportErrors;
@@ -13,11 +14,14 @@ import celtech.roboxbase.comms.tx.SendDataFileStart;
 import celtech.roboxbase.comms.tx.SendPrintFileStart;
 import celtech.roboxbase.comms.tx.StatusRequest;
 import celtech.roboxbase.configuration.BaseConfiguration;
+import celtech.roboxbase.configuration.Filament;
+import celtech.roboxbase.configuration.datafileaccessors.FilamentContainer;
 import celtech.roboxbase.postprocessor.PrintJobStatistics;
 import com.codahale.metrics.annotation.Timed;
 import java.io.File;
 import java.io.IOException;
-import javafx.application.Platform;
+import java.util.Map;
+import java.util.Map.Entry;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -89,11 +93,12 @@ public class LowLevelAPI
             {
                 try
                 {
-                    rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getCommandInterface().writeToPrinter(remoteTx, true);
+                    rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getCommandInterface().writeToPrinter(remoteTx, false);
                 } catch (RoboxCommsException ex)
                 {
                     steno.error("Failed whilst writing to local printer with ID" + printerID);
                 }
+
                 if (remoteTx instanceof SendPrintFileStart
                         || remoteTx instanceof SendDataFileStart)
                 {
@@ -153,5 +158,27 @@ public class LowLevelAPI
         }
 
         return statistics;
+    }
+
+    @RolesAllowed("root")
+    @POST
+    @Timed
+    @Path(Configuration.overrideFilamentService)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response overrideFilament(@PathParam("printerID") String printerID,
+            Map<Integer, String> filamentMap)
+    {
+        Response response;
+        Entry<Integer, String> filamentEntry = filamentMap.entrySet().iterator().next();
+        Filament chosenFilament = FilamentContainer.getInstance().getFilamentByID(filamentEntry.getValue());
+        if (chosenFilament != null)
+        {
+            PrinterRegistry.getInstance().getRemotePrinters().get(printerID).overrideFilament(filamentEntry.getKey(), chosenFilament);
+            response = Response.ok().build();
+        } else
+        {
+            response = Response.serverError().build();
+        }
+        return response;
     }
 }
