@@ -105,9 +105,9 @@ function sendGCode(gcodeToSend)
     sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/executeGCode", null, null, gcodeToSend);
 }
 
-function runMacroFile(macroTitle, macroFilePrefix)
+function runMacroFile(macroName)
 {
-    sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/runMacroFile", null, null, macroTitle + ":" + macroFilePrefix);
+    sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/runMacro", null, null, macroName);
 }
 
 function sendGCodeFromDialog()
@@ -208,7 +208,7 @@ function jogExtruder2In()
 
 function homeXYZ()
 {
-    runMacroFile("Home", "Home_all");
+    runMacroFile("HOME_ALL");
 }
 
 function switchNozzles()
@@ -239,7 +239,7 @@ function openCloseNozzle()
 
 function purgeHead()
 {
-    runMacroFile("Purge", "Mote_PurgeMaterial");
+    runMacroFile("MOTE_INITIATED_PURGE");
 }
 
 function populateReprintDialog()

@@ -8,6 +8,7 @@ import celtech.roboxbase.printerControl.model.PrinterException;
 import celtech.roboxbase.utils.PrinterUtils;
 import celtech.roboxremote.rootDataStructures.StatusData;
 import celtech.roboxbase.comms.remote.clear.SuitablePrintJob;
+import celtech.roboxbase.configuration.Macro;
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.jersey.params.BooleanParam;
 import java.io.File;
@@ -340,62 +341,29 @@ public class PublicPrinterControlAPI
 
     @POST
     @Timed
-    @Path("/runMacroFile")
-    public Response runMacroFile(@PathParam("printerID") String printerID, String macroTitleAndFilePrefix)
+    @Path("/runMacro")
+    public Response runMacro(@PathParam("printerID") String printerID, String macroName)
     {
+        Response response = Response.serverError().build();
+
         if (PrinterRegistry.getInstance() != null)
         {
-            String macroTitleAndFilePrefixCleaned = Utils.cleanInboundJSONString(macroTitleAndFilePrefix);
-            String macroTitle = null;
-            String macroPrefix = null;
-            if (macroTitleAndFilePrefixCleaned.contains(":"))
+            Macro macroToRun = Macro.valueOf(Utils.cleanInboundJSONString(macroName));
+            if (macroToRun != null)
             {
-                String[] parts = macroTitleAndFilePrefixCleaned.split(":");
-                macroTitle = parts[0];
-                macroPrefix = parts[1];
-            } else
-            {
-                macroPrefix = macroTitleAndFilePrefixCleaned;
-            }
-
-            Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
-            String gcodePathApp = BaseConfiguration.getCommonApplicationDirectory() + BaseConfiguration.macroFileSubpath + macroPrefix + ".gcode";
-            File gcodeFileApp = new File(gcodePathApp);
-            String gcodePathUser = BaseConfiguration.getUserStorageDirectory() + BaseConfiguration.macroFileSubpath + macroPrefix + ".gcode";
-            File gcodeFileUser = new File(gcodePathUser);
-            File gcodeFileToUse = null;
-
-            if (gcodeFileUser.exists())
-            {
-                gcodeFileToUse = gcodeFileUser;
-            } else if (gcodeFileApp.exists())
-            {
-                gcodeFileToUse = gcodeFileApp;
-            }
-
-            //See if we can run a macro
-            if (printerToUse != null && gcodeFileToUse != null)
-            {
+                Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
                 try
                 {
-                    if (macroTitle != null)
-                    {
-                        printerToUse.executeGCodeFile(macroTitle, gcodeFileToUse.getAbsolutePath(), false);
-                    } else
-                    {
-                        printerToUse.executeGCodeFile(gcodeFileToUse.getAbsolutePath(), false);
-                    }
-                } catch (PrinterException ex)
-                {
-                    steno.error("Failed to run macro: " + macroTitleAndFilePrefixCleaned);
+                printerToUse.executeMacroWithoutPurgeCheck(macroToRun);
+                response = Response.ok().build();
                 }
-            } else
-            {
-                steno.error("Can't run requested macro: " + macroTitleAndFilePrefixCleaned);
+                catch (PrinterException ex)
+                {
+                    steno.exception("Exception whilst attempting to run macro with name " + macroName, ex);
+                }
             }
         }
 
-        Response response = Response.ok().build();
         return response;
     }
 
