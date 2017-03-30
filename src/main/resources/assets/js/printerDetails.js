@@ -138,72 +138,52 @@ function changePrinterColour()
 
 function jogZUp()
 {
-    sendGCode("G91");
-    sendGCode("G0 Z20");
-    sendGCode("G90");
+    sendGCode("G91:G0 Z20:G90");
 }
 
 function jogZDown()
 {
-    sendGCode("G91");
-    sendGCode("G0 Z-20");
-    sendGCode("G90");
+    sendGCode("G91:G0 Z-20:G90");
 }
 
 function jogYForward()
 {
-    sendGCode("G91");
-    sendGCode("G0 Y10");
-    sendGCode("G90");
+    sendGCode("G91:G0 Y10:G90");
 }
 
 function jogYBack()
 {
-    sendGCode("G91");
-    sendGCode("G0 Y-10");
-    sendGCode("G90");
+    sendGCode("G91:G0 Y-10:G90");
 }
 
 function jogXLeft()
 {
-    sendGCode("G91");
-    sendGCode("G0 X-10");
-    sendGCode("G90");
+    sendGCode("G91:G0 X-10:G90");
 }
 
 function jogXRight()
 {
-    sendGCode("G91");
-    sendGCode("G0 X10");
-    sendGCode("G90");
+    sendGCode("G91:G0 X10:G90");
 }
 
 function jogExtruder1Out()
 {
-    sendGCode("G91");
-    sendGCode("G1 E-20 F400");
-    sendGCode("G90");
+    sendGCode("G91:G1 E-20 F400:G90");
 }
 
 function jogExtruder1In()
 {
-    sendGCode("G91");
-    sendGCode("G1 E20 F400");
-    sendGCode("G90");
+    sendGCode("G91:G1 E20 F400:G90");
 }
 
 function jogExtruder2Out()
 {
-    sendGCode("G91");
-    sendGCode("G1 D-20 F400");
-    sendGCode("G90");
+    sendGCode("G91:G1 D-20 F400:G90");
 }
 
 function jogExtruder2In()
 {
-    sendGCode("G91");
-    sendGCode("G1 D20 F400");
-    sendGCode("G90");
+    sendGCode("G91:G1 D20 F400:G90");
 }
 
 function homeXYZ()
@@ -328,6 +308,20 @@ function configurePrinterButtons(printerData)
         setElementDisabled(printerData.canPrint, "reprintButton");
         setElementDisabled(printerData.canPurgeHead, "purgeButton");
         setElementDisabled(printerData.canRemoveHead, "removeHeadButton");
+
+        if (printerData.canPrint)
+        {
+            $(".disabled-when-printer-busy").each(function ()
+            {
+                $(this).removeClass("disabled");
+            });
+        } else
+        {
+            $(".disabled-when-printer-busy").each(function ()
+            {
+                $(this).addClass("disabled");
+            });
+        }
     }
     lastPrinterData = printerData;
 
@@ -406,7 +400,7 @@ function updateAndDisplayPrinterStatus(printerID)
 
             var statusText = printerData.printerStatusString;
 
-            if (printerData.printerStatusString.match("^Printing"))
+            if (printerData.printerStatusEnumValue.match("^PRINTING_PROJECT"))
             {
                 statusText += " " + printerData.printJobName;
                 $('#printer-details-panel').find('#' + etcRowTag).show();
@@ -568,7 +562,7 @@ function page_initialiser()
 
     $('#gcode-input').keypress(function (event) {
         var keycode = (event.keyCode ? event.keyCode : event.which);
-        if (keycode == '13') {
+        if (keycode == '13' && lastPrinterData.canPrint) {
             $(this).parent().find('button').click();
         }
     });

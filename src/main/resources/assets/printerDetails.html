@@ -185,9 +185,9 @@
                         <div class="modal-body container-fluid">
                             <textarea rows='10' id='gcode-output' class="col-xs-12 form-control noresize" readonly></textarea>
                             <div class="input-group">
-                                <input id="gcode-input" class="server-name-entry form-control" type="text" placeholder="" aria-describedby="sizing-addon1">
+                                <input id="gcode-input" class="server-name-entry form-control disabled-when-printer-busy" type="text" placeholder="" aria-describedby="sizing-addon1">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-default localised" type="button" data-i18n="sendGCode" onClick="sendGCodeFromDialog()">Send GCode</button>
+                                    <button class="btn btn-default localised disabled-when-printer-busy" type="button" data-i18n="sendGCode" onClick="sendGCodeFromDialog()">Send GCode</button>
                                 </span>
                             </div>
                         </div>
@@ -203,40 +203,40 @@
                         </div>
                         <div class="modal-body container-fluid">
                             <div class="no-margin no-padding row centred-grid-box">
-                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding jog-button' onclick='jogZUp()' id="zUpButton"><img class='img-fluid' alt='Z Up' src='robox-images/joghead/Move_A1.png'></a></div>
-                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless extruder1-control jog-button' onclick='jogExtruder1Out()'><img class='img-fluid' alt='Reel 1 Out' src='robox-images/joghead/Move_B2.png'></a></div>
-                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Image of Reel 1' src='robox-images/joghead/Move_C2.png'></a></div>
-                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless extruder1-control jog-button' onclick='jogExtruder1In()'><img class='img-fluid' alt='Reel 1 Out' src='robox-images/joghead/Move_D2.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding jog-button disabled-when-printer-busy' onclick='jogZUp()' id="zUpButton"><img class='img-fluid' alt='Z Up' src='robox-images/joghead/Move_A1.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless extruder1-control jog-button disabled-when-printer-busy' onclick='jogExtruder1Out()'><img class='img-fluid' alt='Reel 1 Out' src='robox-images/joghead/Move_B2.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button disabled-when-printer-busy'><img class='img-fluid' alt='Image of Reel 1' src='robox-images/joghead/Move_C2.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless extruder1-control jog-button disabled-when-printer-busy' onclick='jogExtruder1In()'><img class='img-fluid' alt='Reel 1 Out' src='robox-images/joghead/Move_D2.png'></a></div>
                             </div>
                             <div class="no-margin no-padding row centred-grid-box">
-                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_A2.png'></a></div>
-                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless extruder2-control jog-button' onclick='jogExtruder2Out()'><img class='img-fluid' alt='Reel 2 Out' src='robox-images/joghead/Move_B3.png'></a></div>
-                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Z Up' src='robox-images/joghead/Move_C3.png'></a></div>
-                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless extruder2-control jog-button' onclick='jogExtruder2In()'><img class='img-fluid' alt='Reel 2 In' src='robox-images/joghead/Move_D3.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button disabled-when-printer-busy'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_A2.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless extruder2-control jog-button disabled-when-printer-busy' onclick='jogExtruder2Out()'><img class='img-fluid' alt='Reel 2 Out' src='robox-images/joghead/Move_B3.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button disabled-when-printer-busy'><img class='img-fluid' alt='Z Up' src='robox-images/joghead/Move_C3.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless extruder2-control jog-button disabled-when-printer-busy' onclick='jogExtruder2In()'><img class='img-fluid' alt='Reel 2 In' src='robox-images/joghead/Move_D3.png'></a></div>
                             </div>
                             <div class="no-margin no-padding row centred-grid-box">
-                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='jogZDown()'><img class='img-fluid' alt='Z Down' src='robox-images/joghead/Move_A3.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button disabled-when-printer-busy' onclick='jogZDown()'><img class='img-fluid' alt='Z Down' src='robox-images/joghead/Move_A3.png'></a></div>
                                 <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"></div>
                                 <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"></div>
                                 <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"></div>
                             </div>
                             <div class="no-margin no-padding row centred-grid-box">
-                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='jogYBack()'><img class='img-fluid' alt='Y Back' src='robox-images/joghead/Move_A4.png'></a></div>
-                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='jogXLeft()'><img class='img-fluid' alt='X Left' src='robox-images/joghead/Move_B4.png'></a></div>
-                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_C4.png'></a></div>
-                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='jogXRight()'><img class='img-fluid' alt='X Right' src='robox-images/joghead/Move_D4.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button disabled-when-printer-busy' onclick='jogYBack()'><img class='img-fluid' alt='Y Back' src='robox-images/joghead/Move_A4.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button disabled-when-printer-busy' onclick='jogXLeft()'><img class='img-fluid' alt='X Left' src='robox-images/joghead/Move_B4.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button disabled-when-printer-busy'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_C4.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button disabled-when-printer-busy' onclick='jogXRight()'><img class='img-fluid' alt='X Right' src='robox-images/joghead/Move_D4.png'></a></div>
                             </div>
                             <div class="no-margin no-padding row centred-grid-box">
-                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_A5.png'></a></div>
-                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='homeXYZ()'><img class='img-fluid' alt='Home XYZ' src='robox-images/joghead/Move_B5.png'></a></div>
-                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='switchNozzles()'><img class='img-fluid' alt='Switch nozzles' src='robox-images/joghead/Move_C5.png'></a></div>
-                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='openCloseNozzle()'><img class='img-fluid' alt='Open/Close nozzle' src='robox-images/joghead/Move_D5.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button disabled-when-printer-busy'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_A5.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button disabled-when-printer-busy' onclick='homeXYZ()'><img class='img-fluid' alt='Home XYZ' src='robox-images/joghead/Move_B5.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button disabled-when-printer-busy' onclick='switchNozzles()'><img class='img-fluid' alt='Switch nozzles' src='robox-images/joghead/Move_C5.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button disabled-when-printer-busy' onclick='openCloseNozzle()'><img class='img-fluid' alt='Open/Close nozzle' src='robox-images/joghead/Move_D5.png'></a></div>
                             </div>
                             <div class="no-margin no-padding row centred-grid-box">
-                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='jogYForward()'><img class='img-fluid' alt='Y Forward' src='robox-images/joghead/Move_A6.png'></a></div>
-                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_B6.png'></a></div>
-                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_C6.png'></a></div>
-                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_D6.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button disabled-when-printer-busy' onclick='jogYForward()'><img class='img-fluid' alt='Y Forward' src='robox-images/joghead/Move_A6.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button disabled-when-printer-busy'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_B6.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button disabled-when-printer-busy'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_C6.png'></a></div>
+                                <div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button disabled-when-printer-busy'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_D6.png'></a></div>
                             </div>
                         </div>
                     </div><!-- /.modal-content -->

@@ -26,6 +26,7 @@ public class StatusData
     private String printerName;
     private String printerWebColourString;
     private String printerStatusString;
+    private String printerStatusEnumValue;
 
     private boolean canPrint;
     private boolean canPause;
@@ -85,6 +86,7 @@ public class StatusData
             case UNLOADING_FILAMENT_D:
             case UNLOADING_FILAMENT_E:
                 printerStatusString = BaseLookup.i18n(printer.busyStatusProperty().get().getI18nString());
+                printerStatusEnumValue = printer.busyStatusProperty().get().name();
                 statusProcessed = true;
                 break;
             default:
@@ -99,6 +101,7 @@ public class StatusData
                 case PAUSE_PENDING:
                 case RESUME_PENDING:
                     printerStatusString = BaseLookup.i18n(printer.pauseStatusProperty().get().getI18nString());
+                    printerStatusEnumValue = printer.pauseStatusProperty().get().name();
                     statusProcessed = true;
                     break;
                 default:
@@ -109,6 +112,7 @@ public class StatusData
         if (!statusProcessed)
         {
             printerStatusString = printer.printerStatusProperty().get().getI18nString();
+            printerStatusEnumValue = printer.printerStatusProperty().get().name();
         }
 
         canPrint = printer.canPrintProperty().get();
@@ -273,6 +277,16 @@ public class StatusData
     public void setPrinterStatusString(String printerStatusString)
     {
         this.printerStatusString = printerStatusString;
+    }
+
+    public String getPrinterStatusEnumValue()
+    {
+        return printerStatusEnumValue;
+    }
+
+    public void setPrinterStatusEnumValue(String printerStatusEnumValue)
+    {
+        this.printerStatusEnumValue = printerStatusEnumValue;
     }
 
     public boolean isCanPrint()

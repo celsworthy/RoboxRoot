@@ -48,7 +48,10 @@ public class DiscoveryAPI
     {
         if (PrinterRegistry.getInstance() != null)
         {
-            return new ListPrintersResponse(PrinterRegistry.getInstance().getRemotePrinterIDs());
+            ListPrintersResponse response = new ListPrintersResponse(PrinterRegistry.getInstance().getRemotePrinterIDs());
+            steno.debug("Returning " + response.getPrinterIDs().size() + "printers");
+            
+            return response;
         } else
         {
             return null;

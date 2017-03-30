@@ -331,8 +331,12 @@ public class PublicPrinterControlAPI
     {
         if (PrinterRegistry.getInstance() != null)
         {
+            String[] gcodeParts = Utils.cleanInboundJSONString(gcode).split(":");
             Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
-            printerToUse.sendRawGCode(Utils.cleanInboundJSONString(gcode), false);
+            for (String gcodePart : gcodeParts)
+            {
+                printerToUse.sendRawGCode(gcodePart, false);
+            }
         }
 
         Response response = Response.ok().build();
@@ -354,10 +358,9 @@ public class PublicPrinterControlAPI
                 Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
                 try
                 {
-                printerToUse.executeMacroWithoutPurgeCheck(macroToRun);
-                response = Response.ok().build();
-                }
-                catch (PrinterException ex)
+                    printerToUse.executeMacroWithoutPurgeCheck(macroToRun);
+                    response = Response.ok().build();
+                } catch (PrinterException ex)
                 {
                     steno.exception("Exception whilst attempting to run macro with name " + macroName, ex);
                 }

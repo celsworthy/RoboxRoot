@@ -72,8 +72,11 @@ public class PrinterRegistry implements PrinterListChangesListener
             } while (remotePrinters.containsKey(printerID));
 
             steno.info("New printer detected - id is " + printerID);
-            remotePrinters.put(printerID, printer);
-            remotePrinterIDs.add(printerID);
+            synchronized (this)
+            {
+                remotePrinters.put(printerID, printer);
+                remotePrinterIDs.add(printerID);
+            }
         }
     }
 
