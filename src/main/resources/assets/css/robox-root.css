@@ -173,14 +173,14 @@ tr.selector-press {
 }
 
 .noresize {
-  resize: none; 
+    resize: none; 
 }
 
 .btn-colorselector
 {
-   width: 100% !important;
-   height: 34px !important;
-   margin-top: 0px !important;
+    width: 100% !important;
+    height: 34px !important;
+    margin-top: 0px !important;
 }
 
 .jog-button :hover
@@ -204,9 +204,9 @@ body
 }
 
 .visuallyhidden { 
-  position: absolute; 
-  overflow: hidden; 
-  clip: rect(0 0 0 0); 
-  height: 1px; width: 1px; 
-  margin: -1px; padding: 0; border: 0; 
+    position: absolute; 
+    overflow: hidden; 
+    clip: rect(0 0 0 0); 
+    height: 1px; width: 1px; 
+    margin: -1px; padding: 0; border: 0; 
 }

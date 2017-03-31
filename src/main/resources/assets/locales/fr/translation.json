@@ -64,5 +64,6 @@
     "fileName": "FRFile name",
     "colour": "FRColour",
     "created": "FRCreated",
-    "status": "FRStatus"
+    "status": "FRStatus",
+    "reprint-subtitle": "FRLists projects if loaded Robox® filaments are present" 
 }

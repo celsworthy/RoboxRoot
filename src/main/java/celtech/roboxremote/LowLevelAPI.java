@@ -7,6 +7,7 @@ import celtech.roboxbase.comms.exceptions.RoboxCommsException;
 import celtech.roboxbase.comms.rx.PrinterIDResponse;
 import celtech.roboxbase.comms.rx.RoboxRxPacketFactory;
 import celtech.roboxbase.comms.rx.RxPacketTypeEnum;
+import celtech.roboxbase.comms.tx.ReadPrinterID;
 import celtech.roboxbase.comms.tx.ReportErrors;
 import celtech.roboxbase.comms.tx.SendDataFileChunk;
 import celtech.roboxbase.comms.tx.SendDataFileEnd;
@@ -89,6 +90,9 @@ public class LowLevelAPI
             } else if (remoteTx instanceof ReportErrors)
             {
                 rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getLastErrorResponse();
+            } else if (remoteTx instanceof ReadPrinterID)
+            {
+                rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getLastIdentityResponse();
             } else
             {
                 try

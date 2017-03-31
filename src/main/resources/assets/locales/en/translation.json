@@ -64,5 +64,6 @@
     "fileName": "File name",
     "colour": "Colour",
     "created": "Created",
-    "status": "Status"
+    "status": "Status",
+    "reprint-subtitle": "Lists projects if loaded Robox® filaments are present" 
 }

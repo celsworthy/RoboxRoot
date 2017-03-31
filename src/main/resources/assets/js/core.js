@@ -177,6 +177,7 @@ $(document).ready(function () {
 
                 if (typeof page_initialiser === "function")
                 {
+                    $('img').on('dragstart', function(event) { event.preventDefault(); });
                     page_initialiser();
                     updateLocalisation();
                 }
