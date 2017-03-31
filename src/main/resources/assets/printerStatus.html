@@ -22,7 +22,7 @@
         <script src="js/jquery.base64.js"></script>
         <script src="js/printerStatus.js"></script> 
         <script src="js/bootstrap.min.js"></script> 
-        <script src="js/core.js"></script> 
+        <script src="js/core.js"></script>
 
         <title>Robox Root Manager</title>
 
@@ -51,19 +51,12 @@
         <script type="text/javascript">var titlei18n = "printer-status";</script>
         <script type="text/javascript" src="js/header.js"></script>
 
-        <div class='content-container'>
-            <table id="printer-status" class="table">
-                <thead class="thead-default">
-                    <tr>
-                        <th width="20px" class="status-title"></th>
-                        <th width="130px" class="localised status-title" data-i18n="name">Name</th>
-                        <th width="100px" class="localised status-title" data-i18n="status">Status</th>
-                        <th width="88px" class=""></th>
-                    </tr>
-                </thead>
-                <tbody id="printer-status-body">
-                </tbody>
-            </table>
+        <div class="container-fluid">
+            <div class="status-title" style="width: 5%;"></div>
+            <span class="localised status-title" style="width: 43%;" data-i18n="name"></span>
+            <span class="localised status-title" style="width: 45%;" data-i18n="status"></span>
+        </div>
+        <div class="container-fluid" id="status-area">
         </div>
         <script type='text/javascript' src='js/footer.js'></script>
     </body>

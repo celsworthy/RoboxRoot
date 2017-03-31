@@ -372,24 +372,6 @@ function firmwareUpdateSubmit(event) {
     });
 }
 
-function secondsToHMS(secondsInput)
-{
-    var minutes = Math.floor(secondsInput / 60);
-    var hours = Math.floor(minutes / 60);
-    minutes = minutes - (60 * hours);
-    var seconds = secondsInput - (minutes * 60) - (hours * 3600);
-    if (hours > 0)
-    {
-        return hours + ":" + minutes + ":" + Math.trunc(seconds);
-    } else if (minutes > 0)
-    {
-        return "00:" + minutes + ":" + Math.trunc(seconds);
-    } else
-    {
-        return Math.trunc(seconds) + " seconds";
-    }
-}
-
 function updateAndDisplayPrinterStatus(printerID)
 {
     getPrinterStatus(printerID, function (printerData) {
@@ -400,14 +382,17 @@ function updateAndDisplayPrinterStatus(printerID)
 
             var statusText = printerData.printerStatusString;
 
-            if (printerData.printerStatusEnumValue.match("^PRINTING_PROJECT"))
+            if ((printerData.printerStatusEnumValue.match("^PRINTING_PROJECT")
+                    || printerData.printerStatusEnumValue.match("^PAUSED")
+                    || printerData.printerStatusEnumValue.match("^PAUSE_PENDING")
+                    || printerData.printerStatusEnumValue.match("^RESUME_PENDING"))
+                    && printerData.totalDurationSeconds > 0)
             {
                 statusText += " " + printerData.printJobName;
-                $('#printer-details-panel').find('#' + etcRowTag).show();
-                $('#printer-details-panel').find('#' + etcDisplayTag).text(secondsToHMS(printerData.etcSeconds));
+                $('#printer-details-panel').find('#' + etcDisplayTag).text(secondsToHM(printerData.etcSeconds) + '/' + secondsToHM(printerData.totalDurationSeconds));
             } else
             {
-                $('#printer-details-panel').find('#' + etcRowTag).hide();
+                $('#printer-details-panel').find('#' + etcDisplayTag).text("");
             }
 
             $('#printer-details-panel').find('#' + nameDisplayTag).text(printerData.printerName);

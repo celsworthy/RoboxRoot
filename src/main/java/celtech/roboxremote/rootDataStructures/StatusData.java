@@ -49,6 +49,7 @@ public class StatusData
     //Print info
     private String printJobName;
     private String printJobSettings;
+    private int totalDurationSeconds;
     private int etcSeconds;
 
     //Material
@@ -166,6 +167,8 @@ public class StatusData
         bedTemperature = printer.getPrinterAncillarySystems().bedTemperatureProperty().get();
 
         //Print info
+        totalDurationSeconds = printer.getPrintEngine().totalDurationSecondsProperty().get();
+
         if (printer.printerStatusProperty().get() == PrinterStatus.PRINTING_PROJECT)
         {
             if (lastPrintJobID == null
@@ -451,6 +454,16 @@ public class StatusData
     public void setEtcSeconds(int etcSeconds)
     {
         this.etcSeconds = etcSeconds;
+    }
+
+    public int getTotalDurationSeconds()
+    {
+        return totalDurationSeconds;
+    }
+
+    public void setTotalDurationSeconds(int totalDurationSeconds)
+    {
+        this.totalDurationSeconds = totalDurationSeconds;
     }
 
     public String getPrintJobSettings()

@@ -65,5 +65,6 @@
     "colour": "FRColour",
     "created": "FRCreated",
     "status": "FRStatus",
-    "reprint-subtitle": "FRLists projects if loaded Robox® filaments are present" 
+    "reprint-subtitle": "FRLists projects if loaded Robox® filaments are present",
+    "duration-remaining": "FRETC" 
 }

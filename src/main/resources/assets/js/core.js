@@ -146,9 +146,35 @@ function updateHeaderi18String(i18nString)
 
 function selectLanguage(language)
 {
-    i18next.changeLanguage(language, function(err, t){
+    i18next.changeLanguage(language, function (err, t) {
         updateLocalisation();
     });
+}
+
+function secondsToHMS(secondsInput)
+{
+    var minutes = Math.floor(secondsInput / 60);
+    var hours = Math.trunc(Math.floor(minutes / 60));
+    minutes = Math.trunc(minutes - (60 * hours));
+    var seconds = Math.trunc(secondsInput - (minutes * 60) - (hours * 3600));
+
+    var hoursString = ('00' + hours).slice(-2);
+    var minutesString = ('00' + minutes).slice(-2);
+    var secondsString = ('00' + seconds).slice(-2);
+
+    return hoursString + ":" + minutesString + ":" + secondsString;
+}
+
+function secondsToHM(secondsInput)
+{
+    var minutes = Math.floor(secondsInput / 60);
+    var hours = Math.trunc(Math.floor(minutes / 60));
+    minutes = Math.trunc(minutes - (60 * hours));
+
+    var hoursString = ('00' + hours).slice(-2);
+    var minutesString = ('00' + minutes).slice(-2);
+
+    return hoursString + ":" + minutesString;
 }
 
 $(document).ready(function () {
@@ -177,7 +203,9 @@ $(document).ready(function () {
 
                 if (typeof page_initialiser === "function")
                 {
-                    $('img').on('dragstart', function(event) { event.preventDefault(); });
+                    $('img').on('dragstart', function (event) {
+                        event.preventDefault();
+                    });
                     page_initialiser();
                     updateLocalisation();
                 }

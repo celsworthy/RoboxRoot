@@ -65,5 +65,6 @@
     "colour": "Colour",
     "created": "Created",
     "status": "Status",
-    "reprint-subtitle": "Lists projects if loaded Robox® filaments are present" 
+    "reprint-subtitle": "Lists projects if loaded Robox® filaments are present",
+    "duration-remaining": "ETC"
 }

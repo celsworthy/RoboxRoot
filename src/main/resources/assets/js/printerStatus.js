@@ -11,6 +11,7 @@ var controlsDisplayTag = "_controlsDisplay";
 var jobDisplayTag = "_jobDisplay";
 var etcRowTag = "_etcRow";
 var etcDisplayTag = "_etcDisplay";
+var progressDisplayTag = "_progressDisplay";
 var headNameDisplayTag = "_headNameDisplay";
 var bedTemperatureDisplayTag = "_bedTemperatureDisplay";
 var materialRowTag = "_materialRow";
@@ -119,24 +120,6 @@ function firmwareUpdateSubmit(event) {
     });
 }
 
-function secondsToHMS(secondsInput)
-{
-    var minutes = Math.floor(secondsInput / 60);
-    var hours = Math.floor(minutes / 60);
-    minutes = minutes - (60 * hours);
-    var seconds = secondsInput - (minutes * 60) - (hours * 3600);
-    if (hours > 0)
-    {
-        return hours + ":" + minutes + ":" + seconds;
-    } else if (minutes > 0)
-    {
-        return minutes + ":" + seconds;
-    } else
-    {
-        return seconds + " seconds";
-    }
-}
-
 function pausePressed(caller)
 {
     sendPostCommandToRoot(caller.data("printerid") + "/remoteControl/pause", null, null, null);
@@ -176,6 +159,18 @@ function updateAndDisplayPrinterStatus(printerID)
         $('#' + printerID + nameDisplayTag).text(printerData.printerName);
         $('#' + printerID + statusDisplayTag).text(statusText);
         $('#' + printerID + colourDisplayTag).css("background-color", printerData.printerWebColourString);
+        if ((printerData.printerStatusEnumValue.match("^PRINTING_PROJECT")
+                || printerData.printerStatusEnumValue.match("^PAUSED")
+                || printerData.printerStatusEnumValue.match("^PAUSE_PENDING")
+                || printerData.printerStatusEnumValue.match("^RESUME_PENDING"))
+                && printerData.totalDurationSeconds > 0)
+        {
+            var progressPercent = (printerData.etcSeconds * 1.0 / printerData.totalDurationSeconds) * 100;
+            $('#' + printerID + progressDisplayTag).css("width", progressPercent + "%");
+        } else
+        {
+            $('#' + printerID + progressDisplayTag).css("width", "0%");
+        }
         updateControlButtons(printerData);
     });
 }
@@ -197,15 +192,23 @@ function createPrinterSelector()
     for (var connectedPrinterIndex = 0; connectedPrinterIndex < connectedPrinterIDs.length; connectedPrinterIndex++)
     {
         var printerID = connectedPrinterIDs[connectedPrinterIndex];
-        selectorHTML += "<tr id=\"" + printerID + "_row" + "\" class=\"printer-selector\">";
-        selectorHTML += "<td id=\"" + printerID + colourDisplayTag + "\" class=\"printer-selector\"></th>";
-        selectorHTML += "<td id=\"" + printerID + nameDisplayTag + "\" class=\"printer-selector\"></th>";
-        selectorHTML += "<td id=\"" + printerID + statusDisplayTag + "\" class=\"printer-selector\"></td>";
-        selectorHTML += "<td id=\"" + printerID + controlsDisplayTag + "\" class=\"printer-selector\"></td>";
-        selectorHTML += "</tr>\n";
+        selectorHTML += "<div class='status-row no-margin' id=\"" + printerID + "_row\">";
+        selectorHTML += "<div class='status-line no-padding no-margin' style='width: 5%;' id=\"" + printerID + colourDisplayTag + "\"></div>";
+        selectorHTML += "<span class='status-line status-line-text no-margin' style='width: 45%;' id=\"" + printerID + nameDisplayTag + "\"></span>";
+        selectorHTML += "<span class='status-line status-line-text no-margin' style='width: 22%;' id=\"" + printerID + statusDisplayTag + "\"></span>";
+        selectorHTML += "<div class='status-line no-padding' style='width: 28%;' id=\"" + printerID + controlsDisplayTag + "\"></div>";
+        selectorHTML += "</div>";
+        selectorHTML += "<div class='no-margin progress-row'>";
+        selectorHTML += "<div class='progress'>";
+        selectorHTML += "<div id=\"" + printerID + progressDisplayTag + "\" class='progress-bar' role='progressbar'";
+        selectorHTML += "aria-valuemin='0' aria-valuemax='100' style='width:0%'>";
+        selectorHTML += "</div>";
+        selectorHTML += "</div>";
+        selectorHTML += "</div>";
     }
 
-    $("#printer-status-body").html(selectorHTML);
+    $("#status-area").html(selectorHTML);
+
     for (var connPrinterIndex = 0; connPrinterIndex < connectedPrinterIDs.length; connPrinterIndex++)
     {
         var printerID = connectedPrinterIDs[connPrinterIndex];
@@ -286,6 +289,7 @@ function getPrinters()
             },
             function (data) {
                 connectedToServer = false;
+                logout();
             },
             null);
 }
