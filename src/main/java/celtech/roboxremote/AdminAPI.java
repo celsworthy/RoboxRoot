@@ -3,8 +3,11 @@ package celtech.roboxremote;
 import celtech.roboxbase.BaseLookup;
 import celtech.roboxbase.comms.remote.Configuration;
 import celtech.roboxbase.comms.remote.clear.WifiStatusResponse;
+import celtech.roboxbase.comms.remote.types.SerializableFilament;
 import celtech.roboxbase.configuration.BaseConfiguration;
+import celtech.roboxbase.configuration.Filament;
 import celtech.roboxbase.configuration.MachineType;
+import celtech.roboxbase.configuration.datafileaccessors.FilamentContainer;
 import celtech.roboxbase.printerControl.model.Printer;
 import com.codahale.metrics.annotation.Timed;
 import java.io.IOException;
@@ -90,10 +93,10 @@ public class AdminAPI
                 uploadedFileLocation = BaseConfiguration.getUserTempDirectory() + fileName;
             }
             steno.info("Upgrade file " + uploadedFileLocation + " has been uploaded");
-            
+
             // save it
             utils.writeToFile(uploadedInputStream, uploadedFileLocation);
-            
+
             //Shut down - but allow the response to go back to the requester first
             BaseLookup.getTaskExecutor().runOnBackgroundThread(() ->
             {
@@ -185,5 +188,29 @@ public class AdminAPI
     public WifiStatusResponse getCurrentWifiSSID()
     {
         return WifiControl.getCurrentWifiState();
+    }
+
+    @RolesAllowed("root")
+    @POST
+    @Timed
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/saveFilament")
+    public Response saveFilament(SerializableFilament serializableFilament)
+    {
+        Filament filament = serializableFilament.getFilament();
+        FilamentContainer.getInstance().saveFilament(filament);
+        return Response.ok().build();
+    }
+
+    @RolesAllowed("root")
+    @POST
+    @Timed
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/deleteFilament")
+    public Response deleteFilament(SerializableFilament serializableFilament)
+    {
+        Filament filament = serializableFilament.getFilament();
+        FilamentContainer.getInstance().deleteFilament(filament);
+        return Response.ok().build();
     }
 }

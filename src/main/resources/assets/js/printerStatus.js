@@ -165,7 +165,12 @@ function updateAndDisplayPrinterStatus(printerID)
                 || printerData.printerStatusEnumValue.match("^RESUME_PENDING"))
                 && printerData.totalDurationSeconds > 0)
         {
-            var progressPercent = (printerData.etcSeconds * 1.0 / printerData.totalDurationSeconds) * 100;
+            var timeElapsed = printerData.totalDurationSeconds - printerData.etcSeconds;
+            if (timeElapsed < 0)
+            {
+                timeElapsed = 0;
+            }
+            var progressPercent = (timeElapsed * 1.0 / printerData.totalDurationSeconds) * 100;
             $('#' + printerID + progressDisplayTag).css("width", progressPercent + "%");
         } else
         {

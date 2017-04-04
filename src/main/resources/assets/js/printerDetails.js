@@ -303,7 +303,7 @@ function configurePrinterButtons(printerData)
 
         setElementVisibility(printerData.canCancel, "cancelButton");
 
-        setElementDisabled(printerData.canPrint, "jogHeadButton");
+        setElementDisabled(printerData.canPrint || printerData.canResume, "jogHeadButton");
         setElementDisabled(printerData.canPrint, "printJobButton");
         setElementDisabled(printerData.canPrint, "reprintButton");
         setElementDisabled(printerData.canPurgeHead, "purgeButton");
@@ -389,7 +389,13 @@ function updateAndDisplayPrinterStatus(printerID)
                     && printerData.totalDurationSeconds > 0)
             {
                 statusText += " " + printerData.printJobName;
-                $('#printer-details-panel').find('#' + etcDisplayTag).text(secondsToHM(printerData.etcSeconds) + '/' + secondsToHM(printerData.totalDurationSeconds));
+                var timeElapsed = printerData.totalDurationSeconds - printerData.etcSeconds;
+                if (timeElapsed < 0)
+                {
+                    timeElapsed = 0;
+                }
+
+                $('#printer-details-panel').find('#' + etcDisplayTag).text(secondsToHM(timeElapsed) + '/' + secondsToHM(printerData.totalDurationSeconds));
             } else
             {
                 $('#printer-details-panel').find('#' + etcDisplayTag).text("");
