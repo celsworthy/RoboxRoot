@@ -1,6 +1,7 @@
 package celtech.roboxremote;
 
 import celtech.roboxbase.configuration.BaseConfiguration;
+import celtech.roboxbase.configuration.MachineType;
 import celtech.roboxbase.utils.ApplicationUtils;
 import celtech.roboxremote.custom_dropwizard.AuthenticatedAssetsBundle;
 import celtech.roboxremote.security.RootAPIAuthFilter;
@@ -11,6 +12,7 @@ import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.forms.MultiPartBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -183,7 +185,20 @@ public class Root extends Application<RoboxRemoteConfiguration>
     public void restart()
     {
         //Rely on the system process manager to restart us...
-        stop();    }
+        //Kill the browser to make sure that the cache is zapped
+        if (BaseConfiguration.getMachineType() == MachineType.LINUX_X64
+                || BaseConfiguration.getMachineType() == MachineType.LINUX_X86)
+        {
+            try
+            {
+                Runtime.getRuntime().exec("killall chromium-browser");
+            } catch (IOException ex)
+            {
+                steno.exception("Failed to shut down browser", ex);
+            }
+        }
+        stop();
+    }
 
     public void setApplicationPIN(String applicationPIN)
     {
