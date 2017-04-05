@@ -350,15 +350,35 @@ public class PublicPrinterControlAPI
     {
         Response response = Response.serverError().build();
 
+        //We should either just get a plain macro name or the macro|<T|F>|<T|F>|<T|F>
+        //This represents Requires N1, Requires N2, Require safety features
         if (PrinterRegistry.getInstance() != null)
         {
-            Macro macroToRun = Macro.valueOf(Utils.cleanInboundJSONString(macroName));
-            if (macroToRun != null)
+            String inputString = Utils.cleanInboundJSONString(macroName);
+            String[] parts = inputString.split("\\|");
+            Macro macroToRun = null;
+            Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+
+            if (parts.length != 4)
             {
-                Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+                macroToRun = Macro.valueOf(Utils.cleanInboundJSONString(macroName));
                 try
                 {
                     printerToUse.executeMacroWithoutPurgeCheck(macroToRun);
+                    response = Response.ok().build();
+                } catch (PrinterException ex)
+                {
+                    steno.exception("Exception whilst attempting to run macro with name " + macroName, ex);
+                }
+            } else
+            {
+                macroToRun = Macro.valueOf(parts[0]);
+                boolean requiresN1 = parts[1].toLowerCase().equals("T");
+                boolean requiresN2 = parts[2].toLowerCase().equals("T");
+                boolean requiresSafeties = parts[3].toLowerCase().equals("T");
+                try
+                {
+                    printerToUse.executeMacroWithoutPurgeCheck(macroToRun, requiresN1, requiresN2, requiresSafeties);
                     response = Response.ok().build();
                 } catch (PrinterException ex)
                 {

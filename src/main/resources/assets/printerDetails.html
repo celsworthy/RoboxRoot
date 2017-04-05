@@ -135,7 +135,7 @@
                             </div>
                             <div class="row centred-grid-box">
                                 <div class="col-xs-3 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='populateReprintDialog()' id="reprintButton"><img class='img-fluid root-icon' alt='Reprint' src='robox-images/reprint.png'></a></div>
-                                <div class="col-xs-6 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='purgeHead()' id="purgeButton"><img class='img-fluid root-icon' alt='Purge' src='robox-images/purge.png'></a></div>
+                                <div class="col-xs-6 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='populatePurgeDialog()' id="purgeButton"><img class='img-fluid root-icon' alt='Purge' src='robox-images/purge.png'></a></div>
                                 <div class="col-xs-3 borderless white-background centred-grid-box"><a class='btn no-padding' onclick='removeHead()' id="removeHeadButton"><img class='img-fluid root-icon' alt='Remove Head' src='robox-images/remove_head.png'></a></div>
                             </div>
                         </div>
@@ -190,9 +190,9 @@
                         <div class="modal-body container-fluid">
                             <textarea rows='10' id='gcode-output' class="col-xs-12 form-control noresize" readonly></textarea>
                             <div class="input-group">
-                                <input id="gcode-input" class="server-name-entry form-control disabled-when-printer-busy" type="text" placeholder="" aria-describedby="sizing-addon1">
+                                <input id="gcode-input" class="server-name-entry form-control" type="text" placeholder="" aria-describedby="sizing-addon1">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-default localised disabled-when-printer-busy" type="button" data-i18n="sendGCode" onClick="sendGCodeFromDialog()">Send GCode</button>
+                                    <button class="btn btn-default localised" type="button" data-i18n="sendGCode" onClick="sendGCodeFromDialog()">Send GCode</button>
                                 </span>
                             </div>
                         </div>
@@ -321,6 +321,21 @@
                                 <span class="btn btn-default btn-file"><span>Choose file</span><input type="file" /></span>
                                 <span class="fileinput-filename"></span><span class="fileinput-new">No file chosen</span>
                             </div>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+            <div class="modal fade" id="purge-dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header modal-header-primary">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h3 class="localised" data-i18n="purge-dialog-title"><i class="fa fa-bar-chart-o"></i></h3>
+                        </div>
+                        <div class="modal-body container-fluid">
+                            <button id="purge-nozzle-1-button" type="button" data-i18n="purge-dialog-n1" class="btn btn-default btn-block localised" onclick="purgeNozzle1()">1</button>
+                            <button id="purge-nozzle-2-button" type="button" data-i18n="purge-dialog-n2" class="btn btn-default btn-block localised" onclick="purgeNozzle2()">2</button>
+                            <button id="purge-both-button" type="button" data-i18n="purge-dialog-both" class="btn btn-default btn-block localised" onclick="purgeBoth()">3</button>
                         </div>
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->

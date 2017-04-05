@@ -267,23 +267,6 @@ function updatePrinterStatuses()
     }
 }
 
-function getServerStatus()
-{
-    sendGetCommandToRoot('discovery/whoareyou',
-            function (data) {
-                $('#serverOnline').text(i18next.t('online'));
-                updateServerStatus(data);
-                connectedToServer = true;
-            },
-            function (data) {
-                connectedToServer = false;
-                $('#serverOnline').text(i18next.t('offline'));
-                removeAllPrinterTabs();
-                updateServerStatus(null);
-            },
-            null);
-}
-
 function getPrinters()
 {
     sendGetCommandToRoot('discovery/listPrinters',
@@ -328,32 +311,15 @@ function updateServerStatus(serverData)
     }
 }
 
-function getServerStatus()
+function serverOffline()
 {
-    sendGetCommandToRoot('discovery/whoareyou',
-            function (data) {
-                $('#serverOnline').text(i18next.t('online'));
-                updateServerStatus(data);
-                connectedToServer = true;
-            },
-            function (data) {
-                connectedToServer = false;
-                $('#serverOnline').text(i18next.t('offline'));
-                removeAllPrinterTabs();
-                updateServerStatus(null);
-            },
-            null);
+    removeAllPrinterTabs();
 }
 
 function getStatus()
 {
-    if (!connectedToServer)
-    {
-        getServerStatus();
-    } else
-    {
-        getPrinters();
-    }
+    getServerStatus();
+    getPrinters();
 }
 
 //$(document).on("pageinit", "#server-status-page", function () {
@@ -377,7 +343,7 @@ function page_initialiser()
 
     $("#pin-update-value").val(localStorage.getItem(applicationPINVar));
 
-    getServerStatus()
+    getServerStatus();
     getPrinters();
     setInterval(getStatus, 2000);
 }

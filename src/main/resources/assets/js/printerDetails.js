@@ -217,11 +217,6 @@ function openCloseNozzle()
     }
 }
 
-function purgeHead()
-{
-    runMacroFile("MOTE_INITIATED_PURGE");
-}
-
 function populateReprintDialog()
 {
     sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/listReprintableJobs", function (suitablePrintJobs) {
@@ -265,6 +260,73 @@ function populateReprintDialog()
         }
         $('#reprint-dialog').modal('show');
     }, null, null);
+}
+
+function populatePurgeDialog()
+{
+    if (lastPrinterData.dualMaterialHead)
+    {
+        if (lastPrinterData.materialLoaded.length === 1)
+        {
+            //Single extruder
+            if (lastPrinterData.materialLoaded[0] === true)
+            {
+                $('#purge-nozzle-1-button').removeClass('disabled');
+            } else
+            {
+                $('#purge-nozzle-1-button').addClass('disabled');
+            }
+            $('#purge-nozzle-2-button').addClass('disabled');
+            $('#purge-both-button').addClass('disabled');
+        } else
+        {
+            //Dual extruder
+            if (lastPrinterData.materialLoaded[0] === true)
+            {
+                $('#purge-nozzle-1-button').removeClass('disabled');
+            } else
+            {
+                $('#purge-nozzle-1-button').addClass('disabled');
+            }
+            if (lastPrinterData.materialLoaded[1] === true)
+            {
+                $('#purge-nozzle-2-button').removeClass('disabled');
+            } else
+            {
+                $('#purge-nozzle-2-button').addClass('disabled');
+            }
+            if (lastPrinterData.materialLoaded[0] === true
+                    && lastPrinterData.materialLoaded[1] === true)
+            {
+                $('#purge-both-button').removeClass('disabled');
+            } else
+            {
+                $('#purge-both-button').addClass('disabled');
+            }
+        }
+        $('#purge-dialog').modal('show');
+    } else
+    {
+        runMacroFile("MOTE_INITIATED_PURGE");
+    }
+}
+
+function purgeNozzle1()
+{
+    runMacroFile("MOTE_INITIATED_PURGE|T|F|F");
+    $('#purge-dialog').modal('hide');
+}
+
+function purgeNozzle2()
+{
+    runMacroFile("MOTE_INITIATED_PURGE|F|T|F");
+    $('#purge-dialog').modal('hide');
+}
+
+function purgeBoth()
+{
+    runMacroFile("MOTE_INITIATED_PURGE|T|T|F");
+    $('#purge-dialog').modal('hide');
 }
 
 function configurePrinterButtons(printerData)
@@ -516,6 +578,7 @@ function getPrinterStatus(printerID, callback)
 
 function getStatus()
 {
+    getServerStatus();
     var selectedPrinter = localStorage.getItem(selectedPrinterVar);
     if (selectedPrinter !== null)
     {
@@ -553,7 +616,7 @@ function page_initialiser()
 
     $('#gcode-input').keypress(function (event) {
         var keycode = (event.keyCode ? event.keyCode : event.which);
-        if (keycode == '13' && lastPrinterData.canPrint) {
+        if (keycode == '13') {
             $(this).parent().find('button').click();
         }
     });

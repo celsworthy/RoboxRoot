@@ -8,6 +8,7 @@ var serverNameVar = "serverName";
 var safetiesOnVar = "safetiesOn";
 var loginPage = "/login.html";
 var printerStatusPage = "/printerStatus.html";
+var lastServerData = null;
 var locationificator_initialised = false;
 
 function checkForMobileBrowser()
@@ -175,6 +176,54 @@ function secondsToHM(secondsInput)
     var minutesString = ('00' + minutes).slice(-2);
 
     return hoursString + ":" + minutesString;
+}
+
+function getServerStatus()
+{
+    sendGetCommandToRoot('discovery/whoareyou',
+            function (data) {
+                $('#serverOnline').text(i18next.t('online'));
+                updateServerStatus(data);
+                connectedToServer = true;
+                if (typeof serverOnline === "function")
+                {
+                   serverOnline(); 
+                }
+            },
+            function (data) {
+                connectedToServer = false;
+                $('#serverOnline').text(i18next.t('offline'));
+                updateServerStatus(null);
+                if (typeof serverOffline === "function")
+                {
+                   serverOffline(); 
+                }
+            },
+            null);
+}
+
+function updateServerStatus(serverData)
+{
+    if (serverData === null)
+    {
+        $('#serverVersion').text("");
+        $(".serverStatusLine").text("");
+        $(".server-name-title").text("");
+        $("#server-name-input").val("");
+        $(".server-ip-address").val("");
+    } else if (lastServerData == null
+            || serverData.name !== lastServerData.name
+            || serverData.serverIP !== lastServerData.serverIP
+            || serverData.serverVersion !== lastServerData.serverVersion)
+    {
+        $('#serverVersion').text(serverData.serverVersion);
+        $(".serverStatusLine").text(serverData.name);
+        $(".server-name-title").text(serverData.name);
+        $("#server-name-input").val(serverData.name);
+        $(".server-ip-address").text(serverData.serverIP);
+        $(".serverIP").text(serverData.serverIP);
+        lastServerData = serverData;
+    }
 }
 
 $(document).ready(function () {

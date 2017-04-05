@@ -1,6 +1,5 @@
 var connectedToServer = false;
 var isMobile = false; //initiate as false
-var lastServerData = null;
 var lastWifiData = null;
 var suppressWifiToggleAction = false;
 
@@ -69,45 +68,6 @@ function rootUpgrade()
 //    event.preventDefault();
 }
 
-function updateServerStatus(serverData)
-{
-    if (serverData === null)
-    {
-        $('#serverVersion').text("");
-        $(".serverStatusLine").text("");
-        $(".server-name-title").text("");
-        $("#server-name-input").val("");
-        $(".server-ip-address").val("");
-    } else if (lastServerData == null
-            || serverData.name !== lastServerData.name
-            || serverData.serverIP !== lastServerData.serverIP
-            || serverData.serverVersion !== lastServerData.serverVersion)
-    {
-        $('#serverVersion').text(serverData.serverVersion);
-        $(".serverStatusLine").text(serverData.name);
-        $(".server-name-title").text(serverData.name);
-        $("#server-name-input").val(serverData.name);
-        $(".server-ip-address").text(serverData.serverIP);
-        lastServerData = serverData;
-    }
-}
-
-function getServerStatus()
-{
-    sendGetCommandToRoot('discovery/whoareyou',
-            function (data) {
-                $('#serverOnline').text(i18next.t('online'));
-                updateServerStatus(data);
-                connectedToServer = true;
-            },
-            function (data) {
-                connectedToServer = false;
-                $('#serverOnline').text(i18next.t('offline'));
-                updateServerStatus(null);
-            },
-            null);
-}
-
 function getStatus()
 {
     getServerStatus();
@@ -169,7 +129,6 @@ function updateCurrentWifiState()
 
 function page_initialiser()
 {
-    $('.numberOfPrintersDisplay').text(i18next.t('admin'));
     updateCurrentWifiState();
 
     $("#wifi-enabled-switch").change(function () {
@@ -183,8 +142,7 @@ function page_initialiser()
             $("#wifi-ssid-group").addClass("visuallyhidden");
             $("#wifi-password-group").addClass("visuallyhidden");
             $("#wifi-update-button").addClass("visuallyhidden");
-        }
-        else
+        } else
         {
             $("#wifi-ssid-group").removeClass("visuallyhidden");
             $("#wifi-password-group").removeClass("visuallyhidden");

@@ -66,5 +66,9 @@
     "created": "FRCreated",
     "status": "FRStatus",
     "reprint-subtitle": "FRLists projects if loaded Robox® filaments are present",
-    "duration-remaining": "FRETC" 
+    "duration-remaining": "FRETC",
+    "purge-dialog-title": "FRPurge",
+    "purge-dialog-n1": "FRNozzle 1",
+    "purge-dialog-n2": "FRNozzle 2",
+    "purge-dialog-both": "FRBoth Nozzles"
 }

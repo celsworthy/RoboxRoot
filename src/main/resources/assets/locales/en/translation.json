@@ -66,5 +66,9 @@
     "created": "Created",
     "status": "Status",
     "reprint-subtitle": "Lists projects if loaded Robox® filaments are present",
-    "duration-remaining": "ETC"
+    "duration-remaining": "ETC",
+    "purge-dialog-title": "Purge",
+    "purge-dialog-n1": "Nozzle 1",
+    "purge-dialog-n2": "Nozzle 2",
+    "purge-dialog-both": "Both Nozzles"
 }

@@ -80,18 +80,40 @@ public class StatusData
 
         boolean statusProcessed = false;
 
-        switch (printer.busyStatusProperty().get())
+        switch (printer.printerStatusProperty().get())
         {
-            case LOADING_FILAMENT_D:
-            case LOADING_FILAMENT_E:
-            case UNLOADING_FILAMENT_D:
-            case UNLOADING_FILAMENT_E:
-                printerStatusString = BaseLookup.i18n(printer.busyStatusProperty().get().getI18nString());
-                printerStatusEnumValue = printer.busyStatusProperty().get().name();
+            case CALIBRATING_NOZZLE_ALIGNMENT:
+            case CALIBRATING_NOZZLE_HEIGHT:
+            case CALIBRATING_NOZZLE_OPENING:
+            case OPENING_DOOR:
+            case PRINTING_PROJECT:
+            case PURGING_HEAD:
+            case REMOVING_HEAD:
+                printerStatusString = printer.printerStatusProperty().get().getI18nString();
+                printerStatusEnumValue = printer.printerStatusProperty().get().name();
+                statusProcessed = true;
+            case RUNNING_MACRO_FILE:
+                printerStatusString = printer.getPrintEngine().macroBeingRun.get().getFriendlyName();
+                printerStatusEnumValue = printer.printerStatusProperty().get().name();
                 statusProcessed = true;
                 break;
-            default:
-                break;
+        }
+
+        if (!statusProcessed)
+        {
+            switch (printer.busyStatusProperty().get())
+            {
+                case LOADING_FILAMENT_D:
+                case LOADING_FILAMENT_E:
+                case UNLOADING_FILAMENT_D:
+                case UNLOADING_FILAMENT_E:
+                    printerStatusString = BaseLookup.i18n(printer.busyStatusProperty().get().getI18nString());
+                    printerStatusEnumValue = printer.busyStatusProperty().get().name();
+                    statusProcessed = true;
+                    break;
+                default:
+                    break;
+            }
         }
 
         if (!statusProcessed)
