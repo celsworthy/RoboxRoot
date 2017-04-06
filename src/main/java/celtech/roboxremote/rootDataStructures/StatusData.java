@@ -92,6 +92,7 @@ public class StatusData
                 printerStatusString = printer.printerStatusProperty().get().getI18nString();
                 printerStatusEnumValue = printer.printerStatusProperty().get().name();
                 statusProcessed = true;
+                break;
             case RUNNING_MACRO_FILE:
                 printerStatusString = printer.getPrintEngine().macroBeingRun.get().getFriendlyName();
                 printerStatusEnumValue = printer.printerStatusProperty().get().name();
