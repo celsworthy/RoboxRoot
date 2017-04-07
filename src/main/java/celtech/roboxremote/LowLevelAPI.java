@@ -90,9 +90,6 @@ public class LowLevelAPI
             } else if (remoteTx instanceof ReportErrors)
             {
                 rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getLastErrorResponse();
-            } else if (remoteTx instanceof ReadPrinterID)
-            {
-                rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getLastIdentityResponse();
             } else
             {
                 try

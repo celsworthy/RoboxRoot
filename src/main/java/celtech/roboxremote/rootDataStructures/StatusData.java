@@ -71,10 +71,9 @@ public class StatusData
     {
         this.printerID = printerID;
         Printer printer = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
-        PrinterIDResponse printerIDResponse = printer.getLastIdentityResponse();
-        printerName = printerIDResponse.getPrinterFriendlyName();
+        printerName = printer.getPrinterIdentity().printerFriendlyNameProperty().get();
         PrinterColourMap colourMap = PrinterColourMap.getInstance();
-        Color displayColour = colourMap.printerToDisplayColour(Color.web(printerIDResponse.getPrinterColour()));
+        Color displayColour = colourMap.printerToDisplayColour(printer.getPrinterIdentity().printerColourProperty().get());
 
         printerWebColourString = "#" + ColourStringConverter.colourToString(displayColour);
 
