@@ -142,6 +142,7 @@ function page_initialiser()
             $("#wifi-ssid-group").addClass("visuallyhidden");
             $("#wifi-password-group").addClass("visuallyhidden");
             $("#wifi-update-button").addClass("visuallyhidden");
+            $("#wifi-associated-tick").addClass("visuallyhidden");
         } else
         {
             $("#wifi-ssid-group").removeClass("visuallyhidden");
