@@ -1,5 +1,5 @@
 .selector-highlight {
-    background-color: lightgrey;
+    background-color: lightgrey !important;
 }
 
 .selector-press {
