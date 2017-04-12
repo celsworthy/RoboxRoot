@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import javafx.application.Platform;
 import javafx.scene.paint.Color;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
@@ -309,18 +310,16 @@ public class PublicPrinterControlAPI
     @Path("/reprintJob")
     public Response reprintJob(@PathParam("printerID") String printerID, String printJobID)
     {
-        boolean submittedOK = false;
         if (PrinterRegistry.getInstance() != null)
         {
             Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
-            submittedOK = printerToUse.reprintJob(Utils.cleanInboundJSONString(printJobID));
+            Platform.runLater(() ->
+            {
+                printerToUse.reprintJob(Utils.cleanInboundJSONString(printJobID));
+            });
         }
 
         Response response = Response.ok().build();
-        if (!submittedOK)
-        {
-            response = Response.status(Response.Status.NOT_ACCEPTABLE).build();
-        }
         return response;
     }
 
