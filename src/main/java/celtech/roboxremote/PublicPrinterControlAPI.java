@@ -143,13 +143,13 @@ public class PublicPrinterControlAPI
     @POST
     @Timed
     @Path("/cancel")
-    public void cancel(@PathParam("printerID") String printerID)
+    public void cancel(@PathParam("printerID") String printerID, BooleanParam safetyOn)
     {
         if (PrinterRegistry.getInstance() != null)
         {
             try
             {
-                PrinterRegistry.getInstance().getRemotePrinters().get(printerID).cancel(null);
+                PrinterRegistry.getInstance().getRemotePrinters().get(printerID).cancel(null, safetyOn.get());
             } catch (PrinterException ex)
             {
                 steno.error("Exception whilst cancelling");
@@ -245,13 +245,13 @@ public class PublicPrinterControlAPI
     @POST
     @Timed
     @Path("/removeHead")
-    public void removeHead(@PathParam("printerID") String printerID)
+    public void removeHead(@PathParam("printerID") String printerID, BooleanParam safetyOn)
     {
         if (PrinterRegistry.getInstance() != null)
         {
             try
             {
-                PrinterRegistry.getInstance().getRemotePrinters().get(printerID).removeHead(null);
+                PrinterRegistry.getInstance().getRemotePrinters().get(printerID).removeHead(null, safetyOn.get());
             } catch (PrinterException ex)
             {
                 steno.error("Exception whilst removing head");

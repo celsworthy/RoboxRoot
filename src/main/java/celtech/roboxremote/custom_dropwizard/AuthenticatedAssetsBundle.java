@@ -1,19 +1,15 @@
 package celtech.roboxremote.custom_dropwizard;
 
 import celtech.roboxremote.security.User;
+import static com.google.common.base.Preconditions.checkArgument;
 import io.dropwizard.Bundle;
-import io.dropwizard.servlets.assets.AssetServlet;
+import io.dropwizard.auth.Authenticator;
+import io.dropwizard.auth.basic.BasicCredentials;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.nio.charset.StandardCharsets;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import io.dropwizard.auth.Authenticator;
-import io.dropwizard.auth.Authorizer;
-import io.dropwizard.auth.basic.BasicCredentials;
 
 /**
  *
@@ -28,12 +24,12 @@ public class AuthenticatedAssetsBundle implements Bundle
     private static final String DEFAULT_INDEX_FILE = "index.htm";
     private static final String DEFAULT_PATH = "/assets";
 
-    private final String resourcePath;
-    private final String uriPath;
-    private final String indexFile;
-    private final String assetsName;
+    protected final String resourcePath;
+    protected final String uriPath;
+    protected final String indexFile;
+    protected final String assetsName;
 
-    private final Authenticator<BasicCredentials, User> authenticator;
+    protected final Authenticator<BasicCredentials, User> authenticator;
 
     /**
      * Creates a new AssetsBundle which serves up static assets from

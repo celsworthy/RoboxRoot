@@ -4,9 +4,10 @@ import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxbase.configuration.MachineType;
 import celtech.roboxbase.utils.ApplicationUtils;
 import celtech.roboxremote.custom_dropwizard.AuthenticatedAssetsBundle;
+import celtech.roboxremote.custom_dropwizard.ExternalAuthenticatedAssetsBundle;
 import celtech.roboxremote.security.RootAPIAuthFilter;
-import celtech.roboxremote.security.User;
 import celtech.roboxremote.security.RootAPIAuthenticator;
+import celtech.roboxremote.security.User;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.forms.MultiPartBundle;
@@ -64,8 +65,19 @@ public class Root extends Application<RoboxRemoteConfiguration>
         coreManager = new CoreManager();
 
         bootstrap.addBundle(new MultiPartBundle());
-        AuthenticatedAssetsBundle webControlAssetsBundle = new AuthenticatedAssetsBundle("/assets", "/", "index.html",
-                new RootAPIAuthenticator());
+		
+        String externalStaticDir = BaseConfiguration.getExternalStaticDirectory();
+        AuthenticatedAssetsBundle webControlAssetsBundle;
+
+        if (externalStaticDir != null)
+        {
+            webControlAssetsBundle = new ExternalAuthenticatedAssetsBundle(externalStaticDir,
+                    "/assets", "/", new RootAPIAuthenticator());
+        } else
+        {
+            webControlAssetsBundle = new AuthenticatedAssetsBundle(
+                    "/assets", "/", new RootAPIAuthenticator());
+        }
         bootstrap.addBundle(webControlAssetsBundle);
     }
 
