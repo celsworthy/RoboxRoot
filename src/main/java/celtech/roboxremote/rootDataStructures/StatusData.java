@@ -46,6 +46,9 @@ public class StatusData
     //Bed
     private int bedTemperature;
 
+    // Ambient
+    private int ambientTemperature;
+
     //Print info
     private String printJobName;
     private String printJobSettings;
@@ -187,6 +190,8 @@ public class StatusData
 
         //Bed
         bedTemperature = printer.getPrinterAncillarySystems().bedTemperatureProperty().get();
+
+        ambientTemperature = printer.getPrinterAncillarySystems().ambientTemperatureProperty().get();
 
         //Print info
         totalDurationSeconds = printer.getPrintEngine().totalDurationSecondsProperty().get();
@@ -434,6 +439,16 @@ public class StatusData
     public void setBedTemperature(int bedTemperature)
     {
         this.bedTemperature = bedTemperature;
+    }
+
+    public int getAmbientTemperature()
+    {
+        return ambientTemperature;
+    }
+
+    public void setAmbientTemperature(int ambientTemperature)
+    {
+        this.ambientTemperature = ambientTemperature;
     }
 
     @JsonProperty
