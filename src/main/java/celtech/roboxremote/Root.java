@@ -132,11 +132,18 @@ public class Root extends Application<RoboxRemoteConfiguration>
 //
         // Configure CORS parameters
         cors.setInitParameter("allowedOrigins", "*");
-        cors.setInitParameter("allowedHeaders", "X-Requested-With,Content-Type,Accept,Origin");
+// From https://stackoverflow.com/questions/25775364/enabling-cors-in-dropwizard-not-working
+//        cors.setInitParameter("allowedHeaders", "X-Requested-With,Content-Type,Accept,Origin");
+        cors.setInitParameter("allowedHeaders", "*");
         cors.setInitParameter("allowedMethods", "OPTIONS,GET,POST,HEAD");
 //
 //        // Add URL mapping
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
+
+        // From https://stackoverflow.com/questions/25775364/enabling-cors-in-dropwizard-not-working
+        // DO NOT pass a preflight request to down-stream auth filters
+        // unauthenticated preflight requests should be permitted by spec
+        cors.setInitParameter(CrossOriginFilter.CHAIN_PREFLIGHT_PARAM, Boolean.FALSE.toString());
 
         final AdminAPI adminAPI = new AdminAPI();
         final LowLevelAPI lowLevelAPI = new LowLevelAPI();

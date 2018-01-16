@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" href="../../favicon.ico">
+
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+        <link href="css/grid.css" rel="stylesheet">
+        <link href="css/sticky-header.css" rel="stylesheet">
+        <link href="css/sticky-footer.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/robox-root.css">
+        <script src="js/jquery-2.2.4.min.js"></script>
+        <script src="js/i18next.min.js"></script>
+        <script src="js/i18nextBrowserLanguageDetector.min.js"></script>
+        <script src="js/i18nextXHRBackend.min.js"></script>
+        <script src="js/jquery-i18next.min.js"></script>
+        <script src="js/jquery.base64.js"></script>
+        <script src="js/printerDetails.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/bootstrap-colorselector.min.js"></script>
+        <script src="js/core.js"></script> 
+
+        <title>Robox Root Manager</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/bootstrap-colorselector.min.css" rel="stylesheet">
+        <!-- Bootstrap theme -->
+        <link href="css/bootstrap-theme.min.css" rel="stylesheet">
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+        <!-- Custom styles for this template -->
+        <!--<link href="css/theme.css" rel="stylesheet">-->
+
+        <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+        <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+        <script src="js/ie-emulation-modes-warning.js"></script>
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+        <script type="text/javascript">var titlei18n = "printer-status";</script>
+		<div class="container-fluid">
+			<div class="no-margin no-padding row centred-grid-box">
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding jog-button' onclick='jogZUp()' id="zUpButton"><img class='img-fluid' alt='Z Up' src='robox-images/joghead/Move_A1.png'></a></div>
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless extruder1-control jog-button' onclick='jogExtruder1Out()'><img class='img-fluid' alt='Reel 1 Out' src='robox-images/joghead/Move_B2.png'></a></div>
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Image of Reel 1' src='robox-images/joghead/Move_C2.png'></a></div>
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless extruder1-control jog-button' onclick='jogExtruder1In()'><img class='img-fluid' alt='Reel 1 Out' src='robox-images/joghead/Move_D2.png'></a></div>
+			</div>
+			<div class="no-margin no-padding row centred-grid-box">
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_A2.png'></a></div>
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless extruder2-control jog-button' onclick='jogExtruder2Out()'><img class='img-fluid' alt='Reel 2 Out' src='robox-images/joghead/Move_B3.png'></a></div>
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Z Up' src='robox-images/joghead/Move_C3.png'></a></div>
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless extruder2-control jog-button' onclick='jogExtruder2In()'><img class='img-fluid' alt='Reel 2 In' src='robox-images/joghead/Move_D3.png'></a></div>
+			</div>
+			<div class="no-margin no-padding row centred-grid-box">
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='jogZDown()'><img class='img-fluid' alt='Z Down' src='robox-images/joghead/Move_A3.png'></a></div>
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"></div>
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"></div>
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"></div>
+			</div>
+			<div class="no-margin no-padding row centred-grid-box">
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='jogYBack()'><img class='img-fluid' alt='Y Back' src='robox-images/joghead/Move_A4.png'></a></div>
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='jogXLeft()'><img class='img-fluid' alt='X Left' src='robox-images/joghead/Move_B4.png'></a></div>
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_C4.png'></a></div>
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='jogXRight()'><img class='img-fluid' alt='X Right' src='robox-images/joghead/Move_D4.png'></a></div>
+			</div>
+			<div class="no-margin no-padding row centred-grid-box">
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_A5.png'></a></div>
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='homeXYZ()'><img class='img-fluid' alt='Home XYZ' src='robox-images/joghead/Move_B5.png'></a></div>
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='switchNozzles()'><img class='img-fluid' alt='Switch nozzles' src='robox-images/joghead/Move_C5.png'></a></div>
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='openCloseNozzle()'><img class='img-fluid' alt='Open/Close nozzle' src='robox-images/joghead/Move_D5.png'></a></div>
+			</div>
+			<div class="no-margin no-padding row centred-grid-box">
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button' onclick='jogYForward()'><img class='img-fluid' alt='Y Forward' src='robox-images/joghead/Move_A6.png'></a></div>
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_B6.png'></a></div>
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_C6.png'></a></div>
+				<div class="col-xs-3 borderless white-background centred-grid-box no-padding no-margin"><a class='btn no-padding borderless jog-button'><img class='img-fluid' alt='Blank' src='robox-images/joghead/Move_D6.png'></a></div>
+			</div>
+			
+			<div class="no-margin no-padding row centred-grid-box">
+				<div class="col borderless white-background centred-grid-box no-padding no-margin">
+					<div>
+						<h3 class="localised" data-i18n="gcodeEntry"><i class="fa fa-bar-chart-o"></i>GCode</h3>
+						<textarea rows='3' id='gcode-output' class="form-control noresize" readonly></textarea>
+						<div class="input-group">
+							<input id="gcode-input" class="server-name-entry form-control" type="text" placeholder="" aria-describedby="sizing-addon1">
+							<span class="input-group-btn">
+								<button class="btn btn-default localised" type="button" data-i18n="sendGCode" onClick="sendGCodeFromDialog()">Send GCode</button>
+							</span>
+						</div>
+					<div>	
+				</div>
+			</div><!-- /.modal-content -->
+		</div>
+		<script type='text/javascript' src='js/footer.js'></script>
+    </body>
+</html>

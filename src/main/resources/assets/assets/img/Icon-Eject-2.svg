@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Layer_1"
+   data-name="Layer 1"
+   viewBox="0 0 120 120"
+   version="1.1"
+   sodipodi:docname="Icon-Eject-2.svg"
+   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)">
+  <metadata
+     id="metadata837">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Icon-Eject</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     id="namedview835"
+     showgrid="false"
+     inkscape:zoom="5.5625734"
+     inkscape:cx="67.610132"
+     inkscape:cy="62.980389"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Layer_1" />
+  <defs
+     id="defs826">
+    <style
+       id="style824">.cls-1,.cls-2{fill:#fff;}.cls-2{fill-rule:evenodd;}</style>
+  </defs>
+  <title
+     id="title828">Icon-Eject</title>
+  <rect
+     class="cls-1"
+     y="72.053749"
+     width="70"
+     height="12.500834"
+     id="rect830"
+     x="25"
+     style="fill:#ff661b;stroke-width:0.58333331;fill-opacity:1" />
+  <polygon
+     class="cls-2"
+     points="60.01,9.34 120,73.63 0,73.63 "
+     id="polygon832"
+     transform="matrix(0.58333333,0,0,0.58333333,25.539319,20.35663)"
+     style="fill:#ff661b;fill-opacity:1;fill-rule:evenodd" />
+  <path
+     inkscape:connector-curvature="0"
+     class="cls-1"
+     d="m 119.99097,59.988766 c 0,24.08 -15.29,46.430004 -37.470001,55.610004 -22.72,9.4 -49,3.39 -65.89,-14.31 A 59.86,59.86 0 0 1 5.540968,34.758766 C 15.770969,12.988766 38.810969,-1.1312345 62.920969,0.05876548 94.140969,1.5887655 119.99097,28.748766 119.99097,59.988766 Z m -5.52,0.08 c 0,-24.22 -16.760001,-45.91 -40.000001,-52.4400003 -23.56,-6.64000022 -49.12,4.1600003 -61.48,25.0600003 a 54.36,54.36 0 0 0 8.6,65.82 c 17,16.820004 43.31,21.000004 64.33,9.390004 A 55.17,55.17 0 0 0 114.47097,60.048766 Z"
+     id="path842"
+     style="fill:#ffffff;fill-opacity:1" />
+</svg>

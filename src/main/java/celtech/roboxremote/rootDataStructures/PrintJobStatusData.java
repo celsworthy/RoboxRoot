@@ -1,57 +1,33 @@
 package celtech.roboxremote.rootDataStructures;
 
 import celtech.roboxbase.BaseLookup;
-import celtech.roboxbase.PrinterColourMap;
 import celtech.roboxbase.configuration.BaseConfiguration;
-import celtech.roboxbase.configuration.Filament;
-import celtech.roboxbase.configuration.datafileaccessors.FilamentContainer;
 import celtech.roboxbase.postprocessor.PrintJobStatistics;
 import celtech.roboxbase.printerControl.PrinterStatus;
-import celtech.roboxbase.printerControl.model.Head;
 import celtech.roboxbase.printerControl.model.Printer;
-import celtech.roboxbase.utils.ColourStringConverter;
 import celtech.roboxremote.PrinterRegistry;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.IOException;
-import javafx.scene.paint.Color;
 
 /**
  *
  * @author ianhudson
  */
-public class StatusData
+public class PrintJobStatusData
 {
 
     private String printerID;
-    private String printerName;
-    private String printerTypeCode;
-    private String printerWebColourString;
     private String printerStatusString;
     private String printerStatusEnumValue;
 
     private boolean canPrint;
     private boolean canPause;
     private boolean canResume;
-    private boolean canPurgeHead;
-    private boolean canRemoveHead;
     private boolean canOpenDoor;
-    private boolean[] canEjectFilament;
     private boolean canCancel;
-    private boolean canCalibrateHead;
 
-    //Head
-    private String headName;
-    private boolean dualMaterialHead;
-    private int[] nozzleTemperature;
-
-    //Bed
-    private int bedTemperature;
-
-    // Ambient
-    private int ambientTemperature;
-
-    //Print info
+    //Print job info
     private String printJobName;
     private String printJobSettings;
     private String printJobProfile;
@@ -60,20 +36,14 @@ public class StatusData
     private int currentLayer;
     private int numberOfLayers;
 
-    //Material
-    private String[] attachedFilamentNames = null;
-    private String[] attachedFilamentMaterials = null;
-    private String[] attachedFilamentWebColours = null;
-    private boolean[] attachedFilamentCustomFlags = null;
-    private boolean[] materialLoaded = null;
-
     //Errors
     private String[] activeErrors;
 
     @JsonIgnore
     private String lastPrintJobID = null;
 
-    public StatusData()
+
+    public PrintJobStatusData()
     {
         // Jackson deserialization
     }
@@ -82,12 +52,6 @@ public class StatusData
     {
         this.printerID = printerID;
         Printer printer = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
-        printerName = printer.getPrinterIdentity().printerFriendlyNameProperty().get();
-        printerTypeCode = printer.printerConfigurationProperty().get().getTypeCode();
-        PrinterColourMap colourMap = PrinterColourMap.getInstance();
-        Color displayColour = colourMap.printerToDisplayColour(printer.getPrinterIdentity().printerColourProperty().get());
-
-        printerWebColourString = "#" + ColourStringConverter.colourToString(displayColour);
 
         boolean statusProcessed = false;
 
@@ -155,77 +119,14 @@ public class StatusData
         }
 
         canPrint = printer.canPrintProperty().get();
-        canCalibrateHead = printer.canCalibrateHeadProperty().get();
         canCancel = printer.canCancelProperty().get();
         canOpenDoor = printer.canOpenDoorProperty().get();
 
-        int numberOfExtruders = 1;
-        if (printer.extrudersProperty().size() == 2
-                && printer.extrudersProperty().get(1) != null
-                && printer.extrudersProperty().get(1).isFittedProperty().get())
-        {
-            numberOfExtruders = 2;
-        }
-        
-        canEjectFilament = new boolean[numberOfExtruders];
-        attachedFilamentNames = new String[numberOfExtruders];
-        attachedFilamentMaterials = new String[numberOfExtruders];
-        attachedFilamentWebColours = new String[numberOfExtruders];
-        attachedFilamentCustomFlags = new boolean[numberOfExtruders];
-        materialLoaded = new boolean[numberOfExtruders];
-        for (int extruderNumber = 0; extruderNumber < numberOfExtruders; extruderNumber++)
-        {
-            canEjectFilament[extruderNumber] = (printer.extrudersProperty().get(extruderNumber) != null &&
-                                                printer.extrudersProperty().get(extruderNumber).isFittedProperty().get() &&
-                                                printer.extrudersProperty().get(extruderNumber).canEjectProperty().get());
-            if (printer.effectiveFilamentsProperty().get(extruderNumber) != FilamentContainer.UNKNOWN_FILAMENT)
-            {
-                Filament filament = printer.effectiveFilamentsProperty().get(extruderNumber);
-                attachedFilamentNames[extruderNumber] = filament.getFriendlyFilamentName();
-                attachedFilamentMaterials[extruderNumber] = filament.getMaterial().toString();
-                attachedFilamentWebColours[extruderNumber] = "#" + ColourStringConverter.colourToString(filament.getDisplayColourProperty().get());
-                attachedFilamentCustomFlags[extruderNumber] = filament.isMutable();
-            }
-
-            materialLoaded[extruderNumber] = printer.extrudersProperty().get(extruderNumber).filamentLoadedProperty().get();
-        }
-
         canPause = printer.canPauseProperty().get();
-        canPurgeHead = false;
-        canRemoveHead = printer.canRemoveHeadProperty().get();
         canResume = printer.canResumeProperty().get();
-
-        //Head
-        if (printer.headProperty().get() != null)
-        {
-            headName = printer.headProperty().get().nameProperty().get();
-            dualMaterialHead = printer.headProperty().get().headTypeProperty().get() == Head.HeadType.DUAL_MATERIAL_HEAD;
-
-            if (dualMaterialHead)
-            {
-                canPurgeHead = printer.reelsProperty().containsKey(0) && printer.reelsProperty().containsKey(1) && printer.canPurgeHeadProperty().get();
-            } else
-            {
-                canPurgeHead = printer.reelsProperty().containsKey(0) && printer.canPurgeHeadProperty().get();
-            }
-
-            nozzleTemperature = new int[printer.headProperty().get().getNozzleHeaters().size()];
-            for (int heaterNumber = 0; heaterNumber < printer.headProperty().get().getNozzleHeaters().size(); heaterNumber++)
-            {
-                nozzleTemperature[heaterNumber] = printer.headProperty().get().getNozzleHeaters().get(heaterNumber).nozzleTemperatureProperty().get();
-            }
-        } else
-        {
-            headName = "";
-        }
-
-        bedTemperature = printer.getPrinterAncillarySystems().bedTemperatureProperty().get();
-
-        ambientTemperature = printer.getPrinterAncillarySystems().ambientTemperatureProperty().get();
 
         //Print info
         totalDurationSeconds = printer.getPrintEngine().totalDurationSecondsProperty().get();
-
         if (printer.printerStatusProperty().get() == PrinterStatus.PRINTING_PROJECT)
         {
             if (lastPrintJobID == null
@@ -257,7 +158,7 @@ public class StatusData
         {
             lastPrintJobID = null;
         }
-
+        
         if (!printer.getActiveErrors().isEmpty())
         {
             activeErrors = new String[printer.getActiveErrors().size()];
@@ -272,48 +173,6 @@ public class StatusData
     public String getPrinterID()
     {
         return printerID;
-    }
-
-    @JsonProperty
-    public void setPrinterID(String printerID)
-    {
-        this.printerID = printerID;
-    }
-
-    @JsonProperty
-    public String getPrinterName()
-    {
-        return printerName;
-    }
-
-    @JsonProperty
-    public void setPrinterName(String printerName)
-    {
-        this.printerName = printerName;
-    }
-
-    @JsonProperty
-    public String getPrinterTypeCode()
-    {
-        return printerTypeCode;
-    }
-
-    @JsonProperty
-    public void setPrinterTypeCode(String printerTypeCode)
-    {
-        this.printerTypeCode = printerTypeCode;
-    }
-
-    @JsonProperty
-    public String getPrinterWebColourString()
-    {
-        return printerWebColourString;
-    }
-
-    @JsonProperty
-    public void setPrinterWebColourString(String printerWebColourString)
-    {
-        this.printerWebColourString = printerWebColourString;
     }
 
     @JsonProperty
@@ -348,16 +207,6 @@ public class StatusData
         this.canPrint = canPrint;
     }
 
-    public boolean isCanCalibrateHead()
-    {
-        return canCalibrateHead;
-    }
-
-    public void setCanCalibrateHead(boolean canCalibrateHead)
-    {
-        this.canCalibrateHead = canCalibrateHead;
-    }
-
     public boolean isCanCancel()
     {
         return canCancel;
@@ -378,18 +227,6 @@ public class StatusData
         this.canOpenDoor = canOpenDoor;
     }
 
-    @JsonProperty
-    public void setCanEjectFilament(boolean[] canEjectFilament)
-    {
-        this.canEjectFilament = canEjectFilament;
-    }
-
-    @JsonProperty
-    public boolean[] getCanEjectFilament()
-    {
-        return canEjectFilament;
-    }
-
     public boolean isCanPause()
     {
         return canPause;
@@ -400,26 +237,6 @@ public class StatusData
         this.canPause = canPause;
     }
 
-    public boolean isCanPurgeHead()
-    {
-        return canPurgeHead;
-    }
-
-    public void setCanPurgeHead(boolean canPurgeHead)
-    {
-        this.canPurgeHead = canPurgeHead;
-    }
-
-    public boolean isCanRemoveHead()
-    {
-        return canRemoveHead;
-    }
-
-    public void setCanRemoveHead(boolean canRemoveHead)
-    {
-        this.canRemoveHead = canRemoveHead;
-    }
-
     public boolean isCanResume()
     {
         return canResume;
@@ -428,68 +245,6 @@ public class StatusData
     public void setCanResume(boolean canResume)
     {
         this.canResume = canResume;
-    }
-
-    public String getHeadName()
-    {
-        return headName;
-    }
-
-    public void setHeadName(String headName)
-    {
-        this.headName = headName;
-    }
-
-    public boolean isDualMaterialHead()
-    {
-        return dualMaterialHead;
-    }
-
-    public void setDualMaterialHead(boolean dualMaterialHead)
-    {
-        this.dualMaterialHead = dualMaterialHead;
-    }
-
-    public int getBedTemperature()
-    {
-        return bedTemperature;
-    }
-
-    public void setBedTemperature(int bedTemperature)
-    {
-        this.bedTemperature = bedTemperature;
-    }
-
-    public int getAmbientTemperature()
-    {
-        return ambientTemperature;
-    }
-
-    public void setAmbientTemperature(int ambientTemperature)
-    {
-        this.ambientTemperature = ambientTemperature;
-    }
-
-    @JsonProperty
-    public int[] getNozzleTemperature()
-    {
-        return nozzleTemperature;
-    }
-
-    @JsonProperty
-    public void setNozzleTemperature(int[] nozzleTemperature)
-    {
-        this.nozzleTemperature = nozzleTemperature;
-    }
-
-    @JsonIgnore
-    public void setNozzleTemperature(int nozzleIndex, int newNozzleTemperature)
-    {
-        if (nozzleIndex >= 0
-                && nozzleIndex < nozzleTemperature.length)
-        {
-            nozzleTemperature[nozzleIndex] = newNozzleTemperature;
-        }
     }
 
     public String getPrintJobName()
@@ -563,56 +318,6 @@ public class StatusData
         this.printJobProfile = printJobProfile;
     }
     
-    public String[] getAttachedFilamentNames()
-    {
-        return attachedFilamentNames;
-    }
-
-    public void setAttachedFilamentNames(String[] attachedFilamentNames)
-    {
-        this.attachedFilamentNames = attachedFilamentNames;
-    }
-
-    public String[] getAttachedFilamentMaterials()
-    {
-        return attachedFilamentMaterials;
-    }
-
-    public void setAttachedFilamentMaterials(String[] attachedFilamentMaterials)
-    {
-        this.attachedFilamentMaterials = attachedFilamentMaterials;
-    }
-
-    public String[] getAttachedFilamentWebColours()
-    {
-        return attachedFilamentWebColours;
-    }
-
-    public void setAttachedFilamentWebColours(String[] attachedFilamentWebColours)
-    {
-        this.attachedFilamentWebColours = attachedFilamentWebColours;
-    }
-
-     public boolean[] getAttachedFilamentCustomFlags()
-    {
-        return attachedFilamentCustomFlags;
-    }
-
-    public void setAttachedFilamentCustomFlags(boolean[] attachedFilamentCustomFlags)
-    {
-        this.attachedFilamentCustomFlags = attachedFilamentCustomFlags;
-    }
-
-    public boolean[] getMaterialLoaded()
-    {
-        return materialLoaded;
-    }
-
-    public void setMaterialLoaded(boolean[] materialLoaded)
-    {
-        this.materialLoaded = materialLoaded;
-    }
-
     public String[] getActiveErrors()
     {
         return activeErrors;

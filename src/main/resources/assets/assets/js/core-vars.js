@@ -1,0 +1,23 @@
+var serverHostName = window.location.hostname;
+var serverPort = 8080;
+var serverURL = 'http://' + serverHostName + ':' + serverPort;
+var clientHostName = window.location.hostname
+//var clientPort = 59559; // For the Bootstrap preview, it has to be edited to be the allocated preview port.
+var clientPort = 8080; // In the release version, should be 8080 (same as server port).
+var clientURL = 'http://' + clientHostName + ':' + clientPort;
+//var imageRoot = ""; // For the Boostrap preview, it has to be empty.
+var imageRoot = "assets/img/"; // In the release version, this should be assets/img/.
+
+var isMobile = false;
+var defaultUser = "root";
+var applicationPINVar = "applicationPIN";
+var selectedPrinterVar = "selectedPrinter";
+var serverNameVar = "serverName";
+var safetiesOnVar = "safetiesOn";
+var loginPage = "/login.html";
+var printerStatusPage = "/printerStatus.html";
+var homePage = "/home.html";
+var lastServerData = null;
+var locationificator_initialised = false;
+var lastPrinterData = null;
+var selectedPrinterID = null;

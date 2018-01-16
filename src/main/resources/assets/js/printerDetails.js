@@ -72,12 +72,12 @@ function resumePrint()
 
 function cancelPrint()
 {
-    sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/cancel", null, null, null);
+    sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/cancel", null, null, safetiesOn().toString());
 }
 
 function removeHead()
 {
-    sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/removeHead", null, null, null);
+    sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/removeHead", null, null, safetiesOn().toString());
 }
 
 function purgeHead()

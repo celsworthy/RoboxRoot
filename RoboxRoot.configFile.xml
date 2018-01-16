@@ -9,7 +9,7 @@
         <requiredFirmwareVersion>753</requiredFirmwareVersion>
         <DefaultMode>Normal</DefaultMode>
         <DefaultLocaleLanguageTag>en</DefaultLocaleLanguageTag>
-        <FakeInstallDirectory>C:\Program Files\CEL-Root\Root/</FakeInstallDirectory>
+        <FakeInstallDirectory>C:\Program Files\CEL\Root/</FakeInstallDirectory>
     </ApplicationConfiguration>
     <Stenographer>
         <logfilename>#ApplicationConfiguration:ApplicationDataStorageDirectory#/RoboxRoot.log</logfilename>

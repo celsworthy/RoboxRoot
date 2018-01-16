@@ -1,17 +1,3 @@
-var isMobile = false;
-var hostname = window.location.hostname;
-var port = 8080;
-var defaultUser = "root";
-var applicationPINVar = "applicationPIN";
-var selectedPrinterVar = "selectedPrinter";
-var serverNameVar = "serverName";
-var safetiesOnVar = "safetiesOn";
-var loginPage = "/login.html";
-var printerStatusPage = "/printerStatus.html";
-var homePage = "/home.html";
-var lastServerData = null;
-var locationificator_initialised = false;
-
 function checkForMobileBrowser()
 {
     // device detection
@@ -28,15 +14,19 @@ function goToPrinterStatusPage()
     if (enteredPIN !== null && enteredPIN !== "")
     {
         var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + enteredPIN);
+        console.log(" goToPrinterStatusPage - modified url = \"" + 'http://' + window.location.host + printerStatusPage + "\"");
         $.ajax({
-            url: 'http://' + window.location.hostname + ':8080' + printerStatusPage,
+            //url: 'http://' + window.location.hostname + ':8080' + printerStatusPage,
+            url: clientURL + printerStatusPage,
             cache: true,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
             },
             type: 'GET',
             success: function (data, textStatus, jqXHR) {
-                location.href = 'http://' + window.location.hostname + ':8080' + printerStatusPage;
+//               location.href = 'http://' + window.location.hostname + ':8080' + printerStatusPage;
+                console.log(" goToPrinterStatusPage - modified location.href = \"" + 'http://' + window.location.host + printerStatusPage + "\"");
+                location.href = clientURL + printerStatusPage;
             },
             error: function (data, textStatus, jqXHR) {
                 logout();
@@ -54,15 +44,19 @@ function goToHomePage()
     if (enteredPIN !== null && enteredPIN !== "")
     {
         var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + enteredPIN);
+        console.log(" goToPrinterStatusPage - modified url = \"" + 'http://' + window.location.host + printerStatusPage + "\"");
         $.ajax({
-            url: 'http://' + window.location.hostname + ':8080' + homePage,
+            //url: 'http://' + window.location.hostname + ':8080' + printerStatusPage,
+            url: clientURL + homePage,
             cache: true,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
             },
             type: 'GET',
             success: function (data, textStatus, jqXHR) {
-               location.href = 'http://' + window.location.hostname + ':8080' + homePage;
+//               location.href = 'http://' + window.location.hostname + ':8080' + printerStatusPage;
+                console.log(" goToPrinterHomePage - modified location.href = \"" + 'http://' + window.location.host + printerStatusPage + "\"");
+                location.href = clientURL + homePage;
             },
             error: function (data, textStatus, jqXHR) {
                 logout();
@@ -100,8 +94,9 @@ function goToHomeOrPrinterStatus()
 
 function logout()
 {
+    debugger;
     localStorage.setItem(applicationPINVar, "");
-    location.href = 'http://' + hostname + ':' + port + loginPage;
+    location.href = clientURL + loginPage;
 }
 
 function sendGetCommandToRoot(service, successCallback, errorCallback, dataToSend)
@@ -115,7 +110,7 @@ function sendPostCommandToRoot(service, successCallback, errorCallback, dataToSe
 
 function sendCommandToRoot(requestType, service, successCallback, errorCallback, dataToSend)
 {
-    var printerURL = "http://" + hostname + ":" + port + "/api/" + service + "/";
+    var printerURL = serverURL + "/api/" + service + "/";
     var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
 
     $.ajax({
@@ -126,24 +121,27 @@ function sendCommandToRoot(requestType, service, successCallback, errorCallback,
         contentType: "application/json", // send as JSON
         type: requestType,
 //        dataType: 'json',
-        data: JSON.stringify(dataToSend)
-    }).success(function (data, textStatus, jqXHR)
-    {
-        if (successCallback !== null)
+        data: JSON.stringify(dataToSend),
+        success:function (data, textStatus, jqXHR)
         {
-            successCallback(data);
-        }
-    }).error(function (jqXHR, textStatus, errorThrown) {
-        if (errorCallback !== null)
+            if (successCallback !== null)
+            {
+                successCallback(data);
+            }
+        },
+        error:function (jqXHR, textStatus, errorThrown)
         {
-            errorCallback(textStatus);
+            if (errorCallback !== null)
+            {
+                errorCallback(textStatus);
+            }
         }
     });
 }
 
 function submitFormToRoot(service, successCallback, errorCallback, formData)
 {
-    var printerURL = "http://" + hostname + ":" + port + "/api/" + service + "/";
+    var printerURL = serverURL + "/api/" + service + "/";
     var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
 
     $.ajax({
@@ -262,18 +260,21 @@ function updateServerStatus(serverData)
         $(".server-name-title").text("");
         $("#server-name-input").val("");
         $(".server-ip-address").val("");
-    } else if (lastServerData == null
+    } else
+    {
+        if (lastServerData == null
             || serverData.name !== lastServerData.name
             || serverData.serverIP !== lastServerData.serverIP
             || serverData.serverVersion !== lastServerData.serverVersion)
-    {
-        $('#serverVersion').text(serverData.serverVersion);
-        $(".serverStatusLine").text(serverData.name);
-        $(".server-name-title").text(serverData.name);
-        $("#server-name-input").val(serverData.name);
-        $(".server-ip-address").text(serverData.serverIP);
-        $(".serverIP").text(serverData.serverIP);
-        lastServerData = serverData;
+        {
+            $('#serverVersion').text(serverData.serverVersion);
+            $(".serverStatusLine").text(serverData.name);
+            $(".server-name-title").text(serverData.name);
+            $("#server-name-input").val(serverData.name);
+            $(".server-ip-address").text(serverData.serverIP);
+            $(".serverIP").text(serverData.serverIP);
+            lastServerData = serverData;
+        }
     }
 }
 
@@ -307,7 +308,22 @@ $(document).ready(function () {
                         event.preventDefault();
                     });
                     page_initialiser();
+                    setHeaderAndFooter();
                     updateLocalisation();
                 }
             });
 });
+
+function setHeaderAndFooter()
+{
+    $('.header-box').html(
+        "<a href='printerStatus.html'><img class='img-responsive' alt='Robox Logo' src='assets/img/Icon-Robox.svg' style='width:60px'></a>" +
+        "<p style='flex-grow: 1; font-size: 2em;' class='text-center no-margin localised' data-i18n='" + titlei18n + "'></p>" +
+        "<a href='printerStatus.html'><img class='img-responsive' alt='Root Logo' src='assets/img/Logo-Root.svg' style='width:60px'></a>");
+
+    $('.footer-box').html(
+        "<span class='text-center server-name-title footer-display' style='flex-grow: 1;'>No Server</span>" +
+        "<a class='btn footer-btn' href='printerStatus.html'><img class='img-fluid root-icon' alt='Home' src='assets/img/Icon-Home.svg'></a>" +
+        "<a class='btn footer-btn' href='serverStatus.html'><img class='img-fluid root-icon' altroot-icon='Setup' src='assets/img/Icon-Settings.svg' height='50'></a>" +
+        "<span class='text-center serverIP footer-display' style='flex-grow: 1;'>-</span>");
+}

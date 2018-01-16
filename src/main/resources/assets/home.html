@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robox Pro Home</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bitter">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body id="home-page" class="home-page no-touch-action">
+    <div class="container-fluid d-flex flex-column no-padding hidden" id="home-container">
+        <div class="row printer-name" id="printer-name-row">
+            <div class="col-auto d-flex align-self-center">
+                <div id="rbx01-image" class="pull-left" style="width:130px; height:100px; display:none;">
+    <svg height="100px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 92.39">
+        <path class="robox-icon" d="M17,65.63S6.11,61.35,5.69,61.08,3,59.65,2.15,55.31c0,0-.16-.92-.22-1.61L0,29.4A23,23,0,0,1,2.84,18c3.16-5.63,6.35-6.49,9.49-7.64L39.58.39A5.32,5.32,0,0,1,42.46.08l7.93,1.41L53.27,2a3,3,0,0,0-1.56.22L22.86,14.11s-10,3.1-10.05,19.82L14.07,57.8C14.41,63.78,17,65.63,17,65.63Z"/>
+        <path class="robox-icon" d="M55,2.24l52.5,9.48a3.6,3.6,0,0,0-.94.49L102.46,15,48.07,4.65l5.07-2.16A4.2,4.2,0,0,1,55,2.24Z"/>
+        <path class="robox-icon" d="M16.16,62.66a8.51,8.51,0,0,0,2.29,3.52l55.36,22s-.93-.89-1.3-3.63Z"/>
+        <path class="robox-icon" d="M88.37,55.82c-.16,1.31-.21,2.1-.21,2.14V58c0,.08-.32,3-.73,7l6.94-7.5Z"/>
+        <path class="robox-icon" d="M74.59,55.17c0-.19.08-1.34.29-3.07L48.07,44.7l-20.26,13,45.37,16.1Z"/>
+        <path class="robox-icon" d="M119.95,17.47a3.87,3.87,0,0,0-1.73-3.54l-8.37-1.61a1.46,1.46,0,0,0-1.23.26c-.76.46-6.56,4.78-6.56,4.78L85.76,29.54s-3.85,2.57-7.16,11.93a55.29,55.29,0,0,0-2.74,13.78L74,80.1s-.38,7.55,1.94,8.62c3.08,1.42,9.55,3.63,9.51,3.59a5.66,5.66,0,0,0,.66.08,4.1,4.1,0,0,0,2.64-1.17c.2-.26,20.44-26.11,21.57-27.57A19,19,0,0,1,113.95,60l.15-.1,0-.18c.28-2.32.71-5.41.71-5.41,0-.23,3.51-22.61,4.76-30.08A30.61,30.61,0,0,0,119.95,17.47Zm-1.16,6.63C117.53,31.56,114.06,54,114,54.19c0,0-.41,3-.69,5.26a20.25,20.25,0,0,0-3.67,3.71c-1.13,1.46-21.36,27.31-21.54,27.53a3.19,3.19,0,0,1-2.1.9,2.48,2.48,0,0,1-1.77-.94,7.2,7.2,0,0,1-.38-3.29c.44-5,3-29.47,3-29.47s.85-15,8.44-25l21.93-18.35.63.1a3.19,3.19,0,0,1,1.26,2.83A30.58,30.58,0,0,1,118.79,24.09Z"/>
+    </svg>
+</div>
+<div id="rbx10-image" class="pull-left" style="width:100px; height:100px; display:none;">
+    <svg height="100px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+        <path class="robox-icon" d="M32.85,0h-.22l-.28,0-.29.09-.29.14L30.53.89,4.52,15.8,4.2,16l-.31.24-.3.28-.3.32-.3.37-.29.4-.28.44-.27.47-.26.5-.25.53-.23.56-.22.59-.2.61L.81,22l-.17.64-.15.66-.13.67-.11.68-.09.68L.09,26,0,26.66l0,.68v1.34L.1,31,2.53,98.31v0l.08,2.11,0,.67.06.63.09.6.11.57.14.53.16.49.18.45.2.41.22.36.24.31.26.26.27.2.28.15.3.1.07,0,10.33,1.94L15,107.8l-.27-.2-.26-.26-.24-.31-.22-.36-.2-.41-.18-.45-.16-.49-.14-.53-.11-.57-.09-.6-.06-.63,0-.67-.08-2.11L12.74,93v-.54l7.75-38.11v-.57L20.1,33.71,20,30.84v-1l0-.49,0-.5,0-.5.06-.5.07-.5.07-.49.08-.49.09-.49.1-.48.11-.48.12-.47L21,24l.14-.45.14-.44.15-.43.16-.41.16-.4.17-.39.18-.37.18-.35.19-.34.19-.32.2-.3.2-.28.2-.26.2-.24L37.61,3.76,42.17,1ZM9.63,95.22l0,.18,0,.17-.07.16-.09.15L9.29,96l-.09.08,0,0-.14.1-.15.08-.16.05-.17,0H8.18l-.19,0-.18-.05-.18-.08-.18-.1L7.28,96l-.16-.13L7,95.72l-.13-.16-.11-.17-.1-.18L6.55,95l-.06-.19,0-.19,0-.19v-.19l0-.18,0-.17.07-.16.09-.15.11-.13.1-.09,0,0,.14-.1.15-.08.16-.05.17,0h.36l.19,0,.18.05.18.08.18.1.17.11.16.13.15.15.13.16.12.17.1.18.08.19.06.19,0,.19,0,.2ZM8.15,51.93,7.65,34.84l10,1.36L18,53.4Z"/>
+        <polygon class="robox-icon" points="34,83.59,47.7,71.19,70.19,74.77,69.92,89.64,34,83.59"/>
+        <polygon class="robox-icon" points="79.57,91.27,91.28,78.13,79.03,76.15,78.8,91.12,79.57,91.27"/>
+        <polygon class="robox-icon" points="94.91,7.92,96.19,6.86,43.2,1.13,41.58,2.1,94.91,7.92"/>
+        <path class="robox-icon" d="M105.33,12.84l0-.62,0-.6-.06-.56-.08-.53L105,10l-.11-.45-.12-.41-.13-.37-.15-.32-.16-.27L104.18,8,104,7.84l-.19-.11-.2-.06h0L97.17,7,75.46,24.47l-.25.22L75,25l-.24.31-.24.35-.24.39-.24.43-.23.47-.23.51-.22.54-.21.57-.2.6-.19.62-.18.64-.17.67-.15.68-.14.7-.13.71-.11.71-.1.72-.08.72-.07.72,0,.71,0,.7,0,.7-.07,2.66-.91,69.92,0,2.31v.69l0,.66,0,.62.06.59.08.55.09.5.11.46.13.41.15.36.16.31.18.25.19.2.2.14.22.08h.05L78.43,120h0l.17,0,.23,0,.24-.09.25-.14.25-.2.25-.25.26-.31,22.5-28.79,2.74-75.37,0-.69v-.66Zm-.76,1.3,0,.67-2.73,75.11L79.47,118.51l-.22.26-.2.2-.17.13-.14.08-.1,0h-.06l-.06,0-.07,0-.09-.1-.12-.17-.12-.23-.12-.29L77.9,118l-.11-.43-.09-.46-.07-.52-.05-.56,0-.59,0-.63v-.67l0-2.32,1.23-70.16.1-3.36,0-.69.05-.69.07-.7.08-.71.1-.71.11-.7.12-.7.14-.68.15-.67.16-.65.17-.63.18-.61.19-.58.2-.55.21-.52L81,28l.21-.45.22-.4.22-.36.2-.3.21-.27.2-.22.22-.2L102.33,9.27l.9-.67.15-.11.08,0h0l0,0,.07.07.1.13.11.19.12.25.12.31.11.38.1.41.09.46.07.5.06.53,0,.57,0,.6v1.26Z"/>
+        <polygon class="robox-icon" points="70.88,118.6,16.66,108.16,16.1,107.83,15.72,107.58,15.32,107.27,15,106.91,14.73,106.51,14.52,106.06,14.35,105.57,14.2,105.03,14.07,104.47,13.96,103.87,13.91,103.24,13.86,102.57,13.79,100.46,69.66,110.57,69.68,112.88,69.68,113.58,69.69,114.23,69.74,114.86,69.79,115.44,69.86,115.99,69.95,116.5,70.03,116.96,70.15,117.37,70.28,117.73,70.44,118.04,70.62,118.33,70.88,118.6"/>
+    </svg>
+</div>
+            </div>
+            <div class="col d-flex align-self-center hidden">
+                <p id="printer-name-field" class="no-margins"> .</p>
+            </div>
+        </div>
+        <div class="row filament filament-1" id="filament-1-row">
+            <div class="col">
+                <div class="row extruder-1">
+                    <div class="col filament-title">
+                        <p id="filament-1-title-field" class="no-margins">1: </p>
+                    </div>
+                    <div class="col-auto align-self-end filament-icon filament-1-icon" id="filament-1-icon-column">
+                        <div>
+    <div class="pull-right" style="font-size:0px;">
+        <svg id="filament-1-smart-icon" height="60px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 70" style="display:none;">
+            <path class="filament-1-icon" d="M36,70a34,34,0,0,1,67.92-2.08c0,.7.06,1.39.06,2.08h36c0-1.43,0-2.85-.12-4.3A70,70,0,0,0,0,70Zm90.77-22.93a4.05,4.05,0,0,1,5.11,2.58A64.78,64.78,0,0,1,134.38,60a3.58,3.58,0,0,1,0,.38,4,4,0,0,1-3.79,4.29l-13.4.82A4.06,4.06,0,0,1,113,62.16a43.65,43.65,0,0,0-1.47-5.8,11.88,11.88,0,0,0-1.41-2.9.81.81,0,0,1,.76-1.26,12.18,12.18,0,0,0,6.22-.93l9.34-4.06ZM96.5,34.16a12,12,0,0,0,4.91-3.92L107.47,22c.08-.09.15-.2.24-.29a4,4,0,0,1,5.71-.32,64.42,64.42,0,0,1,7.32,7.71c.08.09.15.2.23.31a4,4,0,0,1-1.14,5.6l-11.19,7.42a4.06,4.06,0,0,1-5.33-.75,42.52,42.52,0,0,0-4.16-4.29,12.36,12.36,0,0,0-2.68-1.82.75.75,0,0,1-.38-.41A.79.79,0,0,1,96.5,34.16ZM75,25.7a12.06,12.06,0,0,0,2.3-5.84L78.47,9.74a2.4,2.4,0,0,1,.07-.37,4,4,0,0,1,4.78-3.13,64.55,64.55,0,0,1,10.2,3,3,3,0,0,1,.35.14,4,4,0,0,1,1.82,5.42l-6,12a4.05,4.05,0,0,1-5,2A43.85,43.85,0,0,0,79,27.23,12.26,12.26,0,0,0,75.71,27a.85.85,0,0,1-.53-.16A.83.83,0,0,1,75,25.7ZM49.64,8.12A64.79,64.79,0,0,1,60,5.64l.38,0a4,4,0,0,1,4.29,3.78l.83,13.4A4,4,0,0,1,62.15,27a44.54,44.54,0,0,0-5.79,1.46,12.23,12.23,0,0,0-2.92,1.42.8.8,0,0,1-.53.13.81.81,0,0,1-.72-.9,12.3,12.3,0,0,0-.93-6.22l-4.07-9.34a2.72,2.72,0,0,1-.13-.36A4,4,0,0,1,49.64,8.12ZM21.42,26.58a65.35,65.35,0,0,1,7.71-7.32l.3-.23A4,4,0,0,1,35,20.18l7.41,11.19a4,4,0,0,1-.75,5.32,41.73,41.73,0,0,0-4.28,4.17,12.07,12.07,0,0,0-1.83,2.68.85.85,0,0,1-.4.39.82.82,0,0,1-1.06-.42,12.16,12.16,0,0,0-3.92-4.92L22,32.53c-.1-.07-.19-.16-.29-.23A4.05,4.05,0,0,1,21.42,26.58ZM9.23,46.48l.15-.35a4.07,4.07,0,0,1,5.44-1.82l12,6a4,4,0,0,1,2,5A44.09,44.09,0,0,0,27.21,61,12.36,12.36,0,0,0,27,64.28a.79.79,0,0,1-.15.53.81.81,0,0,1-1.13.17,12.14,12.14,0,0,0-5.85-2.3L9.72,61.53l-.37-.06a4.05,4.05,0,0,1-3.14-4.79A65.73,65.73,0,0,1,9.23,46.48Z"/>
+        </svg>
+        <svg id="filament-1-custom-icon" height="60px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 70" style="display:none">
+            <path class="filament-1-icon" d="M140,70V60.07a3.45,3.45,0,0,0-.73-2.15,3,3,0,0,0-1.92-1.14l-16.68-2.55a54.13,54.13,0,0,0-3.73-8.93q1.64-2.28,4.92-6.43t4.65-6a3.61,3.61,0,0,0,.73-2.1,2.92,2.92,0,0,0-.64-2q-3.28-4.65-15-15.49a3.53,3.53,0,0,0-2.28-.92,3,3,0,0,0-2.18.82L94.15,22.88A56.54,56.54,0,0,0,86,19.5L83.4,2.73A2.7,2.7,0,0,0,82.35.78,3.43,3.43,0,0,0,80.12,0H59.88A3.07,3.07,0,0,0,56.6,2.55,148.89,148.89,0,0,0,54,19.5,52.76,52.76,0,0,0,45.66,23L33.09,13.22a3.91,3.91,0,0,0-2.38-.92q-2,0-8.61,6.52a88.92,88.92,0,0,0-9,9.8,3.85,3.85,0,0,0-.83,2.1,3.47,3.47,0,0,0,.91,2.18Q19.32,40.3,23,45.48a45.67,45.67,0,0,0-3.56,8.39L2.46,56.42A2.74,2.74,0,0,0,.73,57.6,3.5,3.5,0,0,0,0,59.7V70H36a34,34,0,0,1,68,0Z"/>
+        </svg>
+        <svg id="filament-1-unknown-icon" height="60px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 70" style="display:none">
+            <path class="filament-1-icon" d="M139.88,65.71A70,70,0,0,0,0,70H36a34,34,0,0,1,67.91-2.08c0,.69.06,1.39.06,2.08h36C140,68.58,140,67.15,139.88,65.71ZM70.71,30.28a2.13,2.13,0,0,1-3,0A2,2,0,0,1,67,28.77a2.06,2.06,0,0,1,.16-.84,1.94,1.94,0,0,1,.47-.68,2.16,2.16,0,0,1,1.53-.65,2.14,2.14,0,0,1,1.52.65,2.05,2.05,0,0,1,.64,1.52A2,2,0,0,1,70.71,30.28Zm5.05-16.56a8.35,8.35,0,0,1-.5.94,8.52,8.52,0,0,1-.61.87q-.33.41-.69.78a9.46,9.46,0,0,1-.74.69c-.26.21-.51.43-.74.64l-.69.63a6.76,6.76,0,0,0-1.1,1.33,2.69,2.69,0,0,0-.45,1.52,4,4,0,0,0,.18,1.28l.19.54.19.44H67.24q-.08-.21-.15-.48c0-.18-.09-.37-.13-.59a5.16,5.16,0,0,1-.08-.66c0-.21,0-.42,0-.64a4.11,4.11,0,0,1,.41-1.81,7.4,7.4,0,0,1,1-1.52l.65-.69c.22-.23.45-.45.68-.66s.48-.44.7-.66l.64-.62a6.73,6.73,0,0,0,1-1.32,2.83,2.83,0,0,0,.42-1.5A2.58,2.58,0,0,0,72.1,11a2.87,2.87,0,0,0-.84-.93,2.62,2.62,0,0,0-.57-.32A4.14,4.14,0,0,0,70,9.47a6.72,6.72,0,0,0-.7-.13,6.28,6.28,0,0,0-.75,0,6.8,6.8,0,0,0-4.79,2.18V7.7a12,12,0,0,1,2.81-1.19,11.12,11.12,0,0,1,2.93-.39,9.18,9.18,0,0,1,2.57.34,6.2,6.2,0,0,1,2.13,1,4.79,4.79,0,0,1,1.44,1.66,5,5,0,0,1,.52,2.34A5.6,5.6,0,0,1,75.76,13.72Z"/>
+        </svg>
+        <svg id="filament-1-none-icon" height="60px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 70">
+            <defs> <style>.cls-1{fill:#414141;fill-rule:evenodd;}</style></defs>
+            <path class="cls-1" d="M139.88,65.71A70,70,0,0,0,0,70H36a34,34,0,0,1,67.91-2.08c0,.69.06,1.39.06,2.08h36C140,68.58,140,67.15,139.88,65.71ZM82.6,27.44l-3.85,3.85L70,22.54l-8.75,8.75L57.4,27.44l8.75-8.75L57.4,9.94l3.85-3.85L70,14.84l8.75-8.75L82.6,9.94l-8.75,8.75Z"/>
+        </svg>
+    </div>
+    <div id="filament-1-loaded-icon" style="position:absolute; right:66px; top:36px;">
+        <svg width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+            <path class="extruder-1" fill="#009ee3" d="M4.69,63.87l-4-4.31a2.84,2.84,0,0,1,.23-4L12.43,44.8a2.84,2.84,0,0,1,1.91-.7,3,3,0,0,1,1.14.23,2.37,2.37,0,0,1,.94.65L48,79.07,102.43,9A2.87,2.87,0,0,1,104.69,8a2.63,2.63,0,0,1,1.73.63l12.52,9.66a3.28,3.28,0,0,1,.72.91,2.29,2.29,0,0,1,.34,1.08,3.48,3.48,0,0,1-.63,2L49.46,112Z"/>
+        </svg>
+    </div>
+</div>
+                    </div>
+                </div>
+                <div class="row end-margin">
+                    <div class="col filament-description">
+                        <p id="filament-1-description-field" class="no-margins">. </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row filament filament-2" id="filament-2-row" style="margin-top:5px;">
+            <div class="col">
+                <div class="row">
+                    <div class="col extruder-2 filament-title">
+                        <p id="filament-2-title-field" class="no-margins">2:</p>
+                    </div>
+                    <div class="col-auto align-self-end filament-icon">
+                        <div>
+    <div class="pull-right" style="font-size:0px;">
+        <svg id="filament-2-smart-icon" height="60px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 70" style="display:none">
+            <path class="filament-2-icon" d="M36,70a34,34,0,0,1,67.92-2.08c0,.7.06,1.39.06,2.08h36c0-1.43,0-2.85-.12-4.3A70,70,0,0,0,0,70Zm90.77-22.93a4.05,4.05,0,0,1,5.11,2.58A64.78,64.78,0,0,1,134.38,60a3.58,3.58,0,0,1,0,.38,4,4,0,0,1-3.79,4.29l-13.4.82A4.06,4.06,0,0,1,113,62.16a43.65,43.65,0,0,0-1.47-5.8,11.88,11.88,0,0,0-1.41-2.9.81.81,0,0,1,.76-1.26,12.18,12.18,0,0,0,6.22-.93l9.34-4.06ZM96.5,34.16a12,12,0,0,0,4.91-3.92L107.47,22c.08-.09.15-.2.24-.29a4,4,0,0,1,5.71-.32,64.42,64.42,0,0,1,7.32,7.71c.08.09.15.2.23.31a4,4,0,0,1-1.14,5.6l-11.19,7.42a4.06,4.06,0,0,1-5.33-.75,42.52,42.52,0,0,0-4.16-4.29,12.36,12.36,0,0,0-2.68-1.82.75.75,0,0,1-.38-.41A.79.79,0,0,1,96.5,34.16ZM75,25.7a12.06,12.06,0,0,0,2.3-5.84L78.47,9.74a2.4,2.4,0,0,1,.07-.37,4,4,0,0,1,4.78-3.13,64.55,64.55,0,0,1,10.2,3,3,3,0,0,1,.35.14,4,4,0,0,1,1.82,5.42l-6,12a4.05,4.05,0,0,1-5,2A43.85,43.85,0,0,0,79,27.23,12.26,12.26,0,0,0,75.71,27a.85.85,0,0,1-.53-.16A.83.83,0,0,1,75,25.7ZM49.64,8.12A64.79,64.79,0,0,1,60,5.64l.38,0a4,4,0,0,1,4.29,3.78l.83,13.4A4,4,0,0,1,62.15,27a44.54,44.54,0,0,0-5.79,1.46,12.23,12.23,0,0,0-2.92,1.42.8.8,0,0,1-.53.13.81.81,0,0,1-.72-.9,12.3,12.3,0,0,0-.93-6.22l-4.07-9.34a2.72,2.72,0,0,1-.13-.36A4,4,0,0,1,49.64,8.12ZM21.42,26.58a65.35,65.35,0,0,1,7.71-7.32l.3-.23A4,4,0,0,1,35,20.18l7.41,11.19a4,4,0,0,1-.75,5.32,41.73,41.73,0,0,0-4.28,4.17,12.07,12.07,0,0,0-1.83,2.68.85.85,0,0,1-.4.39.82.82,0,0,1-1.06-.42,12.16,12.16,0,0,0-3.92-4.92L22,32.53c-.1-.07-.19-.16-.29-.23A4.05,4.05,0,0,1,21.42,26.58ZM9.23,46.48l.15-.35a4.07,4.07,0,0,1,5.44-1.82l12,6a4,4,0,0,1,2,5A44.09,44.09,0,0,0,27.21,61,12.36,12.36,0,0,0,27,64.28a.79.79,0,0,1-.15.53.81.81,0,0,1-1.13.17,12.14,12.14,0,0,0-5.85-2.3L9.72,61.53l-.37-.06a4.05,4.05,0,0,1-3.14-4.79A65.73,65.73,0,0,1,9.23,46.48Z"/>
+        </svg>
+        <svg id="filament-2-custom-icon" height="60px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 70" style="display:none">
+            <path class="filament-2-icon" d="M140,70V60.07a3.45,3.45,0,0,0-.73-2.15,3,3,0,0,0-1.92-1.14l-16.68-2.55a54.13,54.13,0,0,0-3.73-8.93q1.64-2.28,4.92-6.43t4.65-6a3.61,3.61,0,0,0,.73-2.1,2.92,2.92,0,0,0-.64-2q-3.28-4.65-15-15.49a3.53,3.53,0,0,0-2.28-.92,3,3,0,0,0-2.18.82L94.15,22.88A56.54,56.54,0,0,0,86,19.5L83.4,2.73A2.7,2.7,0,0,0,82.35.78,3.43,3.43,0,0,0,80.12,0H59.88A3.07,3.07,0,0,0,56.6,2.55,148.89,148.89,0,0,0,54,19.5,52.76,52.76,0,0,0,45.66,23L33.09,13.22a3.91,3.91,0,0,0-2.38-.92q-2,0-8.61,6.52a88.92,88.92,0,0,0-9,9.8,3.85,3.85,0,0,0-.83,2.1,3.47,3.47,0,0,0,.91,2.18Q19.32,40.3,23,45.48a45.67,45.67,0,0,0-3.56,8.39L2.46,56.42A2.74,2.74,0,0,0,.73,57.6,3.5,3.5,0,0,0,0,59.7V70H36a34,34,0,0,1,68,0Z"/>
+        </svg>
+        <svg id="filament-2-unknown-icon" height="60px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 70" style="display:none">
+            <path class="filament-2-icon" d="M139.88,65.71A70,70,0,0,0,0,70H36a34,34,0,0,1,67.91-2.08c0,.69.06,1.39.06,2.08h36C140,68.58,140,67.15,139.88,65.71ZM70.71,30.28a2.13,2.13,0,0,1-3,0A2,2,0,0,1,67,28.77a2.06,2.06,0,0,1,.16-.84,1.94,1.94,0,0,1,.47-.68,2.16,2.16,0,0,1,1.53-.65,2.14,2.14,0,0,1,1.52.65,2.05,2.05,0,0,1,.64,1.52A2,2,0,0,1,70.71,30.28Zm5.05-16.56a8.35,8.35,0,0,1-.5.94,8.52,8.52,0,0,1-.61.87q-.33.41-.69.78a9.46,9.46,0,0,1-.74.69c-.26.21-.51.43-.74.64l-.69.63a6.76,6.76,0,0,0-1.1,1.33,2.69,2.69,0,0,0-.45,1.52,4,4,0,0,0,.18,1.28l.19.54.19.44H67.24q-.08-.21-.15-.48c0-.18-.09-.37-.13-.59a5.16,5.16,0,0,1-.08-.66c0-.21,0-.42,0-.64a4.11,4.11,0,0,1,.41-1.81,7.4,7.4,0,0,1,1-1.52l.65-.69c.22-.23.45-.45.68-.66s.48-.44.7-.66l.64-.62a6.73,6.73,0,0,0,1-1.32,2.83,2.83,0,0,0,.42-1.5A2.58,2.58,0,0,0,72.1,11a2.87,2.87,0,0,0-.84-.93,2.62,2.62,0,0,0-.57-.32A4.14,4.14,0,0,0,70,9.47a6.72,6.72,0,0,0-.7-.13,6.28,6.28,0,0,0-.75,0,6.8,6.8,0,0,0-4.79,2.18V7.7a12,12,0,0,1,2.81-1.19,11.12,11.12,0,0,1,2.93-.39,9.18,9.18,0,0,1,2.57.34,6.2,6.2,0,0,1,2.13,1,4.79,4.79,0,0,1,1.44,1.66,5,5,0,0,1,.52,2.34A5.6,5.6,0,0,1,75.76,13.72Z"/>
+        </svg>
+        <svg id="filament-2-none-icon" height="60px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 70">
+            <defs> <style>.cls-1{fill:#414141;fill-rule:evenodd;}</style></defs>
+            <path class="cls-1" d="M139.88,65.71A70,70,0,0,0,0,70H36a34,34,0,0,1,67.91-2.08c0,.69.06,1.39.06,2.08h36C140,68.58,140,67.15,139.88,65.71ZM82.6,27.44l-3.85,3.85L70,22.54l-8.75,8.75L57.4,27.44l8.75-8.75L57.4,9.94l3.85-3.85L70,14.84l8.75-8.75L82.6,9.94l-8.75,8.75Z"/>
+        </svg>
+    </div>
+    <div id="filament-2-loaded-icon" style="position:absolute; right:66px; top:36px;">
+        <svg width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+            <path class="extruder-2" fill="#ff661b" d="M4.69,63.87l-4-4.31a2.84,2.84,0,0,1,.23-4L12.43,44.8a2.84,2.84,0,0,1,1.91-.7,3,3,0,0,1,1.14.23,2.37,2.37,0,0,1,.94.65L48,79.07,102.43,9A2.87,2.87,0,0,1,104.69,8a2.63,2.63,0,0,1,1.73.63l12.52,9.66a3.28,3.28,0,0,1,.72.91,2.29,2.29,0,0,1,.34,1.08,3.48,3.48,0,0,1-.63,2L49.46,112Z"/>
+        </svg>
+    </div>
+</div>
+                    </div>
+                </div>
+                <div class="row end-margin">
+                    <div class="col filament-description">
+                        <p id="filament-2-description-field" class="no-margins">. </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row temperature" id="temperature-row">
+            <div class="col-3 extruder-1">
+                <h1 class="text-center temperature-field" id="nozzle-1-temperature-field">°C </h1>
+                <p class="text-center temperature-label">Nozzle 1</p>
+            </div>
+            <div class="col-3 extruder-2">
+                <h1 class="text-center temperature-field" id="nozzle-2-temperature-field">°C </h1>
+                <p class="text-center temperature-label">Nozzle 2</p>
+            </div>
+            <div class="col-3 bed no-margins">
+                <h1 class="text-center temperature-field" id="bed-temperature-field">°C </h1>
+                <p class="text-center temperature-label">Bed </p>
+            </div>
+            <div class="col-3 ambient no-margins">
+                <h1 class="text-center temperature-field" id="ambient-temperature-field">°C </h1>
+                <p class="text-center temperature-label">Ambient </p>
+            </div>
+        </div>
+        <div class="row job-progress" id="job-progress-row">
+            <div class="col no-padding">
+                <div class="row margin-top">
+                    <div class="col align-self-center job-title no-margin">
+                        <p class="no-margins"><img src="assets/img/Icon-Model.svg" style="height:30px;margin:0px 10px 5px 0px;"><span id="job-title-field"> </span></p>
+                    </div>
+                    <div class="col-auto align-self-center job-profile">
+                        <p id="job-profile-field" class="no-margins">* </p>
+                    </div>
+                </div>
+                <div class="row no-margins">
+                    <div class="col align-self-center">
+                        <div class="horizontal-separator"></div>
+                    </div>
+                </div>
+                <div class="row no-margins">
+                    <div class="col align-self-center job-status">
+                        <p id="job-status-field" class="no-margins">Idle </p>
+                    </div>
+                    <div class="col-auto justify-content-center align-items-center align-content-center">
+                        <p id="job-etc-label" class="no-margins centred-text">~Time Remaining</p>
+                        <p id="job-etc-field" class="no-margins centred-text">* </p>
+                    </div>
+                </div>
+                <div class="row no-margins">
+                    <div class="col align-self-center">
+                        <div class="progress job-progress" id="job-progress-bar">
+                            <div class="progress-bar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">0%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row rbx-footer no-margins" id="footer-row">
+            <div class="col-4 d-flex justify-content-center no-padding">
+                <div class="row full-width">
+                    <div class="col" id="eject-1-col"><button class="btn btn-primary align-self-center footer-button" type="button" id="eject-1-button"><img src="assets/img/Icon-Eject-B.svg" id="eject-1-image" class="centred" style="width:60px;"></button></div>
+                    <div class="col hidden" id="eject-2-col"><button class="btn btn-primary align-self-center footer-button" type="button" id="eject-2-button"><img src="assets/img/Icon-Eject-2.svg" id="eject-2-image" class="centred" style="width:60px;"></button></div>
+                </div>
+            </div>
+            <div class="col-4 d-flex justify-content-center no-padding"><a class="btn btn-primary footer-button" role="button" href="main-menu.html"><img src="assets/img/Icon-Menu.svg" class="centred" style="width:60px;"></a></div>
+            <div class="col-4 d-flex justify-content-center no-padding">
+                <div class="row d-flex full-width no-margins">
+                    <div class="col no-padding" id="pause-resume-col"><button class="btn btn-primary footer-button" type="button" id="pause-resume-button"><img src="assets/img/Icon-Pause-B.svg" id="pause-resume-image" class="centred" style="width:60px;"></button></div>
+                    <div class="col no-padding hidden" id="cancel-col"><button class="btn btn-primary footer-button" type="button" id="cancel-button"><img src="assets/img/Icon-Cancel-B.svg" class="centred" style="width:60px;"></button></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/i18next.min.js"></script>
+    <script src="assets/js/i18nextBrowserLanguageDetector.min.js"></script>
+    <script src="assets/js/i18nextXHRBackend.min.js"></script>
+    <script src="assets/js/jquery-i18next.min.js"></script>
+    <script src="assets/js/jquery.base64.js"></script>
+    <script src="assets/js/core-vars.js"></script>
+    <script src="assets/js/core-funcs.js"></script>
+    <script src="assets/js/login.js"></script>
+    <script src="assets/js/home.js"></script>
+    <script src="assets/js/main-menu.js"></script>
+    <script src="assets/js/page-specific.js"></script>
+</body>
+
+</html>

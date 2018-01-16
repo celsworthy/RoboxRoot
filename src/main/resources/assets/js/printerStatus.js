@@ -249,21 +249,22 @@ function createPrinterSelector()
 
 function updatePrinterStatuses()
 {
-
-    for (var printerIndex = 0; printerIndex < connectedPrinterIDs.length; printerIndex++)
-    {
-        $("#no-printers-connected-text").hide();
-        var printerID = connectedPrinterIDs[printerIndex];
-        updateAndDisplayPrinterStatus(printerID);
-    }
-
     if (connectedPrinterIDs.length === 0)
     {
         $("#no-printers-connected-text").show();
         $(".numberOfPrintersDisplay").text(i18next.t("no") + " " + i18next.t("robox-attached"));
-    } else
+    } else if (connectedPrinterIDs.length = 1)
+	{
+		selectPrinter(connectedPrinterIDs[0]);
+	} else
     {
+        $("#no-printers-connected-text").hide();
         $(".numberOfPrintersDisplay").text(connectedPrinterIDs.length.valueOf() + " " + i18next.t("robox-attached"));
+		for (var printerIndex = 0; printerIndex < connectedPrinterIDs.length; printerIndex++)
+		{
+			var printerID = connectedPrinterIDs[printerIndex];
+			updateAndDisplayPrinterStatus(printerID);
+		}
     }
 }
 
@@ -287,7 +288,7 @@ function selectPrinter(printerID)
     selectedPrinterID = printerID;
     lastPrinterData = null;
     localStorage.setItem(selectedPrinterVar, printerID);
-    window.location.href = "printerDetails.html";
+    window.location.href = "/home.html";
 }
 
 function updateServerStatus(serverData)

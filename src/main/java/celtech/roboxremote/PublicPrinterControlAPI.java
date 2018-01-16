@@ -6,12 +6,16 @@ import celtech.roboxbase.printerControl.model.Head;
 import celtech.roboxbase.printerControl.model.Printer;
 import celtech.roboxbase.printerControl.model.PrinterException;
 import celtech.roboxbase.utils.PrinterUtils;
+import celtech.roboxremote.rootDataStructures.ControlStatusData;
+import celtech.roboxremote.rootDataStructures.HeadStatusData;
+import celtech.roboxremote.rootDataStructures.MaterialStatusData;
+import celtech.roboxremote.rootDataStructures.NameStatusData;
+import celtech.roboxremote.rootDataStructures.PrintJobStatusData;
 import celtech.roboxremote.rootDataStructures.StatusData;
 import celtech.roboxbase.comms.remote.clear.SuitablePrintJob;
 import celtech.roboxbase.configuration.Macro;
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.jersey.params.BooleanParam;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -56,6 +60,76 @@ public class PublicPrinterControlAPI
         if (PrinterRegistry.getInstance() != null)
         {
             returnVal = new StatusData();
+            returnVal.updateFromPrinterData(printerID);
+        }
+        return returnVal;
+    }
+
+    @GET
+    @Timed
+    @Path("headStatus")
+    public HeadStatusData getHeadStatus(@PathParam("printerID") String printerID)
+    {
+        HeadStatusData returnVal = null;
+        if (PrinterRegistry.getInstance() != null)
+        {
+            returnVal = new HeadStatusData();
+            returnVal.updateFromPrinterData(printerID);
+        }
+        return returnVal;
+    }
+
+    @GET
+    @Timed
+    @Path("materialStatus")
+    public MaterialStatusData getMaterialStatus(@PathParam("printerID") String printerID)
+    {
+        MaterialStatusData returnVal = null;
+        if (PrinterRegistry.getInstance() != null)
+        {
+            returnVal = new MaterialStatusData();
+            returnVal.updateFromPrinterData(printerID);
+        }
+        return returnVal;
+    }
+
+    @GET
+    @Timed
+    @Path("nameStatus")
+    public NameStatusData getNameStatus(@PathParam("printerID") String printerID)
+    {
+        NameStatusData returnVal = null;
+        if (PrinterRegistry.getInstance() != null)
+        {
+            returnVal = new NameStatusData();
+            returnVal.updateFromPrinterData(printerID);
+        }
+        return returnVal;
+    }
+
+    @GET
+    @Timed
+    @Path("printJobStatus")
+    public PrintJobStatusData getPrintJobStatus(@PathParam("printerID") String printerID)
+    {
+        PrintJobStatusData returnVal = null;
+        if (PrinterRegistry.getInstance() != null)
+        {
+            returnVal = new PrintJobStatusData();
+            returnVal.updateFromPrinterData(printerID);
+        }
+        return returnVal;
+    }
+
+    @GET
+    @Timed
+    @Path("controlStatus")
+    public ControlStatusData getControlStatus(@PathParam("printerID") String printerID)
+    {
+        ControlStatusData returnVal = null;
+        if (PrinterRegistry.getInstance() != null)
+        {
+            returnVal = new ControlStatusData();
             returnVal.updateFromPrinterData(printerID);
         }
         return returnVal;

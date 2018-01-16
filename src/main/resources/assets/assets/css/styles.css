@@ -1,0 +1,240 @@
+.centred {
+  position:absolute;
+  left:50%;
+  margin-right:-50%;
+  top:50%;
+  transform:translate(-50%, -50%);
+}
+
+.centred-text {
+  text-align:center;
+}
+
+.col.filament-description {
+  background-color:#414141;
+  font-size:26px;
+  margin:0px 15px 0px 15px;
+}
+
+.col.filament-title {
+  font-size:45px;
+  font-weight:700;
+  margin:0.0;
+}
+
+.col.mm-col {
+  padding:5px;
+  margin:0;
+}
+
+.col-3.ambient {
+  color:#1eb43c;
+}
+
+.col-3.bed {
+  color:#ffc800;
+}
+
+.col-auto.filament-icon {
+  margin:0px 0px 0px 0px;
+}
+
+.container.main-container {
+  margin:5px 5px 90px 5px;
+  height:calc(100vh - 100px);
+}
+
+.dimmed-section {
+  visibility:hidden;
+}
+
+.extruder-1 {
+  color:#009ee3;
+}
+
+.extruder-2 {
+  color:#ff661b;
+}
+
+.filament-1-description {
+  color:inherit;
+}
+
+.filament-1-icon {
+  background-color:inherit;
+}
+
+.footer-button {
+  width:100%;
+  height:90px;
+  background-color:black;
+  color:inherit;
+  border:none;
+}
+
+.footer-button.disabled {
+  background:black;
+}
+
+.full-width {
+  width:100%;
+}
+
+.hidden {
+  display:none;
+}
+
+.home-page {
+  background-color:#414141;
+  height:100vh;
+}
+
+.horizontal-separator {
+  height:2px;
+  margin:2px;
+  background-color:white;
+}
+
+#job-etc-field {
+  font-size:24px;
+  font-weight:300;
+}
+
+#job-etc-label {
+  font-size:16px;
+  font-weight:normal;
+}
+
+.job-profile {
+  font-size:24px;
+  font-weight:300;
+}
+
+.job-status {
+  font-size:32px;
+  font-weight:300;
+}
+
+.job-title {
+  font-size:32px;
+  font-weight:500;
+}
+
+.main-menu {
+  background-color:#414141;
+  height:100vh;
+}
+
+.main-menu-button {
+  width:100%;
+  height:100%;
+  background-color:#303030;
+  border:none;
+  margin:0;
+}
+
+.margin-top {
+  margin:5px;
+}
+
+.no-margins {
+  margin:0px;
+}
+
+.no-padding {
+  padding:0px;
+}
+
+.no-padding-bottom {
+  padding-bottom:0px;
+}
+
+.no-touch-action {
+  touch-action:none;
+}
+
+.printer-name {
+  font-size:48px;
+  line-height:48px;
+}
+
+#printer-name-field {
+  transform:translateY(-8px);
+}
+
+.print-status-icon {
+  height:30px;
+  margin:0px 10px 5px 0px;
+}
+
+.progress.job-progress {
+  background-color:rgba(255, 255, 255, 0.3);
+  margin:5px 0px 5px 0px;
+  height:30px;
+}
+
+.rbx-footer {
+  background-color:black;
+}
+
+.robox-icon {
+  color:#ffffff;
+}
+
+.row.end-margin {
+  margin-bottom:15px;
+}
+
+.row.filament {
+  background-color:#303030;
+  margin:0px 5px;
+}
+
+.row.filament-1 {
+}
+
+.row.filament-2 {
+  margin-top:5px;
+}
+
+.row.job-progress {
+  background-color:#009ee3;
+  color:white;
+  margin:5px;
+  padding:0 0 5px 0;
+  min-height:170px;
+  height:calc(100vh - 590px);
+}
+
+.row.main-menu {
+  background-color:#414141;
+  height:calc((100vh - 100px) / 3);
+  margin:0;
+}
+
+.row.printer-name {
+  background-color:#414141;
+  margin:5px;
+  height:163px;
+}
+
+.row.temperature {
+  margin:5px 5px 0px 5px;
+  background-color:#303030;
+}
+
+.temperature-field {
+  font-size:32px;
+  font-weight:700;
+  margin:0px;
+}
+
+.temperature-label {
+  font-size:18px;
+  margin:0px;
+}
+
+.trans-bckgnd {
+  background-color:rgba(0,0,0,0);
+}
+
