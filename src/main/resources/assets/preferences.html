@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoboxPro</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bitter">
+    <link rel="stylesheet" href="assets/css/bootstrap-colorselector.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body id="preferences-page" class="rbx-page no-touch-action">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <h3 class="localised rbx-title" data-i18n="identity">Identity </h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="input-group">
+                    <div class="input-group-addon"><span class="localised" data-i18n="name">Name </span></div><input class="form-control" type="text" id="printer-name-input">
+                    <div class="input-group-btn"><button class="btn btn-primary" type="button" data-i18n="update">Update </button></div>
+                </div>
+            </div>
+        </div>
+        <div class="row margin-top" id="colour-selector-row">
+            <div class="col">
+                <div class="input-group">
+    <div class="input-group-addon">
+        <span class="localised" data-i18n="colour">Colour</span>
+    </div>
+    <select id="colour-selector" data-colors-per-row="6">
+        <option value="1" data-color="#7F0000"></option>
+        <option value="2" data-color="#FF0000"></option>
+        <option value="3" data-color="#FF7F7F"></option>
+        <option value="4" data-color="#FF00FF"></option>
+        <option value="5" data-color="#FFFF00"></option>
+        <option value="6" data-color="#FF7F00"></option>
+        <option value="7" data-color="#FFFF00"></option>                                    
+        <option value="8" data-color="#007F00"></option>
+        <option value="9" data-color="#00FF00"></option>
+        <option value="10" data-color="#7FFF7F"></option>
+        <option value="11" data-color="#7FFF00"></option>
+        <option value="12" data-color="#00FF96"></option>
+        <option value="13" data-color="#7F7F7F"></option>
+        <option value="14" data-color="#00007F"></option>
+        <option value="15" data-color="#0000FF"></option>
+        <option value="16" data-color="#00FFFF"></option>
+        <option value="17" data-color="#7F7FFF"></option>
+        <option value="18" data-color="#7F00FF"></option>
+    </select>
+    <span class="input-group-btn">
+        <button class="btn btn-primary" type="button" data-i18n="update" onclick="changePrinterColour()">Update</button>
+    </span>
+</div>
+            </div>
+        </div>
+        <div class="row rbx-footer margin-top">
+            <div class="col d-flex justify-content-center mm-col no-padding"><a class="btn btn-primary footer-button" role="button" href="home.html"><img src="assets/img/Icon-Home.svg" class="centred" style="width:60px;"></a></div>
+        </div>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bootstrap-colorselector.min.js"></script>
+    <script src="assets/js/i18next.min.js"></script>
+    <script src="assets/js/i18nextBrowserLanguageDetector.min.js"></script>
+    <script src="assets/js/i18nextXHRBackend.min.js"></script>
+    <script src="assets/js/jquery-i18next.min.js"></script>
+    <script src="assets/js/jquery.base64.js"></script>
+    <script src="assets/js/core-vars.js"></script>
+    <script src="assets/js/core-funcs.js"></script>
+    <script src="assets/js/login.js"></script>
+    <script src="assets/js/home.js"></script>
+    <script src="assets/js/main-menu.js"></script>
+    <script src="assets/js/move.js"></script>
+    <script src="assets/js/preferences.js"></script>
+    <script src="assets/js/page-specific.js"></script>
+</body>
+
+</html>

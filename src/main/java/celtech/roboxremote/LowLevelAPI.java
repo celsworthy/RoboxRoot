@@ -77,6 +77,13 @@ public class LowLevelAPI
     {
         RoboxRxPacket rxPacket = null;
 
+        //steno.info("Request to write to printer with ID " + printerID + " and packet type " + remoteTx.getPacketType());
+        //String messagePayload = remoteTx.getMessagePayload();
+        //if (messagePayload != null)
+        //     steno.info("    Payload length " + Integer.toString(messagePayload.length()));
+        //if (remoteTx.getIncludeSequenceNumber())
+        //     steno.info("    Sequence number = " + Integer.toString(remoteTx.getSequenceNumber()));
+        
         if (PrinterRegistry.getInstance() != null
                 && !PrinterRegistry.getInstance().getRemotePrinterIDs().contains(printerID))
         {

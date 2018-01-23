@@ -1,4 +1,4 @@
- // Note "&nbsp;" (non-breaking space) is used to stop
+// Note "&nbsp;" (non-breaking space) is used to stop
 // empty lines from collapsing to zero height.
 
 var homeStatusText = "";
@@ -9,12 +9,14 @@ var homeTotalDurationSeconds = 0;
 var homeEtcSeconds = 0;
 var homeTimeElapsed = 0;
 var backgroundColour = 'Black';
-
-// brightness  =  sqrt( .241 R2 + .691 G2 + .068 B2 )
-// brightness > 130, use dark colour. Otherwise use light colour.
+// Debounce flag to prevent buttons from being clicked multiple times.
+// Flag is set when a button is pressed and cleared when the button status is refreshed.
+var homeDebounceFlag = true;
 
 function getComplimentaryColour(baseColour, darkColour, lightColour)
 {
+    // brightness  =  sqrt( .241 R2 + .691 G2 + .068 B2 )
+    // brightness > 130, use dark colour. Otherwise use light colour.
    var rgb = baseColour.match(/\d+/g).slice(0,3);
     var b = Math.sqrt(0.241 * rgb[0] * rgb[0] + 0.691 * rgb[1] * rgb[1] + 0.068 * rgb[2] * rgb[2]);
     if (b > 130)
@@ -51,13 +53,13 @@ function updateFilamentStatus(materialData, filamentIndex)
     var titleValue = null;
     var descriptionValue = null;
     var colourValue = "White";
-    var showLoadedIcon = false;
+    var showLoadedSign = false;
     var showNoneReelIcon = false;
     var showCustomReelIcon = false;
 
     if (materialData.attachedFilamentNames !== null)
     {
-        showLoadedIcon = materialData.materialLoaded[filamentIndex];
+        showLoadedSign = materialData.materialLoaded[filamentIndex];
         titleValue = "" + (filamentIndex + 1) + ": "
         if (materialData.attachedFilamentMaterials.length > filamentIndex)
         {
@@ -70,7 +72,7 @@ function updateFilamentStatus(materialData, filamentIndex)
             }
             else
             {
-                if (showLoadedIcon)
+                if (showLoadedSign)
                     descriptionValue = i18next.t("unknown");
                 else
                 {
@@ -85,7 +87,7 @@ function updateFilamentStatus(materialData, filamentIndex)
     var filamentName = "filament-" + (filamentIndex + 1);
     var titleField = "#" + filamentName + "-title-field";
     var iconClass = "." + filamentName + "-icon";
-    var loadedIcon = "#" + filamentName + "-loaded-icon"
+    var loadedSign = "#" + filamentName + "-loaded-sign"
     var smartReelIcon = "#" + filamentName + "-smart-icon"
     var customReelIcon = "#" + filamentName + "-custom-icon"
     var unknownReelIcon = "#" + filamentName + "-unknown-icon"
@@ -133,22 +135,25 @@ function updateFilamentStatus(materialData, filamentIndex)
             }
         }
  
-        if (showLoadedIcon)
-            $(loadedIcon).show();
+        if (showLoadedSign)
+            $(loadedSign).show();
         else
-            $(loadedIcon).hide();
+            $(loadedSign).hide();
     }
     else
     {
         $(titleField).html("&nbsp;")
         $(descriptionField).html("&nbsp");
-        $(loadedIcon).css("visibility", "hidden");
+        $(loadedSign).css("visibility", "hidden");
     }
 }
 
 function eject(materialNumber)
 {
-    sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/ejectFilament", null, null, materialNumber + 1);
+    var selectedPrinter = localStorage.getItem(selectedPrinterVar)
+    sendPostCommandToRoot(selectedPrinter + "/remoteControl/ejectFilament", null, null, materialNumber + 1);
+	getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus)
+	getStatusData(selectedPrinter, '/materialStatus', updateMaterialStatus)
 }
 
 function updateFilamentEjectStatus(materialData)
@@ -156,38 +161,32 @@ function updateFilamentEjectStatus(materialData)
     var enableEject1Button = false;
     var enableEject2Button = false;
 
-    if (materialData.attachedFilamentNames !== null && materialData.canEjectFilament)
+    if (materialData.attachedFilamentNames !== null && materialData.canEjectFilament !== null)
     {
         enableEject1Button = (materialData.canEjectFilament.length > 0 && materialData.canEjectFilament[0] === true);
         enableEject2Button = (materialData.canEjectFilament.length > 1 && materialData.canEjectFilament[1] === true);
     }
     
+    if (enableEject1Button)
+    {
+        $('#eject-1-button').removeClass("disabled");
+        $('#eject-1-button').on('click', function() { eject(0); });
+    } else
+    {
+        $('#eject-1-button').addClass("disabled");
+        $('#eject-1-button').on('click');
+    }
+
     if (enableEject2Button)
     {
-        $('#eject-2-col').show();
+        $('#eject-2-button').removeClass("disabled");
         $('#eject-2-button').on('click', function() { eject(1); });
     } else
     {
-        $('#eject-2-col').hide();
+        $('#eject-2-button').addClass("disabled");
+        $('#eject-2-button').on('click');
     }
-
-    if (enableEject1Button)
-    {
-        $('#eject-1-col').show();
-        $('#eject-1-button').removeClass("disabled");
-        $('#eject-1-button').on('click', function() { eject(0); });
-        $('#eject-1-image').attr('src', imageRoot + 'Icon-Eject-1.svg');
-    } else if (enableEject2Button)
-    {
-        $('#eject-1-col').hide();
-    }
-    else
-    {
-        $('#eject-1-col').show();
-        $('#eject-1-button').addClass("disabled");
-        $('#eject-1-button').on('click');
-        $('#eject-1-image').attr('src', imageRoot + 'Icon-Eject-B.svg');
-    }
+    $('.eject-button.disabled').css('background-color', 'rgba(0,0,0,0)')
 }
 
 function updateMaterialStatus(materialData)
@@ -350,17 +349,36 @@ function safetiesOn()
 
 function pausePrint()
 {
-    sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/pause", null, null, null);
+    if (homeDebounceFlag !== true)
+    {
+	    var selectedPrinter = localStorage.getItem(selectedPrinterVar);
+        sendPostCommandToRoot(selectedPrinter + "/remoteControl/pause", null, null, null);
+	    getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus)
+	    getStatusData(selectedPrinter, '/controlStatus', updateControlStatus)
+    }
 }
 
 function resumePrint()
 {
-    sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/resume", null, null, null);
+    if (homeDebounceFlag !== true)
+    {
+        var selectedPrinter = localStorage.getItem(selectedPrinterVar);
+        sendPostCommandToRoot(selectedPrinter + "/remoteControl/resume", null, null, null);
+        getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus)
+        getStatusData(selectedPrinter, '/controlStatus', updateControlStatus)
+    }
 }
 
 function cancelPrint()
 {
-    sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/cancel", null, null, safetiesOn().toString());
+    if (homeDebounceFlag !== true)
+    {
+        var selectedPrinter = localStorage.getItem(selectedPrinterVar);
+        sendPostCommandToRoot(selectedPrinter + "/remoteControl/cancel", null, null, safetiesOn().toString());
+        getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus)
+        getStatusData(selectedPrinter, '/controlStatus', updateControlStatus)
+        homeDebounceFlag = true;
+    }
 }
 
 function updateControlStatus(controlData)
@@ -385,53 +403,15 @@ function updateControlStatus(controlData)
     
     if (controlData.canCancel === true)
     {
-        $('#cancel-col').show();
+        $('#cancel-button').removeClass("disabled");
         $('#cancel-button').on('click', cancelPrint);
     }
     else
     {
-        $('#cancel-col').hide();
+        $('#cancel-button').addClass("disabled");
         $('#cancel-button').on('click');
     }
-
-//   if (controlData.canResume === true)
-//    {
-//        $('#pauseResumeButton').show();
-//        $('#pauseResumeButton').off('click');
-//        $('#pauseResumeButton').on('click', resumePrint);
-//        $('#pauseResumeButton > img').attr('src', 'robox-images/resume.png');
-//    } else if (controlData.canPause === true)
-//    {
-//        $('#pauseResumeButton').show();
-//        $('#pauseResumeButton').off('click');
-//        $('#pauseResumeButton').on('click', pausePrint;
-//        $('#pauseResumeButton > img').attr('src', 'robox-images/pause.png');
-//    } else
-//    {
-//        $('#pauseResumeButton').hide();
-//    }
-//
-//    setElementVisibility(controlData.canCancel, "cancelButton");
-//
-//    setElementDisabled(controlData.canPrint || controlData.canResume, "jogHeadButton");
-//    setElementDisabled(controlData.canPrint, "printJobButton");
-//    setElementDisabled(controlData.canPrint, "reprintButton");
-//    setElementDisabled(controlData.canPurgeHead, "purgeButton");
-//    setElementDisabled(controlData.canRemoveHead, "removeHeadButton");
-//
-//    if (printerData.canPrint)
-//    {
-//        $(".disabled-when-printer-busy").each(function ()
-//        {
-//            $(this).removeClass("disabled");
-//        });
-//    } else
-//    {
-//        $(".disabled-when-printer-busy").each(function ()
-//        {
-//            $(this).addClass("disabled");
-//        });
-//    }
+    homeDebounceFlag = false;
 }
 
 function updateHomeData(printerData)
@@ -443,17 +423,47 @@ function updateHomeData(printerData)
     updateHeadStatus(printerData);
     updatePrintJobStatus(printerData);
     updateControlStatus(printerData);
+    currentPrinterData = printerData;
+}
+
+function resolvePrinterID(printerID)
+{
+    if (printerID !== null)
+        return printerID;
+    else
+        return localStorage.getItem(selectedPrinterVar);
 }
 
 function getStatusData(printerID, statusName, callback)
 {
-    sendGetCommandToRoot(printerID + '/remoteControl' + statusName,
-            function (data)
-            {
-                callback(data);
-            },
-            goToPrinterStatusPage,
-            null);
+    var pr = resolvePrinterID(printerID);
+
+    if (pr !== null)
+    {
+        sendGetCommandToRoot(pr + '/remoteControl' + statusName,
+                function (data)
+                {
+                    callback(data);
+                },
+                goToPrinterStatusPage,
+                null);
+    }
+}
+
+function getPrinterStatus(printerID, callback)
+{
+    var pr = resolvePrinterID(printerID);
+    
+    if (pr !== null)
+    {
+        sendGetCommandToRoot(pr + '/remoteControl',
+                function (data)
+                {
+                    callback(data);
+                },
+                goToPrinterStatusPage,
+                null);
+    }
 }
 
 function getHomeData()
@@ -462,15 +472,31 @@ function getHomeData()
 	if (selectedPrinter !== null)
 	{
 		// Either get all the data in one lump
-		//getPrinterStatus(selectedPrinter, updateHomeData);
+		getPrinterStatus(selectedPrinter, updateHomeData);
 		// Or get the data in smaller segments.
-		getStatusData(selectedPrinter, '/nameStatus', updateNameStatus)
-		getStatusData(selectedPrinter, '/materialStatus', updateMaterialStatus)
-		getStatusData(selectedPrinter, '/headStatus', updateHeadStatus)
-		getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus)
-		getStatusData(selectedPrinter, '/controlStatus', updateControlStatus)
-		//setControlButtons(selectedPrinter);
+		//getStatusData(selectedPrinter, '/nameStatus', updateNameStatus)
+		//getStatusData(selectedPrinter, '/materialStatus', updateMaterialStatus)
+		//getStatusData(selectedPrinter, '/headStatus', updateHeadStatus)
+		//getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus)
+		//getStatusData(selectedPrinter, '/controlStatus', updateControlStatus)
 	}
 	else
 		goToPrinterStatusPage();
 }
+
+function startHomeUpdates()
+{
+	var selectedPrinter = localStorage.getItem(selectedPrinterVar);
+	if (selectedPrinter !== null)
+	{
+	    // Either get all the data in one lump
+		setInterval(function() { getPrinterStatus(null, updateHomeData); }, 2000);
+		// Or get the data in smaller segments.
+		//setInterval(function() { getStatusData(null, '/nameStatus', updateNameStatus); }, 2000);
+		//setInterval(function() { getStatusData(null, '/materialStatus', updateMaterialStatus); }, 1000);
+		//setInterval(function() { getStatusData(null, '/headStatus', updateHeadStatus); }, 1000);
+		//setInterval(function() { getStatusData(null, '/printJobStatus', updatePrintJobStatus); }, 500);
+		//setInterval(function() { getStatusData(null, '/controlStatus', updateControlStatus); }, 500);
+	}
+}
+

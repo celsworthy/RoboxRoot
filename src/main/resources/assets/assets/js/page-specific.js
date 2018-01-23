@@ -49,7 +49,15 @@ function page_initialiser() {
     $('#home-page').each(function(){
         titlei18n = "home-page";
         getHomeData();
-        setInterval(getHomeData, 2000);
+        startHomeUpdates();
+    });
+    $('#move-page').each(function(){
+        titlei18n = "move-page";
+        setupMovePage();
+    });
+    $('#preferences-page').each(function(){
+        titlei18n = "preferences-page";
+        setupPreferencesPage();
     });
     $('#login-page').each(function(){
         var enteredPIN = localStorage.getItem(applicationPINVar);

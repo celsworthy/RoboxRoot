@@ -82,6 +82,7 @@ public class StatusData
     {
         this.printerID = printerID;
         Printer printer = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+      
         printerName = printer.getPrinterIdentity().printerFriendlyNameProperty().get();
         printerTypeCode = printer.printerConfigurationProperty().get().getTypeCode();
         PrinterColourMap colourMap = PrinterColourMap.getInstance();

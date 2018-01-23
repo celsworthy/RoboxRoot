@@ -8,10 +8,11 @@
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bitter">
+    <link rel="stylesheet" href="assets/css/bootstrap-colorselector.min.css">
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 
-<body id="home-page" class="home-page no-touch-action">
+<body id="home-page" class="home rbx-page no-touch-action">
     <div class="container-fluid d-flex flex-column no-padding hidden" id="home-container">
         <div class="row printer-name" id="printer-name-row">
             <div class="col-auto d-flex align-self-center">
@@ -63,10 +64,15 @@
             <path class="cls-1" d="M139.88,65.71A70,70,0,0,0,0,70H36a34,34,0,0,1,67.91-2.08c0,.69.06,1.39.06,2.08h36C140,68.58,140,67.15,139.88,65.71ZM82.6,27.44l-3.85,3.85L70,22.54l-8.75,8.75L57.4,27.44l8.75-8.75L57.4,9.94l3.85-3.85L70,14.84l8.75-8.75L82.6,9.94l-8.75,8.75Z"/>
         </svg>
     </div>
-    <div id="filament-1-loaded-icon" style="position:absolute; right:66px; top:36px;">
+    <div id="filament-1-loaded-sign" class="hidden" style="position:absolute; right:45px; top:15px;">
+        <button class="btn btn-primary align-self-center eject-button" type="button" id="eject-1-button">
+            <img src="assets/img/Icon-Eject-1.svg" id="eject-1-image" class="centred" style="width:25px;">
+        </button>
+        <!--
         <svg width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
             <path class="extruder-1" fill="#009ee3" d="M4.69,63.87l-4-4.31a2.84,2.84,0,0,1,.23-4L12.43,44.8a2.84,2.84,0,0,1,1.91-.7,3,3,0,0,1,1.14.23,2.37,2.37,0,0,1,.94.65L48,79.07,102.43,9A2.87,2.87,0,0,1,104.69,8a2.63,2.63,0,0,1,1.73.63l12.52,9.66a3.28,3.28,0,0,1,.72.91,2.29,2.29,0,0,1,.34,1.08,3.48,3.48,0,0,1-.63,2L49.46,112Z"/>
         </svg>
+        -->
     </div>
 </div>
                     </div>
@@ -101,10 +107,15 @@
             <path class="cls-1" d="M139.88,65.71A70,70,0,0,0,0,70H36a34,34,0,0,1,67.91-2.08c0,.69.06,1.39.06,2.08h36C140,68.58,140,67.15,139.88,65.71ZM82.6,27.44l-3.85,3.85L70,22.54l-8.75,8.75L57.4,27.44l8.75-8.75L57.4,9.94l3.85-3.85L70,14.84l8.75-8.75L82.6,9.94l-8.75,8.75Z"/>
         </svg>
     </div>
-    <div id="filament-2-loaded-icon" style="position:absolute; right:66px; top:36px;">
+    <div id="filament-2-loaded-sign" class="hidden" style="position:absolute; right:45px; top:15px;">
+        <button class="btn btn-primary align-self-center eject-button" type="button" id="eject-2-button">
+            <img src="assets/img/Icon-Eject-2.svg" id="eject-2-image" class="centred" style="width:25px;">
+        </button>
+        <!--
         <svg width="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
             <path class="extruder-2" fill="#ff661b" d="M4.69,63.87l-4-4.31a2.84,2.84,0,0,1,.23-4L12.43,44.8a2.84,2.84,0,0,1,1.91-.7,3,3,0,0,1,1.14.23,2.37,2.37,0,0,1,.94.65L48,79.07,102.43,9A2.87,2.87,0,0,1,104.69,8a2.63,2.63,0,0,1,1.73.63l12.52,9.66a3.28,3.28,0,0,1,.72.91,2.29,2.29,0,0,1,.34,1.08,3.48,3.48,0,0,1-.63,2L49.46,112Z"/>
         </svg>
+        -->
     </div>
 </div>
                     </div>
@@ -136,7 +147,7 @@
         </div>
         <div class="row job-progress" id="job-progress-row">
             <div class="col no-padding">
-                <div class="row margin-top">
+                <div class="row no-margins margin-top">
                     <div class="col align-self-center job-title no-margin">
                         <p class="no-margins"><img src="assets/img/Icon-Model.svg" style="height:30px;margin:0px 10px 5px 0px;"><span id="job-title-field"> </span></p>
                     </div>
@@ -168,23 +179,14 @@
             </div>
         </div>
         <div class="row rbx-footer no-margins" id="footer-row">
-            <div class="col-4 d-flex justify-content-center no-padding">
-                <div class="row full-width">
-                    <div class="col" id="eject-1-col"><button class="btn btn-primary align-self-center footer-button" type="button" id="eject-1-button"><img src="assets/img/Icon-Eject-B.svg" id="eject-1-image" class="centred" style="width:60px;"></button></div>
-                    <div class="col hidden" id="eject-2-col"><button class="btn btn-primary align-self-center footer-button" type="button" id="eject-2-button"><img src="assets/img/Icon-Eject-2.svg" id="eject-2-image" class="centred" style="width:60px;"></button></div>
-                </div>
-            </div>
+            <div class="col-4 d-flex justify-content-center no-padding"><button class="btn btn-primary footer-button" type="button" id="pause-resume-button"><img src="assets/img/Icon-Pause-B.svg" id="pause-resume-image" class="centred" style="width:60px;"></button></div>
             <div class="col-4 d-flex justify-content-center no-padding"><a class="btn btn-primary footer-button" role="button" href="main-menu.html"><img src="assets/img/Icon-Menu.svg" class="centred" style="width:60px;"></a></div>
-            <div class="col-4 d-flex justify-content-center no-padding">
-                <div class="row d-flex full-width no-margins">
-                    <div class="col no-padding" id="pause-resume-col"><button class="btn btn-primary footer-button" type="button" id="pause-resume-button"><img src="assets/img/Icon-Pause-B.svg" id="pause-resume-image" class="centred" style="width:60px;"></button></div>
-                    <div class="col no-padding hidden" id="cancel-col"><button class="btn btn-primary footer-button" type="button" id="cancel-button"><img src="assets/img/Icon-Cancel-B.svg" class="centred" style="width:60px;"></button></div>
-                </div>
-            </div>
+            <div class="col-4 d-flex justify-content-center no-padding"><button class="btn btn-primary footer-button" type="button" id="cancel-button"><img src="assets/img/Icon-Cancel-B.svg" class="centred" style="width:60px;"></button></div>
         </div>
     </div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bootstrap-colorselector.min.js"></script>
     <script src="assets/js/i18next.min.js"></script>
     <script src="assets/js/i18nextBrowserLanguageDetector.min.js"></script>
     <script src="assets/js/i18nextXHRBackend.min.js"></script>
@@ -195,6 +197,8 @@
     <script src="assets/js/login.js"></script>
     <script src="assets/js/home.js"></script>
     <script src="assets/js/main-menu.js"></script>
+    <script src="assets/js/move.js"></script>
+    <script src="assets/js/preferences.js"></script>
     <script src="assets/js/page-specific.js"></script>
 </body>
 

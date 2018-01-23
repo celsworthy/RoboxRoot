@@ -1,9 +1,38 @@
+.borderless {
+  padding-top:0px;
+  padding-bottom:0px;
+  border:none;
+  padding-left:5px;
+  padding-right:5px;
+  outline:none;
+}
+
+.btn-colorselector {
+  width:100%;
+  height:34px;
+}
+
+.dropdown-colorselector .dropdown-toggle::after {
+  content:none;
+}
+
+.dropdown-colorselector {
+  width:100%;
+}
+
 .centred {
   position:absolute;
   left:50%;
   margin-right:-50%;
   top:50%;
   transform:translate(-50%, -50%);
+}
+
+.centred-grid-box {
+  display:flex;
+  align-content:center;
+  align-items:center;
+  justify-content:center;
 }
 
 .centred-text {
@@ -13,7 +42,7 @@
 .col.filament-description {
   background-color:#414141;
   font-size:26px;
-  margin:0px 15px 0px 15px;
+  margin:0;
 }
 
 .col.filament-title {
@@ -39,6 +68,11 @@
   margin:0px 0px 0px 0px;
 }
 
+#colour-selector-row {
+  height:calc(100vh - 175px);
+  min-height:150px;
+}
+
 .container.main-container {
   margin:5px 5px 90px 5px;
   height:calc(100vh - 100px);
@@ -53,7 +87,20 @@
 }
 
 .extruder-2 {
-  color:#ff661b;
+  color:rgb(255,102,27);
+}
+
+.eject-button {
+  background-color:inherit;
+  border:none;
+  outline:none;
+  color:inherit;
+  height:60px;
+  width:60px;
+}
+
+.eject-button.disabled {
+  background-color:rgb(65,65,65);
 }
 
 .filament-1-description {
@@ -70,23 +117,28 @@
   background-color:black;
   color:inherit;
   border:none;
+  outline:none;
 }
 
 .footer-button.disabled {
-  background:black;
+  background-color:black;
 }
 
 .full-width {
   width:100%;
 }
 
+#gcode-row {
+  margin-bottom:5px;
+  height:calc(100vh - 647px);
+  min-height:30px;
+}
+
 .hidden {
   display:none;
 }
 
-.home-page {
-  background-color:#414141;
-  height:100vh;
+.home {
 }
 
 .horizontal-separator {
@@ -120,9 +172,11 @@
   font-weight:500;
 }
 
+.jog-button:hover {
+  border-color:purple;
+}
+
 .main-menu {
-  background-color:#414141;
-  height:100vh;
 }
 
 .main-menu-button {
@@ -133,8 +187,12 @@
   margin:0;
 }
 
+.margin-bottom {
+  margin-top:5px;
+}
+
 .margin-top {
-  margin:5px;
+  margin-top:5px;
 }
 
 .no-margins {
@@ -145,8 +203,12 @@
   padding:0px;
 }
 
-.no-padding-bottom {
-  padding-bottom:0px;
+.col.no-padding {
+  padding:0;
+}
+
+.no-resize {
+  resize:none;
 }
 
 .no-touch-action {
@@ -177,8 +239,27 @@
   background-color:black;
 }
 
+.rbx-title {
+  color:white;
+}
+
 .robox-icon {
   color:#ffffff;
+}
+
+.rbx-button {
+  color:rgba(255,255,255,0.38);
+  background-color:rgba(0, 0, 0, 0);
+}
+
+.rbx-dialog {
+  color:white;
+  background-color:#414141;
+}
+
+.rbx-page {
+  background-color:#414141;
+  height:100vh;
 }
 
 .row.end-margin {
@@ -208,7 +289,7 @@
 
 .row.main-menu {
   background-color:#414141;
-  height:calc((100vh - 100px) / 3);
+  height:calc((100vh - 90px) / 3);
   margin:0;
 }
 
