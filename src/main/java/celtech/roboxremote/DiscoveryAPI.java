@@ -11,10 +11,12 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import libertysystems.stenographer.Stenographer;
 import libertysystems.stenographer.StenographerFactory;
@@ -34,7 +36,8 @@ public class DiscoveryAPI
     public DiscoveryAPI()
     {
     }
-
+    
+    
     @RolesAllowed("root")
     @GET
     @Timed
@@ -55,10 +58,10 @@ public class DiscoveryAPI
     }
 
     @GET
-    @Timed
+    @Timed(name = "getFingerprint")
     @Path("/whoareyou")
     @Consumes(MediaType.APPLICATION_JSON)
-    public WhoAreYouResponse getFingerprint()
+    public WhoAreYouResponse getFingerprint(@Context HttpServletRequest request)
     {
         if (PrinterRegistry.getInstance() != null)
         {
@@ -87,9 +90,10 @@ public class DiscoveryAPI
                 }
             } catch (SocketException e)
             {
-                steno.error("unable to get current IP " + e.getMessage());
+                steno.error("/whoareyou(" + request.getRemoteAddr() + "): unable to get current IP " + e.getMessage());
             }
 
+            steno.debug("/whoareyou(" + request.getRemoteAddr() + "): " + PrinterRegistry.getInstance().getServerName() + " - " + hostAddress);
             return new WhoAreYouResponse(PrinterRegistry.getInstance().getServerName(),
                     BaseConfiguration.getApplicationVersion(),
                     hostAddress);
