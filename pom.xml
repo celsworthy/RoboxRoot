@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>celtech</groupId>
     <artifactId>Root</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Root</name>
@@ -128,12 +128,12 @@
         <dependency>
             <groupId>celtech</groupId>
             <artifactId>RoboxBase</artifactId>
-            <version>1.0</version>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.github.toastshaman</groupId>
             <artifactId>dropwizard-auth-jwt</artifactId>
-            <version>1.0.2-0</version>
+            <version>1.1.2-0</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
