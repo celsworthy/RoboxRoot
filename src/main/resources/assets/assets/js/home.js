@@ -414,6 +414,37 @@ function updateControlStatus(controlData)
     homeDebounceFlag = false;
 }
 
+function clearActiveErrors()
+{
+    var pr = localStorage.getItem(selectedPrinterVar);
+
+    if (pr !== null)
+    {
+        sendPostCommandToRoot(pr + '/remoteControl/clearErrors',
+                function (data)
+                {
+                    $('#active-error-dialog').modal('hide');
+                },
+                goToPrinterStatusPage,
+                null);
+    }
+}
+
+function handleActiveErrors(activeErrorData)
+{
+    if (activeErrorData.activeErrors !== null &&
+	    activeErrorData.activeErrors.length > 0)
+    {
+        $('#error-text').val(activeErrorData.activeErrors[0]);
+        $('#clear-error-button').on('click', clearActiveErrors);
+        $('#active-error-dialog').modal('show');
+    }
+    else
+    {
+        $('#active-error-dialog').modal('hide');
+    }
+}
+
 function updateHomeData(printerData)
 {
     updateNameStatus(printerData);
@@ -497,6 +528,9 @@ function startHomeUpdates()
 		//setInterval(function() { getStatusData(null, '/headStatus', updateHeadStatus); }, 1000);
 		//setInterval(function() { getStatusData(null, '/printJobStatus', updatePrintJobStatus); }, 500);
 		//setInterval(function() { getStatusData(null, '/controlStatus', updateControlStatus); }, 500);
-	}
+
+        // Set off the error notifier.
+		setInterval(function() { getStatusData(null, '/activeErrorStatus', handleActiveErrors); }, 500);
+    }
 }
 

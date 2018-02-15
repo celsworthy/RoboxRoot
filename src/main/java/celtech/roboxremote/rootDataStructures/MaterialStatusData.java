@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  *
- * @author ianhudson
+ * @author taldhous
  */
 public class MaterialStatusData
 {

@@ -18,7 +18,7 @@ import javafx.scene.paint.Color;
 
 /**
  *
- * @author ianhudson
+ * @author taldhous
  */
 public class HeadStatusData
 {

@@ -12,7 +12,7 @@ import java.io.IOException;
 
 /**
  *
- * @author ianhudson
+ * @author taldhous
  */
 public class PrintJobStatusData
 {

@@ -1,6 +1,15 @@
 var titlei18n = "default";
 
 function page_initialiser() {
+    $('#filament-page').each(function(){
+        titlei18n = "filament-page";
+        setupFilamentPage();
+    });
+    $('#home-page').each(function(){
+        titlei18n = "home-page";
+        getHomeData();
+        startHomeUpdates();
+    });
     $('#index-page').each(function(){
         titlei18n = "indexPage";
         checkForMobileBrowser();
@@ -29,6 +38,37 @@ function page_initialiser() {
             logout();
         }
     })
+    $('#login-page').each(function(){
+        var enteredPIN = localStorage.getItem(applicationPINVar);
+        $("#application-pin-value").val(enteredPIN);
+        if (enteredPIN !== null
+            && enteredPIN !== "")
+        {
+            attemptLogin();
+        }
+    
+        $("#application-pin-value").on('keyup', function (e) {
+            if (e.keyCode === 13) {
+                attemptLogin();
+            }
+        });
+    });
+    $('#main-menu-page').each(function(){
+        titlei18n = "main-menu-page";
+        setupMainMenu();
+        });
+    $('#maintenance-page').each(function(){
+        titlei18n = "maintenance-page";
+        setupMaintenancePage();
+        });
+    $('#move-page').each(function(){
+        titlei18n = "move-page";
+        setupMovePage();
+    });
+    $('#preferences-page').each(function(){
+        titlei18n = "preferences-page";
+        setupPreferencesPage();
+    });
     $('#status-page').each(function(){
         titlei18n = "printer-status";
         $('#printer-select').change(function () {
@@ -46,33 +86,4 @@ function page_initialiser() {
         getPrinters();
         setInterval(getStatus, 2000);
     });
-    $('#home-page').each(function(){
-        titlei18n = "home-page";
-        getHomeData();
-        startHomeUpdates();
-    });
-    $('#move-page').each(function(){
-        titlei18n = "move-page";
-        setupMovePage();
-    });
-    $('#preferences-page').each(function(){
-        titlei18n = "preferences-page";
-        setupPreferencesPage();
-    });
-    $('#login-page').each(function(){
-        var enteredPIN = localStorage.getItem(applicationPINVar);
-        $("#application-pin-value").val(enteredPIN);
-        if (enteredPIN !== null
-            && enteredPIN !== "")
-        {
-            attemptLogin();
-        }
-    
-        $("#application-pin-value").on('keyup', function (e) {
-            if (e.keyCode === 13) {
-                attemptLogin();
-            }
-        });
-    });
-    $('#main-menu-page').each(setupMainMenu);
-}
+}v

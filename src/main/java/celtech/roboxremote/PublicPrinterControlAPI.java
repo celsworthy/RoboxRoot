@@ -6,6 +6,7 @@ import celtech.roboxbase.printerControl.model.Head;
 import celtech.roboxbase.printerControl.model.Printer;
 import celtech.roboxbase.printerControl.model.PrinterException;
 import celtech.roboxbase.utils.PrinterUtils;
+import celtech.roboxremote.rootDataStructures.ActiveErrorStatusData;
 import celtech.roboxremote.rootDataStructures.ControlStatusData;
 import celtech.roboxremote.rootDataStructures.HeadStatusData;
 import celtech.roboxremote.rootDataStructures.MaterialStatusData;
@@ -130,6 +131,20 @@ public class PublicPrinterControlAPI
         if (PrinterRegistry.getInstance() != null)
         {
             returnVal = new ControlStatusData();
+            returnVal.updateFromPrinterData(printerID);
+        }
+        return returnVal;
+    }
+    
+    @GET
+    @Timed
+    @Path("activeErrorStatus")
+    public ActiveErrorStatusData getActiveErrorStatus(@PathParam("printerID") String printerID)
+    {
+        ActiveErrorStatusData returnVal = null;
+        if (PrinterRegistry.getInstance() != null)
+        {
+            returnVal = new ActiveErrorStatusData();
             returnVal.updateFromPrinterData(printerID);
         }
         return returnVal;

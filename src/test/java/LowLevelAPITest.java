@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.ClassRule;
 import io.dropwizard.testing.junit.ResourceTestRule;
+import java.net.URL;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
@@ -21,6 +22,15 @@ import javax.ws.rs.core.Response;
  */
 public class LowLevelAPITest
 {
+    static
+    {
+        // Set the libertySystems config file property..
+        // The property is set in this static initializer because the configuration is loaded before the test is run.
+        URL applicationURL = LowLevelAPITest.class.getResource("/");
+        String configDir = applicationURL.getPath();
+        String configFile = configDir + "Root.configFile.xml";
+        System.setProperty("libertySystems.configFile", configFile);
+    }
 
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()

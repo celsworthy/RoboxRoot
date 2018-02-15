@@ -4,10 +4,15 @@ var colourSelectorName = "#colour-selector";
 function setupPreferencesPage()
 {
     $(colourSelectorName).colorselector();
-    getStatusData(null, '/nameStatus', updatePrefStatus);
+    getPreferencesStatus();
 }
 
-function updatePrefStatus(nameData)
+function getPreferencesStatus()
+{
+    getStatusData(null, '/nameStatus', updatePreferencesStatus);
+}
+
+function updatePreferencesStatus(nameData)
 {
     $('#printer-name-input').val(nameData.printerName);
     $(colourSelectorName).colorselector('setColor', nameData.printerWebColourString);
@@ -21,8 +26,11 @@ function renamePrinter()
         prefDebounceFlag = true;
         var newName = $('#printer-name-input').val();
         var selectedPrinter = localStorage.getItem(selectedPrinterVar);
-        sendPostCommandToRoot(selectedPrinter + "/remoteControl/renamePrinter", null, null, newName);
-        getStatusData(selectedPrinter, '/nameStatus', updatePrefStatus);
+        sendPostCommandToRoot(selectedPrinter + "/remoteControl/renamePrinter",
+                              getPreferencesStatus,
+                              null,
+                              newName);
+        
     }
 }
 
@@ -33,7 +41,6 @@ function changePrinterColour()
         prefDebounceFlag = true;
         var newColour = $(colourSelectorName).find(":selected").data('color');
         var selectedPrinter = localStorage.getItem(selectedPrinterVar);
-        sendPostCommandToRoot(selectedPrinter + "/remoteControl/changePrinterColour", null, null, newColour);
-        getStatusData(selectedPrinter, '/nameStatus', updatePrefStatus);
+        sendPostCommandToRoot(selectedPrinter + "/remoteControl/changePrinterColour", getPreferencesStatus, null, newColour);
     }
 }

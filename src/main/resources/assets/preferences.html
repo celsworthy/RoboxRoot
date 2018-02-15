@@ -22,15 +22,14 @@
         <div class="row">
             <div class="col">
                 <div class="input-group">
-                    <div class="input-group-addon"><span class="localised" data-i18n="name">Name </span></div><input class="form-control" type="text" id="printer-name-input">
-                    <div class="input-group-btn"><button class="btn btn-primary" type="button" data-i18n="update">Update </button></div>
+                    <div class="input-group-prepend d-flex align-items-center"><span class="input-group-text rbx-label rbx-pad-right localised" data-i18n="name">Name</span></div><input class="form-control" type="text" id="printer-name-input">
+                    <div class="input-group-append"><button class="btn btn-primary rbx-button" type="button" data-i18n="update">Update </button></div>
                 </div>
             </div>
         </div>
         <div class="row margin-top" id="colour-selector-row">
-            <div class="col">
-                <div class="input-group">
-    <div class="input-group-addon">
+            <div class="col"><div class="input-group">
+    <div class="input-group-addon no-padding rbx-pad-right rbx-label">
         <span class="localised" data-i18n="colour">Colour</span>
     </div>
     <select id="colour-selector" data-colors-per-row="6">
@@ -54,10 +53,9 @@
         <option value="18" data-color="#7F00FF"></option>
     </select>
     <span class="input-group-btn">
-        <button class="btn btn-primary" type="button" data-i18n="update" onclick="changePrinterColour()">Update</button>
+        <button class="btn btn-primary rbx-button" type="button" data-i18n="update" onclick="changePrinterColour()">Update</button>
     </span>
-</div>
-            </div>
+</div></div>
         </div>
         <div class="row rbx-footer margin-top">
             <div class="col d-flex justify-content-center mm-col no-padding"><a class="btn btn-primary footer-button" role="button" href="home.html"><img src="assets/img/Icon-Home.svg" class="centred" style="width:60px;"></a></div>
@@ -76,6 +74,8 @@
     <script src="assets/js/login.js"></script>
     <script src="assets/js/home.js"></script>
     <script src="assets/js/main-menu.js"></script>
+    <script src="assets/js/filament.js"></script>
+    <script src="assets/js/maintenance.js"></script>
     <script src="assets/js/move.js"></script>
     <script src="assets/js/preferences.js"></script>
     <script src="assets/js/page-specific.js"></script>
