@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="12.713194mm"
+   height="12.706083mm"
+   viewBox="0 0 12.713194 12.706083"
+   version="1.1"
+   id="svg7088"
+   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)"
+   sodipodi:docname="Icon-Nozzle-Left-B.svg">
+  <defs
+     id="defs7082" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="7.9195959"
+     inkscape:cx="4.7364178"
+     inkscape:cy="27.414114"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1174"
+     inkscape:window-height="652"
+     inkscape:window-x="318"
+     inkscape:window-y="105"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata7085">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-110.50031,-89.741941)">
+    <g
+       id="g2202"
+       transform="matrix(0.26458333,0,0,0.26458333,19.867258,-24.470625)"
+       style="fill:#ffffff;fill-opacity:1">
+      <g
+         id="g2200"
+         style="fill:#ffffff;fill-opacity:1">
+        <path
+           inkscape:connector-curvature="0"
+           id="path2198"
+           d="m 390.6,455.7 c 0,9.6 -6.1,18.6 -15,22.2 -9.1,3.8 -19.6,1.4 -26.4,-5.7 -6.8,-7.1 -8.6,-17.7 -4.4,-26.6 4.1,-8.7 13.3,-14.4 23,-13.9 12.4,0.6 22.8,11.5 22.8,24 z m -2.2,0 c 0,-9.7 -6.7,-18.4 -16,-21 -9.4,-2.6 -19.6,1.7 -24.6,10 -5,8.5 -3.5,19.4 3.4,26.3 6.8,6.7 17.3,8.4 25.7,3.8 7,-3.8 11.5,-11.2 11.5,-19.1 z"
+           class="st2"
+           style="fill:#ffffff;fill-opacity:1" />
+      </g>
+    </g>
+    <g
+       id="g2208"
+       transform="matrix(0.26458333,0,0,0.26458333,19.867258,-24.470625)"
+       style="fill:#eb672a;fill-opacity:1">
+      <polygon
+         class="st3"
+         points="364.6,470.4 366.1,470.4 366.1,466.9 359.2,460.4 359.2,448.9 353.3,448.9 353.3,459.4 "
+         id="polygon2204"
+         style="fill:#eb672a;fill-opacity:1" />
+      <polygon
+         class="st3"
+         points="368.5,470.4 367,470.4 367,466.9 374,460.4 374,448.9 379.9,448.9 379.9,459.4 "
+         id="polygon2206"
+         style="fill:#eb672a;fill-opacity:1" />
+    </g>
+    <polygon
+       class="st2"
+       points="369.6,440.9 363.6,440.9 363.6,451.6 366.6,456.4 369.6,451.6 "
+       id="polygon2210"
+       transform="matrix(0.26458333,0,0,0.26458333,19.867258,-24.470625)"
+       style="fill:#ffffff;fill-opacity:1" />
+  </g>
+</svg>

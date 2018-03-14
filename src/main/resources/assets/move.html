@@ -4,77 +4,48 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RoboxPro</title>
+    <title>Robox Root TA</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bitter">
-    <link rel="stylesheet" href="assets/css/bootstrap-colorselector.min.css">
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/OldCss.css">
+    <link rel="stylesheet" href="assets/css/RoboxRoot.css">
 </head>
 
-<body id="move-page" class="rbx-page no-touch-action">
-    <div class="container-fluid">
-        <div class="row no-margins no-padding centred-grid-box">
-            <div class="col-3 no-margins no-padding borderless"><button class="btn btn-primary no-padding borderless jog-button" type="button" id="jog-z-up-button"><img class="img-fluid" src="assets/img/Move/Move_A1.png" alt="zUp"></button></div>
-            <div class="col-3 no-margins no-padding borderless"><button class="btn btn-primary no-padding borderless jog-button" type="button" id="jog-extruder-1-out-button"><img class="img-fluid" src="assets/img/Move/Move_B2.png" alt="Reel 1 Out"></button></div>
-            <div class="col-3 no-margins no-padding borderless"><button class="btn btn-primary no-padding borderless jog-button" type="button"><img class="img-fluid" src="assets/img/Move/Move_C2.png" alt="Image of Reel 1"></button></div>
-            <div class="col-3 no-margins no-padding borderless"><button class="btn btn-primary no-padding borderless jog-button" type="button"><img class="img-fluid" src="assets/img/Move/Move_D2.png" alt="Reel 2 In" id="jog-extruder-1-in-button"></button></div>
+<body class="canvas-grey no-touch-action">
+    <div class="container page">
+        <div class="row panel" style="height: 10.25vh">
+            <div>
+                <div class="btn-group" role="group"><button class="btn btn-default" type="button"><img src="assets/img/-50 Arrow.svg" style="height:10.25vh; padding: 2.25vh 0.5vh 0vh 2.5vh;"></button><button class="btn btn-default" type="button"><img src="assets/img/-20 Arrow.svg" style="height:10.25vh; padding: 3.25vh 0vh 1vh 0.5vh;"></button>
+                    <button
+                        class="btn btn-default" type="button"><img src="assets/img/Material 1 Eject.svg" style="height:10.25vh; padding: 2.75vh 1.5vh 0.5vh;"></button><button class="btn btn-default" type="button"><img src="assets/img/+20 Arrow.svg" style="height:10.25vh; padding: 3.25vh 0.5vh 1vh 0vh;"></button>
+                        <button
+                            class="btn btn-default" type="button"><img src="assets/img/+50 Arrow.svg" style="height:10.25vh; padding: 2.25vh 0vh 0vh 0.5vh;"></button><button class="btn btn-default" type="button"><img src="assets/img/Material 1 Heat.svg" style="height:10.25vh;padding:3.375vh 2.5vh 0.875vh 2.25vh;"></button></div>
+            </div>
         </div>
-        <div class="row no-margins no-padding centred-grid-box">
-            <div class="col-3 no-margins no-padding borderless"><button class="btn btn-primary no-padding borderless jog-button" type="button"><img class="img-fluid" src="assets/img/Move/Move_A2.png" alt="Z"></button></div>
-            <div class="col-3 no-margins no-padding borderless"><button class="btn btn-primary no-padding borderless jog-button" type="button" id="jog-extruder-2-out-button"><img class="img-fluid" src="assets/img/Move/Move_B3.png" alt="Reel 1 Out"></button></div>
-            <div class="col-3 no-margins no-padding borderless"><button class="btn btn-primary no-padding borderless jog-button" type="button"><img class="img-fluid" src="assets/img/Move/Move_C3.png" alt="Image of Reel 2"></button></div>
-            <div class="col-3 no-margins no-padding borderless"><button class="btn btn-primary no-padding borderless jog-button" type="button" id="jog-extruder-2-in-button"><img class="img-fluid" src="assets/img/Move/Move_D3.png" alt="Reel 2 In"></button></div>
+        <div class="row panel">
+            <div>
+                <h2 class="label" style="width: 19.625vh; padding: 0vh 3vh 0vh 10.125vh;">Retract</h2>
+                <h2 class="label" style="width: 10.125vh; padding: 0vh 2.5vh;">Eject</h2>
+                <h2 class="label" style="width: 18vh; padding: 0vh 9vh 0vh 3vh;">Extrude</h2>
+                <h2 class="label" style="width: 18vh; padding: 0vh 0vh 0vh 0.8vh;">Heat</h2>
+            </div>
         </div>
-        <div class="row no-margins no-padding centred-grid-box">
-            <div class="col-3 no-margins no-padding borderless"><button class="btn btn-primary no-padding borderless jog-button" type="button" id="jog-z-down-button"><img class="img-fluid" src="assets/img/Move/Move_A3.png" alt="zDown"></button></div>
-            <div class="col-3 no-margins no-padding borderless"></div>
-            <div class="col-3 no-margins no-padding borderless"></div>
-            <div class="col-3 no-margins no-padding borderless"></div>
-        </div>
-        <div class="row no-margins no-padding centred-grid-box">
-            <div class="col-3 no-margins no-padding borderless"><button class="btn btn-primary no-padding borderless jog-button" type="button" id="jog-y-back-button"><img class="img-fluid" src="assets/img/Move/Move_A4.png" alt="Y Back"></button></div>
-            <div class="col-3 no-margins no-padding borderless"><button class="btn btn-primary no-padding borderless jog-button" type="button" id="jog-x-left-button"><img class="img-fluid" src="assets/img/Move/Move_B4.png" alt="X Left"></button></div>
-            <div class="col-3 no-margins no-padding borderless"><button class="btn btn-primary no-padding borderless jog-button" type="button"><img class="img-fluid" src="assets/img/Move/Move_C4.png" alt="X"></button></div>
-            <div class="col-3 no-margins no-padding borderless"><button class="btn btn-primary no-padding borderless jog-button" type="button" id="jog-x-right-button"><img class="img-fluid" src="assets/img/Move/Move_D4.png" alt="X Right"></button></div>
-        </div>
-        <div class="row no-margins no-padding centred-grid-box">
-            <div class="col-3 no-margins no-padding borderless"><button class="btn btn-primary no-padding borderless jog-button" type="button"><img class="img-fluid" src="assets/img/Move/Move_A5.png" alt="Y"></button></div>
-            <div class="col-3 no-margins no-padding borderless"><button class="btn btn-primary no-padding borderless jog-button" type="button" id="home-xyz-a-button"><img class="img-fluid" src="assets/img/Move/Move_B5.png" alt="Home XYZ"></button></div>
-            <div class="col-3 no-margins no-padding borderless"><button class="btn btn-primary no-padding borderless jog-button" type="button" id="switch-nozzles-a-button"><img class="img-fluid" src="assets/img/Move/Move_C5.png" alt="Switch nozzles"></button></div>
-            <div class="col-3 no-margins no-padding borderless"><button class="btn btn-primary no-padding borderless jog-button" type="button" id="open-close-nozzle-a-button"><img class="img-fluid" src="assets/img/Move/Move_D5.png" alt="Open/Close nozzle"></button></div>
-        </div>
-        <div class="row no-margins no-padding centred-grid-box">
-            <div class="col-3 no-margins no-padding borderless"><button class="btn btn-primary no-padding borderless jog-button" type="button" id="jog-y-forward-button"><img class="img-fluid" src="assets/img/Move/Move_A6.png" alt="Y Forward"></button></div>
-            <div class="col-3 no-margins no-padding borderless"><button class="btn btn-primary no-padding borderless jog-button" type="button" id="home-xyz-b-button"><img class="img-fluid" src="assets/img/Move/Move_B6.png" alt="Home XYZ"></button></div>
-            <div class="col-3 no-margins no-padding borderless"><button class="btn btn-primary no-padding borderless jog-button" type="button" id="switch-nozzles-b-button"><img class="img-fluid" src="assets/img/Move/Move_C6.png" alt="Switch nozzles"></button></div>
-            <div class="col-3 no-margins no-padding borderless"><button class="btn btn-primary no-padding borderless jog-button" type="button" id="open-close-nozzle-b-button"><img class="img-fluid" src="assets/img/Move/Move_D6.png" alt="Open/Close nozzle"></button></div>
-        </div>
-        <div class="row align-items-end align-content-end no-margins no-padding centred-grid-box" id="gcode-row">
-            <div class="col d-flex justify-content-end no-padding"><a class="btn btn-link borderless rbx-button" role="button" href="#" id="gcode-button">Enter GCode</a></div>
-        </div>
-        <div class="row rbx-footer">
-            <div class="col d-flex justify-content-center mm-col no-padding"><a class="btn btn-primary footer-button" role="button" href="home.html"><img src="assets/img/Icon-Home.svg" class="centred" style="width:60px;"></a></div>
-        </div>
-    </div>
-    <div class="modal fade" role="dialog" tabindex="-1" id="gcode-dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header rbx-dialog">
-                    <h4 class="modal-title">Send GCode</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                <div class="modal-body rbx-dialog">
-                    <div><textarea rows="2" readonly="" autocomplete="off" id="gcode-output" class="form-control no-resize"></textarea>
-                        <div class="input-group"><input class="form-control" type="text" id="gcode-input">
-                            <div class="input-group-append"><button class="btn btn-primary localised" type="button" id="send-gcode-button" data-i18n="sendGCode">Send GCode</button></div>
-                        </div>
-                    </div>
-                </div>
+        <div class="row panel" style="height: 10.25vh">
+            <div>
+                <div class="btn-group" role="group"><button class="btn btn-default" type="button"><img src="assets/img/-50 Arrow.svg" style="height:10.25vh; padding: 0vh 0.5vh 2.25vh 2.5vh;"></button><button class="btn btn-default" type="button"><img src="assets/img/-20 Arrow.svg" style="height:10.25vh; padding: 1vh 0vh 3.25vh 0.5vh;"></button>
+                    <button
+                        class="btn btn-default" type="button"><img src="assets/img/Material 1 Eject.svg" style="height:10.25vh; padding: 0.5vh 1.5vh 2.75vh;"></button><button class="btn btn-default" type="button"><img src="assets/img/+20 Arrow.svg" style="height:10.25vh; padding: 1vh 0.5vh 3.25vh 0vh;"></button>
+                        <button
+                            class="btn btn-default" type="button"><img src="assets/img/+50 Arrow.svg" style="height:10.25vh; padding: 0vh 0vh 2.25vh 0.5vh;"></button><button class="btn btn-default" type="button"><img src="assets/img/Material 1 Heat.svg" style="height:10.25vh;padding:0.875vh 2.5vh 3.375vh 2.25vh;"></button></div>
             </div>
         </div>
     </div>
+    <div class="container footer">
+        <div class="btn-group btn-group-justified" role="group"><a class="btn btn-default disabled menu-bottom-button invisible" role="button" href="#" id="left-button"> <img src="assets/img/Icon_Menu_Back.svg" class="menu-bottom-button-icon"></a><a class="btn btn-default menu-bottom-button" role="button" href="/menu-grid.html?main"
+                id="middle-button"> <img src="assets/img/Icon-Menu.svg" style="height:6.5vh;"></a><a class="btn btn-default disabled menu-bottom-button invisible" role="button" href="#" id="right-button"> <img src="assets/img/Icon_Menu_Next.svg" class="menu-bottom-button-icon"></a></div>
+    </div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/bootstrap-colorselector.min.js"></script>
     <script src="assets/js/i18next.min.js"></script>
     <script src="assets/js/i18nextBrowserLanguageDetector.min.js"></script>
     <script src="assets/js/i18nextXHRBackend.min.js"></script>
@@ -82,14 +53,18 @@
     <script src="assets/js/jquery.base64.js"></script>
     <script src="assets/js/core-vars.js"></script>
     <script src="assets/js/core-funcs.js"></script>
-    <script src="assets/js/login.js"></script>
+    <script src="assets/js/access-pin.js"></script>
+    <script src="assets/js/console.js"></script>
+    <script src="assets/js/head-eeprom.js"></script>
     <script src="assets/js/home.js"></script>
-    <script src="assets/js/main-menu.js"></script>
-    <script src="assets/js/filament.js"></script>
-    <script src="assets/js/maintenance.js"></script>
-    <script src="assets/js/move.js"></script>
-    <script src="assets/js/preferences.js"></script>
-    <script src="assets/js/page-specific.js"></script>
+    <script src="assets/js/job-progress.js"></script>
+    <script src="assets/js/login.js"></script>
+    <script src="assets/js/menu-horz.js"></script>
+    <script src="assets/js/print-adjust.js"></script>
+    <script src="assets/js/printer-colour.js"></script>
+    <script src="assets/js/printer-name.js"></script>
+    <script src="assets/js/purge.js"></script>
+    <script src="assets/js/page-init.js"></script>
 </body>
 
 </html>

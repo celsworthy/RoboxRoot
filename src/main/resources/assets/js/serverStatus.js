@@ -80,7 +80,7 @@ function enableWifi(state)
 
 function setWiFiCredentials()
 {
-    sendPostCommandToRoot("admin/setWiFiCredentials", null, null, $("#wifi-ssid").val() + ":" + $("#wifi-password").val());
+    sendPostCommandToRoot("admin/setWiFiCredentials", updateCurrentWifiState, updateCurrentWifiState, $("#wifi-ssid").val() + ":" + $("#wifi-password").val());
 }
 
 function updateCurrentWifiState()

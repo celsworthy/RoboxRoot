@@ -8,16 +8,16 @@ function checkForMobileBrowser()
     }
 }
 
-function goToPrinterStatusPage()
+function goToPage(page)
 {
     var enteredPIN = localStorage.getItem(applicationPINVar);
     if (enteredPIN !== null && enteredPIN !== "")
     {
         var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + enteredPIN);
-        console.log(" goToPrinterStatusPage - modified url = \"" + 'http://' + window.location.host + printerStatusPage + "\"");
+        console.log(" goToPage - modified url = \"" + 'http://' + window.location.host + page + "\"");
         $.ajax({
             //url: 'http://' + window.location.hostname + ':8080' + printerStatusPage,
-            url: clientURL + printerStatusPage,
+            url: clientURL + page,
             cache: true,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
@@ -25,8 +25,8 @@ function goToPrinterStatusPage()
             type: 'GET',
             success: function (data, textStatus, jqXHR) {
 //               location.href = 'http://' + window.location.hostname + ':8080' + printerStatusPage;
-                console.log(" goToPrinterStatusPage - modified location.href = \"" + 'http://' + window.location.host + printerStatusPage + "\"");
-                location.href = clientURL + printerStatusPage;
+                console.log(" goToPage - modified location.href = \"" + 'http://' + window.location.host + page + "\"");
+                location.href = clientURL + page;
             },
             error: function (data, textStatus, jqXHR) {
                 logout();
@@ -38,34 +38,14 @@ function goToPrinterStatusPage()
     }
 }
 
+function goToPrinterStatusPage()
+{
+    goToPage(printerStatusPage);
+}
+
 function goToHomePage()
 {
-    var enteredPIN = localStorage.getItem(applicationPINVar);
-    if (enteredPIN !== null && enteredPIN !== "")
-    {
-        var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + enteredPIN);
-        console.log(" goToPrinterStatusPage - modified url = \"" + 'http://' + window.location.host + printerStatusPage + "\"");
-        $.ajax({
-            //url: 'http://' + window.location.hostname + ':8080' + printerStatusPage,
-            url: clientURL + homePage,
-            cache: true,
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
-            },
-            type: 'GET',
-            success: function (data, textStatus, jqXHR) {
-//               location.href = 'http://' + window.location.hostname + ':8080' + printerStatusPage;
-                console.log(" goToPrinterHomePage - modified location.href = \"" + 'http://' + window.location.host + printerStatusPage + "\"");
-                location.href = clientURL + homePage;
-            },
-            error: function (data, textStatus, jqXHR) {
-                logout();
-            }
-        });
-    } else
-    {
-        logout();
-    }
+    goToPage(homePage);
 }
 
 function goToHomeOrPrinterStatus()
@@ -103,6 +83,7 @@ function sendGetCommandToRoot(service, successCallback, errorCallback, dataToSen
 {
     sendCommandToRoot('GET', service, successCallback, errorCallback, dataToSend);
 }
+
 function sendPostCommandToRoot(service, successCallback, errorCallback, dataToSend)
 {
     sendCommandToRoot('POST', service, successCallback, errorCallback, dataToSend);
@@ -137,43 +118,6 @@ function sendCommandToRoot(requestType, service, successCallback, errorCallback,
             }
         }
     });
-}
-
-function submitFormToRoot(service, successCallback, errorCallback, formData)
-{
-    var printerURL = serverURL + "/api/" + service + "/";
-    var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
-
-    $.ajax({
-        url: printerURL,
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
-        },
-        type: 'POST',
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false
-    }).success(function (data, textStatus, jqXHR)
-    {
-        if (successCallback !== null)
-        {
-            successCallback(data);
-        }
-    }).error(function (jqXHR, textStatus, errorThrown) {
-        if (errorCallback !== null)
-        {
-            errorCallback(textStatus);
-        }
-    });
-}
-
-function refreshStatusTable()
-{
-    $("table#printer-status")
-            .table("refresh")
-            // Trigger if the new injected markup contain links or buttons that need to be enhanced
-            .trigger("create");
 }
 
 function updateLocalisation()
@@ -227,7 +171,7 @@ function secondsToHM(secondsInput)
     return hoursString + ":" + minutesString;
 }
 
-function getServerStatus()
+function getServerStatus(successFunc, errorFunc)
 {
     sendGetCommandToRoot('discovery/whoareyou',
             function (data) {
@@ -278,6 +222,63 @@ function updateServerStatus(serverData)
     }
 }
 
+function onSpinnerClick()
+{
+    var btn = $(this);
+    var b = btn.closest('.rbx-spinner');
+    input = btn.parent().find('input');
+    var oldValue = Number(input.val());
+    var newValue = oldValue;
+    var step = input.attr('step');
+    if (step == null)
+        step = 1;
+    else
+       step = Number(step); 
+    if (btn.attr('data-dir') == 'up')
+    {
+        var maxLimit = input.attr('max');
+        oldValue += step
+        if (maxLimit == null ||
+            oldValue <= Number(maxLimit))
+        {
+            newValue = oldValue;
+        }
+    }
+    else // (btn.attr('data-dir') == 'down')
+    {
+        var minLimit = input.attr('min');
+        oldValue -= step
+        if (minLimit == null ||
+            oldValue >= Number(minLimit))
+        {
+            newValue = oldValue;
+        }
+    }
+    var precision = input.attr('precision');
+    if (precision == null)
+        precision = 0;
+    else
+       precision = Number(precision); 
+    input.val(newValue.toFixed(precision));
+    var callback = input.attr('callback');
+    if (callback != null && window.hasOwnProperty(callback))
+        window[callback](input.attr('id'), newValue);
+}
+
+function setHeaderAndFooter()
+{
+    $('.header-box').html(
+        "<a href='printerStatus.html'><img class='img-responsive' alt='Robox Logo' src='assets/img/Icon-Robox.svg' style='width:60px'></a>" +
+        "<p style='flex-grow: 1; font-size: 2em;' class='text-center no-margins localised' data-i18n='" + titlei18n + "'></p>" +
+        "<a href='printerStatus.html'><img class='img-responsive' alt='Root Logo' src='assets/img/Logo-Root.svg' style='width:60px'></a>");
+
+    $('.footer-box').html(
+        "<span class='text-center server-name-title footer-display' style='flex-grow: 1;'>No Server</span>" +
+        "<a class='btn footer-btn' href='printerStatus.html'><img class='img-fluid root-icon' alt='Home' src='assets/img/Icon-Home.svg'></a>" +
+        "<a class='btn footer-btn' href='serverStatus.html'><img class='img-fluid root-icon' altroot-icon='Setup' src='assets/img/Icon-Settings.svg' height='50'></a>" +
+        "<span class='text-center serverIP footer-display' style='flex-grow: 1;'>-</span>");
+}
+
 $(document).ready(function () {
     i18next.use(i18nextBrowserLanguageDetector)
             .use(i18nextXHRBackend)
@@ -314,16 +315,113 @@ $(document).ready(function () {
             });
 });
 
-function setHeaderAndFooter()
+function safetiesOn()
 {
-    $('.header-box').html(
-        "<a href='printerStatus.html'><img class='img-responsive' alt='Robox Logo' src='assets/img/Icon-Robox.svg' style='width:60px'></a>" +
-        "<p style='flex-grow: 1; font-size: 2em;' class='text-center no-margin localised' data-i18n='" + titlei18n + "'></p>" +
-        "<a href='printerStatus.html'><img class='img-responsive' alt='Root Logo' src='assets/img/Logo-Root.svg' style='width:60px'></a>");
+    var booleanStatus = false;
+    var safetyStatus = localStorage.getItem(safetiesOnVar);
+    if (safetyStatus === 'on')
+    {
+        booleanStatus = true;
+    }
+    return booleanStatus;
+}
 
-    $('.footer-box').html(
-        "<span class='text-center server-name-title footer-display' style='flex-grow: 1;'>No Server</span>" +
-        "<a class='btn footer-btn' href='printerStatus.html'><img class='img-fluid root-icon' alt='Home' src='assets/img/Icon-Home.svg'></a>" +
-        "<a class='btn footer-btn' href='serverStatus.html'><img class='img-fluid root-icon' altroot-icon='Setup' src='assets/img/Icon-Settings.svg' height='50'></a>" +
-        "<span class='text-center serverIP footer-display' style='flex-grow: 1;'>-</span>");
+function cancelAction()
+{
+    var selectedPrinter = localStorage.getItem(selectedPrinterVar);
+    sendPostCommandToRoot(selectedPrinter + "/remoteControl/cancel", null, null, safetiesOn().toString());
+}
+
+function setFooterButton(details, field)
+{
+    var item = '#' + field;
+    menu = details[field];
+    if (menu == null)
+    {
+        $(item).addClass('disabled')
+               .addClass('rbx-invisible');      
+    }
+    else
+    {
+        var icon = menu['icon'];
+        var href = menu['href'];
+        var action = menu['action'];
+        if (icon != null)
+            icon = '<img class = "menu-bottom-button-icon" src="' + imageRoot + icon + '" />';
+        else
+            icon = '&nbsp;';
+        if (href == null)
+            href = '#';
+        $(item).html(icon)
+               .attr('href', href)
+               .on('click', action)
+               .removeClass('disabled')
+               .removeClass('rbx-invisible');
+    }
+}
+
+function getMachineDetails()
+{
+    var printerType = localStorage.getItem(printerTypeVar);
+    var machineDetails = machineDetailsMap[printerType];
+    if (machineDetails == null)
+        machineDetails = machineDetailsMap['RBX01'];
+    return machineDetails;
+}
+
+function setMachineLogo()
+{    
+    var machineDetails = getMachineDetails();
+    setImageOnElement('.machine-logo', machineDetails['logo']);
+}
+
+function setTextFromField(details, field)
+{
+    var item = '#' + field;
+    var text = details[field];
+    if (text == null)
+    {
+        $(item).html("&nbsp;")
+               .closest('.row')
+               .addClass('rbx-hidden');      
+    }
+    else
+    {
+        $(item).html(i18next.t(text))
+               .closest('.row')
+               .removeClass('rbx-hidden');
+    }
+}
+
+function setImageOnElement(element, image)
+{
+    if (image == null)
+    {
+        $(element).attr('src', null)
+               .closest('.row')
+               .addClass('rbx-hidden');      
+    }
+    else
+    {
+        $(element).attr('src', imageRoot + image)
+                 .closest('.row')
+                 .removeClass('rbx-hidden');
+    }
+}
+
+function setImageFromField(details, field)
+{
+    setImageOnElement('#' + field, details[field]);
+}
+
+function getComplimentaryOption(baseColour, darkOption, lightOption)
+{
+    // brightness  =  sqrt( .241 R2 + .691 G2 + .068 B2 )
+    // brightness > 130, use dark colour. Otherwise use light colour.
+   var rgb = baseColour.match(/\d+/g).slice(0,3);
+    var b = Math.sqrt(0.241 * rgb[0] * rgb[0] + 0.691 * rgb[1] * rgb[1] + 0.068 * rgb[2] * rgb[2]);
+    if (b > 130)
+        return darkOption;
+    else
+        return lightOption;
 }

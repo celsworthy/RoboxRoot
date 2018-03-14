@@ -1,5 +1,6 @@
 package celtech.roboxremote;
 
+import celtech.roboxbase.comms.exceptions.RoboxCommsException;
 import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxbase.configuration.datafileaccessors.FilamentContainer;
 import celtech.roboxbase.printerControl.model.Head;
@@ -8,13 +9,16 @@ import celtech.roboxbase.printerControl.model.PrinterException;
 import celtech.roboxbase.utils.PrinterUtils;
 import celtech.roboxremote.rootDataStructures.ActiveErrorStatusData;
 import celtech.roboxremote.rootDataStructures.ControlStatusData;
+import celtech.roboxremote.rootDataStructures.HeadEEPROMData;
 import celtech.roboxremote.rootDataStructures.HeadStatusData;
 import celtech.roboxremote.rootDataStructures.MaterialStatusData;
 import celtech.roboxremote.rootDataStructures.NameStatusData;
 import celtech.roboxremote.rootDataStructures.PrintJobStatusData;
 import celtech.roboxremote.rootDataStructures.StatusData;
+import celtech.roboxremote.rootDataStructures.TargetValue;
 import celtech.roboxbase.comms.remote.clear.SuitablePrintJob;
 import celtech.roboxbase.configuration.Macro;
+import celtech.roboxremote.rootDataStructures.PrintAdjustData;
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.jersey.params.BooleanParam;
 import java.io.IOException;
@@ -61,6 +65,20 @@ public class PublicPrinterControlAPI
         if (PrinterRegistry.getInstance() != null)
         {
             returnVal = new StatusData();
+            returnVal.updateFromPrinterData(printerID);
+        }
+        return returnVal;
+    }
+
+    @GET
+    @Timed
+    @Path("headEEPROM")
+    public HeadEEPROMData getHeadEEPROMData(@PathParam("printerID") String printerID)
+    {
+        HeadEEPROMData returnVal = null;
+        if (PrinterRegistry.getInstance() != null)
+        {
+            returnVal = new HeadEEPROMData();
             returnVal.updateFromPrinterData(printerID);
         }
         return returnVal;
@@ -124,6 +142,20 @@ public class PublicPrinterControlAPI
 
     @GET
     @Timed
+    @Path("printAdjust")
+    public PrintAdjustData getPrintAdjust(@PathParam("printerID") String printerID)
+    {
+        PrintAdjustData returnVal = null;
+        if (PrinterRegistry.getInstance() != null)
+        {
+            returnVal = new PrintAdjustData();
+            returnVal.updateFromPrinterData(printerID);
+        }
+        return returnVal;
+    }
+
+    @GET
+    @Timed
     @Path("controlStatus")
     public ControlStatusData getControlStatus(@PathParam("printerID") String printerID)
     {
@@ -171,6 +203,133 @@ public class PublicPrinterControlAPI
             steno.exception("Exception whilst trying to print gcode file " + uploadedFileLocation, ex);
         }
         return Response.ok().build();
+    }
+    
+    @POST
+    @Timed
+    @Path("setHeadEEPROM")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response setNozzleParams(@PathParam("printerID") String printerID,
+                                    HeadEEPROMData eData)
+    {
+        Response response = null;
+        try
+        {
+            Printer printer = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+            if (printer != null)
+            {
+                printer.transmitWriteHeadEEPROM(
+                    eData.getTypeCode(),
+                    eData.getUniqueID(),
+                    (float)eData.getMaxTemp(),
+                    (float)eData.getBeta(),
+                    (float)eData.getTCal(),
+                    (float)eData.getNozzle0XOffset(),
+                    (float)eData.getNozzle0YOffset(),
+                    (float)eData.getNozzle0ZOverrun(),
+                    (float)eData.getNozzle0BOffset(),
+                    "",
+                    "",
+                    (float)eData.getNozzle1XOffset(),
+                    (float)eData.getNozzle1YOffset(),
+                    (float)eData.getNozzle1ZOverrun(),
+                    (float)eData.getNozzle1BOffset(),
+                    (float)eData.getNozzle0LastFTemp(),
+                    (float)eData.getNozzle1LastFTemp(),
+                    (float)eData.getHourCount());
+                response = Response.ok().build();
+            }
+        } catch (RoboxCommsException ex)
+        {
+        }
+        finally
+        {
+            if (response == null)
+                response = Response.serverError().build();
+        }
+        
+        return response;
+    }
+
+    @POST
+    @Timed
+    @Path("setParamTarget")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response setParameterTarget(@PathParam("printerID") String printerID,
+                                       TargetValue tData)
+    {
+        boolean ok = true;
+        try
+        {
+            Printer printer = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+            if (printer != null)
+            {
+                switch(tData.getName())
+                {
+                    case "temp":
+                        switch(tData.getTag())
+                        {
+                            case "bed":
+                                printer.setBedTargetTemperature(Math.round(tData.getValue()));
+                                break;
+                            case "1":
+                                if (printer.headProperty().get().headTypeProperty().get() == Head.HeadType.DUAL_MATERIAL_HEAD)
+                                {
+                                    printer.setNozzleHeaterTargetTemperature(1, Math.round(tData.getValue()));
+                                } else
+                                {
+                                    printer.setNozzleHeaterTargetTemperature(0, Math.round(tData.getValue()));
+                                }
+                                break;
+                            case "2":
+                                printer.setNozzleHeaterTargetTemperature(0, Math.round(tData.getValue()));
+                                break;
+                            default:
+                                ok = false;
+                        }  
+                        break;
+                    case "flowRate":
+                        switch(tData.getTag())
+                        {
+                            case "1":
+                                printer.changeEFeedRateMultiplier(0.01 * tData.getValue());
+                                break;
+                            case "2":
+                                printer.changeDFeedRateMultiplier(0.01 * tData.getValue());
+                                break;
+                            default:
+                                ok = false;
+                        }  
+                        break;
+                    case "printSpeed":
+                        switch(tData.getTag())
+                        {
+                            case "1":
+                                printer.changeFilamentInfo("E", printer.extrudersProperty().get(0).filamentDiameterProperty().get(), 0.01 * tData.getValue());
+                                break;
+                            case "2":
+                                printer.changeFilamentInfo("D", printer.extrudersProperty().get(1).filamentDiameterProperty().get(), 0.01 * tData.getValue());
+                                break;
+                            default:
+                                ok = false;
+                        }  
+                        break;
+                    default:
+                        ok = false;
+                }
+            }
+        }
+        catch (PrinterException ex)
+        {
+            ok = false;
+        }
+        Response response = null;
+        if (ok)
+            response = Response.ok().build();
+        else
+            response = Response.serverError().build();
+        
+        return response;
     }
 
     @POST
@@ -366,7 +525,7 @@ public class PublicPrinterControlAPI
     @POST
     @Timed
     @Path("/ejectFilament")
-    public void removeHead(@PathParam("printerID") String printerID, int filamentNumber)
+    public void ejectFilament(@PathParam("printerID") String printerID, int filamentNumber)
     {
         if (PrinterRegistry.getInstance() != null)
         {
@@ -376,6 +535,95 @@ public class PublicPrinterControlAPI
             } catch (PrinterException ex)
             {
                 steno.error("Exception whilst ejecting filament " + filamentNumber + ": " + ex);
+            }
+        }
+    }
+
+    /**
+     *
+     * Expects nozzle number to be 1 or 2
+     *
+     * @param printerID
+     * @param nozzleNumber
+     * @param safetyOn
+    */
+    @POST
+    @Timed
+    @Path("/ejectStuckMaterial")
+    public void ejectStuckFilament(@PathParam("printerID") String printerID, int nozzleNumber)//, BooleanParam safetyOn)
+    {
+        if (PrinterRegistry.getInstance() != null)
+        {
+            try
+            {
+                PrinterRegistry.getInstance().getRemotePrinters().get(printerID).ejectStuckMaterial(nozzleNumber - 1, false, null, false);// safetyOn.get());
+            } catch (PrinterException ex)
+            {
+                steno.error("Exception whilst ejecting stuck material" + nozzleNumber + ": " + ex);
+            }
+        }
+    }
+    
+    /**
+     *
+     * Expects nozzle number to be 1 or 2
+     *
+     * @param printerID
+     * @param nozzleNumber
+     * @param safetyOn
+     */
+    @POST
+    @Timed
+    @Path("/cleanNozzle")
+    public void cleanNozzle(@PathParam("printerID") String printerID, int nozzleNumber)//, BooleanParam safetyOn)
+    {
+        if (PrinterRegistry.getInstance() != null)
+        {
+            try
+            {
+                PrinterRegistry.getInstance().getRemotePrinters().get(printerID).cleanNozzle(nozzleNumber - 1, false, null, false);// safetyOn.get());
+            } catch (PrinterException ex)
+            {
+                steno.error("Exception whilst cleaning nozzle" + nozzleNumber + ": " + ex);
+            }
+        }
+    }
+    
+/**
+     *
+     * @param printerID
+     * @param nozzleNumber
+    */
+    @POST
+    @Timed
+    @Path("/performTest")
+    public void performTest(@PathParam("printerID") String printerID, String test)
+    {
+        if (PrinterRegistry.getInstance() != null)
+        {
+            try
+            {
+                Printer p = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+                switch (Utils.cleanInboundJSONString(test).toLowerCase())
+                {
+                    case "x":
+                        p.testX(false, null);
+                        break;
+                    case "y":
+                        p.testY(false, null);
+                        break;
+                    case "z":
+                        p.testZ(false, null);
+                        break;
+                    case "s":
+                        p.speedTest(true, null);
+                        break;
+                        
+                }
+                
+            } catch (PrinterException ex)
+            {
+                steno.error("Exception whilst performing test " + test + ": " + ex);
             }
         }
     }
