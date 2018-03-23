@@ -20,6 +20,7 @@ public class MaterialStatusData
     private String[] attachedFilamentMaterials = null;
     private String[] attachedFilamentWebColours = null;
     private boolean[] attachedFilamentCustomFlags = null;
+    private int[] attachedFilamentTemp = null;
     private boolean[] canEjectFilament = null;
     private boolean[] materialLoaded = null;
 
@@ -40,12 +41,13 @@ public class MaterialStatusData
         {
             numberOfExtruders = 2;
         }
-        
+                
         canEjectFilament = new boolean[numberOfExtruders];
         attachedFilamentNames = new String[numberOfExtruders];
         attachedFilamentMaterials = new String[numberOfExtruders];
         attachedFilamentWebColours = new String[numberOfExtruders];
         attachedFilamentCustomFlags = new boolean[numberOfExtruders];
+        attachedFilamentTemp = new int[numberOfExtruders];
         materialLoaded = new boolean[numberOfExtruders];
         for (int extruderNumber = 0; extruderNumber < numberOfExtruders; extruderNumber++)
         {
@@ -59,6 +61,7 @@ public class MaterialStatusData
                 attachedFilamentMaterials[extruderNumber] = filament.getMaterial().toString();
                 attachedFilamentWebColours[extruderNumber] = "#" + ColourStringConverter.colourToString(filament.getDisplayColourProperty().get());
                 attachedFilamentCustomFlags[extruderNumber] = filament.isMutable();
+                attachedFilamentTemp[extruderNumber] = filament.getNozzleTemperature();
             }
 
             materialLoaded[extruderNumber] = printer.extrudersProperty().get(extruderNumber).filamentLoadedProperty().get();
@@ -127,6 +130,16 @@ public class MaterialStatusData
     public void setAttachedFilamentCustomFlags(boolean[] attachedFilamentCustomFlags)
     {
         this.attachedFilamentCustomFlags = attachedFilamentCustomFlags;
+    }
+
+    public int[] getAttachedFilamentTemp()
+    {
+        return attachedFilamentTemp;
+    }
+
+    public void setAttachedFilamentTemp(int[] attachedFilamentTemp)
+    {
+        this.attachedFilamentTemp = attachedFilamentTemp;
     }
 
     public boolean[] getMaterialLoaded()

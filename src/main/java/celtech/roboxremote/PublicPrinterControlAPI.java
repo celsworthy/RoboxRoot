@@ -19,6 +19,7 @@ import celtech.roboxremote.rootDataStructures.TargetValue;
 import celtech.roboxbase.comms.remote.clear.SuitablePrintJob;
 import celtech.roboxbase.configuration.Macro;
 import celtech.roboxremote.rootDataStructures.PrintAdjustData;
+import celtech.roboxremote.rootDataStructures.PurgeTarget;
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.jersey.params.BooleanParam;
 import java.io.IOException;
@@ -183,6 +184,7 @@ public class PublicPrinterControlAPI
     }
 
     @POST
+    @Timed
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("printGCodeFile")
@@ -405,91 +407,115 @@ public class PublicPrinterControlAPI
         }
     }
 
+    private void doPurge(String printerID, int targetTemperature0, int targetTemperature1, boolean safetyOn)
+    {
+        if (PrinterRegistry.getInstance() != null)
+        {
+            Printer printer = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+            if (printer != null)
+            {
+                Thread purgeThread = new Thread(() ->
+                {
+                    int nozzle0Temperature = targetTemperature0;
+                    int nozzle1Temperature = targetTemperature1;
+
+                    if (printer.headProperty().get().headTypeProperty().get() == Head.HeadType.DUAL_MATERIAL_HEAD)
+                    {
+                        if (nozzle1Temperature == 0 && printer.effectiveFilamentsProperty().get(0) != FilamentContainer.UNKNOWN_FILAMENT)
+                        {
+                            nozzle1Temperature = printer.effectiveFilamentsProperty().get(0).getNozzleTemperature();
+                        }
+                        if (nozzle0Temperature == 0 && printer.effectiveFilamentsProperty().get(1) != FilamentContainer.UNKNOWN_FILAMENT)
+                        {
+                            nozzle0Temperature = printer.effectiveFilamentsProperty().get(1).getNozzleTemperature();
+                        }
+                    }
+                    boolean purgeNozzle0 = (nozzle0Temperature > 0);
+                    boolean purgeNozzle1 = (nozzle1Temperature > 0);
+
+                    try
+                    {
+                        //Set the bed to 90 degrees C
+                        int desiredBedTemperature = 90;
+                        printer.setBedTargetTemperature(desiredBedTemperature);
+                        printer.goToTargetBedTemperature();
+                        boolean bedHeatFailed = PrinterUtils.waitUntilTemperatureIsReached(
+                                printer.getPrinterAncillarySystems().bedTemperatureProperty(), null,
+                                desiredBedTemperature, 5, 600, null);
+
+                        if (!bedHeatFailed)
+                        {
+                            if (purgeNozzle0)
+                            {
+                                printer.setNozzleHeaterTargetTemperature(0, nozzle0Temperature);
+                                printer.goToTargetNozzleHeaterTemperature(0);
+                            }
+
+                            if (purgeNozzle1)
+                            {
+                                printer.setNozzleHeaterTargetTemperature(1, nozzle1Temperature);
+                                printer.goToTargetNozzleHeaterTemperature(1);
+                            }
+
+                            boolean nozzleHeatFailed = false;
+
+                            if (purgeNozzle0)
+                            {
+                                nozzleHeatFailed = PrinterUtils.waitUntilTemperatureIsReached(
+                                        printer.headProperty().get().getNozzleHeaters().get(0).nozzleTemperatureProperty(),
+                                        null, nozzle0Temperature, 5, 300, null);
+                            }
+
+                            if (purgeNozzle1 && !nozzleHeatFailed)
+                            {
+                                nozzleHeatFailed = PrinterUtils.waitUntilTemperatureIsReached(
+                                        printer.headProperty().get().getNozzleHeaters().get(1).nozzleTemperatureProperty(),
+                                        null, nozzle1Temperature, 5, 300, null);
+                            }
+
+                            if (!nozzleHeatFailed)
+                            {
+                                printer.purgeMaterial(purgeNozzle0, purgeNozzle1, safetyOn, false, null);
+                            }
+                        }
+                    } catch (PrinterException | InterruptedException ex)
+                    {
+                        steno.error("Exception whilst purging");
+
+                    }
+                });
+                purgeThread.setName("Purge_" + printerID);
+                purgeThread.run();
+            }
+        }
+    }
+
     @POST
     @Timed
     @Path("/purge")
     public void purge(@PathParam("printerID") String printerID, BooleanParam safetyOn)
     {
-        if (PrinterRegistry.getInstance() != null)
-        {
-            Printer printer = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
-
-            Thread purgeThread = new Thread(() ->
-            {
-                boolean purgeNozzle0 = false;
-                int nozzle0Temperature = 180;
-                boolean purgeNozzle1 = false;
-                int nozzle1Temperature = 180;
-
-                if (printer.headProperty().get().headTypeProperty().get() == Head.HeadType.DUAL_MATERIAL_HEAD)
-                {
-                    if (printer.effectiveFilamentsProperty().get(0) != FilamentContainer.UNKNOWN_FILAMENT)
-                    {
-                        purgeNozzle1 = true;
-                        nozzle1Temperature = printer.effectiveFilamentsProperty().get(0).getNozzleTemperature();
-                    }
-                    if (printer.effectiveFilamentsProperty().get(1) != FilamentContainer.UNKNOWN_FILAMENT)
-                    {
-                        purgeNozzle0 = true;
-                        nozzle0Temperature = printer.effectiveFilamentsProperty().get(1).getNozzleTemperature();
-                    }
-                }
-                try
-                {
-                    //Set the bed to 90 degrees C
-                    int desiredBedTemperature = 90;
-                    printer.setBedTargetTemperature(desiredBedTemperature);
-                    printer.goToTargetBedTemperature();
-                    boolean bedHeatFailed = PrinterUtils.waitUntilTemperatureIsReached(
-                            printer.getPrinterAncillarySystems().bedTemperatureProperty(), null,
-                            desiredBedTemperature, 5, 600, null);
-
-                    if (!bedHeatFailed)
-                    {
-                        if (purgeNozzle0)
-                        {
-                            printer.setNozzleHeaterTargetTemperature(0, nozzle0Temperature);
-                            printer.goToTargetNozzleHeaterTemperature(0);
-                        }
-
-                        if (purgeNozzle1)
-                        {
-                            printer.setNozzleHeaterTargetTemperature(1, nozzle1Temperature);
-                            printer.goToTargetNozzleHeaterTemperature(1);
-                        }
-
-                        boolean nozzleHeatFailed = false;
-
-                        if (purgeNozzle0)
-                        {
-                            nozzleHeatFailed = PrinterUtils.waitUntilTemperatureIsReached(
-                                    printer.headProperty().get().getNozzleHeaters().get(0).nozzleTemperatureProperty(),
-                                    null, nozzle0Temperature, 5, 300, null);
-                        }
-
-                        if (purgeNozzle1 && !nozzleHeatFailed)
-                        {
-                            nozzleHeatFailed = PrinterUtils.waitUntilTemperatureIsReached(
-                                    printer.headProperty().get().getNozzleHeaters().get(1).nozzleTemperatureProperty(),
-                                    null, nozzle1Temperature, 5, 300, null);
-                        }
-
-                        if (!nozzleHeatFailed)
-                        {
-                            PrinterRegistry.getInstance().getRemotePrinters().get(printerID).purgeMaterial(purgeNozzle0, purgeNozzle1, safetyOn.get(), false, null);
-                        }
-                    }
-                } catch (PrinterException | InterruptedException ex)
-                {
-                    steno.error("Exception whilst purging");
-
-                }
-            });
-            purgeThread.setName("Purge_" + printerID);
-            purgeThread.run();
-        }
+        doPurge(printerID, 0, 0, safetyOn.get());
     }
-
+    
+    @POST
+    @Timed
+    @Path("/purgeToTarget")
+    public void purgeToTarget(@PathParam("printerID") String printerID, PurgeTarget target)
+    {
+        int nozzle0Temperature = -1;
+        int nozzle1Temperature = -1;
+        int[] targetTemperature = target.getTargetTemperature();
+        if (targetTemperature != null)
+        {
+            if (targetTemperature.length > 0)
+                nozzle0Temperature = targetTemperature[0];
+            if (targetTemperature.length > 1)
+                nozzle1Temperature = targetTemperature[1];
+        }
+        doPurge(printerID, nozzle0Temperature, nozzle1Temperature, target.getSafetyOn());
+}
+    
     @POST
     @Timed
     @Path("/removeHead")

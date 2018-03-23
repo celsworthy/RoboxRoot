@@ -8,7 +8,9 @@ import celtech.roboxbase.configuration.datafileaccessors.FilamentContainer;
 import celtech.roboxbase.postprocessor.PrintJobStatistics;
 import celtech.roboxbase.printerControl.PrinterStatus;
 import celtech.roboxbase.printerControl.model.Head;
+import celtech.roboxbase.printerControl.model.HeaterMode;
 import celtech.roboxbase.printerControl.model.Printer;
+import celtech.roboxbase.printerControl.model.PrinterAncillarySystems;
 import celtech.roboxbase.utils.ColourStringConverter;
 import celtech.roboxremote.PrinterRegistry;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -42,6 +44,8 @@ public class StatusData
 
     //Head
     private String headName;
+    private String headTypeCode;
+            
     private boolean dualMaterialHead;
     private int[] nozzleTemperature;
 
@@ -148,7 +152,14 @@ public class StatusData
                     break;
             }
         }
-        
+
+        if (!statusProcessed && printer.getPrinterAncillarySystems().bedHeaterModeProperty().get() != HeaterMode.OFF)
+        {
+            printerStatusString = "Heating";
+            printerStatusEnumValue = "HEATING";
+            statusProcessed = true;
+        }
+                
         if (!statusProcessed)
         {
             printerStatusString = printer.printerStatusProperty().get().getI18nString();
@@ -197,10 +208,13 @@ public class StatusData
         canResume = printer.canResumeProperty().get();
 
         //Head
-        if (printer.headProperty().get() != null)
+        Head printerHead = printer.headProperty().get();
+        if (printerHead != null)
         {
-            headName = printer.headProperty().get().nameProperty().get();
-            dualMaterialHead = printer.headProperty().get().headTypeProperty().get() == Head.HeadType.DUAL_MATERIAL_HEAD;
+            headName = printerHead.nameProperty().get();
+            headTypeCode = printerHead.typeCodeProperty().get().trim();
+
+            dualMaterialHead = printerHead.headTypeProperty().get() == Head.HeadType.DUAL_MATERIAL_HEAD;
 
             if (dualMaterialHead)
             {
@@ -210,12 +224,13 @@ public class StatusData
                 canPurgeHead = printer.reelsProperty().containsKey(0) && printer.canPurgeHeadProperty().get();
             }
 
-            nozzleTemperature = new int[printer.headProperty().get().getNozzleHeaters().size()];
-            for (int heaterNumber = 0; heaterNumber < printer.headProperty().get().getNozzleHeaters().size(); heaterNumber++)
+            nozzleTemperature = new int[printerHead.getNozzleHeaters().size()];
+            for (int heaterNumber = 0; heaterNumber < printerHead.getNozzleHeaters().size(); heaterNumber++)
             {
-                nozzleTemperature[heaterNumber] = printer.headProperty().get().getNozzleHeaters().get(heaterNumber).nozzleTemperatureProperty().get();
+                nozzleTemperature[heaterNumber] = printerHead.getNozzleHeaters().get(heaterNumber).nozzleTemperatureProperty().get();
             }
-        } else
+        }
+        else
         {
             headName = "";
         }
@@ -439,6 +454,16 @@ public class StatusData
     public void setHeadName(String headName)
     {
         this.headName = headName;
+    }
+
+    public String getHeadTypeCode()
+    {
+        return headTypeCode;
+    }
+
+    public void setHeadTypeCode(String headTypeCode)
+    {
+        this.headTypeCode = headTypeCode;
     }
 
     public boolean isDualMaterialHead()

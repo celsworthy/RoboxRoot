@@ -27,6 +27,7 @@ public class HeadStatusData
 
     //Head
     private String headName;
+    private String headTypeCode;
     private boolean dualMaterialHead;
     private int[] nozzleTemperature;
 
@@ -55,10 +56,12 @@ public class HeadStatusData
         canRemoveHead = printer.canRemoveHeadProperty().get();
      
         //Head
-        if (printer.headProperty().get() != null)
+        Head printerHead = printer.headProperty().get();
+        if (printerHead != null)
         {
-            headName = printer.headProperty().get().nameProperty().get();
-            dualMaterialHead = printer.headProperty().get().headTypeProperty().get() == Head.HeadType.DUAL_MATERIAL_HEAD;
+            headName = printerHead.nameProperty().get();
+            headTypeCode = printerHead.typeCodeProperty().get().trim();
+            dualMaterialHead = printerHead.headTypeProperty().get() == Head.HeadType.DUAL_MATERIAL_HEAD;
 
             if (dualMaterialHead)
             {
@@ -68,10 +71,10 @@ public class HeadStatusData
                 canPurgeHead = printer.reelsProperty().containsKey(0) && printer.canPurgeHeadProperty().get();
             }
 
-            nozzleTemperature = new int[printer.headProperty().get().getNozzleHeaters().size()];
-            for (int heaterNumber = 0; heaterNumber < printer.headProperty().get().getNozzleHeaters().size(); heaterNumber++)
+            nozzleTemperature = new int[printerHead.getNozzleHeaters().size()];
+            for (int heaterNumber = 0; heaterNumber < printerHead.getNozzleHeaters().size(); heaterNumber++)
             {
-                nozzleTemperature[heaterNumber] = printer.headProperty().get().getNozzleHeaters().get(heaterNumber).nozzleTemperatureProperty().get();
+                nozzleTemperature[heaterNumber] = printerHead.getNozzleHeaters().get(heaterNumber).nozzleTemperatureProperty().get();
             }
         } else
         {
@@ -135,6 +138,16 @@ public class HeadStatusData
         this.headName = headName;
     }
 
+    public String getHeadTypeCode()
+    {
+        return headTypeCode;
+    }
+
+    public void setHeadTypeCode(String headTypeCode)
+    {
+        this.headTypeCode = headTypeCode;
+    }
+    
     public boolean isDualMaterialHead()
     {
         return dualMaterialHead;

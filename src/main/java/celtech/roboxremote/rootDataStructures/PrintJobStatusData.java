@@ -4,6 +4,7 @@ import celtech.roboxbase.BaseLookup;
 import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxbase.postprocessor.PrintJobStatistics;
 import celtech.roboxbase.printerControl.PrinterStatus;
+import celtech.roboxbase.printerControl.model.HeaterMode;
 import celtech.roboxbase.printerControl.model.Printer;
 import celtech.roboxremote.PrinterRegistry;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -110,6 +111,13 @@ public class PrintJobStatusData
                     statusProcessed = true;
                     break;
             }
+        }
+
+        if (!statusProcessed && printer.getPrinterAncillarySystems().bedHeaterModeProperty().get() != HeaterMode.OFF)
+        {
+            printerStatusString = "Heating";
+            printerStatusEnumValue = "HEATING";
+            statusProcessed = true;
         }
         
         if (!statusProcessed)
