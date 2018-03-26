@@ -1,13 +1,11 @@
 function savePIN()
 {
- sendPostCommandToRoot('admin/updatePIN',
-            function () {
-                alert('Succesfully updated PIN');
-                logout();
-            },
-            function() { alert('Failed to set PIN'); },
-            null,
-            $('#pin-1').val());
+    promisePostCommandToRoot('admin/updatePIN', $('#pin-1').val())
+            .then(function () {
+                    alert('Succesfully updated PIN');
+                    logout();
+                  })
+                .catch(function() { alert('Failed to set PIN'); });
 }
 
 function filterText(event)

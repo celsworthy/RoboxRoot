@@ -1,6 +1,6 @@
 function attemptLogin()
 {
-    var enteredPIN = $("#application-pin-value").val();
+    var enteredPIN = $("#pin-value").val();
     if (enteredPIN !== "")
     {
         localStorage.setItem(applicationPINVar, enteredPIN);
@@ -47,16 +47,17 @@ function indexInit()
 function loginInit()
 {
     var enteredPIN = localStorage.getItem(applicationPINVar);
-    $("#application-pin-value").val(enteredPIN);
+    $("#pin-value").val(enteredPIN);
     if (enteredPIN !== null
         && enteredPIN !== "")
     {
         attemptLogin();
     }
 
-    $("#application-pin-value").on('keyup', function (e) {
+    $("#pin-value").on('keyup', function (e) {
         if (e.keyCode === 13) {
             attemptLogin();
         }
     });
+    $("#middle-button").on('click', attemptLogin)
 }

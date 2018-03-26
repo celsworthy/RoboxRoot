@@ -25,6 +25,11 @@ var jobProgressDetailsMap =
                     'image': 'Icon-Menu-Remove-White.svg',
 		            'right-button': {'icon':'Button-Cancel-White.svg',
 					                 'action':cancelAction}},
+	'purge': {'title-text': 'purge-title',
+              'description-text': 'purge-description',
+              'image': 'Icon-Menu-Purge-White.svg',
+		      'right-button': {'icon':'Button-Cancel-White.svg',
+			                   'action':cancelAction}},
 	'test': {'title-text': 'test-title',
              'description-text': 'test-description',
              'image': 'Icon-Menu-Test-White.svg',
@@ -46,21 +51,20 @@ var maxIdleCount = 5;
 function jobProgressInit()
 {
     var jpDetails = null;
-    var jpId = window.location.search;
-    if (jpId.length > 0)
-        jpId = jpId.substr(1);
+    var urlParams = new URLSearchParams(window.location.search);
+    var jpId = urlParams.get('id');
     if (jpId != null)
         jpDetails = jobProgressDetailsMap[jpId];
     if (jpDetails != null)
     {
-        var machineDetails = getMachineDetails();
-        setImageFromField(machineDetails, 'logo');
+        setMachineLogo();
         setTextFromField(jpDetails, 'title-text');
         setTextFromField(jpDetails, 'description-text');
         setImageFromField(jpDetails, 'image');
         setFooterButton(jpDetails, 'left-button')
         setFooterButton(jpDetails, 'right-button')
         startJobStatusUpdates();
+        startActiveErrorHandling();
     }
     else
         goToPage(mainMenu);
@@ -144,7 +148,8 @@ function updateJobStatusFields(statusField, etcField, progressBar, printJobData)
 
 function updateJobStatus(printJobData)
 {
-    if (printJobData.printerStatusEnumValue == "RUNNING_MACRO_FILE")
+    console.log('updateJobStatus - printerStatus = ' + printJobData.printerStatusEnumValue);
+    if (printJobData.printerStatusEnumValue !== "IDLE")
     {
         idleCount = maxIdleCount;
         updateJobStatusFields('#status-text', '#etc-text', '#progress-bar', printJobData)

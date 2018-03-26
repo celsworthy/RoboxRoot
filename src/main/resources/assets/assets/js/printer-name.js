@@ -1,8 +1,7 @@
 function savePrinterName()
 {
     var newName = $('#pname-input').val();
-    sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + '/remoteControl/renamePrinter', null, null, newName); 
-    //goToPage('home.html');
+    promisePostCommandToRoot(localStorage.getItem(selectedPrinterVar) + '/remoteControl/renamePrinter', newName); 
 }
 
 function updatePrinterName(nameData)
@@ -18,11 +17,10 @@ function printerNameInit()
 	if (selectedPrinter !== null)
 	{
         setMachineLogo();
-        sendGetCommandToRoot(selectedPrinter + '/remoteControl/nameStatus',
-                             updatePrinterName,
-                             goToPrinterStatusPage,
-                             null);
-	}
+        promiseGetCommandToRoot(selectedPrinter + '/remoteControl/nameStatus', null)
+            .then(updatePrinterName)
+            .catch(goToPrinterStatusPage);
+    }
 	else
 		goToPrinterStatusPage();
 }

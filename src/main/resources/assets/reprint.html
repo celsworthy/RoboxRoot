@@ -1,116 +1,122 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-        <meta name="description" content="">
-        <meta name="author" content="">
-        <link rel="icon" href="../../favicon.ico">
+<html>
 
-        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
-        <link href="css/grid.css" rel="stylesheet">
-        <link href="css/sticky-header.css" rel="stylesheet">
-        <link href="css/sticky-footer.css" rel="stylesheet">
-        <link rel="stylesheet" href="css/robox-root.css">
-        <script src="js/jquery-2.2.4.min.js"></script>
-        <script src="js/i18next.min.js"></script>
-        <script src="js/i18nextBrowserLanguageDetector.min.js"></script>
-        <script src="js/i18nextXHRBackend.min.js"></script>
-        <script src="js/jquery-i18next.min.js"></script>
-        <script src="js/jquery.base64.js"></script>
-        <script src="js/printerDetails.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/bootstrap-colorselector.min.js"></script>
-        <script src="js/eModal.min.js"></script>
-        <script src="js/core.js"></script> 
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robox Root TA</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro">
+    <link rel="stylesheet" href="assets/css/OldCss.css">
+    <link rel="stylesheet" href="assets/css/RoboxRoot.css">
+</head>
 
-        <title>Robox Root Manager</title>
+<body id="reprint" class="canvas-grey no-touch-action">
+    <div class="container page reprint">
+        <div class="row">
+            <div>
+                <h1 class="localised" style="padding:0vh 0vh 1vh 0vh" data-i18n="reprint-title">Reprint</h1>
+            </div>
+        </div>
+        <div class="row panel rbx-reprint-job rbx-invisible" id="job-row-1" role="button">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 rbx-home-job-headings">
+                <p class="no-margins rbx-text-medium rbx-colour-material-1">Name:</p>
+                <p class="no-margins rbx-text-medium rbx-colour-material-1">Created:</p>
+                <p class="no-margins rbx-text-medium rbx-colour-material-1">Duration:</p>
+                <p class="no-margins rbx-text-medium rbx-colour-material-1">Profile:</p>
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 rbx-home-job-details pull-right">
+                <p class="job-name no-margins rbx-text-medium rbx-white">&nbsp;</p>
+                <p class="job-created no-margins rbx-text-medium rbx-white">&nbsp;</p>
+                <p class="job-duration no-margins rbx-text-medium rbx-white">&nbsp;</p>
+                <p class="job-profile no-margins rbx-text-medium rbx-white">&nbsp;</p>
+            </div>
+        </div>
+        <div class="row panel rbx-reprint-job rbx-invisible" id="job-row-2" role="button">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 rbx-home-job-headings">
+                <p class="no-margins rbx-text-medium rbx-colour-material-1">Name:</p>
+                <p class="no-margins rbx-text-medium rbx-colour-material-1">Created:</p>
+                <p class="no-margins rbx-text-medium rbx-colour-material-1">Duration:</p>
+                <p class="no-margins rbx-text-medium rbx-colour-material-1">Profile:</p>
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 rbx-home-job-details pull-right">
+                <p class="job-name no-margins rbx-text-medium rbx-white">&nbsp;</p>
+                <p class="job-created no-margins rbx-text-medium rbx-white">&nbsp;</p>
+                <p class="job-duration no-margins rbx-text-medium rbx-white">&nbsp;</p>
+                <p class="job-profile no-margins rbx-text-medium rbx-white">&nbsp;</p>
+            </div>
+        </div>
+        <div class="row panel rbx-reprint-job rbx-invisible" id="job-row-3" role="button">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 rbx-home-job-headings">
+                <p class="no-margins rbx-text-medium rbx-colour-material-1">Name:</p>
+                <p class="no-margins rbx-text-medium rbx-colour-material-1">Created:</p>
+                <p class="no-margins rbx-text-medium rbx-colour-material-1">Duration:</p>
+                <p class="no-margins rbx-text-medium rbx-colour-material-1">Profile:</p>
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 rbx-home-job-details pull-right">
+                <p class="job-name no-margins rbx-text-medium rbx-white">&nbsp;</p>
+                <p class="job-created no-margins rbx-text-medium rbx-white">&nbsp;</p>
+                <p class="job-duration no-margins rbx-text-medium rbx-white">&nbsp;</p>
+                <p class="job-profile no-margins rbx-text-medium rbx-white">&nbsp;</p>
+            </div>
+        </div>
+        <div class="row panel rbx-reprint-job rbx-invisible" id="job-row-4" role="button">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 rbx-home-job-headings">
+                <p class="no-margins rbx-text-medium rbx-colour-material-1">Name:</p>
+                <p class="no-margins rbx-text-medium rbx-colour-material-1">Created:</p>
+                <p class="no-margins rbx-text-medium rbx-colour-material-1">Duration:</p>
+                <p class="no-margins rbx-text-medium rbx-colour-material-1">Profile:</p>
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 rbx-home-job-details pull-right">
+                <p class="job-name no-margins rbx-text-medium rbx-white">&nbsp;</p>
+                <p class="job-created no-margins rbx-text-medium rbx-white">&nbsp;</p>
+                <p class="job-duration no-margins rbx-text-medium rbx-white">&nbsp;</p>
+                <p class="job-profile no-margins rbx-text-medium rbx-white">&nbsp;</p>
+            </div>
+        </div>
+    </div>
+    <div class="container page next-prev">
+        <div class="row vertical-align" id="navigator">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 no-padding"><a class="btn btn-default menu-sub-button" role="button" href="#" id="previous-sub-button"> <img src="assets/img/Icon-Previous.svg" class="sub-button-icon"></a></div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 no-padding">
+                <p id="page-number" class="rbx-text-medium no-margins text-center rbx-white" style="text-align: center; color: #fff">Page 1 of 1</p>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 no-padding"><a class="btn btn-default menu-sub-button" role="button" href="#" id="next-sub-button"> <img src="assets/img/Icon-Next.svg" class="sub-button-icon"></a></div>
+        </div>
+    </div>
+    <div class="container footer">
+        <div class="btn-group btn-group-justified" role="group"><a class="btn btn-default menu-bottom-button" role="button" href="/menu-grid.html?id=main" id="left-button"> <img src="assets/img/Icon_Menu_Back.svg" class="menu-bottom-button-icon"></a><a class="btn btn-default menu-bottom-button" role="button" href="/home.html"
+                id="middle-button"> <img src="assets/img/Icon-Home.svg" style="height:6.5vh;"></a><a class="btn btn-default disabled menu-bottom-button rbx-invisible" role="button" href="#" id="right-button"> <img src="assets/img/Icon-Border.svg" class="menu-bottom-button-icon"></a></div>
+    </div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/i18next.min.js"></script>
+    <script src="assets/js/i18nextBrowserLanguageDetector.min.js"></script>
+    <script src="assets/js/i18nextXHRBackend.min.js"></script>
+    <script src="assets/js/jquery-i18next.min.js"></script>
+    <script src="assets/js/core-vars.js"></script>
+    <script src="assets/js/jquery.base64.js"></script>
+    <script src="assets/js/core-funcs.js"></script>
+    <script src="assets/js/promise-funcs.js"></script>
+    <script src="assets/js/access-pin.js"></script>
+    <script src="assets/js/error-handling.js"></script>
+    <script src="assets/js/console.js"></script>
+    <script src="assets/js/control.js"></script>
+    <script src="assets/js/head-eeprom.js"></script>
+    <script src="assets/js/job-progress.js"></script>
+    <script src="assets/js/home.js"></script>
+    <script src="assets/js/login.js"></script>
+    <script src="assets/js/menu-horz.js"></script>
+    <script src="assets/js/pin-reset.js"></script>
+    <script src="assets/js/print-adjust.js"></script>
+    <script src="assets/js/printer-colour.js"></script>
+    <script src="assets/js/printer-status.js"></script>
+    <script src="assets/js/printer-name.js"></script>
+    <script src="assets/js/purge.js"></script>
+    <script src="assets/js/reprint.js"></script>
+    <script src="assets/js/wireless-settings.js"></script>
+    <script src="assets/js/page-init.js"></script>
+</body>
 
-        <!-- Bootstrap core CSS -->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-        <link href="css/bootstrap-colorselector.min.css" rel="stylesheet">
-        <!-- Bootstrap theme -->
-        <link href="css/bootstrap-theme.min.css" rel="stylesheet">
-        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-        <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
-
-        <!-- Custom styles for this template -->
-        <!--<link href="css/theme.css" rel="stylesheet">-->
-
-        <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-        <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-        <script src="js/ie-emulation-modes-warning.js"></script>
-
-        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-        <!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
-    </head>
-
-    <body>
-        <script type="text/javascript">var titlei18n = "reprint";</script>
-		<div class="container-fluid">
-            <h3 class="localised" data-i18n="reprint"><i class="fa fa-bar-chart-o"></i>Reprint</h3>
-            <h4 class="localised" data-i18n="reprint-subtitle"><i class="fa fa-bar-chart-o"></i></h4>
-			<table class="table">
-				<thead class="thead-default">
-					<tr>
-						<th height="50px" width="140px" class="localised h4" data-i18n="name">Name</th>
-						<th height="50px" width="130px" class="localised h4" data-i18n="created">Created</th>
-						<th height="50px" width="60px" class="localised h4" data-i18n="duration">Duration</th>
-					</tr>
-				</thead>
-				<tbody id="reprint-table-body">
-				</tbody>
-			</table>
-		</div>
-		<script type="text/javascript">
-			sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/listReprintableJobs",
-				function (suitablePrintJobs) {
-					var selectorHTML = "";
-					for (var printJobIndex = 0; printJobIndex < suitablePrintJobs.length; printJobIndex++)
-					{
-						var printJobID = suitablePrintJobs[printJobIndex].printJobID;
-						console.log(suitablePrintJobs[printJobIndex].printJobID);
-						console.log(suitablePrintJobs[printJobIndex].printJobName);
-						console.log(suitablePrintJobs[printJobIndex].printProfileName);
-						console.log(suitablePrintJobs[printJobIndex].durationInSeconds);
-						console.log(suitablePrintJobs[printJobIndex].eVolume);
-						console.log(suitablePrintJobs[printJobIndex].dVolume);
-						selectorHTML += "<tr id=\"" + printJobID + "_row" + "\">";
-						selectorHTML += "<td>" + suitablePrintJobs[printJobIndex].printJobName + "</td>";
-						selectorHTML += "<td>" + suitablePrintJobs[printJobIndex].creationDate + "</td>";
-						selectorHTML += "<td>" + secondsToHMS(suitablePrintJobs[printJobIndex].durationInSeconds) + "</td>";
-						selectorHTML += "</tr>\n";
-
-						$("#reprint-table-body").html(selectorHTML);
-					}
-					for (var printJobIndex = 0; printJobIndex < suitablePrintJobs.length; printJobIndex++)
-					{
-						var printJobID = suitablePrintJobs[printJobIndex].printJobID;
-						$('#' + printJobID + "_row").data("printJobID", printJobID);
-						$('#' + printJobID + "_row").click(function () {
-							$('#reprint-dialog').modal('hide');
-							reprintJob($(this).data("printJobID"));
-						});
-
-						$('#' + printJobID + "_row").hover(function () {
-							$(this).addClass('selector-highlight');
-						}, function () {
-							$(this).removeClass('selector-highlight');
-						});
-						$('#' + printJobID + "_row").mousedown(function () {
-							$(this).addClass('selector-press');
-						}, function () {
-							$(this).removeClass('selector-press');
-						});
-					}
-				},
-				null, null);
-		</script>
-		<script type='text/javascript' src='js/footer.js'></script>
-    </body>
 </html>

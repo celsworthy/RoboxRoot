@@ -6,10 +6,15 @@ var pageInitMap = {'access-pin':accessPINInit,
                    'job-progress':jobProgressInit,
                    'login':loginInit,
                    'menu-horz':menuHorzInit,
+                   'control':controlInit,
+                   'pin-reset':pinResetInit,
                    'print-adjust':printAdjustInit,
                    'printer-colour':printerColourInit,
                    'printer-name':printerNameInit,
-                   'purge':purgeInit};
+                   'printer-status':printerStatusInit,
+                   'purge':purgeInit,
+                   'reprint':reprintInit,
+                   'wireless-settings':wirelessSettingsInit};
 var pageTitleMap = {};
 
 function page_initialiser() {

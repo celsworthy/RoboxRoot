@@ -16,7 +16,6 @@ function goToPage(page)
         var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + enteredPIN);
         console.log(" goToPage - modified url = \"" + 'http://' + window.location.host + page + "\"");
         $.ajax({
-            //url: 'http://' + window.location.hostname + ':8080' + printerStatusPage,
             url: clientURL + page,
             cache: true,
             beforeSend: function (xhr) {
@@ -24,7 +23,6 @@ function goToPage(page)
             },
             type: 'GET',
             success: function (data, textStatus, jqXHR) {
-//               location.href = 'http://' + window.location.hostname + ':8080' + printerStatusPage;
                 console.log(" goToPage - modified location.href = \"" + 'http://' + window.location.host + page + "\"");
                 location.href = clientURL + page;
             },
@@ -50,8 +48,8 @@ function goToHomePage()
 
 function goToHomeOrPrinterStatus()
 {
-    sendGetCommandToRoot('discovery/listPrinters',
-            function (printerData) {
+    promiseGetCommandToRoot('discovery/listPrinters', null)
+        .then(function(printerData) {
                 connectedToServer = true;
                 if (printerData.printerIDs.length === 1)
                 {
@@ -64,12 +62,16 @@ function goToHomeOrPrinterStatus()
                 {
                     goToPrinterStatusPage();        
                 }
-            },
-            function (data) {
+            })
+        .catch(function() {
                 connectedToServer = false;
                 logout();
-            },
-            null);
+            });
+}
+
+function goToMainMenu()
+{
+    goToPage(mainMenu);
 }
 
 function logout()
@@ -77,47 +79,6 @@ function logout()
     debugger;
     localStorage.setItem(applicationPINVar, "");
     location.href = clientURL + loginPage;
-}
-
-function sendGetCommandToRoot(service, successCallback, errorCallback, dataToSend)
-{
-    sendCommandToRoot('GET', service, successCallback, errorCallback, dataToSend);
-}
-
-function sendPostCommandToRoot(service, successCallback, errorCallback, dataToSend)
-{
-    sendCommandToRoot('POST', service, successCallback, errorCallback, dataToSend);
-}
-
-function sendCommandToRoot(requestType, service, successCallback, errorCallback, dataToSend)
-{
-    var printerURL = serverURL + "/api/" + service + "/";
-    var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
-
-    $.ajax({
-        url: printerURL,
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
-        },
-        contentType: "application/json", // send as JSON
-        type: requestType,
-//        dataType: 'json',
-        data: JSON.stringify(dataToSend),
-        success:function (data, textStatus, jqXHR)
-        {
-            if (successCallback !== null)
-            {
-                successCallback(data);
-            }
-        },
-        error:function (jqXHR, textStatus, errorThrown)
-        {
-            if (errorCallback !== null)
-            {
-                errorCallback(textStatus);
-            }
-        }
-    });
 }
 
 function updateLocalisation()
@@ -171,57 +132,6 @@ function secondsToHM(secondsInput)
     return hoursString + ":" + minutesString;
 }
 
-function getServerStatus(successFunc, errorFunc)
-{
-    sendGetCommandToRoot('discovery/whoareyou',
-            function (data) {
-                $('#serverOnline').text(i18next.t('online'));
-                updateServerStatus(data);
-                connectedToServer = true;
-                if (typeof serverOnline === "function")
-                {
-                   serverOnline(); 
-                }
-            },
-            function (data) {
-                connectedToServer = false;
-                $('#serverOnline').text(i18next.t('offline'));
-                updateServerStatus(null);
-                if (typeof serverOffline === "function")
-                {
-                   serverOffline(); 
-                }
-            },
-            null);
-}
-
-function updateServerStatus(serverData)
-{
-    if (serverData === null)
-    {
-        $('#serverVersion').text("");
-        $(".serverStatusLine").text("");
-        $(".server-name-title").text("");
-        $("#server-name-input").val("");
-        $(".server-ip-address").val("");
-    } else
-    {
-        if (lastServerData == null
-            || serverData.name !== lastServerData.name
-            || serverData.serverIP !== lastServerData.serverIP
-            || serverData.serverVersion !== lastServerData.serverVersion)
-        {
-            $('#serverVersion').text(serverData.serverVersion);
-            $(".serverStatusLine").text(serverData.name);
-            $(".server-name-title").text(serverData.name);
-            $("#server-name-input").val(serverData.name);
-            $(".server-ip-address").text(serverData.serverIP);
-            $(".serverIP").text(serverData.serverIP);
-            lastServerData = serverData;
-        }
-    }
-}
-
 function onSpinnerClick()
 {
     var btn = $(this);
@@ -265,56 +175,6 @@ function onSpinnerClick()
         window[callback](input.attr('id'), newValue);
 }
 
-function setHeaderAndFooter()
-{
-    $('.header-box').html(
-        "<a href='printerStatus.html'><img class='img-responsive' alt='Robox Logo' src='assets/img/Icon-Robox.svg' style='width:60px'></a>" +
-        "<p style='flex-grow: 1; font-size: 2em;' class='text-center no-margins localised' data-i18n='" + titlei18n + "'></p>" +
-        "<a href='printerStatus.html'><img class='img-responsive' alt='Root Logo' src='assets/img/Logo-Root.svg' style='width:60px'></a>");
-
-    $('.footer-box').html(
-        "<span class='text-center server-name-title footer-display' style='flex-grow: 1;'>No Server</span>" +
-        "<a class='btn footer-btn' href='printerStatus.html'><img class='img-fluid root-icon' alt='Home' src='assets/img/Icon-Home.svg'></a>" +
-        "<a class='btn footer-btn' href='serverStatus.html'><img class='img-fluid root-icon' altroot-icon='Setup' src='assets/img/Icon-Settings.svg' height='50'></a>" +
-        "<span class='text-center serverIP footer-display' style='flex-grow: 1;'>-</span>");
-}
-
-$(document).ready(function () {
-    i18next.use(i18nextBrowserLanguageDetector)
-            .use(i18nextXHRBackend)
-            .init({
-                debug: true,
-                fallbackLng: 'en',
-                backend: {
-                    loadPath: '/locales/{{lng}}/translation.json'
-                }
-            }, function (t) {
-                jqueryI18next.init(i18next, $, {
-                    tName: 't', // --> appends $.t = i18next.t
-                    i18nName: 'i18n', // --> appends $.i18n = i18next
-                    handleName: 'localize', // --> appends $(selector).localize(opts);
-                    selectorAttr: 'data-i18n', // selector for translating elements
-                    targetAttr: 'i18n-target', // data-() attribute to grab target element to translate (if diffrent then itself)
-                    optionsAttr: 'i18n-options', // data-() attribute that contains options, will load/set if useOptionsAttr = true
-                    useOptionsAttr: false, // see optionsAttr
-                });
-                locationificator_initialised = true;
-                updateLocalisation();
-
-                checkForMobileBrowser();
-
-                if (typeof page_initialiser === "function")
-                {
-                    $('img').on('dragstart', function (event) {
-                        event.preventDefault();
-                    });
-                    page_initialiser();
-                    setHeaderAndFooter();
-                    updateLocalisation();
-                }
-            });
-});
-
 function safetiesOn()
 {
     var booleanStatus = false;
@@ -329,7 +189,7 @@ function safetiesOn()
 function cancelAction()
 {
     var selectedPrinter = localStorage.getItem(selectedPrinterVar);
-    sendPostCommandToRoot(selectedPrinter + "/remoteControl/cancel", null, null, safetiesOn().toString());
+    promisePostCommandToRoot(selectedPrinter + "/remoteControl/cancel", safetiesOn().toString());
 }
 
 function setFooterButton(details, field)
@@ -360,9 +220,10 @@ function setFooterButton(details, field)
     }
 }
 
-function getMachineDetails()
+function getMachineDetails(printerType)
 {
-    var printerType = localStorage.getItem(printerTypeVar);
+    if (printerType == null)
+        printerType = localStorage.getItem(printerTypeVar);
     var machineDetails = machineDetailsMap[printerType];
     if (machineDetails == null)
         machineDetails = machineDetailsMap['RBX01'];
@@ -425,3 +286,70 @@ function getComplimentaryOption(baseColour, darkOption, lightOption)
     else
         return lightOption;
 }
+
+function resolvePrinterID(printerID)
+{
+    if (printerID !== null)
+        return printerID;
+    else
+        return localStorage.getItem(selectedPrinterVar);
+}
+
+function getStatusData(printerID, statusName, callback)
+{
+    var pr = resolvePrinterID(printerID);
+
+    if (pr !== null)
+    {
+        promiseGetCommandToRoot(pr + '/remoteControl' + statusName, null)
+            .then(callback)
+            .catch(goToPrinterStatusPage);
+    }
+}
+
+function getPrinterStatus(printerID, callback)
+{
+    var pr = resolvePrinterID(printerID);
+    
+    if (pr !== null)
+    {
+        promiseGetCommandToRoot(pr + '/remoteControl', null)
+            .then(callback)
+            .catch(goToPrinterStatusPage);
+    }
+}
+
+$(document).ready(function () {
+    i18next.use(i18nextBrowserLanguageDetector)
+            .use(i18nextXHRBackend)
+            .init({
+                debug: true,
+                fallbackLng: 'en',
+                backend: {
+                    loadPath: '/locales/{{lng}}/translation.json'
+                }
+            }, function (t) {
+                jqueryI18next.init(i18next, $, {
+                    tName: 't', // --> appends $.t = i18next.t
+                    i18nName: 'i18n', // --> appends $.i18n = i18next
+                    handleName: 'localize', // --> appends $(selector).localize(opts);
+                    selectorAttr: 'data-i18n', // selector for translating elements
+                    targetAttr: 'i18n-target', // data-() attribute to grab target element to translate (if diffrent then itself)
+                    optionsAttr: 'i18n-options', // data-() attribute that contains options, will load/set if useOptionsAttr = true
+                    useOptionsAttr: false, // see optionsAttr
+                });
+                locationificator_initialised = true;
+                updateLocalisation();
+
+                checkForMobileBrowser();
+
+                if (typeof page_initialiser === "function")
+                {
+                    $('img').on('dragstart', function (event) {
+                        event.preventDefault();
+                    });
+                    page_initialiser();
+                    updateLocalisation();
+                }
+            });
+});

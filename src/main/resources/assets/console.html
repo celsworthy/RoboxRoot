@@ -7,32 +7,45 @@
     <title>Robox Root TA</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro">
     <link rel="stylesheet" href="assets/css/OldCss.css">
     <link rel="stylesheet" href="assets/css/RoboxRoot.css">
 </head>
 
 <body id="console" class="canvas-grey no-touch-action">
     <div class="container page">
-        <div class="row">
-            <div style="padding:4vh 6.5vh 2vh;"><img src="assets/img/Logo-Blank.svg" class="machine-logo"></div>
+        <div class="row panel">
+            <div class="no-padding" style="height:34.5vh;  margin: 1.25vh"><textarea wrap="hard" readonly="" autofocus="" inputmode="verbatim" id="gcode-output" class="console-output rbx-text-medium"></textarea></div>
         </div>
-        <div class="row">
-            <div>
-                <h1 id="console-title" class="localised" style="padding:0vh 0vh 1vh 0vh" data-i18n="console-title">Console</h1>
+        <div class="row panel vertical-align">
+            <div style="margin: 0vh 0vh 1.25vh 1.25vh; width: 49.375vh;"><input type="text" readonly="" placeholder="Enter GCode..." autocomplete="on" id="gcode-input" class="rbx-text-medium console-input"></div>
+            <div style="width: 5.625vh; height: 6.25vh; margin-bottom: 1.25vh;"><button class="btn btn-default console-input-clear clear" type="button" id="clear">0</button></div>
+        </div>
+        <div class="row vertical-align" style="margin: 0.8125vh -0.5vh 0vh; font-size: 0;">
+            <div style="width: 48.75vh;"><button class="btn btn-default keyboard-30bt console-key" type="button" id="zero" char="0">0</button><button class="btn btn-default keyboard-30bt console-key" type="button" id="one" char="1">1</button><button class="btn btn-default keyboard-30bt console-key"
+                    type="button" id="two" char="2">2</button><button class="btn btn-default keyboard-30bt console-key" type="button" id="three" char="3">3</button><button class="btn btn-default keyboard-30bt console-key" type="button" id="four" char="4">4</button>
+                <button
+                    class="btn btn-default keyboard-30bt console-key" type="button" id="five" char="5">5</button><button class="btn btn-default keyboard-30bt console-key" type="button" id="six" char="6">6</button><button class="btn btn-default keyboard-30bt console-key" type="button" id="seven" char="7">7</button><button class="btn btn-default keyboard-30bt console-key"
+                        type="button" id="eight" char="8">8</button><button class="btn btn-default keyboard-30bt console-key" type="button" id="nine" char="9">9</button></div>
+            <div style="width: 9.75vh;"><button class="btn btn-default keyboard-30bt dbl bspace" type="button" id="backspace">&nbsp;</button></div>
+        </div>
+        <div class="row" style="margin: 0vh -0.5vh; font-size: 0;">
+            <div><button class="btn btn-default keyboard-30bt console-key" type="button" id="X" char="X">X</button><button class="btn btn-default keyboard-30bt console-key" type="button" id="Y" char="Y">Y</button><button class="btn btn-default keyboard-30bt console-key"
+                    type="button" id="Z" char="Z">Z</button><button class="btn btn-default keyboard-30bt console-key" type="button" id="E" char="E">E</button><button class="btn btn-default keyboard-30bt console-key" type="button" id="D" char="D">D</button>
+                <button
+                    class="btn btn-default keyboard-30bt console-key" type="button" id="B" char="B">B</button>
             </div>
         </div>
-        <div class="row panel">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding"><textarea class="input-sm" id="gcode-output" style="width:100%;height:15em;"></textarea></div>
-        </div>
-        <div class="row panel">
-            <div class="col-lg-10 col-md-10 col-sm-9 col-xs-9 no-padding"><input type="text" id="gcode-input" style="width:100%;"></div>
-            <div class="col-lg-2 col-md-2 col-sm-3 col-xs-3">
-                <div class="btn-group" role="group"><button class="btn btn-default localised" type="button" id="send-gcode-button" data-i18n="console-send">Send</button></div>
-            </div>
+        <div class="row vertical-align" style="margin: 0vh -0.5vh; font-size: 0;">
+            <div style="width: 48.75vh;"><button class="btn btn-default keyboard-30bt console-key" type="button" id="G" char="G">G</button><button class="btn btn-default keyboard-30bt console-key" type="button" id="M" char="M">M</button><button class="btn btn-default keyboard-30bt console-key"
+                    type="button" id="F" char="F">F</button><button class="btn btn-default keyboard-30bt console-key" type="button" id="S" char="S">S</button><button class="btn btn-default keyboard-30bt console-key" type="button" id="T" char="T">T</button>
+                <button
+                    class="btn btn-default keyboard-30bt console-key" type="button" id="dot" char=".">.</button><button class="btn btn-default btn btn-default keyboard-30bt space" type="button" id="space">&nbsp;</button><button class="btn btn-default keyboard-30bt console-key" type="button" id="dash" char="-">-</button></div>
+            <div style="width: 9.75vh;"><button class="btn btn-default keyboard-30bt keyboard-30bt dbl return" type="button" id="send-gcode-button">&nbsp;</button></div>
         </div>
     </div>
     <div class="container footer">
-        <div class="btn-group btn-group-justified" role="group"><a class="btn btn-default menu-bottom-button invisible" role="button" href="#" id="left-button"> <img src="assets/img/Icon_Menu_Back.svg" class="menu-bottom-button-icon"></a><a class="btn btn-default menu-bottom-button" role="button" href="menu-grid.html?main"
+        <div class="btn-group btn-group-justified" role="group"><a class="btn btn-default menu-bottom-button invisible" role="button" href="#" id="left-button"> <img src="assets/img/Icon_Menu_Back.svg" class="menu-bottom-button-icon"></a><a class="btn btn-default menu-bottom-button" role="button" href="menu-grid.html?id=main"
                 id="middle-button"> <img src="assets/img/Icon-Menu.svg" id="home-button" style="height:6.5vh;"></a><a class="btn btn-default menu-bottom-button invisible" role="button" href="#" id="right-button"> <img src="assets/img/Icon_Menu_Next.svg" class="menu-bottom-button-icon"></a></div>
     </div>
     <script src="assets/js/jquery.min.js"></script>
@@ -41,20 +54,27 @@
     <script src="assets/js/i18nextBrowserLanguageDetector.min.js"></script>
     <script src="assets/js/i18nextXHRBackend.min.js"></script>
     <script src="assets/js/jquery-i18next.min.js"></script>
-    <script src="assets/js/jquery.base64.js"></script>
     <script src="assets/js/core-vars.js"></script>
+    <script src="assets/js/jquery.base64.js"></script>
     <script src="assets/js/core-funcs.js"></script>
+    <script src="assets/js/promise-funcs.js"></script>
     <script src="assets/js/access-pin.js"></script>
+    <script src="assets/js/error-handling.js"></script>
     <script src="assets/js/console.js"></script>
+    <script src="assets/js/control.js"></script>
     <script src="assets/js/head-eeprom.js"></script>
-    <script src="assets/js/home.js"></script>
     <script src="assets/js/job-progress.js"></script>
+    <script src="assets/js/home.js"></script>
     <script src="assets/js/login.js"></script>
     <script src="assets/js/menu-horz.js"></script>
+    <script src="assets/js/pin-reset.js"></script>
     <script src="assets/js/print-adjust.js"></script>
     <script src="assets/js/printer-colour.js"></script>
+    <script src="assets/js/printer-status.js"></script>
     <script src="assets/js/printer-name.js"></script>
     <script src="assets/js/purge.js"></script>
+    <script src="assets/js/reprint.js"></script>
+    <script src="assets/js/wireless-settings.js"></script>
     <script src="assets/js/page-init.js"></script>
 </body>
 

@@ -18,8 +18,7 @@ var menuDetailsMap =
 								  'text':'z-axis-test',
 	                              'action':function() { performPrinterAction('/runMacro', testStatus, "TEST_Z"); }},
 					 'left-button': {'icon':'Icon_Menu_Back.svg',
-									 'href':maintenanceMenu,
-									 'action': null}},
+									 'href':maintenanceMenu}},
 	'clean-nozzles': {'menu-title': 'clean-nozzles',
 				  'action-1': {'active-icon':'Icon_Menu_Clean_Nozzles.svg',
 							   'icon':'Icon_Menu_Clean_Nozzles.svg',
@@ -52,36 +51,36 @@ var menuDetailsMap =
 								  'text':'printer-colour',
 								  'href':printerColourPage},
 					 'left-button': {'icon':'Icon_Menu_Back.svg',
-									 'href':settingsMenu,
-									 'action': null}},
+									 'href':settingsMenu}},
 	'maintenance': {'menu-title': 'maintenance',
 		            'action-1': {'active-icon':'Icon-Menu-Purge-White.svg',
 			                     'icon':'Icon-Menu-Purge-Grey.svg',
 				                 'text':'purge',
-                                 'href':purgePage, 
-                                 'action':null },
+                                 'href':purgePage + '?from=maintenance'},
 		            'action-2': {'active-icon':'Icon-Menu-Eject-White.svg',
 					             'icon':'Icon-Menu-Eject-Grey.svg',
 						         'text':'eject-stuck',
-					             'href':ejectStuckMenu,
-					             'action':null},
+					             'href':ejectStuckMenu},
 				  'action-3': {'active-icon':'Icon-Menu-Clean-White.svg',
 							   'icon':'Icon-Menu-Clean-Grey.svg',
 							   'text':'clean-nozzles',
-							   'href':cleanNozzlesMenu,
-							   'action':null},
+							   'href':cleanNozzlesMenu},
 				  'action-4': {'active-icon':'Icon-Menu-Remove-White.svg',
 							   'icon':'Icon-Menu-Remove-Grey.svg',
 							   'text':'remove-head',
-							   'action':function() { performPrinterAction('/removeHead', removeHeadStatus, safetiesOn().toString()); }},
+							   'action':function() { performPrinterAction('/removeHead',
+                                                                          removeHeadStatus,
+                                                                          safetiesOn().toString()); }},
 				  'action-5': {'active-icon':'Icon-Menu-Level-White.svg',
 							   'icon':'Icon-Menu-Level-Grey.svg',
 							   'text':'level-gantry',
-                               'action':function() { performPrinterAction('/runMacro', levelGantryStatus, 'LEVEL_GANTRY'); }},
+                               'action':function() { performPrinterAction('/runMacro',
+                                                                          levelGantryStatus,
+                                                                          'LEVEL_GANTRY'); }},
 				  'action-6': {'active-icon':'Icon-Menu-Test-White.svg',
 							   'icon':'Icon-Menu-Test-Grey.svg',
 							   'text':'axis-testing',
-							   'href':'menu-horz.html?axis-testing'}},
+							   'href':axisTestingMenu}},
 	'security-settings': {'menu-title': 'security-settings',
 				          'action-1': {'active-icon':null,
 								       'icon':null,
@@ -97,11 +96,11 @@ var menuDetailsMap =
 					 'action-2': {'active-icon':'Icon-Network.svg',
 								  'icon':'Icon-Network.svg',
 								  'text':'wireless-settings',
-                                  'href':'serverStatus.html'},
+                                  'href':wirelessSettingsPage},
 					 'action-3': {'active-icon':'Icon-Security.svg',
 								  'icon':'Icon-Security.svg',
 								  'text':'security-settings',
-								  'href':'menu-horz.html?security-settings'}}
+								  'href':securitySettingsMenu}}
 };
 
 function setMenuText(details, field)
@@ -169,14 +168,16 @@ function setActionButton(details, field)
 function menuHorzInit()
 {
     var menuDetails = null;
-    var menuId = window.location.search;
-    if (menuId.length > 0)
-        menuId = menuId.substr(1);
+    var urlParams = new URLSearchParams(window.location.search);
+    var menuId = urlParams.get('id');
     if (menuId != null)
         menuDetails = menuDetailsMap[menuId];
     if (menuDetails != null)
     {
         setMachineLogo();
+        var initFunc = menuDetails['init'];
+        if (initFunc != null)
+            menuDetails = initFunc(menuDetails);
         setMenuText(menuDetails, 'menu-title');
         setActionButton(menuDetails, 'action-1');
         setActionButton(menuDetails, 'action-2');
@@ -196,10 +197,9 @@ function performPrinterAction(printerCommand, targetPage, parameter)
 	var selectedPrinter = localStorage.getItem(selectedPrinterVar);
 	if (selectedPrinter !== null)
 	{
-        sendPostCommandToRoot(selectedPrinter + "/remoteControl" + printerCommand,
-                              function() { goToPage(targetPage); },
-                              null,
-                              parameter);
+        promisePostCommandToRoot(selectedPrinter + '/remoteControl' + printerCommand, parameter)
+            .then(function() { goToPage(targetPage); })
+            .catch(function() { alert('Failed to perform action!'); });
     }
     else
         goToHomeOrPrinterStatus();

@@ -34,8 +34,8 @@ function updateNameStatus(nameData)
 {
     var machineDetails = getMachineDetails();
     
-    $('#'+ machineDetails['icon']).removeClass('hidden');
-    $('#idle-image').attr('src', imageRoot + machineDetails['idle-icon'])
+    $('#'+ machineDetails['icon-class']).removeClass('hidden');
+    $('#idle-image').attr('src', imageRoot + machineDetails['icon-background-light'])
     $('#machine-model').html(i18next.t(machineDetails['model']));
     $('#machine-name').html(nameData.printerName);
 
@@ -132,7 +132,7 @@ function updateFilamentStatus(materialData, filamentIndex)
 function eject(materialNumber)
 {
     var selectedPrinter = localStorage.getItem(selectedPrinterVar)
-    sendPostCommandToRoot(selectedPrinter + '/remoteControl/ejectFilament', null, null, materialNumber + 1);
+    promisePostCommandToRoot(selectedPrinter + '/remoteControl/ejectFilament', materialNumber + 1);
 	getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus)
 	getStatusData(selectedPrinter, '/materialStatus', updateMaterialStatus)
 }
@@ -274,7 +274,7 @@ function pausePrint()
     if (homeDebounceFlag !== true)
     {
 	    var selectedPrinter = localStorage.getItem(selectedPrinterVar);
-        sendPostCommandToRoot(selectedPrinter + "/remoteControl/pause", null, null, null);
+        promisePostCommandToRoot(selectedPrinter + "/remoteControl/pause", null);
 	    getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus)
 	    getStatusData(selectedPrinter, '/controlStatus', updateControlStatus)
     }
@@ -285,7 +285,7 @@ function resumePrint()
     if (homeDebounceFlag !== true)
     {
         var selectedPrinter = localStorage.getItem(selectedPrinterVar);
-        sendPostCommandToRoot(selectedPrinter + "/remoteControl/resume", null, null, null);
+        promisePostCommandToRoot(selectedPrinter + "/remoteControl/resume", null);
         getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus)
         getStatusData(selectedPrinter, '/controlStatus', updateControlStatus)
     }
@@ -337,37 +337,6 @@ function updateControlStatus(controlData)
     homeDebounceFlag = false;
 }
 
-function clearActiveErrors()
-{
-    var pr = localStorage.getItem(selectedPrinterVar);
-
-    if (pr !== null)
-    {
-        sendPostCommandToRoot(pr + '/remoteControl/clearErrors',
-                function (data)
-                {
-                    $('#active-error-dialog').modal('hide');
-                },
-                goToPrinterStatusPage,
-                null);
-    }
-}
-
-function handleActiveErrors(activeErrorData)
-{
-    if (activeErrorData.activeErrors !== null &&
-	    activeErrorData.activeErrors.length > 0)
-    {
-        $('#error-text').val(activeErrorData.activeErrors[0]);
-        $('#clear-error-button').on('click', clearActiveErrors);
-        $('#active-error-dialog').modal('show');
-    }
-    else
-    {
-        $('#active-error-dialog').modal('hide');
-    }
-}
-
 function updateHomeData(printerData)
 {
     localStorage.setItem(printerTypeVar, printerData.printerTypeCode);
@@ -381,57 +350,14 @@ function updateHomeData(printerData)
     currentPrinterData = printerData;
 }
 
-function resolvePrinterID(printerID)
-{
-    if (printerID !== null)
-        return printerID;
-    else
-        return localStorage.getItem(selectedPrinterVar);
-}
-
-function getStatusData(printerID, statusName, callback)
-{
-    var pr = resolvePrinterID(printerID);
-
-    if (pr !== null)
-    {
-        sendGetCommandToRoot(pr + '/remoteControl' + statusName,
-                function (data)
-                {
-                    callback(data);
-                },
-                goToPrinterStatusPage,
-                null);
-    }
-}
-
-function getPrinterStatus(printerID, callback)
-{
-    var pr = resolvePrinterID(printerID);
-    
-    if (pr !== null)
-    {
-        sendGetCommandToRoot(pr + '/remoteControl',
-                function (data)
-                {
-                    callback(data);
-                },
-                goToPrinterStatusPage,
-                null);
-    }
-}
-
 function updateHomeServerStatus(data)
 {
-    $('#machine-ip').text(data.serverIP)
+    $('#machine-ip').text(data.serverIP);
 }
 
-function getHomeServerStatus(successCallback, failCallback)
+function clearHomeServerStatus(data)
 {
-    sendGetCommandToRoot('discovery/whoareyou',
-            successCallback,
-            failCallback,
-            null);
+    $('#machine-ip').text("---.---.---.---");
 }
 
 function getHomeData()
@@ -439,7 +365,9 @@ function getHomeData()
 	var selectedPrinter = localStorage.getItem(selectedPrinterVar);
 	if (selectedPrinter !== null)
 	{
-		getHomeServerStatus(updateHomeServerStatus, updateHomeServerStatus);
+        promiseGetCommandToRoot('discovery/whoareyou', null)
+            .then(updateHomeServerStatus)
+            .catch(clearHomeServerStatus);
 		
         // Either get all the data in one lump
         getPrinterStatus(selectedPrinter, updateHomeData);
@@ -467,9 +395,6 @@ function startHomeUpdates()
 		//setInterval(function() { getStatusData(null, '/headStatus', updateHeadStatus); }, 1000);
 		//setInterval(function() { getStatusData(null, '/printJobStatus', updatePrintJobStatus); }, 500);
 		//setInterval(function() { getStatusData(null, '/controlStatus', updateControlStatus); }, 500);
-
-        // Set off the error notifier.
-		setInterval(function() { getStatusData(null, '/activeErrorStatus', handleActiveErrors); }, 500);
     }
 }
 
@@ -478,4 +403,5 @@ function homeInit()
     localStorage.setItem(printerTypeVar, "RBX01");
     getHomeData();
     startHomeUpdates();
+    startActiveErrorHandling();
 }

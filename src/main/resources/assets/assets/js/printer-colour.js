@@ -27,7 +27,7 @@ function savePrinterColour()
 {
     var selectedColour = $('#selected-colour').closest('.btn.rbx-colour-button')
                                               .css('background-color');
-    sendPostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/changePrinterColour", null, null, selectedColour);
+    promisePostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/changePrinterColour", selectedColour);
     //goToPage('home.html');
 }
 
@@ -76,10 +76,9 @@ function printerColourInit()
                                         $(element).css('background-color', colourArray[index])
                                                   .on('click', onColourClicked);
                                     });
-        sendGetCommandToRoot(selectedPrinter + '/remoteControl/nameStatus',
-                             updatePrinterColours,
-                             goToPrinterStatusPage,
-                             null);
+        promiseGetCommandToRoot(selectedPrinter + '/remoteControl/nameStatus', null)
+            .then(updatePrinterColours)
+            .catch(goToPrinterStatusPage);
 	}
 	else
 		goToPrinterStatusPage();

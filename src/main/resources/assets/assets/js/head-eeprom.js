@@ -30,10 +30,9 @@ function setHeadEPPROMData()
         }
         
         var selectedPrinter = localStorage.getItem(selectedPrinterVar);
-        sendPostCommandToRoot(selectedPrinter + "/remoteControl/setHeadEEPROM",
-                              setupHeadEEPROMPage,
-                              reportHEError,
-                              eData);
+        promisePostCommandToRoot(selectedPrinter + "/remoteControl/setHeadEEPROM", eData)
+            .then(setupHeadEEPROMPage)
+            .catch(reportHEError);
     }
 }
 
@@ -102,10 +101,9 @@ function headEEPromInit()
 	{
         setMachineLogo();
         $('.rbx-spinner').on('click', onSpinnerClick);
-        sendGetCommandToRoot(selectedPrinter + '/remoteControl/headEEPROM',
-                             updateHeadEEPROMData,
-                             goToPrinterStatusPage,
-                             null);
+        promiseGetCommandToRoot(selectedPrinter + '/remoteControl/headEEPROM', null)
+            .then(updateHeadEEPROMData)
+            .catch(goToPrinterStatusPage);
 	}
 	else
 		goToPrinterStatusPage();
