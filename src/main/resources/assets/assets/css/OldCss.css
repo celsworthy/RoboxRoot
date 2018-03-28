@@ -88,12 +88,6 @@
   background-color:#303030;
 }
 
-.rbx-text-large {
-  font-size:32px;
-  font-weight:700;
-  color:inherit;
-}
-
 .rbx-text-medium {
   font-size:18px;
   font-weight:400;
@@ -261,18 +255,5 @@ img.idle {
 
 .margin-left {
   margin-left:15px;
-}
-
-.btn.btn-default.rbx-colour-button {
-  width:10vh;
-  height:6vh;
-  margin-top:2vh;
-  margin-bottom:2vh;
-  border-radius:10px;
-  border-width:5px;
-}
-
-img.rbx-colour-button {
-  height:3vh;
 }
 

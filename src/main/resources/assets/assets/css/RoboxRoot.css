@@ -11,11 +11,11 @@ body {
   color:#009ee3;
   background-color:transparent;
   font-size:0;
+  border:none;
 }
 
 .btn.btn-default:hover {
   color:#ffffff;
-  font-size:0;
   background-color:#009ee3;
 }
 
@@ -39,13 +39,6 @@ body {
   margin-top:2.375vh;
 }
 
-.btn {
-  font-weight:300;
-  border:none;
-  padding:0px;
-  font-size:15px;
-}
-
 .btn-default:active, .btn-default:focus, .btn-default:active:focus, .btn-default:active.focus, .btn-default:active:hover, .btn-default:active.hover {
   background-color:#009ee3;
 }
@@ -62,6 +55,10 @@ h2 {
   margin:0px;
   color:#fff;
   line-height:1.8vh;
+}
+
+.page-title {
+  padding:1.25vh 0vh 2.5vh 0vh;
 }
 
 .container.page {
@@ -139,11 +136,12 @@ h2 {
   height:10vh;
   text-align:left;
   font-size:4.5vh;
-  line-height:10vh;
+  font-weight:300;
+  line-height:8.5vh;
   padding-left:11vh;
   background-repeat:no-repeat;
   background-size:5vh;
-  background-position:5% 50%;
+  background-position:6% 50%;
   background-color:#303030;
 }
 
@@ -159,6 +157,7 @@ h2 {
   padding-top:20vh;
   background-position:50% 20%;
   background-color:#303030;
+  font-weight:300;
 }
 
 .menu-horz-button-icon {
@@ -175,7 +174,6 @@ h2 {
   background-color:#303030;
   margin-bottom:0;
   border:none;
-  font-size:0;
 }
 
 .row.panel.rbx-home-currentjob {
@@ -227,8 +225,13 @@ h2 {
   background-image:url("../../assets/img/Icon-Menu-Grid-Console.svg");
 }
 
+.btn.btn-default.menu-grid-button:hover {
+  background-color:#009ee3;
+}
+
 .btn.btn-default.menu-grid-button.menu-main-control:hover {
   background-image:url("../../assets/img/Icon-Menu-Grid-Control-Inverse.svg");
+  background-color:#009ee3;
 }
 
 .btn.btn-default.menu-grid-button.menu-main-reprint:hover {
@@ -275,6 +278,10 @@ h2 {
 
 .btn.btn-default.menu-horz-button.menu-maint-test {
   background-image:url("../../assets/img/Icon-Menu-Test-Grey.svg");
+}
+
+.btn.btn-default.menu-horz-button:hover {
+  background-color:#009ee3;
 }
 
 .btn.btn-default.menu-horz-button.menu-maint-purge:hover {
@@ -328,12 +335,6 @@ h2 {
 
 .float-right {
   float:right;
-}
-
-.rbx-panel {
-  margin:12px;
-  background-color:#303030;
-  height:auto;
 }
 
 img.rbx-panel {
@@ -466,6 +467,14 @@ img.rbx-panel {
   background-color:transparent;
 }
 
+.rbx-text-note {
+  font-size:3.25vh;
+  font-weight:300;
+  color:inherit;
+  font-style:italic;
+  margin:0;
+}
+
 .rbx-text-large {
   font-size:4vh;
   font-weight:700;
@@ -485,6 +494,12 @@ img.rbx-panel {
 .rbx-text-xlarge {
   font-size:5.5vh;
   font-weight:600;
+}
+
+.rbx-field-title {
+  font-size:4.5vh;
+  font-weight:300;
+  padding:1vh 0vh;
 }
 
 .row.rbx-home-temperature {
@@ -556,11 +571,6 @@ img.rbx-panel {
   background-position:100% 90%;
 }
 
-.rbx-text-ml {
-  font-size:28px;
-  font-weight:700;
-}
-
 .rbx-grey {
   color:grey;
 }
@@ -571,7 +581,12 @@ img.rbx-panel {
 
 input.rbx-field {
   width:100%;
-  color:grey;
+  height:7.5vh;
+  color:#000;
+  font-weight:400;
+  outline:none;
+  border:none;
+  padding:0 0vh 0.25vh 2.5vh;
 }
 
 .btn-default.move:hover, .btn-default.move:active, .btn-default.move:focus, .btn-default.move:active:focus, .btn-default.move:active.focus, .btn-default.move:active:hover, .btn-default.move:active.hover {
@@ -944,7 +959,7 @@ input.rbx-field {
   line-height:3vh;
 }
 
-.console-input {
+input.console {
   height:6.25vh;
   width:100%;
   font-family:'Source Code Pro';
@@ -1019,6 +1034,18 @@ input.rbx-field {
   outline:none;
 }
 
+.btn.btn-default.keyboard-12bt {
+  background-color:#303030;
+  width:8.75vh;
+  height:10vh;
+  margin:0.4375vh 0.5vh;
+  color:#fff;
+  font-size:6.75vh;
+  font-weight:300;
+  line-height:2vh;
+  outline:none;
+}
+
 .btn.btn-default.keyboard-30bt.dbl {
   height:15.875vh;
   line-height:2vh;
@@ -1026,18 +1053,25 @@ input.rbx-field {
   background-position:50% 80%;
 }
 
-.btn.btn-default.keyboard-30bt.dbl.bspace {
+.btn.btn-default.keyboard-12bt.dbl {
+  height:20.875vh;
+  line-height:2vh;
+  background-repeat:no-repeat;
+  background-position:50% 80%;
+}
+
+.btn.btn-default.bspace {
   background-size:3.75vh 3vh;
   background-image:url("../../assets/img/Icon-KB-Backspace.svg");
 }
 
-.btn.btn-default.keyboard-30bt.dbl.return {
+.btn.btn-default.return {
   background-color:#009ee3;
   background-size:4.125vh 3.25vh;
   background-image:url("../../assets/img/Icon-KB-Return.svg");
 }
 
-.btn.btn-default.keyboard-30bt.dbl.return:hover {
+.btn.btn-default.keyboard-30bt.return:hover {
   background-color:#fff;
   background-image:url("../../assets/img/Icon-KB-Return-Hover.svg");
 }
@@ -1048,5 +1082,26 @@ input.rbx-field {
 
 .btn.btn-default.keyboard-30bt:hover {
   background-color:#009ee3;
+}
+
+.btn.btn-default.keyboard-12bt:hover {
+  background-color:#009ee3;
+}
+
+input[type="radio"], input[type="checkbox"] {
+  margin:4px 0 0;
+  margin-top:1px \9;
+  line-height:normal;
+}
+
+.btn.btn-default.rbx-colour-button {
+  width:15vh;
+  height:7.5vh;
+  margin:1.25vh 0vh;
+  border-width:0.375vh;
+}
+
+img.rbx-colour-button {
+  height:3vh;
 }
 

@@ -15,32 +15,25 @@
 <body id="wireless-settings" class="canvas-grey no-touch-action">
     <div class="container page">
         <div class="row">
-            <div style="padding:4vh 6.5vh 2vh;"><img src="assets/img/Logo-Blank.svg" class="machine-logo"></div>
-        </div>
-        <div class="row">
             <div>
-                <h1 class="localised" style="padding:0vh 0vh 1vh 0vh" data-i18n="wireless-settings-title">Wireless Settings</h1>
+                <h1 class="localised page-title" data-i18n="wireless-settings-title">Wireless Settings</h1>
             </div>
         </div>
-        <div class="row rbx-panel rbx-white rbx-text-large">
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center no-padding"><input type="radio" name="wifi-state" value="on" id="wifi-on" style="margin-right:0.5em;"><label for="wifi-on">On</label></div>
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center no-padding"><input type="radio" name="wifi-state" value="off" id="wifi-off" style="margin-right:0.5em;"><label for="wifi-off">Off</label></div>
+        <div class="row panel rbx-white rbx-text-large vertical-align" style="height: 8vh; margin: 0vh 1.25vh; padding:0vh 2.5vh;">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center"><input type="radio" name="wifi-state" value="on" id="wifi-on" style="margin-right:0.5em;"><label for="wifi-on" class="rbx-field-title">On</label></div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center"><input type="radio" name="wifi-state" value="off" id="wifi-off" style="margin-right:0.5em;"><label for="wifi-off" class="rbx-field-title">Off</label></div>
         </div>
-        <div class="row rbx-panel rbx-white">
+        <div class="row panel rbx-white" style="margin: 1.25vh 1.25vh; padding:0vh 2.5vh;">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding text-center">
-                        <p class="text-left rbx-text-large no-margins localised" data-i18n="wireless-settings-ssid">SSID:</p><input type="text" autofocus="" inputmode="numeric" id="wifi-ssid" class="rbx-field rbx-text-large">
-                        <p class="text-left rbx-text-large no-margins localised" data-i18n="wireless-settings-password">Password:</p><input type="text" autofocus="" inputmode="numeric" id="password" class="rbx-field rbx-text-large">
-                        <p class="text-left localised" data-i18n="settings-save">Click Save to store your settings.</p>
-                    </div>
-                </div>
+                <p class="localised rbx-field-title no-margins" data-i18n="wireless-settings-ssid">SSID:</p><input type="text" autofocus="" inputmode="numeric" id="wifi-ssid" class="rbx-field rbx-text-xlarge">
+                <p class="localised rbx-field-title no-margins" data-i18n="wireless-settings-password">Password:</p><input type="text" autofocus="" inputmode="numeric" id="password" class="rbx-field rbx-text-xlarge">
+                <p class="rbx-text-note localised" data-i18n="settings-save" style="padding: 1.5vh 0vh 1.5vh">Click Save to store your settings.</p>
             </div>
         </div>
     </div>
     <div class="container footer">
-        <div class="btn-group btn-group-justified" role="group"><a class="btn btn-default menu-bottom-button" role="button" href="/menu-horz.html?id=settings" id="left-button"> <img src="assets/img/Icon_Menu_Back.svg" class="menu-bottom-button-icon"></a><a class="btn btn-default menu-bottom-button" role="button" href="/menu-grid.html?id=main"
-                id="middle-button"> <img src="assets/img/Icon-Menu.svg" style="height:6.5vh;"></a><a class="btn btn-default disabled menu-bottom-button" role="button" href="#" id="right-button"> <img src="assets/img/Icon-Border.svg" class="menu-bottom-button-icon"></a></div>
+        <div class="btn-group btn-group-justified" role="group"><a class="btn btn-default menu-bottom-button" role="button" href="/menu-horz.html?id=settings" id="left-button"> <img src="assets/img/Icon_Menu_Back.svg" class="menu-bottom-button-icon"></a><a class="btn btn-default menu-bottom-button rbx-invisible" role="button"
+                href="home.html" id="middle-button"> <img src="assets/img/Icon-Home.svg" style="height:6.5vh;"></a><a class="btn btn-default disabled menu-bottom-button" role="button" href="#" id="right-button"> <img src="assets/img/Icon-Menu-Save.svg" class="menu-bottom-button-icon"></a></div>
     </div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>

@@ -13,30 +13,37 @@
 </head>
 
 <body id="access-pin" class="canvas-grey no-touch-action">
-    <div class="container page">
-        <div class="row">
-            <div style="padding:4vh 6.5vh 2vh;"><img src="assets/img/Logo-Blank.svg" class="machine-logo"></div>
-        </div>
+    <div class="container page" style="height: 67.25vh;">
         <div class="row">
             <div>
-                <h1 class="localised" style="padding:0vh 0vh 1vh 0vh" data-i18n="access-pin-title">Access PIN</h1>
+                <h1 class="localised page-title" data-i18n="access-pin-title">Access PIN</h1>
             </div>
         </div>
-        <div class="row rbx-panel rbx-white">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
+        <div class="row panel rbx-white" style="margin: 0vh 1.25vh; padding:0vh 2.5vh;">
+            <div>
                 <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding text-center">
-                        <p class="text-left rbx-text-large no-margins localised" data-i18n="access-pin-enter">Enter PIN:</p><input type="text" autofocus="" inputmode="numeric" id="pin-1" class="rbx-field rbx-text-large">
-                        <p class="text-left rbx-text-large no-margins localised" data-i18n="access-pin-confirm">Confirm PIN:</p><input type="text" autofocus="" inputmode="numeric" id="pin-2" class="rbx-field rbx-text-large">
-                        <p class="text-left localised" data-i18n="settings-save">Click Save to store your settings.</p>
+                    <div>
+                        <p class="localised rbx-field-title no-margins" data-i18n="access-pin-enter">Enter PIN:</p><input type="text" placeholder="****" maxlength="4" autofocus="" inputmode="numeric" id="pin-1" class="rbx-field rbx-text-xlarge" style="text-align:center;">
+                        <p class="localised rbx-field-title no-margins" data-i18n="access-pin-confirm">Confirm PIN:</p><input type="text" placeholder="****" maxlength="4" autofocus="" inputmode="numeric" id="pin-1" class="rbx-field rbx-text-xlarge" style="text-align:center;">
+                        <p class="rbx-text-note localised" data-i18n="settings-save"
+                            style="padding: 1.5vh 0vh 1.5vh">Click Save to store your settings.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="container page" style="height: 22.25vh; padding: 0vh 1.25vh;">
+        <div class="row vertical-align rbx-invisible" style="margin: 0vh -0.5vh; font-size: 0;">
+            <div style="width: 48.75vh;"><button class="btn btn-default keyboard-12bt" type="button" id="zero" char="0">0</button><button class="btn btn-default keyboard-12bt" type="button" id="one" char="1">1</button><button class="btn btn-default keyboard-12bt" type="button" id="two"
+                    char="2">2</button><button class="btn btn-default keyboard-12bt" type="button" id="three" char="3">3</button><button class="btn btn-default keyboard-12bt" type="button" id="four" char="4">4</button><button class="btn btn-default keyboard-12bt"
+                    type="button" id="five" char="5">5</button><button class="btn btn-default keyboard-12bt" type="button" id="six" char="6">6</button><button class="btn btn-default keyboard-12bt" type="button" id="seven" char="7">7</button><button class="btn btn-default keyboard-12bt"
+                    type="button" id="eight" char="8">8</button><button class="btn btn-default keyboard-12bt" type="button" id="nine" char="9">9</button></div>
+            <div style="width: 9.75vh;"><button class="btn btn-default keyboard-12bt dbl bspace" type="button" id="backspace">&nbsp;</button></div>
+        </div>
+    </div>
     <div class="container footer">
-        <div class="btn-group btn-group-justified" role="group"><a class="btn btn-default menu-bottom-button" role="button" href="/menu-horz.html?id=security-settings" id="left-button"> <img src="assets/img/Icon_Menu_Back.svg" class="menu-bottom-button-icon"></a><a class="btn btn-default menu-bottom-button" role="button"
-                href="/menu-grid.html?id=main" id="middle-button"> <img src="assets/img/Icon-Menu.svg" style="height:6.5vh;"></a><a class="btn btn-default disabled menu-bottom-button" role="button" href="#" id="right-button"> <img src="assets/img/Icon-Border.svg" class="menu-bottom-button-icon"></a></div>
+        <div class="btn-group btn-group-justified" role="group"><a class="btn btn-default menu-bottom-button" role="button" href="/menu-horz.html?id=security-settings" id="left-button"> <img src="assets/img/Icon_Menu_Back.svg" class="menu-bottom-button-icon"></a><a class="btn btn-default disabled menu-bottom-button rbx-invisible"
+                role="button" href="/menu-grid.html?id=main" id="middle-button"> <img src="assets/img/Icon-Menu.svg" style="height:6.5vh;"></a><a class="btn btn-default disabled menu-bottom-button" role="button" href="#" id="right-button"> <img src="assets/img/Icon-Menu-Save.svg" class="menu-bottom-button-icon"></a></div>
     </div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>

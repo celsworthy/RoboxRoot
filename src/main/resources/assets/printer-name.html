@@ -15,27 +15,24 @@
 <body id="printer-name" class="canvas-grey no-touch-action">
     <div class="container page">
         <div class="row">
-            <div style="padding:4vh 6.5vh 2vh;"><img src="assets/img/Logo-Blank.svg" class="machine-logo"></div>
-        </div>
-        <div class="row">
             <div>
-                <h1 class="localised" style="padding:0vh 0vh 1vh 0vh" data-i18n="printer-name-title">Printer Name</h1>
+                <h1 class="localised page-title" data-i18n="printer-name-title">Printer Name</h1>
             </div>
         </div>
-        <div class="row rbx-panel rbx-white">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
+        <div class="row panel rbx-white" style="margin: 0vh 1.25vh; padding:0vh 2.5vh;">
+            <div>
                 <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding text-center">
-                        <p class="text-left rbx-text-large localised" data-i18n="printer-name-enter">Enter Printer Name:</p><input type="text" autofocus="" id="pname-input" class="rbx-field rbx-text-large">
-                        <p class="text-left localised" data-i18n="settings-save">Click Save to store your settings.</p>
+                    <div>
+                        <p class="localised rbx-field-title no-margins" data-i18n="printer-name-enter">Enter Printer Name:</p><input type="text" autofocus="" id="pname-input" class="rbx-field rbx-text-xlarge">
+                        <p class="rbx-text-note localised" data-i18n="settings-save" style="padding: 1.5vh 0vh 1.5vh">Click Save to store your settings.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="container footer">
-        <div class="btn-group btn-group-justified" role="group"><a class="btn btn-default menu-bottom-button" role="button" href="/menu-horz.html?id=identity" id="left-button"> <img src="assets/img/Icon_Menu_Back.svg" class="menu-bottom-button-icon"></a><a class="btn btn-default menu-bottom-button" role="button" href="/menu-grid.html?id=main"
-                id="middle-button"> <img src="assets/img/Icon-Menu.svg" style="height:6.5vh;"></a><a class="btn btn-default disabled menu-bottom-button" role="button" href="#" id="right-button"> <img src="assets/img/Icon-Border.svg" class="menu-bottom-button-icon"></a></div>
+        <div class="btn-group btn-group-justified" role="group"><a class="btn btn-default menu-bottom-button" role="button" href="/menu-horz.html?id=identity" id="left-button"> <img src="assets/img/Icon_Menu_Back.svg" class="menu-bottom-button-icon"></a><a class="btn btn-default menu-bottom-button rbx-invisible" role="button"
+                href="/menu-grid.html?id=main" id="middle-button"> <img src="assets/img/Icon-Menu.svg" style="height:6.5vh;"></a><a class="btn btn-default disabled menu-bottom-button" role="button" href="#" id="right-button"> <img src="assets/img/Icon-Menu-Save.svg" class="menu-bottom-button-icon"></a></div>
     </div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>

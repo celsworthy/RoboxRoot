@@ -18,8 +18,8 @@
             <div class="no-padding" style="height:34.5vh;  margin: 1.25vh"><textarea wrap="hard" readonly="" autofocus="" inputmode="verbatim" id="gcode-output" class="console-output rbx-text-medium"></textarea></div>
         </div>
         <div class="row panel vertical-align">
-            <div style="margin: 0vh 0vh 1.25vh 1.25vh; width: 49.375vh;"><input type="text" readonly="" placeholder="Enter GCode..." autocomplete="on" id="gcode-input" class="rbx-text-medium console-input"></div>
-            <div style="width: 5.625vh; height: 6.25vh; margin-bottom: 1.25vh;"><button class="btn btn-default console-input-clear clear" type="button" id="clear">0</button></div>
+            <div style="margin: 0vh 0vh 1.25vh 1.25vh; width: 49.375vh;"><input type="text" readonly="" placeholder="Enter GCode..." autocomplete="on" id="gcode-input" class="rbx-text-medium console"></div>
+            <div style="width: 5.625vh; height: 6.25vh; margin-bottom: 1.25vh;"><button class="btn btn-default console-input-clear clear" type="button" id="clear"></button></div>
         </div>
         <div class="row vertical-align" style="margin: 0.8125vh -0.5vh 0vh; font-size: 0;">
             <div style="width: 48.75vh;"><button class="btn btn-default keyboard-30bt console-key" type="button" id="zero" char="0">0</button><button class="btn btn-default keyboard-30bt console-key" type="button" id="one" char="1">1</button><button class="btn btn-default keyboard-30bt console-key"
@@ -45,8 +45,10 @@
         </div>
     </div>
     <div class="container footer">
-        <div class="btn-group btn-group-justified" role="group"><a class="btn btn-default menu-bottom-button invisible" role="button" href="#" id="left-button"> <img src="assets/img/Icon_Menu_Back.svg" class="menu-bottom-button-icon"></a><a class="btn btn-default menu-bottom-button" role="button" href="menu-grid.html?id=main"
-                id="middle-button"> <img src="assets/img/Icon-Menu.svg" id="home-button" style="height:6.5vh;"></a><a class="btn btn-default menu-bottom-button invisible" role="button" href="#" id="right-button"> <img src="assets/img/Icon_Menu_Next.svg" class="menu-bottom-button-icon"></a></div>
+        <div class="btn-group btn-group-justified" role="group"><a class="btn btn-default menu-bottom-button" role="button" href="#" id="left-button"> <img src="assets/img/Icon_Menu_Back.svg" class="menu-bottom-button-icon"></a><a class="btn btn-default menu-bottom-button" role="button" href="home.html" id="middle-button"> <img src="assets/img/Icon-Home.svg" id="home-button" style="height:6.5vh;"></a>
+            <a
+                class="btn btn-default menu-bottom-button invisible" role="button" href="#" id="right-button"> <img src="assets/img/Icon_Menu_Next.svg" class="menu-bottom-button-icon"></a>
+        </div>
     </div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>

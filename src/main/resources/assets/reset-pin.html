@@ -13,21 +13,31 @@
 </head>
 
 <body id="reset-pin" class="canvas-grey no-touch-action">
-    <div class="container page">
+    <div class="container page" style="height: 67.25vh">
         <div class="row">
             <div>
-                <h1 class="localised" style="padding:0vh 0vh 1vh 0vh" data-i18n="reset-pin-title">Reset PIN</h1>
+                <h1 class="localised page-title" data-i18n="reset-pin-title">Reset PIN</h1>
             </div>
         </div>
-        <div class="row rbx-panel rbx-white">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
+        <div class="row panel rbx-white" style="margin: 0vh 1.25vh; padding:0vh 2.5vh;">
+            <div>
                 <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding text-center">
-                        <p class="text-left rbx-text-large no-margins localised" data-i18n="reset-pin-label">Enter Printer Serial Number:</p><input type="text" autofocus="" inputmode="numeric" id="printer-serial" class="rbx-field rbx-text-large">
-                        <p class="text-left localised" data-i18n="reset-pin-instructions">Enter the last six digits of the serial number of an attached printer, then click the key to reset PIN.</p>
+                    <div>
+                        <p class="localised rbx-field-title no-margins" data-i18n="reset-pin-label">Enter Serial Number:</p><input type="text" placeholder="------" maxlength="6" autofocus="" inputmode="numeric" id="printer-serial" class="rbx-field rbx-text-xlarge">
+                        <p class="rbx-text-note localised" data-i18n="reset-pin-instructions"
+                            style="padding: 1.5vh 0vh 1.5vh">Enter the last six digits of the serial number of an attached printer, then click the key to reset PIN.</p>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="container page" style="height: 22.25vh; padding: 0vh 1.25vh;">
+        <div class="row vertical-align" style="margin: 0vh -0.5vh; font-size: 0;">
+            <div style="width: 48.75vh;"><button class="btn btn-default keyboard-12bt" type="button" id="zero" char="0">0</button><button class="btn btn-default keyboard-12bt" type="button" id="one" char="1">1</button><button class="btn btn-default keyboard-12bt" type="button" id="two"
+                    char="2">2</button><button class="btn btn-default keyboard-12bt" type="button" id="three" char="3">3</button><button class="btn btn-default keyboard-12bt" type="button" id="four" char="4">4</button><button class="btn btn-default keyboard-12bt"
+                    type="button" id="five" char="5">5</button><button class="btn btn-default keyboard-12bt" type="button" id="six" char="6">6</button><button class="btn btn-default keyboard-12bt" type="button" id="seven" char="7">7</button><button class="btn btn-default keyboard-12bt"
+                    type="button" id="eight" char="8">8</button><button class="btn btn-default keyboard-12bt" type="button" id="nine" char="9">9</button></div>
+            <div style="width: 9.75vh;"><button class="btn btn-default keyboard-12bt dbl bspace" type="button" id="backspace">&nbsp;</button></div>
         </div>
     </div>
     <div class="container footer">
