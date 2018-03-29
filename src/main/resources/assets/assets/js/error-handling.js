@@ -16,7 +16,6 @@ function handleActiveErrors(activeErrorData)
 	    activeErrorData.activeErrors.length > 0)
     {
         $('#error-text').val(activeErrorData.activeErrors[0]);
-        $('#clear-error-button').on('click', clearActiveErrors);
         $('#active-error-dialog').modal('show');
     }
     else
@@ -53,7 +52,7 @@ function startActiveErrorHandling()
             '<div class="modal fade" role="dialog" tabindex="-1" id="active-error-dialog">'
                 + '<div class="modal-dialog" role="document">'
                 + '<div class="modal-content">'
-                + '<div class="modal-header rbx-dialog"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>'
+                + '<div class="modal-header rbx-dialog">'
                 + '<h4 class="modal-title localised" i18n-data="error-report">Error Report</h4>'
                 + '</div>'
                 + '<div class="modal-body rbx-dialog">'
@@ -67,8 +66,10 @@ function startActiveErrorHandling()
                 + '</div>'
                 + '</div>';
         $('body').append(errorDialogText);
+        $('#clear-error-button').on('click', clearActiveErrors);
 
         // Set off the error notifier.
         setInterval(checkForActiveErrors, 500);
+        
     }
 }

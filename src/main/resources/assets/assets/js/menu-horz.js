@@ -128,8 +128,8 @@ function setActionButton(details, field)
     if (button == null)
     {
         $(item).closest('.row')
-			   .addClass('disabled')
-               .addClass('rbx-hidden');      
+               .off('click')
+			   .addClass('disabled rbx-hidden');      
     }
     else
     {
@@ -158,10 +158,10 @@ function setActionButton(details, field)
 
         $(item).html(text)
                .attr('href', href)
+               .off('click') // Remove all callbacks
                .on('click', action)
                .closest('.row')
-			   .removeClass('disabled')
-               .removeClass('rbx-hidden');
+			   .removeClass('disabled rbx-hidden');
     }
 }
 

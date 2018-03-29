@@ -61,8 +61,7 @@ function updatePrinterColours(nameData)
         selectButton('#custom-colour');        
     }
     
-    $('#right-button').on('click', savePrinterColour)
-                      .removeClass('disabled')
+    $('#right-button').removeClass('disabled')
 }
 
 function printerColourInit()
@@ -76,6 +75,7 @@ function printerColourInit()
                                         $(element).css('background-color', colourArray[index])
                                                   .on('click', onColourClicked);
                                     });
+        $('#right-button').on('click', savePrinterColour);
         promiseGetCommandToRoot(selectedPrinter + '/remoteControl/nameStatus', null)
             .then(updatePrinterColours)
             .catch(goToPrinterStatusPage);

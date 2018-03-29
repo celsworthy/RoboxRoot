@@ -7,8 +7,7 @@ function savePrinterName()
 function updatePrinterName(nameData)
 {
     $('#pname-input').val(nameData.printerName);
-    $('#right-button').on('click', savePrinterName)
-                      .removeClass('disabled')
+    $('#right-button').removeClass('disabled')
 }
 
 function printerNameInit()
@@ -17,6 +16,7 @@ function printerNameInit()
 	if (selectedPrinter !== null)
 	{
         setMachineLogo();
+        $('#right-button').on('click', savePrinterName);
         promiseGetCommandToRoot(selectedPrinter + '/remoteControl/nameStatus', null)
             .then(updatePrinterName)
             .catch(goToPrinterStatusPage);

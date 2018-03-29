@@ -89,7 +89,6 @@ function updateHeadEEPROMData(eData)
         $('#hp-b-2').attr('disabled', 'disabled').val('');
     }
     
-    $('#right-button').on('click', setHeadEPPROMData);
     hpDebounceFlag = false;
     lastEData = eData;
 }
@@ -101,6 +100,7 @@ function headEEPromInit()
 	{
         setMachineLogo();
         $('.rbx-spinner').on('click', onSpinnerClick);
+        $('#right-button').on('click', setHeadEPPROMData);
         promiseGetCommandToRoot(selectedPrinter + '/remoteControl/headEEPROM', null)
             .then(updateHeadEEPROMData)
             .catch(goToPrinterStatusPage);

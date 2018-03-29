@@ -198,8 +198,8 @@ function setFooterButton(details, field)
     menu = details[field];
     if (menu == null)
     {
-        $(item).addClass('disabled')
-               .addClass('rbx-invisible');      
+        $(item).addClass('disabled rbx-invisible')
+               .off('click');      
     }
     else
     {
@@ -214,9 +214,9 @@ function setFooterButton(details, field)
             href = '#';
         $(item).html(icon)
                .attr('href', href)
+               .off('click') // Remove all callbacks
                .on('click', action)
-               .removeClass('disabled')
-               .removeClass('rbx-invisible');
+               .removeClass('disabled rbx-invisible');
     }
 }
 

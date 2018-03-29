@@ -73,7 +73,11 @@ function controlJog()
 function controlEject()
 {
     console.log('controlEject');
-    promisePostCommandToRoot(localStorage.getItem(selectedPrinterVar) + '/remoteControl/ejectFilament', materialNumber + 1);
+}
+
+function controlHeat()
+{
+    console.log('controlHeat');
 }
 
 function controlMove()

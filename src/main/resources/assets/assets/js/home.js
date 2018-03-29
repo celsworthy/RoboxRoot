@@ -151,21 +151,17 @@ function updateFilamentEjectStatus(materialData)
     if (enableEject1Button)
     {
         $('#filament-1-eject').removeClass('disabled');
-        $('#filament-1-eject').on('click', function() { eject(0); });
     } else
     {
         $('#filament-1-eject').addClass('disabled');
-        $('#filament-1-eject').on('click');
     }
 
     if (enableEject2Button)
     {
         $('#filament-2-eject').removeClass('disabled');
-        $('#filament-2-eject').on('click', function() { eject(1); });
     } else
     {
         $('#filament-2-eject').addClass('disabled');
-        $('#filament-2-eject').on('click');
     }
     $('.eject-button.disabled').css('background-color', 'rgba(0,0,0,0)')
 }
@@ -269,25 +265,25 @@ function updatePrintJobStatus(printJobData)
     }
 }
 
-function pausePrint()
+function pauseResumePrint()
 {
     if (homeDebounceFlag !== true)
     {
+        var mode = $(this).attr('mode');
 	    var selectedPrinter = localStorage.getItem(selectedPrinterVar);
-        promisePostCommandToRoot(selectedPrinter + "/remoteControl/pause", null);
+        switch (mode)
+        {
+            case 'p':
+                promisePostCommandToRoot(selectedPrinter + "/remoteControl/pause", null);
+                break;
+            case 'r':
+                promisePostCommandToRoot(selectedPrinter + "/remoteControl/resume", null);
+                break;
+            default:
+                break;
+        }
 	    getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus)
 	    getStatusData(selectedPrinter, '/controlStatus', updateControlStatus)
-    }
-}
-
-function resumePrint()
-{
-    if (homeDebounceFlag !== true)
-    {
-        var selectedPrinter = localStorage.getItem(selectedPrinterVar);
-        promisePostCommandToRoot(selectedPrinter + "/remoteControl/resume", null);
-        getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus)
-        getStatusData(selectedPrinter, '/controlStatus', updateControlStatus)
     }
 }
 
@@ -307,31 +303,29 @@ function updateControlStatus(controlData)
 {
     if (controlData.canPause === true)
     {
-        $('#pause-resume-button').removeClass("disabled")
-                                 .on('click', pausePrint);
+        $('#pause-resume-button').removeClass('disabled')
+                                 .attr('mode', 'p');
         $('#pause-resume-button img').attr('src', imageRoot + 'OldIcons/Icon-Pause-B.svg');
     } else if (controlData.canResume === true)
     {
-        $('#pause-resume-button').removeClass("disabled")
-                                 .on('click', resumePrint);
+        $('#pause-resume-button').removeClass('disabled')
+                                 .attr('mode', 'r');
         $('#pause-resume-button img').attr('src', imageRoot + 'OldIcons/Icon-Play-B.svg');
     }
     else
     {
-        $('#pause-resume-button').addClass("disabled");
-        $('#pause-resume-button').on('click');
+        $('#pause-resume-button').addClass('disabled')
+                                 .attr('mode', 'd');
         $('#pause-resume-image').attr('src', imageRoot + 'OldIcons/Icon-Pause-B.svg');
     }
     
     if (controlData.canCancel === true)
     {
-        $('#cancel-button').removeClass("disabled");
-        $('#cancel-button').on('click', cancelPrint);
+        $('#cancel-button').removeClass('disabled');
     }
     else
     {
-        $('#cancel-button').addClass("disabled");
-        $('#cancel-button').on('click');
+        $('#cancel-button').addClass('disabled');
     }
     
     homeDebounceFlag = false;
@@ -401,6 +395,10 @@ function startHomeUpdates()
 function homeInit()
 {
     localStorage.setItem(printerTypeVar, "RBX01");
+    $('#filament-1-eject').on('click', function() { eject(0); });
+    $('#filament-2-eject').on('click', function() { eject(1); });
+    $('#pause-resume-button').on('click', pauseResumePrint);
+    $('#cancel-button').on('click', cancelPrint);
     getHomeData();
     startHomeUpdates();
     startActiveErrorHandling();

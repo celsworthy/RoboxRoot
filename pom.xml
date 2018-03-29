@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>celtech</groupId>
     <artifactId>Root</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
 
     <name>Root</name>
@@ -129,7 +129,7 @@
         <dependency>
             <groupId>celtech</groupId>
             <artifactId>RoboxBase</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>com.github.toastshaman</groupId>

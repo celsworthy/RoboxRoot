@@ -26,6 +26,7 @@ function updateReprintData(suitablePrintJobs)
         {
             $(jobRow).removeClass('rbx-invisible')
                      .attr('job-id', suitablePrintJobs[pjIndex].printJobID)
+                     .off('click') // Remove all callbacks
                      .on('click', reprintJob);
             $(jobRow + " .job-name").html(suitablePrintJobs[pjIndex].printJobName);
             $(jobRow + " .job-created").html(nbsp);
@@ -36,7 +37,7 @@ function updateReprintData(suitablePrintJobs)
         {
             $(jobRow).addClass('rbx-invisible')
                      .attr('job-id', "")
-                     .on('click', null);
+                     .off('click');
             $(jobRow + " .job-name").html(nbsp);
             $(jobRow + " .job-created").html(nbsp);
             $(jobRow + " .job-duration").html(nbsp);
