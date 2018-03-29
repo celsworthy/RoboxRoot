@@ -88,12 +88,7 @@ function controlMove()
     {
         if (step == 0)
         {
-            s += 'G90\nG28' + axis;
-            if (axis == 'Z')
-            {
-                // Raise head by 10mm so it doesn't hit the bed.
-                s += '\nG0 Z10';
-            }
+            s = 'G90:G28' + axis;
         }
         else
         {

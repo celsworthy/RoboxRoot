@@ -347,11 +347,13 @@ function updateHomeData(printerData)
 function updateHomeServerStatus(data)
 {
     $('#machine-ip').text(data.serverIP);
+    $('#software-version').text(data.serverVersion);
 }
 
 function clearHomeServerStatus(data)
 {
     $('#machine-ip').text("---.---.---.---");
+    $('#software-version').text("*");
 }
 
 function getHomeData()
