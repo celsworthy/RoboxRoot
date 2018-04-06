@@ -47,7 +47,9 @@ function updateHeadEEPROMData(eData)
 {
     var typeCode = eData.typeCode;
 
-    $('#head-title').html(getHeadText(typeCode, "-titleBold") + " " + getHeadText(typeCode, "-titleLight"));
+    $('#head-title-bold').html(getHeadText(typeCode, "-titleBold"));
+    $('#head-title-light').html(getHeadText(typeCode, "-titleLight"));
+    $('#head-title-edition').html(getHeadText(typeCode, "-titleEdition"));
     $('#head-description').html(getHeadText(typeCode, "-description"));
     $('#head-nozzles').html(getHeadText(typeCode, "-nozzles"));
     $('#head-feeds').html(getHeadText(typeCode, "-feeds"));
@@ -103,8 +105,8 @@ function headEEPromInit()
         $('#right-button').on('click', setHeadEPPROMData);
         promiseGetCommandToRoot(selectedPrinter + '/remoteControl/headEEPROM', null)
             .then(updateHeadEEPROMData)
-            .catch(goToPrinterStatusPage);
+            .catch(goToHomeOrPrinterSelectPage);
 	}
 	else
-		goToPrinterStatusPage();
+		goToHomeOrPrinterSelectPage();
 }

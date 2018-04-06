@@ -85,8 +85,8 @@ function printAdjustInit()
 	{
         promiseGetCommandToRoot(selectedPrinter + '/remoteControl/printAdjust', null)
             .then(updatePrintAdjustData)
-            .catch(goToPrinterStatusPage);
+            .catch(goToHomeOrPrinterSelectPage);
 	}
 	else
-		goToPrinterStatusPage();
+		goToHomeOrPrinterSelectPage();
 }

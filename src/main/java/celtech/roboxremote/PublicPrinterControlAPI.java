@@ -24,6 +24,7 @@ import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.jersey.params.BooleanParam;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Platform;
 import javafx.scene.paint.Color;
@@ -691,17 +692,62 @@ public class PublicPrinterControlAPI
     @Path("/executeGCode")
     public Response executeGCode(@PathParam("printerID") String printerID, String gcode)
     {
+        Response response = null;
         if (PrinterRegistry.getInstance() != null)
         {
             String[] gcodeParts = Utils.cleanInboundJSONString(gcode).split(":");
             Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+            
+            List<String> transcript = new ArrayList<String>();
             for (String gcodePart : gcodeParts)
             {
-                printerToUse.sendRawGCode(gcodePart, false);
+                String t = printerToUse.sendRawGCode(gcodePart, false);
+                if (t != null)
+                    t = t.trim();
+                if (!t.isEmpty())
+                    transcript.add(t);
             }
+            if (!transcript.isEmpty())
+            {
+                response = Response.ok(transcript).build();
+            }
+            else
+                response = Response.ok().build();
         }
+        else
+            response = Response.ok().build();
+        return response;
+    }
+    
+    @POST
+    @Timed
+    @Path("/getTranscript")
+    public Response getTranscript(@PathParam("printerID") String printerID)
+    {
+        Response response = null;
+        if (PrinterRegistry.getInstance() != null)
+        {
+            
+            Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+            response = Response.ok(printerToUse.gcodeTranscriptProperty()).build();
+        }
+        else
+            response = Response.ok().build();
+        return response;
+    }
 
-        Response response = Response.ok().build();
+    @POST
+    @Timed
+    @Path("/clearTranscript")
+    public Response clearTranscript(@PathParam("printerID") String printerID)
+    {
+        Response response = null;
+        if (PrinterRegistry.getInstance() != null)
+        {
+            Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+            printerToUse.gcodeTranscriptProperty().clear();
+        }
+        response = Response.ok().build();
         return response;
     }
 

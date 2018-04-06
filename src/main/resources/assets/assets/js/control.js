@@ -1,4 +1,5 @@
-var controlSwitches = {'doorlock':{'state':false, 'onCode':'G37 S', 'offCode':'G37 S'},
+var controlSwitches = {'amblight':{'state':false, 'onCode':'M129', 'offCode':'M128'},
+                       'doorlock':{'state':false, 'onCode':'G37 S', 'offCode':'G37 S'},
                        'fan':{'state':false, 'onCode':'M106', 'offCode':'M107'},
                        'heater1':{'state':false, 'onCode':'M104 S', 'offCode':'M104 S0'},
                        'heater2':{'state':false, 'onCode':'M104 T', 'offCode':'M104 T0'},

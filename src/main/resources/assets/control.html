@@ -7,9 +7,11 @@
     <title>Robox Root TA</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:200,300,400,500,600,700,900">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     <link rel="stylesheet" href="assets/css/OldCss.css">
     <link rel="stylesheet" href="assets/css/RoboxRoot.css">
+    <link rel="stylesheet" href="assets/css/RootFonts.css">
 </head>
 
 <body id="control" class="canvas-grey no-touch-action">
@@ -46,41 +48,38 @@
                 </div>
             </div>
         </div>
-        <div class="row panel vertical-align" style="height: 11vh; font-size: 0;">
-            <div>
-                <div class="row vertical-align">
-                    <div><button class="btn btn-default no-padding control-home" type="button"><img src="assets/img/Icon-Move-Head-Outline.svg" style="height: 8vh; margin: 0vh 4.125vh;"></button><button class="btn btn-default move x--10 control-move" type="button" axis="x" step="-10"></button>
-                        <button
-                            class="btn btn-default move x-home control-move" type="button" axis="x" step="0"></button><button class="btn btn-default move x-10 control-move" type="button" axis="x" step="10"></button></div>
-                </div>
+        <div class="row vertical-align" style="height: 11vh; font-size: 0;">
+            <div class="panel" style="width: 45.25vh;"><button class="btn btn-default no-padding control-home" type="button" style="height: 11vh;"><img src="assets/img/Icon-Move-Head-Outline.svg" style="height: 8vh; margin: 0vh 3.125vh;"></button><button class="btn btn-default move x--10 control-move" type="button"
+                    axis="x" step="-10"></button><button class="btn btn-default move x-home control-move" type="button" axis="x" step="0"></button><button class="btn btn-default move x-10 control-move" type="button" axis="x" step="10"></button></div>
+            <div
+                class="panel" style="height: 11vh; width: 11vh; margin-left: 1.25vh"><button class="btn btn-default move amb-light control-toggle" type="button" switch="amblight"></button></div>
+    </div>
+    <div class="row" style="height: 37.125vh; font-size: 0;">
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 panel no-padding" style="width: 11.75vh; height: 37.125vh;"><button class="btn btn-default move z-10 control-move" type="button" axis="z" step="10"></button><button class="btn btn-default move z-home control-move" type="button" axis="z" step="0"></button><button class="btn btn-default move z--10 control-move"
+                type="button" axis="z" step="-10"></button></div>
+        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 panel move bed">
+            <div class="row vertical-align">
+                <div style="width: 14.75vh; height: 29.625vh;"><button class="btn btn-default move y-10 control-move" type="button" axis="y" step="10"></button><button class="btn btn-default move y-home control-move" type="button" axis="y" step="0"></button><button class="btn btn-default move y--10 control-move"
+                        type="button" axis="y" step="-10"></button></div>
+                <div style="width: 24.75vh; height: 29.625vh; vertical-align: bottom;">
+                    <div class="row" style="height: 23.625vh">
+                        <div class="col-md-12">
+                            <div></div>
+                        </div>
+                    </div><button class="btn btn-default pull-right move unlock control-toggle" type="button" switch="doorlock"></button><button class="btn btn-default pull-right move bed-heat control-toggle" type="button" switch="heaterB"></button></div>
             </div>
         </div>
-        <div class="row" style="height: 37.125vh; font-size: 0;">
-            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 panel no-padding" style="width: 13.75vh; height: 37.125vh;"><button class="btn btn-default move z-10 control-move" type="button" axis="z" step="10"></button><button class="btn btn-default move z-home control-move" type="button" axis="z" step="0"></button><button class="btn btn-default move z--10 control-move"
-                    type="button" axis="z" step="-10"></button></div>
-            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 panel move bed">
-                <div class="row vertical-align">
-                    <div style="width: 14.75vh; height: 29.625vh;"><button class="btn btn-default move y-10 control-move" type="button" axis="y" step="10"></button><button class="btn btn-default move y-home control-move" type="button" axis="y" step="0"></button><button class="btn btn-default move y--10 control-move"
-                            type="button" axis="y" step="-10"></button></div>
-                    <div style="width: 22.75vh; height: 29.625vh; vertical-align: bottom;">
-                        <div class="row" style="height: 23.625vh">
-                            <div class="col-md-12">
-                                <div></div>
-                            </div>
-                        </div><button class="btn btn-default pull-right move unlock control-toggle" type="button" switch="doorlock"></button><button class="btn btn-default pull-right move bed-heat control-toggle" type="button" switch="heaterB"></button></div>
-                </div>
-            </div>
-        </div>
-        <div class="row panel vertical-align" style="height: 15vh; font-size: 0;">
-            <div><img src="assets/img/Blank.svg" id="head-icon" style="height: 10vh; width: 10vh; margin: 2.5vh 1.75vh;"><a class="btn btn-default move nozzle-select rbx-text-small control-toggle require-head" role="button" href="#" switch="nozzle">Select</a>
-                <a
-                    class="btn btn-default move nozzle-valve rbx-text-small control-toggle require-head" role="button" href="#" switch="valve">Valve</a><a class="btn btn-default move nozzle-light rbx-text-small control-toggle require-head" role="button" href="#" switch="lights">Lights</a><a class="btn btn-default move nozzle-fan rbx-text-small control-toggle require-head" role="button"
-                        href="#" switch="fan">Fan</a></div>
-        </div>
+    </div>
+    <div class="row panel vertical-align" style="height: 15vh; font-size: 0;">
+        <div><img src="assets/img/Blank.svg" id="head-icon" style="height: 10vh; width: 10vh; margin: 2.5vh 1.75vh;"><a class="btn btn-default move bar nozzle-select rbx-text-small control-toggle require-head" role="button" href="#" switch="nozzle">Select</a>
+            <a
+                class="btn btn-default move bar nozzle-valve rbx-text-small control-toggle require-head" role="button" href="#" switch="valve">Valve</a><a class="btn btn-default move bar nozzle-light rbx-text-small control-toggle require-head" role="button" href="#" switch="lights">Lights</a><a class="btn btn-default move bar nozzle-fan rbx-text-small control-toggle require-head"
+                    role="button" href="#" switch="fan">Fan</a></div>
+    </div>
     </div>
     <div class="container footer">
         <div class="btn-group btn-group-justified" role="group"><a class="btn btn-default menu-bottom-button" role="button" href="menu-grid.html?id=main" id="left-button"> <img src="assets/img/Icon_Menu_Back.svg" class="menu-bottom-button-icon"></a><a class="btn btn-default menu-bottom-button" role="button" href="home.html"
-                id="middle-button"> <img src="assets/img/Icon-Home.svg" id="home-button" style="height:6.5vh;"></a><a class="btn btn-default menu-bottom-button invisible" role="button" href="#" id="right-button"> <img src="assets/img/Icon_Menu_Next.svg" class="menu-bottom-button-icon"></a></div>
+                id="middle-button"> <img src="assets/img/Icon-Home.svg" id="home-button" style="height:6.5vh;"></a><a class="btn btn-default menu-bottom-button" role="button" href="console.html" id="right-button"> <img src="assets/img/Icon-Console.svg" class="menu-bottom-button-icon"></a></div>
     </div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
@@ -94,6 +93,7 @@
     <script src="assets/js/promise-funcs.js"></script>
     <script src="assets/js/access-pin.js"></script>
     <script src="assets/js/error-handling.js"></script>
+    <script src="assets/js/about.js"></script>
     <script src="assets/js/console.js"></script>
     <script src="assets/js/control.js"></script>
     <script src="assets/js/head-eeprom.js"></script>
@@ -104,8 +104,8 @@
     <script src="assets/js/pin-reset.js"></script>
     <script src="assets/js/print-adjust.js"></script>
     <script src="assets/js/printer-colour.js"></script>
-    <script src="assets/js/printer-status.js"></script>
     <script src="assets/js/printer-name.js"></script>
+    <script src="assets/js/printer-select.js"></script>
     <script src="assets/js/purge.js"></script>
     <script src="assets/js/reprint.js"></script>
     <script src="assets/js/wireless-settings.js"></script>

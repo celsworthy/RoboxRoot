@@ -36,9 +36,9 @@ function goToPage(page)
     }
 }
 
-function goToPrinterStatusPage()
+function goToPrinterSelectPage()
 {
-    goToPage(printerStatusPage);
+    goToPage(printerSelectPage);
 }
 
 function goToHomePage()
@@ -46,7 +46,7 @@ function goToHomePage()
     goToPage(homePage);
 }
 
-function goToHomeOrPrinterStatus()
+function goToHomeOrPrinterSelectPage()
 {
     promiseGetCommandToRoot('discovery/listPrinters', null)
         .then(function(printerData) {
@@ -60,13 +60,18 @@ function goToHomeOrPrinterStatus()
                 }
                 else
                 {
-                    goToPrinterStatusPage();        
+                    goToPrinterSelectPage();        
                 }
             })
         .catch(function() {
                 connectedToServer = false;
                 logout();
             });
+}
+
+function goToPreviousPage()
+{
+    window.history.back();
 }
 
 function goToMainMenu()
@@ -189,13 +194,15 @@ function safetiesOn()
 function cancelAction()
 {
     var selectedPrinter = localStorage.getItem(selectedPrinterVar);
-    promisePostCommandToRoot(selectedPrinter + "/remoteControl/cancel", safetiesOn().toString());
+    return promisePostCommandToRoot(selectedPrinter + "/remoteControl/cancel", safetiesOn().toString());
 }
 
 function setFooterButton(details, field)
 {
     var item = '#' + field;
-    menu = details[field];
+    var menu = null;
+    if (details != null)
+        menu = details[field];
     if (menu == null)
     {
         $(item).addClass('disabled rbx-invisible')
@@ -215,9 +222,19 @@ function setFooterButton(details, field)
         $(item).html(icon)
                .attr('href', href)
                .off('click') // Remove all callbacks
-               .on('click', action)
                .removeClass('disabled rbx-invisible');
+        if (action != null)
+            $(item).on('click', action);
     }
+}
+
+function setHomeButton()
+{
+    var details = {};
+    if (localStorage.getItem(selectedPrinterVar) != null)
+        details = {'middle-button':{'icon':'Icon-Home.svg',
+                                    'href':homePage}};
+    setFooterButton(details, 'middle-button');
 }
 
 function getMachineDetails(printerType)
@@ -303,7 +320,7 @@ function getStatusData(printerID, statusName, callback)
     {
         promiseGetCommandToRoot(pr + '/remoteControl' + statusName, null)
             .then(callback)
-            .catch(goToPrinterStatusPage);
+            .catch(goToHomeOrPrinterSelectPage);
     }
 }
 
@@ -315,7 +332,7 @@ function getPrinterStatus(printerID, callback)
     {
         promiseGetCommandToRoot(pr + '/remoteControl', null)
             .then(callback)
-            .catch(goToPrinterStatusPage);
+            .catch(goToHomeOrPrinterSelectPage);
     }
 }
 

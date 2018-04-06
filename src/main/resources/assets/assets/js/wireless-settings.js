@@ -70,6 +70,8 @@ function wirelessSettingsInit()
 	if (selectedPrinter !== null)
 	{
         setMachineLogo();
+        $('#left-button').on('click', goToPreviousPage);
+        setHomeButton();
         $('#right-button').on('click', setWiFiState);
         getWifiState();
     }

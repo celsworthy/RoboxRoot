@@ -7,9 +7,11 @@
     <title>Robox Root TA</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:200,300,400,500,600,700,900">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     <link rel="stylesheet" href="assets/css/OldCss.css">
     <link rel="stylesheet" href="assets/css/RoboxRoot.css">
+    <link rel="stylesheet" href="assets/css/RootFonts.css">
 </head>
 
 <body id="purge" class="canvas-grey no-touch-action">
@@ -23,12 +25,12 @@
             </div>
         </div>
         <div class="row rbx-panel rbx-white">
-            <div class="col-md-12 rbx-text-medium"><span class="rbx-white">Please enter the temperature and select the nozzles to purge below:</span></div>
+            <div class="col-md-12 rbx-text-medium"><span class="rbx-white purge-description">Please enter the temperature and select the nozzles to purge below:</span></div>
         </div>
         <div class="row rbx-panel rbx-white rbx-hidden" id="nozzle-1">
             <div class="col-md-12 rbx-text-medium no-padding">
                 <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center" style="vertical-align:middle;"><img src="assets/img/OldIcons/Icon-Nozzle-Right-B.svg" class="margin-right"><span class="localised" data-i18n="right-nozzle">Right Nozzle -&nbsp;</span><span class="rbx-italic rbx-purge-mat localised" data-i18n="material-one">Material -1&nbsp;</span>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center" style="vertical-align:middle;"><img src="OldIcons/Icon-Nozzle-Right-B.svg" class="margin-right"><span class="localised" data-i18n="right-nozzle">Right Nozzle -&nbsp;</span><span class="rbx-italic rbx-purge-mat localised" data-i18n="material-one">Material -1&nbsp;</span>
                         <input
                             type="checkbox" id="nozzle-1-check" class="pull-right rbx-checkbox"></div>
                 </div>
@@ -48,9 +50,9 @@
                 <div class="row">
                     <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7 no-padding"><span class="rbx-purge-mat localised" data-i18n="purge-temperature">&nbsp;Purge Temperature</span></div>
                     <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 no-padding">
-                        <div class="form-group justify-content-center no-margins"><button class="btn btn-default rbx-spinner" type="button" data-dir="down"><img src="assets/img/OldIcons/Icon-Dec-1-B.svg"></button><input type="text" readonly="" class="rbx-text-medium rbx-numeric-input purge-temp" step="1" precision="0">
+                        <div class="form-group justify-content-center no-margins"><button class="btn btn-default rbx-spinner" type="button" data-dir="down"><img src="OldIcons/Icon-Dec-1-B.svg"></button><input type="text" readonly="" class="rbx-text-medium rbx-numeric-input purge-temp" step="1" precision="0">
                             <button
-                                class="btn btn-default rbx-spinner" type="button" data-dir="up"><img src="assets/img/OldIcons/Icon-Inc-1-B.svg"></button>
+                                class="btn btn-default rbx-spinner" type="button" data-dir="up"><img src="OldIcons/Icon-Inc-1-B.svg"></button>
                         </div>
                     </div>
                 </div>
@@ -59,8 +61,9 @@
         <div class="row rbx-panel rbx-white rbx-hidden" id="nozzle-2">
             <div class="col-md-12 rbx-text-medium no-padding">
                 <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center" style="vertical-align:middle;"><img src="assets/img/OldIcons/Icon-Nozzle-Left-B.svg" class="margin-right"><span class="localised" data-i18n="left-nozzle">Left Nozzle -&nbsp;</span><span class="rbx-italic rbx-purge-mat localised" data-i18n="material-two">Material -2&nbsp;</span><input type="checkbox"
-                            id="nozzle-2-check" class="pull-right rbx-checkbox"></div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center" style="vertical-align:middle;"><img src="OldIcons/Icon-Nozzle-Left-B.svg" class="margin-right"><span class="localised" data-i18n="left-nozzle">Left Nozzle -&nbsp;</span><span class="rbx-italic rbx-purge-mat localised" data-i18n="material-two">Material -2&nbsp;</span>
+                        <input
+                            type="checkbox" id="nozzle-2-check" class="pull-right rbx-checkbox"></div>
                 </div>
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -78,9 +81,9 @@
                 <div class="row">
                     <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7 no-padding"><span class="rbx-purge-mat localised" data-i18n="purge-temperature">&nbsp;Purge Temperature</span></div>
                     <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 no-padding">
-                        <div class="form-group justify-content-center no-margins"><button class="btn btn-default rbx-spinner" type="button" data-dir="down"><img src="assets/img/OldIcons/Icon-Dec-2-B.svg"></button><input type="text" readonly="" class="rbx-text-medium rbx-numeric-input purge-temp" step="1" precision="0">
+                        <div class="form-group justify-content-center no-margins"><button class="btn btn-default rbx-spinner" type="button" data-dir="down"><img src="OldIcons/Icon-Dec-2-B.svg"></button><input type="text" readonly="" class="rbx-text-medium rbx-numeric-input purge-temp" step="1" precision="0">
                             <button
-                                class="btn btn-default rbx-spinner" type="button" data-dir="up"><img src="assets/img/OldIcons/Icon-Dec-2-B.svg"></button>
+                                class="btn btn-default rbx-spinner" type="button" data-dir="up"><img src="OldIcons/Icon-Dec-2-B.svg"></button>
                         </div>
                     </div>
                 </div>
@@ -103,6 +106,7 @@
     <script src="assets/js/promise-funcs.js"></script>
     <script src="assets/js/access-pin.js"></script>
     <script src="assets/js/error-handling.js"></script>
+    <script src="assets/js/about.js"></script>
     <script src="assets/js/console.js"></script>
     <script src="assets/js/control.js"></script>
     <script src="assets/js/head-eeprom.js"></script>
@@ -113,8 +117,8 @@
     <script src="assets/js/pin-reset.js"></script>
     <script src="assets/js/print-adjust.js"></script>
     <script src="assets/js/printer-colour.js"></script>
-    <script src="assets/js/printer-status.js"></script>
     <script src="assets/js/printer-name.js"></script>
+    <script src="assets/js/printer-select.js"></script>
     <script src="assets/js/purge.js"></script>
     <script src="assets/js/reprint.js"></script>
     <script src="assets/js/wireless-settings.js"></script>

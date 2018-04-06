@@ -7,15 +7,17 @@
     <title>Robox Root TA</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:200,300,400,500,600,700,900">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     <link rel="stylesheet" href="assets/css/OldCss.css">
     <link rel="stylesheet" href="assets/css/RoboxRoot.css">
+    <link rel="stylesheet" href="assets/css/RootFonts.css">
 </head>
 
 <body id="home" class="canvas-grey no-touch-action">
     <div class="container page home">
         <div class="row panel vertical-align" id="printer-row-name" style="height: 13.375vh; margin-bottom: 1.25vh; padding: 1.25vh;">
-            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 rbx-home-machine-icon" id="machine-icon"><div id="rbx01-image" class="rbx-machine-image hidden">
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 rbx-home-machine-icon" id="machine-icon" role="button" href="/menu-horz.html?id=identity"><div id="rbx01-image" class="rbx-machine-image hidden">
     <svg height="7.5vh " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 92.39">
         <path class="robox-icon" d="M17,65.63S6.11,61.35,5.69,61.08,3,59.65,2.15,55.31c0,0-.16-.92-.22-1.61L0,29.4A23,23,0,0,1,2.84,18c3.16-5.63,6.35-6.49,9.49-7.64L39.58.39A5.32,5.32,0,0,1,42.46.08l7.93,1.41L53.27,2a3,3,0,0,0-1.56.22L22.86,14.11s-10,3.1-10.05,19.82L14.07,57.8C14.41,63.78,17,65.63,17,65.63Z"/>
         <path class="robox-icon" d="M55,2.24l52.5,9.48a3.6,3.6,0,0,0-.94.49L102.46,15,48.07,4.65l5.07-2.16A4.2,4.2,0,0,1,55,2.24Z"/>
@@ -35,11 +37,10 @@
         <polygon class="robox-icon" points="70.88,118.6,16.66,108.16,16.1,107.83,15.72,107.58,15.32,107.27,15,106.91,14.73,106.51,14.52,106.06,14.35,105.57,14.2,105.03,14.07,104.47,13.96,103.87,13.91,103.24,13.86,102.57,13.79,100.46,69.66,110.57,69.68,112.88,69.68,113.58,69.69,114.23,69.74,114.86,69.79,115.44,69.86,115.99,69.95,116.5,70.03,116.96,70.15,117.37,70.28,117.73,70.44,118.04,70.62,118.33,70.88,118.6"/>
     </svg>
 </div>
-</div>
+<a href="/menu-horz.html?id=identity"></a></div>
             <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10" style="padding: 0vh 0vh 0vh 2.5vh">
                 <p id="machine-model" class="rbx-home-machine-title">Robox</p>
                 <p id="machine-name" class="rbx-home-machine-name">&nbsp;</p>
-                <p id="software-version" class="rbx-home-machine-ip float-right">*</p>
                 <p id="machine-ip" class="rbx-home-machine-ip">---.---.---.---</p>
             </div>
         </div>
@@ -70,7 +71,7 @@
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 rbx-home-filament-type" style="width: 22.5vh;padding: 0vh 0vh 0vh 1vh">
                         <p id="filament-2-type" class="rbx-text-xlarge rbx-colour-material-2">&nbsp;</p>
                     </div>
-                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 rbx-home-filament-icon"><img src="assets/img/Icon-Home-SmartReel.svg" id="filament-2-icon"><button class="btn btn-default rbx-home-filament-eject-2" type="button" id="filament-2-eject" style="width:6vh;height:6vh;">&nbsp;</button></div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 rbx-home-filament-icon"><img src="assets/img/Icon-Home-CustomReel.svg" id="filament-2-icon"><button class="btn btn-default rbx-home-filament-eject-2" type="button" id="filament-2-eject" style="width:6vh;height:6vh;">&nbsp;</button></div>
                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"
                         style="padding:0; float: right;"><span id="filament-2-remaining" class="rbx-home-filament-remain">&nbsp;</span></div>
                 </div>
@@ -97,22 +98,22 @@
                 <p class="text-center no-margins rbx-text-small">Ambient</p>
             </div>
         </div>
-        <div class="row panel rbx-home-job hidden" id="job-row">
+        <div class="row panel rbx-home-job rbx-hidden" id="job-row">
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 rbx-home-job-headings">
-                <p class="no-margins rbx-text-medium rbx-colour-material-1">Name:</p>
-                <p class="no-margins rbx-text-medium rbx-colour-material-1">Created:</p>
-                <p class="no-margins rbx-text-medium rbx-colour-material-1">Duration:</p>
-                <p class="no-margins rbx-text-medium rbx-colour-material-1">Profile:</p>
+                <p class="no-margins rbx-text-medium">Name:</p>
+                <p class="no-margins rbx-text-medium">Created:</p>
+                <p class="no-margins rbx-text-medium">Duration:</p>
+                <p class="no-margins rbx-text-medium">Profile:</p>
             </div>
-            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 rbx-home-job-details pull-right" id="job-background">
-                <p id="job-name" class="no-margins rbx-text-medium rbx-colour-material-1" style="color: #fff; font-weight: 300">&nbsp;</p>
-                <p id="job-created" class="no-margins rbx-text-medium rbx-colour-material-1" style="color: #fff; font-weight: 300">&nbsp;</p>
-                <p id="job-duration" class="no-margins rbx-text-medium rbx-colour-material-1" style="color: #fff; font-weight: 300">&nbsp;</p>
-                <p id="job-profile" class="no-margins rbx-text-medium rbx-colour-material-1" style="color: #fff; font-weight: 300">&nbsp;</p>
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 rbx-text-medium rbx-home-job-details pull-right" id="job-background">
+                <p id="job-name" class="no-margins">&nbsp;</p>
+                <p id="job-created" class="no-margins">&nbsp;</p>
+                <p id="job-duration" class="no-margins">&nbsp;</p>
+                <p id="job-profile" class="no-margins">&nbsp;</p>
             </div>
         </div>
         <div class="row current-job hidden" id="progress-row">
-            <div class="col-md-12">
+            <div>
                 <div class="row panel rbx-home-currentjob" id="current-job">
                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 no-padding" style="font-size: 4.5vh; color: #fff; line-height: 3vh">
                         <p id="status-text" class="no-margins">&nbsp;</p>
@@ -123,16 +124,16 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
+                    <div class="no-padding">
                         <div class="progress rbx-progress" id="progress-bar">
                             <div class="progress-bar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"><span class="sr-only">0%</span></div>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 no-padding">
-                        <div class="btn-group btn-group-justified" role="group"><a class="btn btn-default menu-sub-button" role="button" href="print-adjust.html" id="tweak-button"> <img src="assets/img/Button-Tweak-White.svg" class="menu-bottom-button-icon"></a><a class="btn btn-default menu-sub-button" role="button" href="#"
-                                id="pause-resume-button" mode="d"> <img src="assets/img/Button-Make-White.svg" style="height:6.5vh;"></a><a class="btn btn-default menu-sub-button" role="button" href="#" id="cancel-button"> <img src="assets/img/Button-Cancel-White.svg" class="menu-bottom-button-icon"></a></div>
+                    <div class="no-padding">
+                        <div class="btn-group btn-group-justified" role="group"><a class="btn btn-default menu-sub-button home tweak no-padding" role="button" href="print-adjust.html" id="tweak-button"> </a><a class="btn btn-default menu-sub-button home resume no-padding" role="button" href="#" id="pause-resume-button"
+                                mode="d"> </a><a class="btn btn-default menu-sub-button home cancel no-padding" role="button" href="#" id="cancel-button"> </a></div>
                     </div>
                 </div>
             </div>
@@ -142,8 +143,8 @@
         </div>
     </div>
     <div class="container footer">
-        <div class="btn-group btn-group-justified" role="group"><a class="btn btn-default menu-bottom-button" role="button" href="printer-status.html" id="back-button"> <img src="assets/img/Icon_Menu_Back.svg" class="menu-bottom-button-icon"></a><a class="btn btn-default menu-bottom-button" role="button" href="menu-grid.html?id=main"
-                id="middle-button"> <img src="assets/img/Icon-Menu.svg" style="height:6.5vh;"></a><a class="btn btn-default menu-bottom-button rbx-invisible" role="button" href="#" id="right-button"> <img src="assets/img/Icon-Border.svg" class="menu-bottom-button-icon"></a></div>
+        <div class="btn-group btn-group-justified" role="group"><a class="btn btn-default disabled menu-bottom-button rbx-invisible" role="button" href="printer-status.html" id="left-button"> <img src="assets/img/Icon_Menu_Back.svg" class="menu-bottom-button-icon"></a><a class="btn btn-default menu-bottom-button" role="button"
+                href="menu-grid.html?id=main" id="middle-button"> <img src="assets/img/Icon-Menu.svg" style="height:6.5vh;"></a><a class="btn btn-default menu-bottom-button rbx-invisible" role="button" href="#" id="right-button"> <img src="assets/img/Icon-Border.svg" class="menu-bottom-button-icon"></a></div>
     </div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
@@ -157,6 +158,7 @@
     <script src="assets/js/promise-funcs.js"></script>
     <script src="assets/js/access-pin.js"></script>
     <script src="assets/js/error-handling.js"></script>
+    <script src="assets/js/about.js"></script>
     <script src="assets/js/console.js"></script>
     <script src="assets/js/control.js"></script>
     <script src="assets/js/head-eeprom.js"></script>
@@ -167,8 +169,8 @@
     <script src="assets/js/pin-reset.js"></script>
     <script src="assets/js/print-adjust.js"></script>
     <script src="assets/js/printer-colour.js"></script>
-    <script src="assets/js/printer-status.js"></script>
     <script src="assets/js/printer-name.js"></script>
+    <script src="assets/js/printer-select.js"></script>
     <script src="assets/js/purge.js"></script>
     <script src="assets/js/reprint.js"></script>
     <script src="assets/js/wireless-settings.js"></script>

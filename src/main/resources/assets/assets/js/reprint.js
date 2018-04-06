@@ -71,5 +71,5 @@ function reprintInit()
                     .catch(goToMainMenu);
     }
 	else
-		goToPrinterStatusPage();
+		goToHomeOrPrinterSelectPage();
 }

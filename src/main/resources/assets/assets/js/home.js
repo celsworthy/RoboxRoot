@@ -303,20 +303,19 @@ function updateControlStatus(controlData)
 {
     if (controlData.canPause === true)
     {
-        $('#pause-resume-button').removeClass('disabled')
+        $('#pause-resume-button').removeClass('disabled resume')
+                                 .addClass('pause')
                                  .attr('mode', 'p');
-        $('#pause-resume-button img').attr('src', imageRoot + 'OldIcons/Icon-Pause-B.svg');
+                                 
     } else if (controlData.canResume === true)
     {
-        $('#pause-resume-button').removeClass('disabled')
-                                 .attr('mode', 'r');
-        $('#pause-resume-button img').attr('src', imageRoot + 'OldIcons/Icon-Play-B.svg');
-    }
+        $('#pause-resume-button').removeClass('disabled pause')
+                                 .attr('mode', 'r')
+                                 .addClass('resume');    }
     else
     {
         $('#pause-resume-button').addClass('disabled')
                                  .attr('mode', 'd');
-        $('#pause-resume-image').attr('src', imageRoot + 'OldIcons/Icon-Pause-B.svg');
     }
     
     if (controlData.canCancel === true)
@@ -347,13 +346,13 @@ function updateHomeData(printerData)
 function updateHomeServerStatus(data)
 {
     $('#machine-ip').text(data.serverIP);
-    $('#software-version').text(data.serverVersion);
+    //$('#software-version').text(data.serverVersion);
 }
 
 function clearHomeServerStatus(data)
 {
     $('#machine-ip').text("---.---.---.---");
-    $('#software-version').text("*");
+    //$('#software-version').text("*");
 }
 
 function getHomeData()
@@ -375,7 +374,7 @@ function getHomeData()
 		//getStatusData(selectedPrinter, '/controlStatus', updateControlStatus)
 	}
 	else
-		goToPrinterStatusPage();
+		goToHomeOrPrinterSelectPage();
 }
 
 function startHomeUpdates()
@@ -394,6 +393,29 @@ function startHomeUpdates()
     }
 }
 
+function prepareHomeLeftButton()
+{
+    promiseGetCommandToRoot('discovery/listPrinters', null)
+        .then(function (data)
+              {
+                  if (data.printerIDs.length > 1)
+                      setFooterButton({'left-button': {'icon': 'Icon_Menu_Back.svg',
+									                   'href': printerSelectPage}},
+                                       'left-button');
+                  else
+                      setFooterButton({}, 'left-button');   
+              })
+        .catch(function ()
+               {
+                   setFooterButton({}, 'left-button');
+               });
+}
+
+function startHomeLeftButtonUpdates()
+{
+    setInterval(prepareHomeLeftButton, 2000);
+}
+
 function homeInit()
 {
     localStorage.setItem(printerTypeVar, "RBX01");
@@ -403,5 +425,7 @@ function homeInit()
     $('#cancel-button').on('click', cancelPrint);
     getHomeData();
     startHomeUpdates();
+    prepareHomeLeftButton();
+    startHomeLeftButtonUpdates();
     startActiveErrorHandling();
 }

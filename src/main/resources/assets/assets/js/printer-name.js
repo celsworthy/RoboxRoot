@@ -19,8 +19,8 @@ function printerNameInit()
         $('#right-button').on('click', savePrinterName);
         promiseGetCommandToRoot(selectedPrinter + '/remoteControl/nameStatus', null)
             .then(updatePrinterName)
-            .catch(goToPrinterStatusPage);
+            .catch(goToHomeOrPrinterSelectPage);
     }
 	else
-		goToPrinterStatusPage();
+		goToHomeOrPrinterSelectPage();
 }

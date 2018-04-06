@@ -88,11 +88,6 @@
   background-color:#303030;
 }
 
-.rbx-text-medium {
-  font-size:18px;
-  font-weight:400;
-}
-
 .rbx-bed {
   color:rgb(255,200,0);
   fill:rgb(255,200,0);
@@ -111,10 +106,6 @@
   height:calc(100vh - 590px);
 }
 
-.no-padding {
-  padding:0px;
-}
-
 .margin-top {
   margin-top:5px;
 }
@@ -127,11 +118,6 @@
 .align-self-center {
   -ms-flex-item-align:center !important;
   align-self:center !important;
-}
-
-.job-profile {
-  font-size:24px;
-  font-weight:300;
 }
 
 .horizontal-separator {
@@ -225,35 +211,8 @@ img.idle {
   margin:2.125vh 12.875vh;
 }
 
-.rbx-spinner {
-  background-color:#303030;
-  width:25px;
-  padding:0;
-  border:none;
-}
-
-.rbx-text-medium {
-  font-size:18px;
-  font-weight:400;
-}
-
-.rbx-numeric-input {
-  width:calc(90% - 50px);
-  padding:0;
-  margin:0 5px 0 5px;
-  color:grey;
-}
-
-.rbx-italic {
-  font-style:italic;
-}
-
 .rbx-checkbox {
   height:5vh;
   width:5vh;
-}
-
-.margin-left {
-  margin-left:15px;
 }
 

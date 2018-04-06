@@ -1,20 +1,20 @@
 var menuDetailsMap = 
 {
 	'axis-testing': {'menu-title': 'axis-testing',
-					 'action-1': {'active-icon':'Icon_Menu_Axis_Testing.svg',
-								  'icon':'Icon_Menu_Axis_Testing.svg',
+					 'action-1': {'active-icon':'Icon-Menu-Speed-Test-White.svg',
+								  'icon':'Icon-Menu-Speed-Test-Grey.svg',
 								  'text':'speed-test',
 	                              'action':function() { performPrinterAction('/runMacro', testStatus, "SPEED_TEST"); }},
-					 'action-2': {'active-icon':'Icon_Menu_Axis_Testing.svg',
-								  'icon':'Icon_Menu_Axis_Testing.svg',
+					 'action-2': {'active-icon':'Icon-Menu-Axis-Test-White.svg',
+								  'icon':'Icon-Menu-Axis-Test-Grey.svg',
 								  'text':'x-axis-test',
 	                              'action':function() { performPrinterAction('/runMacro', testStatus, "TEST_X"); }},
-					 'action-3': {'active-icon':'Icon_Menu_Axis_Testing.svg',
-								  'icon':'Icon_Menu_Axis_Testing.svg',
+					 'action-3': {'active-icon':'Icon-Menu-Axis-Test-White.svg',
+								  'icon':'Icon-Menu-Axis-Test-Grey.svg',
 								  'text':'y-axis-test',
 	                              'action':function() { performPrinterAction('/runMacro', testStatus, "TEST_Y"); }},
-					 'action-4': {'active-icon':'Icon_Menu_Axis_Testing.svg',
-								  'icon':'Icon_Menu_Axis_Testing.svg',
+					 'action-4': {'active-icon':'Icon-Menu-Axis-Test-White.svg',
+								  'icon':'Icon-Menu-Axis-Test-Grey.svg',
 								  'text':'z-axis-test',
 	                              'action':function() { performPrinterAction('/runMacro', testStatus, "TEST_Z"); }},
 					 'left-button': {'icon':'Icon_Menu_Back.svg',
@@ -42,12 +42,12 @@ var menuDetailsMap =
 				  'left-button': {'icon':'Icon_Menu_Back.svg',
 								  'href':maintenanceMenu}},
 	'identity': {'menu-title': 'identity',
-					 'action-1': {'active-icon':null,
-								  'icon':null,
+					 'action-1': {'active-icon':'Icon-Menu-Rename-White.svg',
+								  'icon':'Icon-Menu-Rename-Grey.svg',
                                   'href':printerNamePage,
 								  'text':'printer-name'},
-					 'action-2': {'active-icon':null,
-								  'icon':null,
+					 'action-2': {'active-icon':'Icon-Menu-Colour-White.svg',
+								  'icon':'Icon-Menu-Colour-White.svg',
 								  'text':'printer-colour',
 								  'href':printerColourPage},
 					 'left-button': {'icon':'Icon_Menu_Back.svg',
@@ -82,25 +82,48 @@ var menuDetailsMap =
 							   'text':'axis-testing',
 							   'href':axisTestingMenu}},
 	'security-settings': {'menu-title': 'security-settings',
-				          'action-1': {'active-icon':null,
-								       'icon':null,
+				          'action-1': {'active-icon':'Icon-Menu-PIN-White.svg',
+								       'icon':'Icon-Menu-PIN-Grey.svg',
                                        'href':accessPINPage,
 								       'text':'access-pin'},
 					      'left-button': {'icon':'Icon_Menu_Back.svg',
-									      'href':settingsMenu}},
+									      'action':goToPreviousPage},
+                          'middle-button': null}, // Hide the home button.
 	'settings': {'menu-title': 'settings',
-					 'action-1': {'active-icon':'Icon-NameColour.svg',
-								  'icon':'Icon-NameColour.svg',
-								  'text':'identity',
-								  'href':identityMenu},
-					 'action-2': {'active-icon':'Icon-Network.svg',
-								  'icon':'Icon-Network.svg',
-								  'text':'wireless-settings',
-                                  'href':wirelessSettingsPage},
-					 'action-3': {'active-icon':'Icon-Security.svg',
-								  'icon':'Icon-Security.svg',
-								  'text':'security-settings',
-								  'href':securitySettingsMenu}}
+                 'action-1': {'active-icon':'Icon-NameColour-White.svg',
+                              'icon':'Icon-NameColour-Grey.svg',
+                              'text':'identity',
+                              'href':identityMenu},
+                 'action-2': {'active-icon':'Icon-Wireless-White.svg',
+                              'icon':'Icon-Wireless-Grey.svg',
+                              'text':'wireless-settings',
+                              'href':wirelessSettingsPage},
+                 'action-3': {'active-icon':'Icon-Security-White.svg',
+                              'icon':'Icon-Security-Grey.svg',
+                              'text':'security-settings',
+                              'href':securitySettingsMenu},
+                 'action-4': {'active-icon':'Icon-About-White.svg',
+                              'icon':'Icon-About-Grey.svg',
+                              'text':'about',
+                              'href':aboutPage},
+				  'left-button': {'icon':'Icon_Menu_Back.svg',
+								  'href':maintenanceMenu}},
+	'settings-s': {'menu-title': 'settings',
+                   'action-2': {'active-icon':'Icon-Wireless-White.svg',
+                                'icon':'Icon-Wireless-Grey.svg',
+                                'text':'wireless-settings',
+                                'href':wirelessSettingsPage + '?pdx=s'},
+                   'action-3': {'active-icon':'Icon-Security-White.svg',
+                                'icon':'Icon-Security-Grey.svg',
+                                'text':'security-settings',
+                                'href':securitySettingsMenu},
+                   'action-4': {'active-icon':'Icon-About-White.svg',
+                                'icon':'Icon-About-Grey.svg',
+                                'text':'about',
+                                'href':aboutPage + '?pdx=s'},
+			       'left-button': {'icon':'Icon_Menu_Back.svg',
+								   'href':printerSelectPage},
+                   'middle-button': null} // Hide the home button.
 };
 
 function setMenuText(details, field)
@@ -177,7 +200,7 @@ function menuHorzInit()
         setMachineLogo();
         var initFunc = menuDetails['init'];
         if (initFunc != null)
-            menuDetails = initFunc(menuDetails);
+            menuDetails = initFunc(urlParams, menuDetails);
         setMenuText(menuDetails, 'menu-title');
         setActionButton(menuDetails, 'action-1');
         setActionButton(menuDetails, 'action-2');
@@ -185,8 +208,14 @@ function menuHorzInit()
         setActionButton(menuDetails, 'action-4');
         setActionButton(menuDetails, 'action-5');
         setActionButton(menuDetails, 'action-6');
-        setFooterButton(menuDetails, 'left-button')
-        setFooterButton(menuDetails, 'right-button')
+        setFooterButton(menuDetails, 'left-button');
+        setFooterButton(menuDetails, 'right-button');
+
+        // Default middle button to go to the home page.
+        if (!menuDetails.hasOwnProperty('middle-button'))
+            setHomeButton()
+        else
+            setFooterButton(menuDetails, 'middle-button');
     }
     else
         goToPage(mainMenu);
@@ -202,5 +231,5 @@ function performPrinterAction(printerCommand, targetPage, parameter)
             .catch(function() { alert('Failed to perform action!'); });
     }
     else
-        goToHomeOrPrinterStatus();
+        goToHomeOrPrinterSelectPage();
 }

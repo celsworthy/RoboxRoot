@@ -161,8 +161,8 @@ function completePurgeUpdate(purgeData)
     }
     else
     {
-        $('.purge-description').html(i18next.t('purge-not-possible'));
-        goToMainMenu;
+        $('.purge-description').html(i18next.t('purge-not-available'));
+        //goToMainMenu;
     }
 }
 
@@ -195,5 +195,5 @@ function purgeInit()
                .catch(goToMainMenu);
     }
 	else
-		goToPrinterStatusPage();
+		goToHomeOrPrinterSelectPage();
 }

@@ -1,18 +1,20 @@
-var colourArray =  ['#7F0000',
+var colourArray =  ['#800000',
                     '#FF0000',
-                    '#FF7F7F',
-                    '#FF00FF',
+                    '#FF8000',
                     '#FFFF00',
-                    '#FF7F00',
-                    '#007F00',
+                    '#80FF00',
                     '#00FF00',
-                    '#7FFF7F',
-                    '#7FFF00',
-                    '#00FF96',
-                    '#7F7F7F',
-                    '#00007F',
+                    '#008000',
+                    '#00FF80',
+                    '#00FFFF',
+                    '#008080',
                     '#0000FF',
-                    '#00FFFF'];
+                    '#8000FF',
+                    '#FF00FF',
+                    '#800080',
+                    '#FF8080',
+                    '#808080',
+                    '#FFFFFF'];
 
 function selectButton(button)
 {
@@ -78,8 +80,8 @@ function printerColourInit()
         $('#right-button').on('click', savePrinterColour);
         promiseGetCommandToRoot(selectedPrinter + '/remoteControl/nameStatus', null)
             .then(updatePrinterColours)
-            .catch(goToPrinterStatusPage);
+            .catch(goToHomeOrPrinterSelectPage);
 	}
 	else
-		goToPrinterStatusPage();
+		goToHomeOrPrinterSelectPage();
 }

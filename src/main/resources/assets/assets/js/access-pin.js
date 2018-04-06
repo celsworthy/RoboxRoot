@@ -1,3 +1,5 @@
+var apinFocus = '#pin-1';
+
 function savePIN()
 {
     promisePostCommandToRoot('admin/updatePIN', $('#pin-1').val())
@@ -46,16 +48,32 @@ function validatePIN()
         $('#right-button').addClass('disabled');
 }
 
+function pinFocus()
+{
+    apinFocus = '#' + $(this).attr('id');
+    console.log('apinFocus = ' + apinFocus);
+}
+
+function pinKeyClick()
+{
+    var key_char = $(this).attr('char');
+    var value = $(apinFocus).val();
+    $(apinFocus).val(value + key_char);
+}
+
+function pinKeyBackspace()
+{
+    var value = $(apinFocus).val();
+    $(apinFocus).val(value.substr(0, value.length - 1));
+}
 function accessPINInit()
 {
-    var selectedPrinter = localStorage.getItem(selectedPrinterVar);
-	if (selectedPrinter !== null)
-	{
-        setMachineLogo();
-        $('#right-button').on('click', savePIN);
-        $('.rbx-field').on('change keydown keyup', validatePIN)
-                       .on('keypress paste', filterText);
-	}
-	else
-		goToPrinterStatusPage();
+    $('.pin-key').on('click', pinKeyClick);
+    $('.bspace').on('click', pinKeyBackspace);
+    $('#left-button').on('click', goToPreviousPage);
+    setHomeButton();
+    $('#right-button').on('click', savePIN);
+    $('.rbx-field').on('change keydown keyup', validatePIN)
+                   .on('keypress paste', filterText)
+                    .on('focusin', pinFocus);
 }
