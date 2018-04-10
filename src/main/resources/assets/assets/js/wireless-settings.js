@@ -66,13 +66,8 @@ function getWifiState()
 
 function wirelessSettingsInit()
 {
-    var selectedPrinter = localStorage.getItem(selectedPrinterVar);
-	if (selectedPrinter !== null)
-	{
-        setMachineLogo();
-        $('#left-button').on('click', goToPreviousPage);
-        setHomeButton();
-        $('#right-button').on('click', setWiFiState);
-        getWifiState();
-    }
+    $('#left-button').on('click', goToPreviousPage);
+    setHomeButton();
+    $('#right-button').on('click', setWiFiState);
+    getWifiState();
 }

@@ -676,7 +676,14 @@ img.rbx-macro-panel {
   font-weight:300;
   line-height:4.625vh;
   padding:0vh 0vh 0vh 1vh;
-  background-color:#fff;
+}
+
+.reel-known {
+  background-color:white;
+}
+
+.reel-unknown {
+  background-color:#b2b2b2;
 }
 
 .filament-brand {
@@ -1070,8 +1077,8 @@ input.rbx-field {
   background-image:url("../../assets/img/Icon-Move-X+10-Hover.svg");
 }
 
-.btn.btn-default.move.y--10 {
-  background-image:url("../../assets/img/Icon-Move-Y-10.svg");
+.btn.btn-default.move.y-10 {
+  background-image:url("../../assets/img/Icon-Move-Y+10.svg");
   background-size:8.375vh 11.75vh;
   background-repeat:no-repeat;
   margin:0.625vh 3.625vh 0vh;
@@ -1079,8 +1086,8 @@ input.rbx-field {
   width:8.375vh;
 }
 
-.btn.btn-default.move.y--10:hover {
-  background-image:url("../../assets/img/Icon-Move-Y-10-Hover.svg");
+.btn.btn-default.move.y-10:hover {
+  background-image:url("../../assets/img/Icon-Move-Y+10-Hover.svg");
 }
 
 .btn.btn-default.move.y-home {
@@ -1095,8 +1102,8 @@ input.rbx-field {
   background-image:url("../../assets/img/Icon-Move-Y-Home-Hover.svg");
 }
 
-.btn.btn-default.move.y-10 {
-  background-image:url("../../assets/img/Icon-Move-Y+10.svg");
+.btn.btn-default.move.y--10 {
+  background-image:url("../../assets/img/Icon-Move-Y-10.svg");
   background-size:8vh 9.375vh;
   background-repeat:no-repeat;
   margin-left:6.75vh;
@@ -1104,8 +1111,8 @@ input.rbx-field {
   width:8vh;
 }
 
-.btn.btn-default.move.y-10:hover {
-  background-image:url("../../assets/img/Icon-Move-Y+10-Hover.svg");
+.btn.btn-default.move.y--10:hover {
+  background-image:url("../../assets/img/Icon-Move-Y-10-Hover.svg");
 }
 
 .btn.btn-default.move.bed-heat {

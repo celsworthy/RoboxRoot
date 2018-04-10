@@ -80,7 +80,9 @@ var menuDetailsMap =
 				  'action-6': {'active-icon':'Icon-Menu-Test-White.svg',
 							   'icon':'Icon-Menu-Test-Grey.svg',
 							   'text':'axis-testing',
-							   'href':axisTestingMenu}},
+							   'href':axisTestingMenu},
+                   'left-button': {'icon':'Icon_Menu_Back.svg',
+									      'action':goToPreviousPage}},
 	'security-settings': {'menu-title': 'security-settings',
 				          'action-1': {'active-icon':'Icon-Menu-PIN-White.svg',
 								       'icon':'Icon-Menu-PIN-Grey.svg',
@@ -107,7 +109,7 @@ var menuDetailsMap =
                               'text':'about',
                               'href':aboutPage},
 				  'left-button': {'icon':'Icon_Menu_Back.svg',
-								  'href':maintenanceMenu}},
+								  'href':mainMenu}},
 	'settings-s': {'menu-title': 'settings',
                    'action-2': {'active-icon':'Icon-Wireless-White.svg',
                                 'icon':'Icon-Wireless-Grey.svg',
@@ -185,6 +187,9 @@ function setActionButton(details, field)
                .on('click', action)
                .closest('.row')
 			   .removeClass('disabled rbx-hidden');
+        if (action !== null)
+            $(item).on('click', action)
+            
     }
 }
 

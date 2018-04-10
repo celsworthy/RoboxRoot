@@ -809,7 +809,16 @@ public class PublicPrinterControlAPI
             Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
             try
             {
-                printerToUse.updatePrinterName(Utils.cleanInboundJSONString(newName));
+                String cleanName = Utils.cleanInboundJSONString(newName);
+                printerToUse.updatePrinterName(Utils.cleanInboundJSONString(cleanName));
+                // If this printer is an RBX10, and is the only one connected to the serve,
+                // assume it is a RoboxPro. Name the server to be the same as the printer.
+
+                if (printerToUse.printerConfigurationProperty().get().getTypeCode().equals("RBX10") &&
+                    PrinterRegistry.getInstance().getRemotePrinters().size() == 1)
+                {
+                    PrinterRegistry.getInstance().setServerName(cleanName);                    
+                }
                 success = true;
             } catch (PrinterException ex)
             {

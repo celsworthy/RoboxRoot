@@ -223,7 +223,7 @@ function setFooterButton(details, field)
                .attr('href', href)
                .off('click') // Remove all callbacks
                .removeClass('disabled rbx-invisible');
-        if (action != null)
+        if (action !== null)
             $(item).on('click', action);
     }
 }

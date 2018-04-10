@@ -53,7 +53,7 @@ function updateFilamentStatus(materialData, filamentIndex)
 {
     var typeValue = null;
     var descriptionValue = null;
-    var colourValue = "White";
+    var reelClass = "reel-unknown";
     var showLoaded = false;
     var reelIcon = null;
 
@@ -66,11 +66,11 @@ function updateFilamentStatus(materialData, filamentIndex)
             {
                 typeValue = materialData.attachedFilamentMaterials[filamentIndex];
                 descriptionValue = materialData.attachedFilamentNames[filamentIndex];
-                colourValue = materialData.attachedFilamentWebColours[filamentIndex];
                 if (materialData.attachedFilamentCustomFlags[filamentIndex])
                     reelIcon = reelIconMap['CUSTOM'];
                 else
                     reelIcon = reelIconMap['SMART'];
+                reelClass = 'reel-known';
             }
             else
             {
@@ -84,7 +84,6 @@ function updateFilamentStatus(materialData, filamentIndex)
                     descriptionValue = i18next.t("no-filament");
                     reelIcon = reelIconMap['NONE'];
                 }
-                colourValue = 'White';
             }
         }
     }
@@ -120,6 +119,8 @@ function updateFilamentStatus(materialData, filamentIndex)
         $(remainingField).html(nbsp);
         $(colourField).html(nbsp);
     }
+    $(descriptionField).closest('.rbx-home-filament-name')
+                       .attr('class', 'rbx-home-filament-name ' + reelClass);
 
     $(reelImage).attr('src', imageRoot + reelIcon)
                
@@ -187,10 +188,10 @@ function updateHeadStatus(headData)
         {
             nozzle1Temperature = headData.nozzleTemperature[nHeaters - 1] + '\xB0' + 'C';
         }
-        if (headData.nozzleTemperature.length > 1)
+        if (headData.nozzleTemperature.length > 1 &&
+            headData.nozzleTemperature[0] !== null)
         {
-            if (headData.nozzleTemperature[0] !== null)
-                nozzle2Temperature = headData.nozzleTemperature[0] + '\xB0' + 'C';
+            nozzle2Temperature = headData.nozzleTemperature[0] + '\xB0' + 'C';
         }
     }
         
@@ -327,6 +328,15 @@ function updateControlStatus(controlData)
         $('#cancel-button').addClass('disabled');
     }
     
+    if (controlData.canOpenDoor === true)
+    {
+        $('#right-button').removeClass('disabled');
+    }
+    else
+    {
+        $('#right-button').addClass('disabled');
+    }
+    
     homeDebounceFlag = false;
 }
 
@@ -364,14 +374,7 @@ function getHomeData()
             .then(updateHomeServerStatus)
             .catch(clearHomeServerStatus);
 		
-        // Either get all the data in one lump
         getPrinterStatus(selectedPrinter, updateHomeData);
-		// Or get the data in smaller segments.
-		//getStatusData(selectedPrinter, '/nameStatus', updateNameStatus)
-		//getStatusData(selectedPrinter, '/materialStatus', updateMaterialStatus)
-		//getStatusData(selectedPrinter, '/headStatus', updateHeadStatus)
-		//getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus)
-		//getStatusData(selectedPrinter, '/controlStatus', updateControlStatus)
 	}
 	else
 		goToHomeOrPrinterSelectPage();
@@ -382,14 +385,7 @@ function startHomeUpdates()
 	var selectedPrinter = localStorage.getItem(selectedPrinterVar);
 	if (selectedPrinter !== null)
 	{
-	    // Either get all the data in one lump
 		setInterval(function() { getPrinterStatus(null, updateHomeData); }, 2000);
-		// Or get the data in smaller segments.
-		//setInterval(function() { getStatusData(null, '/nameStatus', updateNameStatus); }, 2000);
-		//setInterval(function() { getStatusData(null, '/materialStatus', updateMaterialStatus); }, 1000);
-		//setInterval(function() { getStatusData(null, '/headStatus', updateHeadStatus); }, 1000);
-		//setInterval(function() { getStatusData(null, '/printJobStatus', updatePrintJobStatus); }, 500);
-		//setInterval(function() { getStatusData(null, '/controlStatus', updateControlStatus); }, 500);
     }
 }
 
@@ -423,6 +419,9 @@ function homeInit()
     $('#filament-2-eject').on('click', function() { eject(1); });
     $('#pause-resume-button').on('click', pauseResumePrint);
     $('#cancel-button').on('click', cancelPrint);
+    setFooterButton({'right-button': {'icon': 'Icon-Move-Unlock.svg',
+									  'action': function() { sendGCode('G37 S'); }}},
+                    'right-button');
     getHomeData();
     startHomeUpdates();
     prepareHomeLeftButton();

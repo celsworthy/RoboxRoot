@@ -1,6 +1,7 @@
 package celtech.roboxremote;
 
 import celtech.roboxbase.comms.remote.Configuration;
+import celtech.roboxbase.printerControl.model.PrinterException;
 import com.codahale.metrics.annotation.Timed;
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,8 +59,29 @@ public class RootWebPageResource
     public Response setServerName(String serverName)
     {
         PrinterRegistry.getInstance().setServerName(serverName);
+        // If this server is connected to just one RBX10 printer, then
+        // assume it is a RoboxPro. Name the printer to be the same as the
+        // server.
+        if (PrinterRegistry.getInstance().getRemotePrinters().size() == 1)
+        {
+            PrinterRegistry.getInstance().getRemotePrinters().forEach((k,v) ->
+                {
+                    try
+                    {
+                        if(v.printerConfigurationProperty().get().getTypeCode().equals("RBX10"))
+                        {
+                            v.updatePrinterName(serverName);
+                        }
+                    }
+                    catch (PrinterException ex)
+                    {
+                        steno.error("Failed to set associated Robox Pro name.");
+                    }
+                });
+        }
+           
         return Response.ok().build();
-    }
+     }
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
