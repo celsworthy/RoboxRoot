@@ -30,16 +30,16 @@ public class HeadEEPROMData
     private float beta = -1.0F;
     private float tCal = -1.0F;
     private float hourCount = -1.0F;
-    private float nozzle0XOffset = -1.0F;
-    private float nozzle0YOffset = -1.0F;
-    private float nozzle0ZOverrun = -1.0F;
-    private float nozzle0BOffset = -1.0F;
-    private float nozzle0LastFTemp = -1.0F;
-    private float nozzle1XOffset = -1.0F;
-    private float nozzle1YOffset = -1.0F;
-    private float nozzle1ZOverrun = -1.0F;
-    private float nozzle1BOffset = -1.0F;
-    private float nozzle1LastFTemp = -1.0F;
+    private float leftNozzleXOffset = -1.0F;
+    private float leftNozzleYOffset = -1.0F;
+    private float leftNozzleZOverrun = -1.0F;
+    private float leftNozzleBOffset = -1.0F;
+    private float leftNozzleLastFTemp = -1.0F;
+    private float rightNozzleXOffset = -1.0F;
+    private float rightNozzleYOffset = -1.0F;
+    private float rightNozzleZOverrun = -1.0F;
+    private float rightNozzleBOffset = -1.0F;
+    private float rightNozzleLastFTemp = -1.0F;
 
     public HeadEEPROMData()
     {
@@ -69,49 +69,49 @@ public class HeadEEPROMData
             heaterCount = printerHead.getNozzleHeaters().size();
             if (heaterCount > 0)
             {
-                nozzle0LastFTemp = printerHead.getNozzleHeaters().get(0).lastFilamentTemperatureProperty().get();
                 maxTemp = printerHead.getNozzleHeaters().get(0).maximumTemperatureProperty().get();
                 beta = printerHead.getNozzleHeaters().get(0).betaProperty().get();
                 tCal = printerHead.getNozzleHeaters().get(0).tCalProperty().get();
-            }
-
-            if (heaterCount > 1)
-            {
-                nozzle0LastFTemp = printerHead.getNozzleHeaters().get(1).lastFilamentTemperatureProperty().get();
+                if (heaterCount > 1)
+                {
+                    leftNozzleLastFTemp = printerHead.getNozzleHeaters().get(0).lastFilamentTemperatureProperty().get();
+                    rightNozzleLastFTemp = printerHead.getNozzleHeaters().get(1).lastFilamentTemperatureProperty().get();
+                }
+                else
+                    rightNozzleLastFTemp = printerHead.getNozzleHeaters().get(0).lastFilamentTemperatureProperty().get();
+                
             }
 
             hourCount = printerHead.headHoursProperty().get();
-
-            if (valveFitted)
-            {
-                nozzle0BOffset = printerHead.getNozzles().get(0).bOffsetProperty().get();
-            }
-
             nozzleCount = printerHead.getNozzles().size();
-            nozzle0XOffset = printerHead.getNozzles().get(0).xOffsetProperty().get();
-            nozzle0YOffset = printerHead.getNozzles().get(0).yOffsetProperty().get();
             if (nozzleCount > 1)
             {
+                leftNozzleXOffset = printerHead.getNozzles().get(0).xOffsetProperty().get();
+                leftNozzleYOffset = printerHead.getNozzles().get(0).yOffsetProperty().get();
+                rightNozzleXOffset = printerHead.getNozzles().get(1).xOffsetProperty().get();
+                rightNozzleYOffset = printerHead.getNozzles().get(1).yOffsetProperty().get();
                 if (valveFitted)
                 {
-                    nozzle1BOffset = printerHead.getNozzles().get(1).bOffsetProperty().get();
+                    leftNozzleBOffset = printerHead.getNozzles().get(0).bOffsetProperty().get();
+                    rightNozzleBOffset = printerHead.getNozzles().get(1).bOffsetProperty().get();
                 }
 
-                nozzle1XOffset = printerHead.getNozzles().get(1).xOffsetProperty().get();
-                nozzle1YOffset = printerHead.getNozzles().get(1).yOffsetProperty().get();
-            }
-            
-            float nozzle0Offset = printerHead.getNozzles().get(0).zOffsetProperty().get();
-            float nozzle1Offset = nozzle0Offset;
+                float leftNozzleOffset = printerHead.getNozzles().get(0).zOffsetProperty().get();
+                float rightNozzleOffset = printerHead.getNozzles().get(1).zOffsetProperty().get();
 
-            if (nozzleCount > 1)
-            {
-                nozzle1Offset = printerHead.getNozzles().get(1).zOffsetProperty().get();
+                leftNozzleZOverrun = PrinterUtils.deriveNozzle1OverrunFromOffsets(leftNozzleOffset, rightNozzleOffset);
+                rightNozzleZOverrun = PrinterUtils.deriveNozzle2OverrunFromOffsets(leftNozzleOffset, rightNozzleOffset);
             }
-            nozzle0ZOverrun = PrinterUtils.deriveNozzle1OverrunFromOffsets(nozzle0Offset, nozzle1Offset);
-            if (nozzleCount > 1)
+            else
             {
-                nozzle1ZOverrun = PrinterUtils.deriveNozzle2OverrunFromOffsets(nozzle0Offset, nozzle1Offset);
+                rightNozzleXOffset = printerHead.getNozzles().get(0).xOffsetProperty().get();
+                rightNozzleYOffset = printerHead.getNozzles().get(0).yOffsetProperty().get();
+                if (valveFitted)
+                {
+                    rightNozzleBOffset = printerHead.getNozzles().get(0).bOffsetProperty().get();
+                }
+                float rightNozzleOffset = printerHead.getNozzles().get(0).zOffsetProperty().get();
+                rightNozzleZOverrun = PrinterUtils.deriveNozzle1OverrunFromOffsets(rightNozzleOffset, rightNozzleOffset);
             }
         }
     }
@@ -321,121 +321,121 @@ public class HeadEEPROMData
     }
 
     @JsonProperty
-    public float getNozzle0XOffset()
+    public float getLeftNozzleXOffset()
     {
-        return nozzle0XOffset;
+        return leftNozzleXOffset;
     }
 
     @JsonProperty
-    public void setNozzle0XOffset(float nozzle0XOffset)
+    public void setLeftNozzleXOffset(float leftNozzleXOffset)
     {
-        this.nozzle0XOffset = nozzle0XOffset;
+        this.leftNozzleXOffset = leftNozzleXOffset;
     }
 
     @JsonProperty
-    public float getNozzle0YOffset()
+    public float getLeftNozzleYOffset()
     {
-        return nozzle0YOffset;
+        return leftNozzleYOffset;
     }
 
     @JsonProperty
-    public void setNozzle0YOffset(float nozzle0YOffset)
+    public void setLeftNozzleYOffset(float leftNozzleYOffset)
     {
-        this.nozzle0YOffset = nozzle0YOffset;
+        this.leftNozzleYOffset = leftNozzleYOffset;
     }
 
     @JsonProperty
-    public float getNozzle0ZOverrun()
+    public float getLeftNozzleZOverrun()
     {
-        return nozzle0ZOverrun;
+        return leftNozzleZOverrun;
     }
 
     @JsonProperty
-    public void setNozzle0ZOverrun(float nozzle0ZOverrun)
+    public void setLeftNozzleZOverrun(float leftNozzleZOverrun)
     {
-        this.nozzle0ZOverrun = nozzle0ZOverrun;
+        this.leftNozzleZOverrun = leftNozzleZOverrun;
     }
     @JsonProperty
-    public float getNozzle0BOffset()
+    public float getLeftNozzleBOffset()
     {
-        return nozzle0BOffset;
+        return leftNozzleBOffset;
     }
 
     @JsonProperty
-    public void setNozzle0BOffset(float nozzle0BOffset)
+    public void setLeftNozzleBOffset(float leftNozzleBOffset)
     {
-        this.nozzle0BOffset = nozzle0BOffset;
+        this.leftNozzleBOffset = leftNozzleBOffset;
     }
     
     @JsonProperty
-    public float getNozzle0LastFTemp()
+    public float getLeftNozzleLastFTemp()
     {
-        return nozzle0LastFTemp;
+        return leftNozzleLastFTemp;
     }
 
     @JsonProperty
-    public void setNozzle0LastFTemp(float nozzle0LastFTemp)
+    public void setLeftNozzleLastFTemp(float leftNozzleLastFTemp)
     {
-        this.nozzle0LastFTemp = nozzle0LastFTemp;
+        this.leftNozzleLastFTemp = leftNozzleLastFTemp;
     }
 
     @JsonProperty
-    public float getNozzle1XOffset()
+    public float getRightNozzleXOffset()
     {
-        return nozzle1XOffset;
+        return rightNozzleXOffset;
     }
 
     @JsonProperty
-    public void setNozzle1XOffset(float nozzle1XOffset)
+    public void setRightNozzleXOffset(float rightNozzleXOffset)
     {
-        this.nozzle1XOffset = nozzle1XOffset;
+        this.rightNozzleXOffset = rightNozzleXOffset;
     }
 
     @JsonProperty
-    public float getNozzle1YOffset()
+    public float getRightNozzleYOffset()
     {
-        return nozzle1YOffset;
+        return rightNozzleYOffset;
     }
 
     @JsonProperty
-    public void setNozzle1YOffset(float nozzle1YOffset)
+    public void setRightNozzleYOffset(float rightNozzleYOffset)
     {
-        this.nozzle1YOffset = nozzle1YOffset;
+        this.rightNozzleYOffset = rightNozzleYOffset;
     }
     
     @JsonProperty
-    public float getNozzle1ZOverrun()
+    public float getRightNozzleZOverrun()
     {
-        return nozzle1ZOverrun;
+        return rightNozzleZOverrun;
     }
 
     @JsonProperty
-    public void setNozzle1ZOverrun(float nozzle1ZOverrun)
+    public void setRightNozzleZOverrun(float rightNozzleZOverrun)
     {
-        this.nozzle1ZOverrun = nozzle1ZOverrun;
+        this.rightNozzleZOverrun = rightNozzleZOverrun;
     }
 
     @JsonProperty
-    public float getNozzle1BOffset()
+    public float getRightNozzleBOffset()
     {
-        return nozzle1BOffset;
+        return rightNozzleBOffset;
     }
 
     @JsonProperty
-    public void setNozzle1BOffset(float nozzle1BOffset)
+    public void setRightNozzleBOffset(float rightNozzleBOffset)
     {
-        this.nozzle1BOffset = nozzle1BOffset;
+        this.rightNozzleBOffset = rightNozzleBOffset;
     }
 
     @JsonProperty
-    public float getNozzle1LastFTemp()
+    public float getRightNozzleLastFTemp()
     {
-        return nozzle1LastFTemp;
+        return rightNozzleLastFTemp;
     }
 
     @JsonProperty
-    public void setNozzle1LastFTempp(float nozzle1LastFTemp)
+    public void setRightNozzleLastFTempp(float rightNozzleLastFTemp)
     {
-        this.nozzle1LastFTemp = nozzle1LastFTemp;
+        this.rightNozzleLastFTemp = rightNozzleLastFTemp;
     }
 }

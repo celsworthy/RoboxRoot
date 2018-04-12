@@ -67,7 +67,7 @@ function jobProgressInit()
         startActiveErrorHandling();
     }
     else
-        goToPage(mainMenu);
+        goToHomeOrPrinterSelectPage();
 }
 
 function updateJobStatusFields(statusField, etcField, progressBar, printJobData)
@@ -157,7 +157,7 @@ function updateJobStatus(printJobData)
     else
     {
         if (++idleCount > maxIdleCount)
-            goToPage(mainMenu);
+            goToPreviousPage();
     }
 }
 

@@ -140,6 +140,10 @@
 
 	"abort":"Abort",
 	"about":"About",
+	"ambient-temp": "Ambient",
+	"bed-temp": "Bed",
+	"left-nozzle-temp": "Left",
+	"right-nozzle-temp": "Right",
 	"access-pin":"*** Access PIN",
 	"access-pin-title":"Access PIN",
 	"access-pin-enter":"Enter PIN:",

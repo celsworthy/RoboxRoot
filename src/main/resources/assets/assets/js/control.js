@@ -1,4 +1,4 @@
-var controlSwitches = {'amblight':{'state':false, 'onCode':'M129', 'offCode':'M128'},
+var controlSwitches = {'ambientlight':{'state':'on'},
                        'doorlock':{'state':false, 'onCode':'G37 S', 'offCode':'G37 S'},
                        'fan':{'state':false, 'onCode':'M106', 'offCode':'M107'},
                        'heater1':{'state':false, 'onCode':'M104 S', 'offCode':'M104 S0'},
@@ -10,7 +10,7 @@ var controlSwitches = {'amblight':{'state':false, 'onCode':'M129', 'offCode':'M1
 
 function runMacroFile(macroName)
 {
-    promisePostCommandToRoot(localStorage.getItem(selectedPrinterVar) + '/remoteControl/runMacro', macroName);
+    return promisePostCommandToRoot(localStorage.getItem(selectedPrinterVar) + '/remoteControl/runMacro', macroName);
 }
 
 function decodeAxis(element)
@@ -123,6 +123,26 @@ function toggleSwitch()
     }
 }
 
+function toggleAmbientLight()
+{
+    var switchData = controlSwitches['ambientlight'];
+    switch(switchData.state)
+    {
+        case 'on':
+            switchData.state = 'white';
+            break;
+        case 'white':
+            switchData.state = 'off';
+            break;
+        case 'off':
+        default:
+            switchData.state = 'on';
+            break;
+    }
+    console.log('ambientlight ' + switchData.state);
+    promisePostCommandToRoot(localStorage.getItem(selectedPrinterVar) + '/remoteControl/setAmbientLED', switchData.state);
+}
+
 function updateControlHeadStatus(headData)
 {
     if (headData.headName.length == 0)
@@ -174,6 +194,7 @@ function controlInit()
     $('.control-toggle').on('click', toggleSwitch);
     $('.control-move').on('click', controlMove);
     $('.control-home').on('click', homeXYZ);
+    $('.control-ambient-light').on('click', toggleAmbientLight);
     getStatusData(null, '/headStatus', updateControlHeadStatus)
 	setInterval(function() { getStatusData(null, '/headStatus', updateControlHeadStatus); }, 2000);
     getStatusData(null, '/materialStatus', updateControlMaterialStatus)

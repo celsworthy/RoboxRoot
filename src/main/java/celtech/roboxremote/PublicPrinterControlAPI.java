@@ -221,25 +221,56 @@ public class PublicPrinterControlAPI
             Printer printer = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
             if (printer != null)
             {
-                printer.transmitWriteHeadEEPROM(
-                    eData.getTypeCode(),
-                    eData.getUniqueID(),
-                    (float)eData.getMaxTemp(),
-                    (float)eData.getBeta(),
-                    (float)eData.getTCal(),
-                    (float)eData.getNozzle0XOffset(),
-                    (float)eData.getNozzle0YOffset(),
-                    (float)eData.getNozzle0ZOverrun(),
-                    (float)eData.getNozzle0BOffset(),
-                    "",
-                    "",
-                    (float)eData.getNozzle1XOffset(),
-                    (float)eData.getNozzle1YOffset(),
-                    (float)eData.getNozzle1ZOverrun(),
-                    (float)eData.getNozzle1BOffset(),
-                    (float)eData.getNozzle0LastFTemp(),
-                    (float)eData.getNozzle1LastFTemp(),
-                    (float)eData.getHourCount());
+                if (eData.getNozzleCount() > 1)
+                {
+                    // If there are two nozzles, then the left one comes first.
+                    float leftNozzleZOffset = PrinterUtils.deriveNozzle1ZOffsetsFromOverrun((float)eData.getLeftNozzleZOverrun(), (float)eData.getRightNozzleZOverrun());
+                    float rightNozzleZOffset = PrinterUtils.deriveNozzle2ZOffsetsFromOverrun((float)eData.getLeftNozzleZOverrun(), (float)eData.getRightNozzleZOverrun());
+
+                    printer.transmitWriteHeadEEPROM(
+                        eData.getTypeCode(),
+                        eData.getUniqueID(),
+                        (float)eData.getMaxTemp(),
+                        (float)eData.getBeta(),
+                        (float)eData.getTCal(),
+                        (float)eData.getLeftNozzleXOffset(),
+                        (float)eData.getLeftNozzleYOffset(),
+                        leftNozzleZOffset,
+                        (float)eData.getLeftNozzleBOffset(),
+                        "",
+                        "",
+                        (float)eData.getRightNozzleXOffset(),
+                        (float)eData.getRightNozzleYOffset(),
+                        rightNozzleZOffset,
+                        (float)eData.getRightNozzleBOffset(),
+                        (float)eData.getLeftNozzleLastFTemp(),
+                        (float)eData.getRightNozzleLastFTemp(),
+                        (float)eData.getHourCount());
+                }
+                else
+                {
+                    // If there is only one nozzle, it is the right one, and should come first.
+                    float rightNozzleZOffset = PrinterUtils.deriveNozzle2ZOffsetsFromOverrun((float)eData.getRightNozzleZOverrun(), (float)eData.getRightNozzleZOverrun());
+                    printer.transmitWriteHeadEEPROM(
+                        eData.getTypeCode(),
+                        eData.getUniqueID(),
+                        (float)eData.getMaxTemp(),
+                        (float)eData.getBeta(),
+                        (float)eData.getTCal(),
+                        (float)eData.getRightNozzleXOffset(),
+                        (float)eData.getRightNozzleYOffset(),
+                        rightNozzleZOffset,
+                        (float)eData.getRightNozzleBOffset(),
+                        "",
+                        "",
+                        -1.0F,
+                        -1.0F,
+                        rightNozzleZOffset,
+                        -1.0F,
+                        (float)eData.getRightNozzleLastFTemp(),
+                        -1.0F,
+                        (float)eData.getHourCount());
+                }
                 response = Response.ok().build();
             }
         } catch (RoboxCommsException ex)
@@ -431,8 +462,8 @@ public class PublicPrinterControlAPI
                             nozzle0Temperature = printer.effectiveFilamentsProperty().get(1).getNozzleTemperature();
                         }
                     }
-                    boolean purgeNozzle0 = (nozzle0Temperature > 0);
-                    boolean purgeNozzle1 = (nozzle1Temperature > 0);
+                    boolean purgeLeftNozzle = (nozzle0Temperature > 0);
+                    boolean purgeRightNozzle = (nozzle1Temperature > 0);
 
                     try
                     {
@@ -446,13 +477,13 @@ public class PublicPrinterControlAPI
 
                         if (!bedHeatFailed)
                         {
-                            if (purgeNozzle0)
+                            if (purgeLeftNozzle)
                             {
                                 printer.setNozzleHeaterTargetTemperature(0, nozzle0Temperature);
                                 printer.goToTargetNozzleHeaterTemperature(0);
                             }
 
-                            if (purgeNozzle1)
+                            if (purgeRightNozzle)
                             {
                                 printer.setNozzleHeaterTargetTemperature(1, nozzle1Temperature);
                                 printer.goToTargetNozzleHeaterTemperature(1);
@@ -460,14 +491,14 @@ public class PublicPrinterControlAPI
 
                             boolean nozzleHeatFailed = false;
 
-                            if (purgeNozzle0)
+                            if (purgeLeftNozzle)
                             {
                                 nozzleHeatFailed = PrinterUtils.waitUntilTemperatureIsReached(
                                         printer.headProperty().get().getNozzleHeaters().get(0).nozzleTemperatureProperty(),
                                         null, nozzle0Temperature, 5, 300, null);
                             }
 
-                            if (purgeNozzle1 && !nozzleHeatFailed)
+                            if (purgeRightNozzle && !nozzleHeatFailed)
                             {
                                 nozzleHeatFailed = PrinterUtils.waitUntilTemperatureIsReached(
                                         printer.headProperty().get().getNozzleHeaters().get(1).nozzleTemperatureProperty(),
@@ -476,7 +507,7 @@ public class PublicPrinterControlAPI
 
                             if (!nozzleHeatFailed)
                             {
-                                printer.purgeMaterial(purgeNozzle0, purgeNozzle1, safetyOn, false, null);
+                                printer.purgeMaterial(purgeLeftNozzle, purgeRightNozzle, safetyOn, false, null);
                             }
                         }
                     } catch (PrinterException | InterruptedException ex)
@@ -568,7 +599,7 @@ public class PublicPrinterControlAPI
 
     /**
      *
-     * Expects nozzle number to be 1 or 2
+     * Expects nozzle number to be 1 (left) or 2 (right)
      *
      * @param printerID
      * @param nozzleNumber
@@ -593,7 +624,7 @@ public class PublicPrinterControlAPI
     
     /**
      *
-     * Expects nozzle number to be 1 or 2
+     * Expects nozzle number to be 1 (left) or 2 (right)
      *
      * @param printerID
      * @param nozzleNumber
@@ -839,25 +870,63 @@ public class PublicPrinterControlAPI
     @Path("/changePrinterColour")
     public Response changePrinterColour(@PathParam("printerID") String printerID, String newWebColour)
     {
-        boolean success = false;
+        Response response = null;
         if (PrinterRegistry.getInstance() != null)
         {
             Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
             try
             {
                 printerToUse.updatePrinterDisplayColour(Color.web(Utils.cleanInboundJSONString(newWebColour)));
-                success = true;
+                response = Response.ok().build();
             } catch (PrinterException ex)
             {
 
             }
         }
 
-        Response response = Response.ok().build();
-        if (!success)
-        {
+        if (response == null)
             response = Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        return response;
+    }
+
+    @POST
+    @Timed
+    @Path("/setAmbientLED")
+    public Response setAmbientLED(@PathParam("printerID") String printerID, String ledColour)
+    {
+        Response response = null;
+        if (PrinterRegistry.getInstance() != null)
+        {
+            Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+            try
+            {
+                String cleanColour = Utils.cleanInboundJSONString(ledColour).toLowerCase();
+                if (cleanColour.equals("on"))
+                {
+                    printerToUse.setAmbientLEDColour(printerToUse.getPrinterIdentity().printerColourProperty().get());
+                }
+                else if (cleanColour.equals("white"))
+                {
+                    printerToUse.setAmbientLEDColour(Color.WHITE);
+                }
+                else if (cleanColour.equals("off"))
+                {
+                    printerToUse.setAmbientLEDColour(Color.BLACK);
+                }
+                else
+                {
+                    printerToUse.updatePrinterDisplayColour(Color.web(cleanColour));
+                }
+                response = Response.ok().build();
+            } catch (PrinterException ex)
+            {
+
+            }
         }
+
+        if (response == null)
+            response = Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        
         return response;
     }
 }

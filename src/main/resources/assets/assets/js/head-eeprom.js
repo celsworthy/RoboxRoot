@@ -15,23 +15,23 @@ function setHeadEPPROMData()
     {
         hpDebounceFlag = true;
         var eData = lastEData;
-		   eData.nozzle0XOffset = $('#hp-x-1').val();
-		   eData.nozzle0YOffset = $('#hp-y-1').val();
-		   eData.nozzle0ZOverrun = $('#hp-z-1').val();
+		   eData.rightNozzleXOffset = $('#hp-right-x').val();
+		   eData.rightNozzleYOffset = $('#hp-right-y').val();
+		   eData.rightNozzleZOverrun = $('#hp-right-z').val();
         if (eData.valveFitted)
-            eData.nozzle0BOffset = $('#hp-b-1').val();
+            eData.rightNozzleBOffset = $('#hp-right-b').val();
         if (eData.nozzleCount > 1)
         {
-            eData.nozzle1XOffset = $('#hp-x-2').val();
-            eData.nozzle1YOffset = $('#hp-y-2').val();
-            eData.nozzle1ZOverrun = $('#hp-z-2').val();
+            eData.leftNozzleXOffset = $('#hp-left-x').val();
+            eData.leftNozzleYOffset = $('#hp-left-y').val();
+            eData.leftNozzleZOverrun = $('#hp-left-z').val();
             if (eData.valveFitted)
-                eData.nozzle1BOffset = $('#hp-b-2').val();
+                eData.leftNozzleBOffset = $('#hp-left-b').val();
         }
         
         var selectedPrinter = localStorage.getItem(selectedPrinterVar);
         promisePostCommandToRoot(selectedPrinter + "/remoteControl/setHeadEEPROM", eData)
-            .then(setupHeadEEPROMPage)
+            .then(headEEPromInit)
             .catch(reportHEError);
     }
 }
@@ -41,6 +41,32 @@ function reportHEError(data)
     alert("Failed to write to head EEPROM");
     setupHeadEEPROMPage();
     hpDebounceFlag = false;
+}
+
+function setSpinnerValue(spinner, value)
+{
+//     $(spinner).removeClass('disabled')
+//               .val(value.toFixed(2))
+//               .parent()
+//               .find('.rbx-spinner')
+//               .removeClass('disabled')
+//               .on('click', onSpinnerClick);
+     $(spinner).val(value.toFixed(2))
+               .parent()
+               .removeClass('rbx-invisible');
+}
+
+function disableSpinnerValue(spinner)
+{
+//     $(spinner).addClass('disabled')
+//               .val('')
+//               .parent()
+//               .find('.rbx-spinner')
+//               .addClass('disabled')
+//               .off('click');
+     $(spinner).val('')
+               .parent()
+               .addClass('rbx-invisible');
 }
 
 function updateHeadEEPROMData(eData)
@@ -65,34 +91,48 @@ function updateHeadEEPROMData(eData)
     $('#head-print-hours').html(eData.hourCount.toFixed(0) + ' ' + hoursUnit);
     $('#head-max-temp').html(eData.maxTemp.toFixed(0) + '\xB0' + 'C');
     
-    $('#hp-x-1').val(eData.nozzle0XOffset.toFixed(2));
-    $('#hp-y-1').val(eData.nozzle0YOffset.toFixed(2));
-    $('#hp-z-1').val(eData.nozzle0ZOverrun.toFixed(2));
+    setSpinnerValue('#hp-right-x', eData.rightNozzleXOffset);
+    setSpinnerValue('#hp-right-y', eData.rightNozzleYOffset);
+    setSpinnerValue('#hp-right-z', eData.rightNozzleZOverrun);
     if (eData.valveFitted)
-        $('#hp-b-1').removeAttr('disabled').val(eData.nozzle0BOffset.toFixed(2));
-    else
-        $('#hp-b-1').attr('disabled', 'disabled').val('');
-
-    if (eData.nozzleCount > 1)
     {
-        $('#hp-x-2').removeAttr('disabled').val(eData.nozzle1XOffset.toFixed(2));
-        $('#hp-y-2').removeAttr('disabled').val(eData.nozzle1YOffset.toFixed(2));
-        $('#hp-z-2').removeAttr('disabled').val(eData.nozzle1ZOverrun.toFixed(2));
-        if (eData.valveFitted)
-            $('#hp-b-2').removeAttr('disabled').val(eData.nozzle1BOffset.toFixed(2));
-        else
-            $('#hp-b-2').attr('disabled', 'disabled').val('');
+        $('#b-heading').removeClass('dimmed-section');
+        setSpinnerValue('#hp-right-b', eData.rightNozzleBOffset);
     }
     else
     {
-        $('#hp-x-2').attr('disabled', 'disabled').val('');
-        $('#hp-y-2').attr('disabled', 'disabled').val('');
-        $('#hp-z-2').attr('disabled', 'disabled').val('');
-        $('#hp-b-2').attr('disabled', 'disabled').val('');
+        $('#b-heading').addClass('dimmed-section');
+        disableSpinnerValue('#hp-right-b');
+    }
+    if (eData.nozzleCount > 1)
+    {
+        $('#left-nozzle-heading').removeClass('dimmed-section');
+        setSpinnerValue('#hp-left-x', eData.leftNozzleXOffset);
+        setSpinnerValue('#hp-left-y', eData.leftNozzleYOffset);
+        setSpinnerValue('#hp-left-z', eData.leftNozzleZOverrun);
+        if (eData.valveFitted)
+            setSpinnerValue('#hp-left-b', eData.leftNozzleBOffset);
+        else
+            disableSpinnerValue('#hp-left-b');
+    }
+    else
+    {
+        $('#left-nozzle-heading').addClass('dimmed-section');
+        disableSpinnerValue('#hp-left-x');
+        disableSpinnerValue('#hp-left-y');
+        disableSpinnerValue('#hp-left-z');
+        disableSpinnerValue('#hp-left-b');
     }
     
     hpDebounceFlag = false;
     lastEData = eData;
+}
+
+function removeHead()
+{
+    performPrinterAction('/removeHead',
+                         removeHeadStatus,
+                         safetiesOn().toString());
 }
 
 function headEEPromInit()
@@ -101,8 +141,9 @@ function headEEPromInit()
 	if (selectedPrinter !== null)
 	{
         setMachineLogo();
-        $('.rbx-spinner').on('click', onSpinnerClick);
         $('#right-button').on('click', setHeadEPPROMData);
+        $('.rbx-spinner').on('click', onSpinnerClick);
+        $('.rbx-head-change').on('click', removeHead);
         promiseGetCommandToRoot(selectedPrinter + '/remoteControl/headEEPROM', null)
             .then(updateHeadEEPROMData)
             .catch(goToHomeOrPrinterSelectPage);

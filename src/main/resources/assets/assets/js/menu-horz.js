@@ -225,16 +225,3 @@ function menuHorzInit()
     else
         goToPage(mainMenu);
 }
-
-function performPrinterAction(printerCommand, targetPage, parameter)
-{
-	var selectedPrinter = localStorage.getItem(selectedPrinterVar);
-	if (selectedPrinter !== null)
-	{
-        promisePostCommandToRoot(selectedPrinter + '/remoteControl' + printerCommand, parameter)
-            .then(function() { goToPage(targetPage); })
-            .catch(function() { alert('Failed to perform action!'); });
-    }
-    else
-        goToHomeOrPrinterSelectPage();
-}

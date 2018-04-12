@@ -178,47 +178,35 @@ function updateHeadStatus(headData)
 {
     $('#bed-temp').html(headData.bedTemperature + '\xB0' + 'C');
     $('#ambient-temp').html(headData.ambientTemperature + '\xB0' + 'C');
-    var nozzle1Temperature = nbsp;
-    var nozzle2Temperature = nbsp;
-    if (headData.nozzleTemperature)
-    {
-        // For some curious reason, the nozzle temperature indices are swapped.
-        var nHeaters = headData.nozzleTemperature.length;
-        if (nHeaters > 0 && headData.nozzleTemperature[nHeaters - 1] !== null)
-        {
-            nozzle1Temperature = headData.nozzleTemperature[nHeaters - 1] + '\xB0' + 'C';
-        }
-        if (headData.nozzleTemperature.length > 1 &&
-            headData.nozzleTemperature[0] !== null)
-        {
-            nozzle2Temperature = headData.nozzleTemperature[0] + '\xB0' + 'C';
-        }
-    }
-        
-    $('#nozzle-1-temp').html(nozzle1Temperature);
-    $('#nozzle-2-temp').html(nozzle2Temperature);
-    
+    var leftNozzleTemperature = nbsp;
+    var rightNozzleTemperature = nbsp;
     var numberOfNozzleHeaters = 0;
     if (headData.nozzleTemperature !== null)
-    {
         numberOfNozzleHeaters = headData.nozzleTemperature.length;
-    }
-
+        
     switch (numberOfNozzleHeaters)
     {
         case 0:
-            $('#nozzle-1-temp').parent().addClass("dimmed-section");
-            $('#nozzle-2-temp').parent().addClass("dimmed-section");
+            $('#left-nozzle-temp').parent().addClass('dimmed-section');
+            $('#right-nozzle-temp').parent().addClass('dimmed-section');
             break;
         case 1:
-            $('#nozzle-1-temp').parent().removeClass("dimmed-section");
-            $('#nozzle-2-temp').parent().addClass("dimmed-section");
+            $('#left-nozzle-temp').parent().addClass('dimmed-section');
+            $('#right-nozzle-temp').parent().removeClass('dimmed-section');
+            if (headData.nozzleTemperature[0] !== null)
+                rightNozzleTemperature = headData.nozzleTemperature[0] + '\xB0' + 'C';
             break;
         case 2:
-            $('#nozzle-1-temp').removeClass("dimmed-section");
-            $('#nozzle-2-temp').removeClass("dimmed-section");
+            $('#left-nozzle-temp').removeClass('dimmed-section');
+            $('#left-nozzle-temp').removeClass('dimmed-section');
+            if (headData.nozzleTemperature[0] !== null)
+                leftNozzleTemperature = headData.nozzleTemperature[0] + '\xB0' + 'C';
+            if (headData.nozzleTemperature[1] !== null)
+                rightNozzleTemperature = headData.nozzleTemperature[1] + '\xB0' + 'C';
             break;
     }
+    $('#left-nozzle-temp').html(leftNozzleTemperature);
+    $('#right-nozzle-temp').html(rightNozzleTemperature);
 }
 
 function updatePrintJobStatus(printJobData)

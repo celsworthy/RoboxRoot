@@ -336,6 +336,19 @@ function getPrinterStatus(printerID, callback)
     }
 }
 
+function performPrinterAction(printerCommand, targetPage, parameter)
+{
+	var selectedPrinter = localStorage.getItem(selectedPrinterVar);
+	if (selectedPrinter !== null)
+	{
+        promisePostCommandToRoot(selectedPrinter + '/remoteControl' + printerCommand, parameter)
+            .then(function() { goToPage(targetPage); })
+            .catch(function() { alert('Failed to perform action!'); });
+    }
+    else
+        goToHomeOrPrinterSelectPage();
+}
+
 $(document).ready(function () {
     i18next.use(i18nextBrowserLanguageDetector)
             .use(i18nextXHRBackend)
