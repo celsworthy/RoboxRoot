@@ -1,22 +1,14 @@
 package celtech.roboxremote.rootDataStructures;
 
-import celtech.roboxbase.BaseLookup;
-import celtech.roboxbase.PrinterColourMap;
-import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxbase.configuration.Filament;
 import celtech.roboxbase.configuration.datafileaccessors.FilamentContainer;
 import celtech.roboxbase.postprocessor.PrintJobStatistics;
 import celtech.roboxbase.printerControl.PrintJob;
-import celtech.roboxbase.printerControl.PrinterStatus;
 import celtech.roboxbase.printerControl.model.Head;
 import celtech.roboxbase.printerControl.model.HeaterMode;
 import celtech.roboxbase.printerControl.model.Printer;
-import celtech.roboxbase.utils.ColourStringConverter;
 import celtech.roboxremote.PrinterRegistry;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.io.IOException;
-import javafx.scene.paint.Color;
 
 /**
  *
@@ -31,22 +23,22 @@ public class PrintAdjustData
     private boolean printingFirstLayer = false;
     
     private int nNozzleHeaters = 0;
-    private float nozzle0TargetTemp = 0.0F;
-    private float nozzle1TargetTemp = 0.0F;
+    private float rightNozzleTargetTemp = 0.0F;
+    private float leftNozzleTargetTemp = 0.0F;
 
     // Bed
     private float bedTargetTemp = 0.0F;
 
     // Material
     private int nMaterials = 0;
-    private boolean usingMaterial0 = true;
     private boolean usingMaterial1 = true;
-    private String material0Name = "";
+    private boolean usingMaterial2 = true;
     private String material1Name = "";
-    private float flowRate0Multiplier = 0.0F;
-    private float flowRate1Multiplier = 0.0F;
-    private float extrusionRate0Multiplier = 0.0F;
-    private float extrusionRate1Multiplier = 0.0F;
+    private String material2Name = "";
+    private float leftFeedRateMultiplier = 0.0F;
+    private float rightFeedRateMultiplier = 0.0F;
+    private float leftExtrusionRateMultiplier = 0.0F;
+    private float rightExtrusionRateMultiplier = 0.0F;
     
     public PrintAdjustData()
     {
@@ -64,8 +56,8 @@ public class PrintAdjustData
             currentPrintJobStatistics = currentPrintJob.getStatistics();
             if (currentPrintJobStatistics != null)
             {
-                usingMaterial0 = (currentPrintJobStatistics.geteVolumeUsed() > 0);
-                usingMaterial1 = (currentPrintJobStatistics.getdVolumeUsed() > 0);
+                usingMaterial1 = (currentPrintJobStatistics.geteVolumeUsed() > 0);
+                usingMaterial2 = (currentPrintJobStatistics.getdVolumeUsed() > 0);
             }
         } catch (Exception ex)
         {
@@ -80,30 +72,30 @@ public class PrintAdjustData
             nMaterials = 2;
         }
         
-        if (nMaterials > 0 && usingMaterial0)
+        if (nMaterials > 0 && usingMaterial1)
         {
             if (printer.effectiveFilamentsProperty().get(0) != FilamentContainer.UNKNOWN_FILAMENT)
             {
                 Filament filament = printer.effectiveFilamentsProperty().get(0);
-                material0Name = filament.getFriendlyFilamentName();
+                material1Name = filament.getFriendlyFilamentName();
             }
             if (printer.extrudersProperty().get(0).isFittedProperty().get())
             {
-                extrusionRate0Multiplier = printer.extrudersProperty().get(0).extrusionMultiplierProperty().floatValue() * 100.0F;
-                flowRate0Multiplier = printer.getPrinterAncillarySystems().feedRateDMultiplierProperty().floatValue() * 100.0F;
+                rightExtrusionRateMultiplier = printer.extrudersProperty().get(0).extrusionMultiplierProperty().floatValue() * 100.0F;
+                rightFeedRateMultiplier = printer.getPrinterAncillarySystems().feedRateEMultiplierProperty().floatValue() * 100.0F;
             }
         }
-        if (nMaterials > 1)
+        if (nMaterials > 1 && usingMaterial2)
         {
             if (printer.effectiveFilamentsProperty().get(1) != FilamentContainer.UNKNOWN_FILAMENT)
             {
                 Filament filament = printer.effectiveFilamentsProperty().get(1);
-                material1Name = filament.getFriendlyFilamentName();
+                material2Name = filament.getFriendlyFilamentName();
             }
             if (printer.extrudersProperty().get(1).isFittedProperty().get())
             {
-                extrusionRate1Multiplier = printer.extrudersProperty().get(1).extrusionMultiplierProperty().floatValue() * 100.0F;
-                flowRate1Multiplier = printer.getPrinterAncillarySystems().feedRateEMultiplierProperty().floatValue() * 100.0F;
+                leftExtrusionRateMultiplier = printer.extrudersProperty().get(1).extrusionMultiplierProperty().floatValue() * 100.0F;
+                leftFeedRateMultiplier = printer.getPrinterAncillarySystems().feedRateDMultiplierProperty().floatValue() * 100.0F;
             }
         }
 
@@ -115,31 +107,31 @@ public class PrintAdjustData
 
             dualMaterialHead = head.headTypeProperty().get() == Head.HeadType.DUAL_MATERIAL_HEAD;
             nNozzleHeaters = head.getNozzleHeaters().size();
-            nozzle0TargetTemp = 0.0F;
-            nozzle1TargetTemp = 0.0F;
+            rightNozzleTargetTemp = 0.0F;
+            leftNozzleTargetTemp = 0.0F;
             if (nNozzleHeaters == 1)
             {
                 if (printingFirstLayer)
-                    nozzle0TargetTemp = head.getNozzleHeaters().get(0).nozzleFirstLayerTargetTemperatureProperty().floatValue();
+                    rightNozzleTargetTemp = head.getNozzleHeaters().get(0).nozzleFirstLayerTargetTemperatureProperty().floatValue();
                 else
-                    nozzle0TargetTemp = head.getNozzleHeaters().get(0).nozzleTargetTemperatureProperty().floatValue();
+                    rightNozzleTargetTemp = head.getNozzleHeaters().get(0).nozzleTargetTemperatureProperty().floatValue();
             }
             if (nNozzleHeaters > 1)
             {
                 if (printingFirstLayer)
                 {
-                    nozzle0TargetTemp = head.getNozzleHeaters().get(1).nozzleFirstLayerTargetTemperatureProperty().floatValue();
-                    nozzle1TargetTemp = head.getNozzleHeaters().get(0).nozzleFirstLayerTargetTemperatureProperty().floatValue();
+                    rightNozzleTargetTemp = head.getNozzleHeaters().get(1).nozzleFirstLayerTargetTemperatureProperty().floatValue();
+                    leftNozzleTargetTemp = head.getNozzleHeaters().get(0).nozzleFirstLayerTargetTemperatureProperty().floatValue();
                 }
                 else
                 {
-                    nozzle0TargetTemp = head.getNozzleHeaters().get(1).nozzleTargetTemperatureProperty().floatValue();
-                    nozzle1TargetTemp = head.getNozzleHeaters().get(0).nozzleTargetTemperatureProperty().floatValue();
+                    rightNozzleTargetTemp = head.getNozzleHeaters().get(1).nozzleTargetTemperatureProperty().floatValue();
+                    leftNozzleTargetTemp = head.getNozzleHeaters().get(0).nozzleTargetTemperatureProperty().floatValue();
                 }
             }
         }
         
-        bedTargetTemp = printer.getPrinterAncillarySystems().bedTemperatureProperty().get();
+        bedTargetTemp = printer.getPrinterAncillarySystems().bedTargetTemperatureProperty().get();
     }
 
     @JsonProperty
@@ -167,18 +159,6 @@ public class PrintAdjustData
     }
 
     @JsonProperty
-    public boolean getUsingMaterial0()
-    {
-        return usingMaterial0;
-    }
-
-    @JsonProperty
-    public void getUsingMaterial0(boolean usingMaterial)
-    {
-        this.usingMaterial0 = usingMaterial;
-    }
-
-    @JsonProperty
     public boolean getUsingMaterial1()
     {
         return usingMaterial1;
@@ -188,6 +168,18 @@ public class PrintAdjustData
     public void getUsingMaterial1(boolean usingMaterial)
     {
         this.usingMaterial1 = usingMaterial;
+    }
+
+    @JsonProperty
+    public boolean getUsingMaterial2()
+    {
+        return usingMaterial2;
+    }
+
+    @JsonProperty
+    public void getUsingMaterial2(boolean usingMaterial)
+    {
+        this.usingMaterial2 = usingMaterial;
     }
 
     @JsonProperty
@@ -215,39 +207,27 @@ public class PrintAdjustData
     }
 
     @JsonProperty
-    public float getNozzle0TargetTemp()
+    public float getRightNozzleTargetTemp()
     {
-        return nozzle0TargetTemp;
+        return rightNozzleTargetTemp;
     }
 
     @JsonProperty
-    public void setNozzle0TargetTemp(float targetTemp)
+    public void setRightNozzleTargetTemp(float targetTemp)
     {
-        this.nozzle0TargetTemp = targetTemp;
+        this.rightNozzleTargetTemp = targetTemp;
     }
     
     @JsonProperty
-    public float getNozzle1TargetTemp()
+    public float getLeftNozzleTargetTemp()
     {
-        return nozzle1TargetTemp;
+        return leftNozzleTargetTemp;
     }
 
     @JsonProperty
-    public void setNozzle1TargetTemp(float targetTemp)
+    public void setLeftNozzleTargetTemp(float targetTemp)
     {
-        this.nozzle1TargetTemp = targetTemp;
-    }
-
-    @JsonProperty
-    public String getMaterial0Name()
-    {
-        return material0Name;
-    }
-
-    @JsonProperty
-    public void setMaterial0Name(String materialName)
-    {
-        this.material0Name = materialName;
+        this.leftNozzleTargetTemp = targetTemp;
     }
 
     @JsonProperty
@@ -261,52 +241,64 @@ public class PrintAdjustData
     {
         this.material1Name = materialName;
     }
+
+    @JsonProperty
+    public String getMaterial2Name()
+    {
+        return material2Name;
+    }
+
+    @JsonProperty
+    public void setMaterial2Name(String materialName)
+    {
+        this.material2Name = materialName;
+    }
     
     @JsonProperty
-    public float getExtrusionRate0Multiplier()
+    public float getLeftExtrusionRateMultiplier()
     {
-        return extrusionRate0Multiplier;
+        return leftExtrusionRateMultiplier;
     }
 
     @JsonProperty
-    public void setExtrusionRate0Multiplier(float extrusionRateMultiplier)
+    public void setLeftExtrusionRateMultiplier(float extrusionRateMultiplier)
     {
-        this.extrusionRate0Multiplier = extrusionRateMultiplier;
+        this.leftExtrusionRateMultiplier = extrusionRateMultiplier;
     }
 
     @JsonProperty
-    public float getExtrusionRate1Multiplier()
+    public float getRightExtrusionRateMultiplier()
     {
-        return extrusionRate1Multiplier;
+        return rightExtrusionRateMultiplier;
     }
 
     @JsonProperty
-    public void setExtrusionRate1Multiplier(float extrusionRateMultiplier)
+    public void setRightExtrusionRateMultiplier(float extrusionRateMultiplier)
     {
-        this.extrusionRate1Multiplier = extrusionRateMultiplier;
+        this.rightExtrusionRateMultiplier = extrusionRateMultiplier;
     }
 
     @JsonProperty
-    public float getFlowRate0Multiplier()
+    public float getLeftFeedRateMultiplier()
     {
-        return flowRate0Multiplier;
+        return leftFeedRateMultiplier;
     }
 
     @JsonProperty
-    public void setFlowRate0Multiplier(float flowRateMultiplier)
+    public void setLeftFeedRateMultiplier(float feedRateMultiplier)
     {
-        this.flowRate0Multiplier = flowRateMultiplier;
+        this.leftFeedRateMultiplier = feedRateMultiplier;
     }
 
     @JsonProperty
-    public float getFlowRate1Multiplier()
+    public float getRightFeedRateMultiplier()
     {
-        return flowRate1Multiplier;
+        return rightFeedRateMultiplier;
     }
 
     @JsonProperty
-    public void setFlowRate1Multiplier(float flowRateMultiplier)
+    public void setRightFeedRateMultiplier(float feedRateMultiplier)
     {
-        this.flowRate1Multiplier = flowRateMultiplier;
+        this.rightFeedRateMultiplier = feedRateMultiplier;
     }
 }

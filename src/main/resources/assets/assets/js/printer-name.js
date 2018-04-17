@@ -1,7 +1,9 @@
 function savePrinterName()
 {
     var newName = $('#pname-input').val();
-    promisePostCommandToRoot(localStorage.getItem(selectedPrinterVar) + '/remoteControl/renamePrinter', newName); 
+    promisePostCommandToRoot(localStorage.getItem(selectedPrinterVar) + '/remoteControl/renamePrinter', newName)
+        .then(goToPage(identityMenu))
+        .catch(goToHomeOrPrinterSelectPage);
 }
 
 function updatePrinterName(nameData)

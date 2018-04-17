@@ -6,13 +6,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  * @author taldhous
  */
-public class TargetValue
+public class NameTagFloat
 {
     private String name = "";
     private String tag = "";
     private float value = 0.0F;
     
-    public TargetValue()
+    public NameTagFloat()
     {
         // Jackson deserialization
     }

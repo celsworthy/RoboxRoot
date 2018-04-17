@@ -1,36 +1,49 @@
-var colourArray =  ['#800000',
-                    '#FF0000',
-                    '#FF8000',
-                    '#FFFF00',
-                    '#80FF00',
-                    '#00FF00',
-                    '#008000',
-                    '#00FF80',
-                    '#00FFFF',
-                    '#008080',
-                    '#0000FF',
-                    '#8000FF',
-                    '#FF00FF',
-                    '#800080',
-                    '#FF8080',
-                    '#808080',
-                    '#FFFFFF'];
+var colourArray =  [ '#7F7F7F',
+                     '#FFFFFF',
+                     '#000000',
+                     '#00007F',
+                     '#007F00',
+                     '#7F0000',
+                     '#FF7F7F',
+                     '#7FFF7F',
+                     '#7F7FFF',
+                     '#7FFF00',
+                     '#00FF00',
+                     '#00FF96',
+                     '#00FFFF',
+                     '#0000FF',
+                     '#7F00FF',
+                     '#FF00FF',
+                     '#FF0000',
+                     '#FF7F00',
+                     '#FFFF00'];
 
 function selectButton(button)
 {
     
     var compIcon = getComplimentaryOption($(button).css('background-color'), 'Icon-Tick-Black.svg', 'Icon-Tick-White.svg');
     
-    $(button).css('border-style', 'groove')
-             .html('<img id="selected-colour" src="' + imageRoot + compIcon + '" class="rbx-colour-button">');
+    var selectedColour = $(button).css('border-style', 'groove')
+                                  .html('<img id="selected-colour" src="' + imageRoot + compIcon + '" class="rbx-colour-button">')
+                                  .css('background-color');
+    console.log('ambientlight ' + selectedColour);
+    promisePostCommandToRoot(localStorage.getItem(selectedPrinterVar) + '/remoteControl/setAmbientLED', selectedColour);
 }
 
 function savePrinterColour()
 {
     var selectedColour = $('#selected-colour').closest('.btn.rbx-colour-button')
                                               .css('background-color');
-    promisePostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/changePrinterColour", selectedColour);
-    //goToPage('home.html');
+    console.log('printer colour ' + selectedColour);
+    promisePostCommandToRoot(localStorage.getItem(selectedPrinterVar) + '/remoteControl/changePrinterColour', selectedColour);
+    goToPreviousPage();
+}
+
+function restorePrinterColour()
+{
+    console.log('ambientlight on');
+    promisePostCommandToRoot(localStorage.getItem(selectedPrinterVar) + '/remoteControl/setAmbientLED', 'on');
+    goToPreviousPage();
 }
 
 function onColourClicked()
@@ -77,6 +90,7 @@ function printerColourInit()
                                         $(element).css('background-color', colourArray[index])
                                                   .on('click', onColourClicked);
                                     });
+        $('#left-button').on('click', restorePrinterColour);
         $('#right-button').on('click', savePrinterColour);
         promiseGetCommandToRoot(selectedPrinter + '/remoteControl/nameStatus', null)
             .then(updatePrinterColours)

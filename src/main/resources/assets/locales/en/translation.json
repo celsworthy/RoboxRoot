@@ -190,6 +190,7 @@
  	"reset-pin-failed":"Failed to reset PIN.",
 	"robox": "Robox",
 	"robox-pro":"RoboxPRO",
+	"server-name":"Server Name",
 	"security-settings":"Security Settings",
 	"settings":"Settings",
 	"settings-save":"Click Save to store your settings.",

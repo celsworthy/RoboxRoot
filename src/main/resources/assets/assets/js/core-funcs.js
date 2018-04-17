@@ -173,10 +173,11 @@ function onSpinnerClick()
     if (precision == null)
         precision = 0;
     else
-       precision = Number(precision); 
-    input.val(newValue.toFixed(precision));
+       precision = Number(precision);
+    if (input.attr('no-update') !== 'true')
+        input.val(newValue.toFixed(precision));
     var callback = input.attr('callback');
-    if (callback != null && window.hasOwnProperty(callback))
+    if (callback !== null && window.hasOwnProperty(callback))
         window[callback](input.attr('id'), newValue);
 }
 

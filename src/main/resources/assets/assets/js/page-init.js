@@ -15,6 +15,7 @@ var pageInitMap = {'about':aboutInit,
                    'printer-select':printerSelectInit,
                    'purge':purgeInit,
                    'reprint':reprintInit,
+                   'server-name':serverNameInit,
                    'wireless-settings':wirelessSettingsInit};
 var pageTitleMap = {};
 

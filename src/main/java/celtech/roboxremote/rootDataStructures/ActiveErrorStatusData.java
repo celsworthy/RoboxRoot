@@ -1,9 +1,12 @@
 package celtech.roboxremote.rootDataStructures;
 
 import celtech.roboxbase.BaseLookup;
+import celtech.roboxbase.comms.rx.FirmwareError;
+import celtech.roboxbase.printerControl.PrinterStatus;
 import celtech.roboxbase.printerControl.model.Printer;
 import celtech.roboxremote.PrinterRegistry;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
 
 /**
  *
@@ -14,7 +17,7 @@ public class ActiveErrorStatusData
 
     private String printerID;
     //Errors
-    private String[] activeErrors;
+    private ArrayList<ErrorDetails> activeErrors;
 
     public ActiveErrorStatusData()
     {
@@ -28,11 +31,28 @@ public class ActiveErrorStatusData
 
         if (!printer.getActiveErrors().isEmpty())
         {
-            activeErrors = new String[printer.getActiveErrors().size()];
+            activeErrors = new ArrayList<>();
             for (int errorCounter = 0; errorCounter < printer.getActiveErrors().size(); errorCounter++)
             {
-                activeErrors[errorCounter] = BaseLookup.i18n(printer.getActiveErrors().get(errorCounter).getErrorTitleKey());
+                FirmwareError currentError = printer.getActiveErrors().get(errorCounter);
+                if (currentError == FirmwareError.NOZZLE_FLUSH_NEEDED &&
+                    printer.printerStatusProperty().get() == PrinterStatus.IDLE)
+                {
+                    //Suppress NOZZLE_FLUSH if the printer is idle.
+                }
+                else
+                {
+                    activeErrors.add(new ErrorDetails(BaseLookup.i18n(currentError.getErrorTitleKey()),
+                                                      BaseLookup.i18n(currentError.getErrorMessageKey()),
+                                                      currentError.isRequireUserToClear(),
+                                                      currentError.getOptions()
+                                                                  .stream()
+                                                                  .mapToInt((o) -> o.getFlag())
+                                                                  .reduce(0, (a, b) -> a & b)));
+                }
             }
+            if (activeErrors.isEmpty())
+                activeErrors = null;
         }
     }
 
@@ -48,12 +68,12 @@ public class ActiveErrorStatusData
         this.printerID = printerID;
     }
 
-    public String[] getActiveErrors()
+    public ArrayList<ErrorDetails> getActiveErrors()
     {
         return activeErrors;
     }
 
-    public void setActiveErrors(String[] activeErrors)
+    public void setActiveErrors(ArrayList<ErrorDetails> activeErrors)
     {
         this.activeErrors = activeErrors;
     }

@@ -16,7 +16,7 @@
 
 <body id="print-adjust" class="canvas-grey no-touch-action">
     <div class="container page">
-        <div class="row panel rbx-colour-material-1" id="pa-material-1" style="height: 34.75vh; padding: 1.25vh; margin-bottom: 1.25vh">
+        <div class="row panel rbx-colour-material-1" id="pa-right-nozzle" style="height: 34.75vh; padding: 1.25vh; margin-bottom: 1.25vh">
             <div>
                 <div class="row vertical-align" style="height: 4vh">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center no-padding" style="margin-top: 1vh"><img src="assets/img/Icon-Tweak-Mat1.svg" style="height: 3.5vh; margin-bottom: 1.5vh;"><span class="rbx-text-bigbody rbx-white localised" data-i18n="right-nozzle" style="margin-left: 1.25vh;">Right Nozzle</span><span class="rbx-text-bigbody localised"
@@ -24,7 +24,7 @@
                 </div>
                 <div class="row" style="margin: 0.5vh 0vh;">
                     <div class="no-padding text-center">
-                        <p id="pa-material-1-name" class="rbx-text-bigbody rbx-white no-margins">colorFabb_XT Dark Green</p>
+                        <p id="pa-material-1-name" class="rbx-text-bigbody rbx-white no-margins">&nbsp;</p>
                     </div>
                 </div>
                 <div class="row vertical-align" style="margin: 1.25vh 0vh;">
@@ -33,8 +33,8 @@
                     </div>
                     <div style="width: 27.125vh">
                         <form class="form-inline">
-                            <div class="form-group no-margins"><button class="btn btn-default rbx-spinner minus mat1" type="button" data-dir="down"></button><input class="form-control rbx-numeric-input small print-speed" type="text" readonly="" id="pa-print-speed-1" step="10" callback="printSpeedChanged"
-                                    nozzle="1" style="width: 11.25vh"><button class="btn btn-default rbx-spinner add mat1" type="button" data-dir="up"></button></div>
+                            <div class="form-group no-margins"><button class="btn btn-default rbx-spinner minus mat1" type="button" data-dir="down"></button><input class="form-control rbx-numeric-input small print-speed" type="text" readonly="" id="pa-print-speed-r" step="10" callback="printSpeedChanged"
+                                    nozzle="r" style="width: 11.25vh" no-update="true"><button class="btn btn-default rbx-spinner add mat1" type="button" data-dir="up"></button></div>
                         </form>
                     </div>
                     <div style="width: 7.125vh">
@@ -47,8 +47,8 @@
                     </div>
                     <div style="width: 27.125vh">
                         <form class="form-inline">
-                            <div class="form-group no-margins"><button class="btn btn-default rbx-spinner minus mat1" type="button" data-dir="down"></button><input class="form-control rbx-numeric-input small flow-rate" type="text" readonly="" id="pa-flow-rate-1" step="2" callback="flowRateChanged"
-                                    nozzle="1" style="width: 11.25vh"><button class="btn btn-default rbx-spinner add mat1" type="button" data-dir="up"></button></div>
+                            <div class="form-group no-margins"><button class="btn btn-default rbx-spinner minus mat1" type="button" data-dir="down"></button><input class="form-control rbx-numeric-input small flow-rate" type="text" readonly="" id="pa-flow-rate-r" step="2" callback="flowRateChanged"
+                                    nozzle="r" style="width: 11.25vh" no-update="true"><button class="btn btn-default rbx-spinner add mat1" type="button" data-dir="up"></button></div>
                         </form>
                     </div>
                     <div style="width: 7.125vh">
@@ -61,8 +61,8 @@
                     </div>
                     <div style="width: 27.125vh">
                         <form class="form-inline">
-                            <div class="form-group no-margins"><button class="btn btn-default rbx-spinner minus mat1" type="button" data-dir="down"></button><input class="form-control rbx-numeric-input small temperature" type="text" readonly="" id="pa-temp-1" step="2" callback="nozzleTempChanged"
-                                    nozzle="1" style="width: 11.25vh"><button class="btn btn-default rbx-spinner add mat1" type="button" data-dir="up"></button></div>
+                            <div class="form-group no-margins"><button class="btn btn-default rbx-spinner minus mat1" type="button" data-dir="down"></button><input class="form-control rbx-numeric-input small temperature" type="text" readonly="" id="pa-temp-r" step="2" callback="nozzleTempChanged"
+                                    nozzle="r" style="width: 11.25vh" no-update="true"><button class="btn btn-default rbx-spinner add mat1" type="button" data-dir="up"></button></div>
                         </form>
                     </div>
                     <div style="width: 7.125vh">
@@ -71,7 +71,7 @@
                 </div>
             </div>
         </div>
-        <div class="row panel rbx-colour-material-2" id="pa-material-2" style="height: 34.75vh; padding: 1.25vh; margin-bottom: 1.25vh">
+        <div class="row panel rbx-colour-material-2 hidden" id="pa-left-nozzle" style="height: 34.75vh; padding: 1.25vh; margin-bottom: 1.25vh">
             <div>
                 <div class="row vertical-align" style="height: 4vh">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center no-padding" style="margin-top: 1vh"><img src="assets/img/Icon-Tweak-Mat2.svg" style="height: 3.5vh; margin-bottom: 1.5vh;"><span class="rbx-text-bigbody rbx-white localised" data-i18n="left-nozzle" style="margin-left: 1.25vh;">Left Nozzle</span><span class="rbx-text-bigbody localised"
@@ -79,7 +79,7 @@
                 </div>
                 <div class="row" style="margin: 0.5vh 0vh;">
                     <div class="no-padding text-center">
-                        <p id="pa-material-2-name" class="rbx-text-bigbody rbx-white no-margins">Polymaker™ PolyMide Natural</p>
+                        <p id="pa-material-2-name" class="rbx-text-bigbody rbx-white no-margins">&nbsp;</p>
                     </div>
                 </div>
                 <div class="row vertical-align" style="margin: 1.25vh 0vh;">
@@ -88,8 +88,8 @@
                     </div>
                     <div style="width: 27.125vh">
                         <form class="form-inline">
-                            <div class="form-group no-margins"><button class="btn btn-default rbx-spinner minus mat2" type="button" data-dir="down"></button><input class="form-control rbx-numeric-input small print-speed" type="text" readonly="" id="pa-print-speed-2" step="10" callback="printSpeedChanged"
-                                    nozzle="2" style="width: 11.25vh"><button class="btn btn-default rbx-spinner add mat2" type="button" data-dir="up"></button></div>
+                            <div class="form-group no-margins"><button class="btn btn-default rbx-spinner minus mat2" type="button" data-dir="down"></button><input class="form-control rbx-numeric-input small print-speed" type="text" readonly="" id="pa-print-speed-l" step="10" callback="printSpeedChanged"
+                                    nozzle="l" style="width: 11.25vh" no-update="true"><button class="btn btn-default rbx-spinner add mat2" type="button" data-dir="up"></button></div>
                         </form>
                     </div>
                     <div style="width: 7.125vh">
@@ -102,8 +102,8 @@
                     </div>
                     <div style="width: 27.125vh">
                         <form class="form-inline">
-                            <div class="form-group no-margins"><button class="btn btn-default rbx-spinner minus mat2" type="button" data-dir="down"></button><input class="form-control rbx-numeric-input small flow-rate" type="text" readonly="" id="pa-flow-rate-1" step="2" callback="flowRateChanged"
-                                    nozzle="2" style="width: 11.25vh"><button class="btn btn-default rbx-spinner add mat2" type="button" data-dir="up"></button></div>
+                            <div class="form-group no-margins"><button class="btn btn-default rbx-spinner minus mat2" type="button" data-dir="down"></button><input class="form-control rbx-numeric-input small flow-rate" type="text" readonly="" id="pa-flow-rate-l" step="2" callback="flowRateChanged"
+                                    nozzle="l" style="width: 11.25vh" no-update="true"><button class="btn btn-default rbx-spinner add mat2" type="button" data-dir="up"></button></div>
                         </form>
                     </div>
                     <div style="width: 7.125vh">
@@ -116,8 +116,8 @@
                     </div>
                     <div style="width: 27.125vh">
                         <form class="form-inline">
-                            <div class="form-group no-margins"><button class="btn btn-default rbx-spinner minus mat2" type="button" data-dir="down"></button><input class="form-control rbx-numeric-input small temperature" type="text" readonly="" id="pa-temp-2" step="2" callback="nozzleTempChanged"
-                                    nozzle="2" style="width: 11.25vh"><button class="btn btn-default rbx-spinner add mat2" type="button" data-dir="up"></button></div>
+                            <div class="form-group no-margins"><button class="btn btn-default rbx-spinner minus mat2" type="button" data-dir="down"></button><input class="form-control rbx-numeric-input small temperature" type="text" readonly="" id="pa-temp-l" step="2" callback="nozzleTempChanged"
+                                    nozzle="l" style="width: 11.25vh" no-update="true"><button class="btn btn-default rbx-spinner add mat2" type="button" data-dir="up"></button></div>
                         </form>
                     </div>
                     <div style="width: 7.125vh">
@@ -138,7 +138,7 @@
                     <div style="width: 27.125vh">
                         <form class="form-inline">
                             <div class="form-group no-margins"><button class="btn btn-default rbx-spinner minus bed" type="button" data-dir="down"></button><input class="form-control rbx-numeric-input small temperature" type="text" readonly="" id="pa-bed-temp" step="5" callback="bedTempChanged"
-                                    style="width: 11.25vh"><button class="btn btn-default rbx-spinner add bed" type="button" data-dir="up"></button></div>
+                                    style="width: 11.25vh" no-update="true"><button class="btn btn-default rbx-spinner add bed" type="button" data-dir="up"></button></div>
                         </form>
                     </div>
                     <div style="width: 7.125vh">
@@ -176,6 +176,7 @@
     <script src="assets/js/print-adjust.js"></script>
     <script src="assets/js/printer-colour.js"></script>
     <script src="assets/js/printer-name.js"></script>
+    <script src="assets/js/server-name.js"></script>
     <script src="assets/js/printer-select.js"></script>
     <script src="assets/js/purge.js"></script>
     <script src="assets/js/reprint.js"></script>

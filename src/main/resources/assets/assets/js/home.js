@@ -2,14 +2,6 @@
 // empty lines from collapsing to zero height.
 var nbsp = '&nbsp;';
 
-var profileIconMap = 
-{
-    'CUSTOM': 'Icon-ProfileCustom.svg',
-	'DRAFT': 'Icon-ProfileDraft.svg',
-    'FINE': 'Icon-ProfileFine.svg',
-    'NORMAL': 'Icon-ProfileNormal.svg'
-};
-
 var reelIconMap = 
 {
     'CUSTOM': 'Icon-Home-CustomReel.svg',
@@ -198,7 +190,7 @@ function updateHeadStatus(headData)
             break;
         case 2:
             $('#left-nozzle-temp').removeClass('dimmed-section');
-            $('#left-nozzle-temp').removeClass('dimmed-section');
+            $('#right-nozzle-temp').removeClass('dimmed-section');
             if (headData.nozzleTemperature[0] !== null)
                 leftNozzleTemperature = headData.nozzleTemperature[0] + '\xB0' + 'C';
             if (headData.nozzleTemperature[1] !== null)
@@ -220,30 +212,34 @@ function updatePrintJobStatus(printJobData)
     if (!printJobData.printerStatusEnumValue.match("^IDLE"))
     {
         $('#idle-row').addClass('hidden');
-        $('#job-row').removeClass('hidden');
         $('#progress-row').removeClass('hidden');
+        var showJobRow = false;
         if (printJobData.printJobName == null)
             $('#job-name').html(nbsp);
         else
+        {
             $('#job-name').html(printJobData.printJobName);
+            showJobRow = true;
+        }
         $('#job-created').html(nbsp);
         if (printJobData.totalDurationSeconds == null || printJobData.totalDurationSeconds <= 0)
             $('#job-duration').html(nbsp);
         else
+        {
             $('#job-duration').html(secondsToHM(printJobData.totalDurationSeconds));
+            showJobRow = true;
+        }
         if (printJobData.printJobSettings == null)
             $('#job-profile').html(nbsp);
         else
-            $('#job-profile').html(secondsToHM(printJobData.printJobSettings));
-        if (printJobData.printJobProfile == null)
-            $('#job-background').css('background-image', null);
-        else
         {
-            var profileIcon = profileIconMap[printJobData.printJobProfile];
-            if (profileIcon == null)
-                profileIcon = profileIconMap['CUSTOM'];
-            $('.rbx-home-job-details').css('background-image', 'url("' + imageRoot + profileIcon + '")');
+            $('#job-profile').html(printJobData.printJobSettings);
+            showJobRow = true;
         }
+        if (showJobRow)
+            $('#job-row').removeClass('hidden');
+        else    
+            $('#job-row').addClass('hidden');
         updateJobStatusFields('#status-text', '#etc-text', '#progress-bar', printJobData)
     }
     else

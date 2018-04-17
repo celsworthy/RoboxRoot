@@ -13,13 +13,13 @@ import celtech.roboxremote.rootDataStructures.HeadEEPROMData;
 import celtech.roboxremote.rootDataStructures.HeadStatusData;
 import celtech.roboxremote.rootDataStructures.MaterialStatusData;
 import celtech.roboxremote.rootDataStructures.NameStatusData;
+import celtech.roboxremote.rootDataStructures.NameTagFloat;
+import celtech.roboxremote.rootDataStructures.PrintAdjustData;
 import celtech.roboxremote.rootDataStructures.PrintJobStatusData;
+import celtech.roboxremote.rootDataStructures.PurgeTarget;
 import celtech.roboxremote.rootDataStructures.StatusData;
-import celtech.roboxremote.rootDataStructures.TargetValue;
 import celtech.roboxbase.comms.remote.clear.SuitablePrintJob;
 import celtech.roboxbase.configuration.Macro;
-import celtech.roboxremote.rootDataStructures.PrintAdjustData;
-import celtech.roboxremote.rootDataStructures.PurgeTarget;
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.jersey.params.BooleanParam;
 import java.io.IOException;
@@ -287,10 +287,10 @@ public class PublicPrinterControlAPI
 
     @POST
     @Timed
-    @Path("setParamTarget")
+    @Path("setPrintAdjust")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response setParameterTarget(@PathParam("printerID") String printerID,
-                                       TargetValue tData)
+    public Response setPrintAdjust(@PathParam("printerID") String printerID,
+                                   NameTagFloat ntfData)
     {
         boolean ok = true;
         try
@@ -298,51 +298,55 @@ public class PublicPrinterControlAPI
             Printer printer = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
             if (printer != null)
             {
-                switch(tData.getName())
+                switch(ntfData.getName().toLowerCase())
                 {
                     case "temp":
-                        switch(tData.getTag())
+                        switch(ntfData.getTag().toLowerCase())
                         {
                             case "bed":
-                                printer.setBedTargetTemperature(Math.round(tData.getValue()));
+                                printer.setBedTargetTemperature(Math.round(ntfData.getValue()));
                                 break;
-                            case "1":
+                            case "r":
                                 if (printer.headProperty().get().headTypeProperty().get() == Head.HeadType.DUAL_MATERIAL_HEAD)
                                 {
-                                    printer.setNozzleHeaterTargetTemperature(1, Math.round(tData.getValue()));
+                                    printer.setNozzleHeaterTargetTemperature(1, Math.round(ntfData.getValue()));
                                 } else
                                 {
-                                    printer.setNozzleHeaterTargetTemperature(0, Math.round(tData.getValue()));
+                                    printer.setNozzleHeaterTargetTemperature(0, Math.round(ntfData.getValue()));
                                 }
                                 break;
-                            case "2":
-                                printer.setNozzleHeaterTargetTemperature(0, Math.round(tData.getValue()));
+                            case "l":
+                                printer.setNozzleHeaterTargetTemperature(0, Math.round(ntfData.getValue()));
                                 break;
                             default:
                                 ok = false;
                         }  
                         break;
-                    case "flowRate":
-                        switch(tData.getTag())
+                    case "feedrate":
+                        switch(ntfData.getTag().toLowerCase())
                         {
-                            case "1":
-                                printer.changeEFeedRateMultiplier(0.01 * tData.getValue());
+                            case "r":
+                                printer.changeEFeedRateMultiplier(0.01 * ntfData.getValue());
+                                steno.info("Setting R feed rate to " + 0.01 * ntfData.getValue());
+                                steno.info("feedRateEMultiplierProperty now " + printer.getPrinterAncillarySystems().feedRateEMultiplierProperty().floatValue() * 100.0F);
                                 break;
-                            case "2":
-                                printer.changeDFeedRateMultiplier(0.01 * tData.getValue());
+                            case "l":
+                                printer.changeDFeedRateMultiplier(0.01 * ntfData.getValue());
+                                steno.info("Setting L feed rate to " + 0.01 * ntfData.getValue());
+                                steno.info("feedRateDMultiplierProperty now " + printer.getPrinterAncillarySystems().feedRateDMultiplierProperty().floatValue() * 100.0F);
                                 break;
                             default:
                                 ok = false;
                         }  
                         break;
-                    case "printSpeed":
-                        switch(tData.getTag())
+                    case "extrusionrate":
+                        switch(ntfData.getTag().toLowerCase())
                         {
-                            case "1":
-                                printer.changeFilamentInfo("E", printer.extrudersProperty().get(0).filamentDiameterProperty().get(), 0.01 * tData.getValue());
+                            case "r":
+                                printer.changeFilamentInfo("E", printer.extrudersProperty().get(0).filamentDiameterProperty().get(), 0.01 * ntfData.getValue());
                                 break;
-                            case "2":
-                                printer.changeFilamentInfo("D", printer.extrudersProperty().get(1).filamentDiameterProperty().get(), 0.01 * tData.getValue());
+                            case "l":
+                                printer.changeFilamentInfo("D", printer.extrudersProperty().get(1).filamentDiameterProperty().get(), 0.01 * ntfData.getValue());
                                 break;
                             default:
                                 ok = false;
@@ -915,7 +919,7 @@ public class PublicPrinterControlAPI
                 }
                 else
                 {
-                    printerToUse.updatePrinterDisplayColour(Color.web(cleanColour));
+                    printerToUse.setAmbientLEDColour(Color.web(cleanColour));
                 }
                 response = Response.ok().build();
             } catch (PrinterException ex)

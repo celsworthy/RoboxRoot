@@ -13,6 +13,7 @@ import celtech.roboxbase.comms.tx.SendDataFileEnd;
 import celtech.roboxbase.comms.tx.SendDataFileStart;
 import celtech.roboxbase.comms.tx.SendPrintFileStart;
 import celtech.roboxbase.comms.tx.StatusRequest;
+import celtech.roboxbase.comms.tx.WritePrinterID;
 import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxbase.configuration.Filament;
 import celtech.roboxbase.configuration.datafileaccessors.FilamentContainer;
@@ -123,6 +124,15 @@ public class LowLevelAPI
                 {
                     PrintJobPersister.getInstance().closeFile(remoteTx.getMessagePayload());
                     PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getPrintEngine().takingItThroughTheBackDoor(false);
+                }
+                else if (remoteTx instanceof WritePrinterID &&
+                          PrinterRegistry.getInstance().getRemotePrinters().size() == 1 &&
+                          PrinterRegistry.getInstance().getRemotePrinters().get(printerID).printerConfigurationProperty().get().getTypeCode().equals("RBX10"))
+                {
+                    // If only one printer is connected and it is an RBX10, then this is a Robox Pro printer.
+                    // Keep the server name the same as the printer name.
+                    WritePrinterID wpid = ((WritePrinterID) remoteTx);
+                    PrinterRegistry.getInstance().setServerName(wpid.getPrinterFriendlyName());                    
                 }
             }
         }

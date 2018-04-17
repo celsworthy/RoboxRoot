@@ -14,21 +14,27 @@
     <link rel="stylesheet" href="assets/css/RootFonts.css">
 </head>
 
-<body class="canvas-blue no-touch-action">
-    <div class="container splash">
+<body id="server-name" class="canvas-grey no-touch-action">
+    <div class="container page">
         <div class="row">
-            <div style="padding:15vh 7.5vh 0vh;"><img src="assets/img/Logo-RoboxPro-Inverse.svg" class="machine-logo"></div>
+            <div>
+                <h1 class="localised page-title" data-i18n="printer-name-title">Server Name</h1>
+            </div>
         </div>
-        <div class="row">
-            <div style="padding:20.5vh 7.5vh 0vh;"><img src="assets/img/Logo-AddSettingsMake-White.svg" class="pulse animated infinite"></div>
-        </div>
-        <div class="row">
-            <div style="padding:31vh 7.5vh 0vh;">
-                <div class="progress splash">
-                    <div class="progress-bar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"><span class="sr-only">60%</span></div>
+        <div class="row panel rbx-white" style="margin: 0vh 1.25vh; padding:0vh 2.5vh;">
+            <div>
+                <div class="row">
+                    <div>
+                        <p class="localised rbx-field-title no-margins" data-i18n="server-name-enter" style="margin-top: 1vh">Enter Server Name:</p><input type="text" autofocus="" id="sname-input" class="rbx-field rbx-text-xlarge">
+                        <p class="rbx-text-note localised" data-i18n="settings-save" style="padding: 1.5vh 0vh 1.5vh">Click Save to store your settings.</p>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="container footer">
+        <div class="btn-group btn-group-justified" role="group"><a class="btn btn-default menu-bottom-button" role="button" href="/menu-horz.html?id=settings-s" id="left-button"> <img src="assets/img/Icon_Menu_Back.svg" class="menu-bottom-button-icon"></a><a class="btn btn-default menu-bottom-button rbx-invisible" role="button"
+                href="/menu-grid.html?id=main" id="middle-button"> <img src="assets/img/Icon-Menu.svg" style="height:6.5vh;"></a><a class="btn btn-default disabled menu-bottom-button" role="button" href="#" id="right-button"> <img src="assets/img/Icon-Menu-Save.svg" class="menu-bottom-button-icon"></a></div>
     </div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>

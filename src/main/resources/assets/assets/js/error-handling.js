@@ -26,7 +26,25 @@ function handleActiveErrors(activeErrorData)
     if (activeErrorData.activeErrors !== null &&
 	    activeErrorData.activeErrors.length > 0)
     {
-        $('#active-error-summary').text(activeErrorData.activeErrors[0]);
+        $('#active-error-title').text(activeErrorData.activeErrors[0].errorTitle);
+        $('#active-error-summary').text(activeErrorData.activeErrors[0].errorMessage);
+        var options = activeErrorData.activeErrors[0].options;
+        // ABORT(1),
+        // CLEAR_CONTINUE(2),
+        // RETRY(4),
+        // OK(8),
+        // OK_ABORT(16),
+        // OK_CONTINUE(32);
+        if ((options & 17) !== 0) // ABORT or OK_ABORT
+            $('#active-error-abort').removeClass('hidden');
+        else
+            $('#active-error-abort').addClass('hidden');
+        
+        if (options === 0 || // Nothing or
+            (options & 46) !== 0) // CLEAR_CONTINUE or RETRY or OK or OK_CONTINUE.
+            $('#active-error-clear').removeClass('hidden');
+        else
+            $('#active-error-clear').addClass('hidden');
         $('#active-error-dialog').modal('show');
     }
     else

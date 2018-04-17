@@ -71,9 +71,6 @@ public class StatusData
     private boolean[] attachedFilamentCustomFlags = null;
     private boolean[] materialLoaded = null;
 
-    //Errors
-    private String[] activeErrors;
-
     @JsonIgnore
     private String lastPrintJobID = null;
 
@@ -272,15 +269,6 @@ public class StatusData
         } else
         {
             lastPrintJobID = null;
-        }
-
-        if (!printer.getActiveErrors().isEmpty())
-        {
-            activeErrors = new String[printer.getActiveErrors().size()];
-            for (int errorCounter = 0; errorCounter < printer.getActiveErrors().size(); errorCounter++)
-            {
-                activeErrors[errorCounter] = BaseLookup.i18n(printer.getActiveErrors().get(errorCounter).getErrorTitleKey());
-            }
         }
     }
 
@@ -637,15 +625,5 @@ public class StatusData
     public void setMaterialLoaded(boolean[] materialLoaded)
     {
         this.materialLoaded = materialLoaded;
-    }
-
-    public String[] getActiveErrors()
-    {
-        return activeErrors;
-    }
-
-    public void setActiveErrors(String[] activeErrors)
-    {
-        this.activeErrors = activeErrors;
     }
 }
