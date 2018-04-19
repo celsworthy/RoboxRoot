@@ -77,66 +77,80 @@ public class LowLevelAPI
             RoboxTxPacket remoteTx)
     {
         RoboxRxPacket rxPacket = null;
-
-        //steno.info("Request to write to printer with ID " + printerID + " and packet type " + remoteTx.getPacketType());
-        //String messagePayload = remoteTx.getMessagePayload();
-        //if (messagePayload != null)
-        //     steno.info("    Payload length " + Integer.toString(messagePayload.length()));
-        //if (remoteTx.getIncludeSequenceNumber())
-        //     steno.info("    Sequence number = " + Integer.toString(remoteTx.getSequenceNumber()));
-        
-        if (PrinterRegistry.getInstance() != null
-                && !PrinterRegistry.getInstance().getRemotePrinterIDs().contains(printerID))
+        long t1 = System.currentTimeMillis();
+        steno.info("Request to write to printer with ID " + printerID + " and packet type " + remoteTx.getPacketType());
+        String messagePayload = remoteTx.getMessagePayload();
+        if (messagePayload != null)
+             steno.info("    Payload length " + Integer.toString(messagePayload.length()));
+        if (remoteTx.getIncludeSequenceNumber())
+             steno.info("    Sequence number = " + Integer.toString(remoteTx.getSequenceNumber()));
+        try
         {
-            rxPacket = RoboxRxPacketFactory.createPacket(RxPacketTypeEnum.PRINTER_NOT_FOUND);
-        } else
-        {
-            if (remoteTx instanceof StatusRequest)
+            if (PrinterRegistry.getInstance() != null
+                    && !PrinterRegistry.getInstance().getRemotePrinterIDs().contains(printerID))
             {
-                rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getLastStatusResponse();
-            } else if (remoteTx instanceof ReportErrors)
-            {
-                rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getLastErrorResponse();
-            } else if (remoteTx instanceof ReadSendFileReport
-                    && PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getPrintEngine().highIntensityCommsInProgressProperty().get())
-            {
-                rxPacket = RoboxRxPacketFactory.createPacket(RxPacketTypeEnum.SEND_FILE);
+                rxPacket = RoboxRxPacketFactory.createPacket(RxPacketTypeEnum.PRINTER_NOT_FOUND);
             } else
             {
-                try
+                if (remoteTx instanceof StatusRequest)
                 {
-                    rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getCommandInterface().writeToPrinter(remoteTx, false);
-                } catch (RoboxCommsException ex)
+                    rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getLastStatusResponse();
+                } else if (remoteTx instanceof ReportErrors)
                 {
-                    steno.error("Failed whilst writing to local printer with ID" + printerID);
-                }
+                    rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getLastErrorResponse();
+                } else if (remoteTx instanceof ReadSendFileReport
+                        && PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getPrintEngine().highIntensityCommsInProgressProperty().get())
+                {
+                    rxPacket = RoboxRxPacketFactory.createPacket(RxPacketTypeEnum.SEND_FILE);
+                } else
+                {
+                    try
+                    {
+                        rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getCommandInterface().writeToPrinter(remoteTx, false);
+                    } catch (RoboxCommsException ex)
+                    {
+                        steno.error("Failed whilst writing to local printer with ID" + printerID);
+                    }
 
-                if (remoteTx instanceof SendPrintFileStart
-                        || remoteTx instanceof SendDataFileStart)
-                {
-                    PrintJobPersister.getInstance().startFile(remoteTx.getMessagePayload());
-                    PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getPrintEngine().takingItThroughTheBackDoor(true);
-                } else if (remoteTx instanceof SendDataFileChunk)
-                {
-                    String payload = remoteTx.getMessagePayload();
-                    PrintJobPersister.getInstance().writeSegment(payload);
-                } else if (remoteTx instanceof SendDataFileEnd)
-                {
-                    PrintJobPersister.getInstance().closeFile(remoteTx.getMessagePayload());
-                    PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getPrintEngine().takingItThroughTheBackDoor(false);
-                }
-                else if (remoteTx instanceof WritePrinterID &&
-                          PrinterRegistry.getInstance().getRemotePrinters().size() == 1 &&
-                          PrinterRegistry.getInstance().getRemotePrinters().get(printerID).printerConfigurationProperty().get().getTypeCode().equals("RBX10"))
-                {
-                    // If only one printer is connected and it is an RBX10, then this is a Robox Pro printer.
-                    // Keep the server name the same as the printer name.
-                    WritePrinterID wpid = ((WritePrinterID) remoteTx);
-                    PrinterRegistry.getInstance().setServerName(wpid.getPrinterFriendlyName());                    
+                    if (remoteTx instanceof SendPrintFileStart
+                            || remoteTx instanceof SendDataFileStart)
+                    {
+                        PrintJobPersister.getInstance().startFile(remoteTx.getMessagePayload());
+                        PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getPrintEngine().takingItThroughTheBackDoor(true);
+                    } else if (remoteTx instanceof SendDataFileChunk)
+                    {
+                        String payload = remoteTx.getMessagePayload();
+                        PrintJobPersister.getInstance().writeSegment(payload);
+                    } else if (remoteTx instanceof SendDataFileEnd)
+                    {
+                        PrintJobPersister.getInstance().closeFile(remoteTx.getMessagePayload());
+                        PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getPrintEngine().takingItThroughTheBackDoor(false);
+                    }
+                    else if (remoteTx instanceof WritePrinterID &&
+                              PrinterRegistry.getInstance().getRemotePrinters().size() == 1 &&
+                              PrinterRegistry.getInstance().getRemotePrinters().get(printerID).printerConfigurationProperty().get().getTypeCode().equals("RBX10"))
+                    {
+                        // If only one printer is connected and it is an RBX10, then this is a Robox Pro printer.
+                        // Keep the server name the same as the printer name.
+                        WritePrinterID wpid = ((WritePrinterID) remoteTx);
+                        PrinterRegistry.getInstance().setServerName(wpid.getPrinterFriendlyName());                    
+                    }
                 }
             }
+
+        }
+        catch (Exception ex)
+        {
+            long t2 = System.currentTimeMillis();
+            steno.error("LowLevelAPI.writeToPrinter() after " + (t2 - t1) + "ms caught exception " + ex.getClass().getCanonicalName() + " with message " + ex.getMessage());
+            throw ex;
         }
 
+        long t2 = System.currentTimeMillis();
+        if (rxPacket == null)
+            steno.info("Returning null packet after " + (t2 - t1) + "ms");
+        else
+            steno.info("Returning packet " + rxPacket.getPacketType() + " after " + (t2 - t1) + "ms");
         return rxPacket;
     }
 

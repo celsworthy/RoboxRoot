@@ -115,7 +115,7 @@ function updateJobStatusFields(statusField, etcField, progressBar, printJobData)
     {
         $(etcField).html(secondsToHM(printJobData.etcSeconds))
                    .closest('div')
-                   .removeClass('rbx-hidden');
+                   .removeClass('invisible');
 
         var timeElapsed = printJobData.totalDurationSeconds - printJobData.etcSeconds;
         if (timeElapsed < 0)
@@ -132,17 +132,17 @@ function updateJobStatusFields(statusField, etcField, progressBar, printJobData)
             $(progressBar + " .progress-bar").width(progressPercent).html("");
         }
         $(progressBar).closest('.row')
-                      .removeClass('rbx-hidden');
+                      .removeClass('invisible');
     }
     else
     {
         $(etcField).html("&nbsp;")
                    .closest('div')
-                   .addClass('rbx-hidden');
+                   .addClass('invisible');
         $(progressBar + " .progress-bar").width("0%")
                                          .html("")
                                          .closest('.row')
-                                         .addClass('rbx-hidden');
+                                         .addClass('invisible');
     }
 }
 
