@@ -16,17 +16,22 @@ function goToPINReset()
 
 function login_key()
 {
-    var key_char = $(this).attr('char');
-    var value = $('#pin-value').val();
-    $('#pin-value').val(value + key_char);
+    var pv = $('#pin-value');
+    var value = pv.val();
+    if (value.length < 4)
+    {
+        var key_char = $(this).attr('char');
+        pv.val(value + key_char);
+    }
 }
 
 function login_backspace()
 {
-    var value = $('#pin-value').val();
-    $('#pin-value').val(value.substr(0, value.length - 1));
+    var pv = $('#pin-value');
+    var value = pv.val();
+    if (value.length > 0)
+        pv.val(value.substr(0, value.length - 1));
 }
-
 
 function loginInit()
 {

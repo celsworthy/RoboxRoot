@@ -125,9 +125,12 @@ function updateFilamentStatus(materialData, filamentIndex)
 function eject(materialNumber)
 {
     var selectedPrinter = localStorage.getItem(selectedPrinterVar)
-    promisePostCommandToRoot(selectedPrinter + '/remoteControl/ejectFilament', materialNumber + 1);
-	getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus)
-	getStatusData(selectedPrinter, '/materialStatus', updateMaterialStatus)
+    promisePostCommandToRoot(selectedPrinter + '/remoteControl/ejectFilament', materialNumber + 1)
+        .then(function() 
+              {
+	               getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus);
+	               getStatusData(selectedPrinter, '/materialStatus', updateMaterialStatus);
+              });
 }
 
 function updateFilamentEjectStatus(materialData)

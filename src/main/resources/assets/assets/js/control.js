@@ -1,8 +1,8 @@
 var controlSwitches = {'ambientlight':{'state':'on'},
                        'doorlock':{'state':false, 'onCode':'G37 S', 'offCode':'G37 S'},
                        'fan':{'state':false, 'onCode':'M106', 'offCode':'M107'},
-                       'heater1':{'state':false, 'onCode':'M104 S', 'offCode':'M104 S0'},
-                       'heater2':{'state':false, 'onCode':'M104 T', 'offCode':'M104 T0'},
+                       'heaterS':{'state':false, 'onCode':'M104 S', 'offCode':'M104 S0'},
+                       'heaterT':{'state':false, 'onCode':'M104 T', 'offCode':'M104 T0'},
                        'heaterB':{'state':false, 'onCode':'M140 S', 'offCode':'M140 S0'},
                        'lights':{'state':false, 'onCode':'M129', 'offCode':'M128'},
                        'nozzle':{'state':false, 'onCode':'T0', 'offCode':'T1'},
@@ -73,16 +73,19 @@ function controlJog()
 
 function controlEject()
 {
-    console.log('controlEject');
-}
+    if ($(this).hasClass('disabled'))
+        return;
 
-function controlHeat()
-{
-    console.log('controlHeat');
+    var selectedPrinter = localStorage.getItem(selectedPrinterVar)
+    promisePostCommandToRoot(selectedPrinter + '/remoteControl/ejectFilament', materialNumber + 1)
+        .then(getStatusData(null, '/materialStatus', updateControlMaterialStatus));
 }
 
 function controlMove()
 {
+    if ($(this).hasClass('disabled'))
+        return;
+
     var step = decodeStep(this);
     var axis = decodeAxis(this);
     if (step != null && axis != null)
@@ -108,6 +111,9 @@ function homeXYZ()
 
 function toggleSwitch()
 {
+    if ($(this).hasClass('disabled'))
+        return;
+    
     var switchName = $(this).attr('switch');
     var switchData = controlSwitches[switchName];
     if (switchData.state)
@@ -156,8 +162,17 @@ function updateControlHeadStatus(headData)
         // Head attached.
         $('#head-icon').attr('src', imageRoot + "Icon-" + headData.headTypeCode + '.svg');
         $('.require-head').removeClass('disabled');
-        if (!headData.dualMaterialHead)
+        if (headData.dualMaterialHead)
+        {
+            // The right hand heater for a dual material head is T.
+            $('.mat1-heat').attr('switch', 'heaterT');
+        }
+        else
+        {
             $('.nozzle-select, .mat2-heat').addClass('disabled');
+            // The right hand heater for a single material head is S.
+            $('.mat1-heat').attr('switch', 'heaterS');
+        }
     }
 }
 
