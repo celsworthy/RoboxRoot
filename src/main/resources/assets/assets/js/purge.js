@@ -99,11 +99,11 @@ function completePanelUpdate(panelId, showPanel, lastTemp, newTemp)
         var t = newTemp;
         if (lastTemp > 0)
             t = 0.5 * (lastTemp + newTemp);
-        $(panel).removeClass('rbx-hidden');
+        $(panel).removeClass('hidden');
         $('#' + panelId + ' .purge-temp').val(t.toFixed(0));
     }
     else
-        $(panel).addClass('rbx-hidden');
+        $(panel).addClass('hidden');
 } 
 
 function updatePurgeHeadData(headData)
