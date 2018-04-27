@@ -127,12 +127,12 @@ function updatePurgeHeadData(headData)
 function updatePurgeMaterialData(materialData)
 {
     console.log('updatePurgeMaterialData');
-    if (materialData.attachedFilamentNames.length > 0)
-        updatePanelMaterialData('nozzle-1', materialData.attachedFilamentTemp[0], materialData.attachedFilamentNames[0]);
+    if (materialData.attachedFilaments.length > 0)
+        updatePanelMaterialData('nozzle-1', materialData.attachedFilaments[0].filamentTemperature, materialData.attachedFilaments[0].filamentName);
     else
         updatePanelMaterialData('nozzle-1', null, null);
-    if (materialData.attachedFilamentNames.length > 1)
-        updatePanelMaterialData('nozzle-2', materialData.attachedFilamentTemp[1], materialData.attachedFilamentNames[1]);
+    if (materialData.attachedFilaments.length > 1)
+        updatePanelMaterialData('nozzle-2', materialData.attachedFilaments[1].filamentTemperature, materialData.attachedFilaments[1].filamentName);
     else
         updatePanelMaterialData('nozzle-2', null, null);
     return materialData;
@@ -140,23 +140,24 @@ function updatePurgeMaterialData(materialData)
 
 function completePurgeUpdate(purgeData)
 {
+    // purgeData[0] is headData, purgeData[1] is materialData.
     console.log('completePurgeUpdate');
     
-     var showPanel1 = (purgeData[1].materialLoaded.length > 0 &&
-        purgeData[1].materialLoaded[0] &&
-        purgeData[1].canEjectFilament.length > 0 &&
-        purgeData[1].canEjectFilament[0]);
+     var showPanel1 = (purgeData[1].attachedFilaments.length > 0 &&
+        purgeData[1].attachedFilaments[0].materialLoaded &&
+        purgeData[1].attachedFilaments[0].canEject);
         
-    var showPanel2 = (purgeData[1].materialLoaded.length > 1 &&
-        purgeData[1].materialLoaded[1] &&
-        purgeData[1].canEjectFilament.length > 1 &&
-        purgeData[1].canEjectFilament[1]);
+    var showPanel2 = (purgeData[1].attachedFilaments.length > 1 &&
+        purgeData[1].attachedFilaments[1].materialLoaded &&
+        purgeData[1].attachedFilaments[1].canEject);
 
     if (showPanel1 || showPanel2)
     {
         $('.purge-description').html(i18next.t('purge-instructions'));
-        completePanelUpdate('nozzle-1', showPanel1, purgeData[0].nozzle0LastFTemp, purgeData[1].attachedFilamentTemp[0]);
-        completePanelUpdate('nozzle-2', showPanel2, purgeData[0].nozzle1LastFTemp, purgeData[1].attachedFilamentTemp[1]);
+        completePanelUpdate('nozzle-1', showPanel1, purgeData[0].nozzle0LastFTemp,
+                            purgeData[1].attachedFilaments[0].filamentTemperature);
+        completePanelUpdate('nozzle-2', showPanel2, purgeData[0].nozzle1LastFTemp,
+                            purgeData[1].attachedFilaments[1].filamentTemperature);
         setPurgeButtonState();
     }
     else

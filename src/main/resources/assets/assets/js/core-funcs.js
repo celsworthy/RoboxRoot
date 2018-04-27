@@ -364,8 +364,7 @@ function getUrlParameter(name)
         var urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(name);
     }
-};
-
+}
 
 $(document).ready(function () {
     i18next.use(i18nextBrowserLanguageDetector)

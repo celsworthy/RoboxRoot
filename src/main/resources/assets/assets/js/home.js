@@ -48,34 +48,35 @@ function updateFilamentStatus(materialData, filamentIndex)
     var reelClass = "reel-unknown";
     var showLoaded = false;
     var reelIcon = null;
-
-    if (materialData.attachedFilamentNames !== null)
+    var remaining = -1.0;
+    
+    if (materialData.attachedFilaments != null &&
+        materialData.attachedFilaments.length > filamentIndex)
     {
-        showLoaded = materialData.materialLoaded[filamentIndex];
-        if (materialData.attachedFilamentMaterials.length > filamentIndex)
+        filament = materialData.attachedFilaments[filamentIndex];
+        showLoaded = filament.materialLoaded;
+        if (filament.filamentName !== null && filament.filamentName.length > 0)
         {
-            if (materialData.attachedFilamentNames[filamentIndex] !== null)
+            typeValue = filament.materialName;
+            descriptionValue = filament.filamentName;
+            if (filament.customFlag)
+                reelIcon = reelIconMap['CUSTOM'];
+            else
+                reelIcon = reelIconMap['SMART'];
+            remaining = filament.remainingFilament;
+            reelClass = 'reel-known';
+        }
+        else
+        {
+            if (showLoaded)
             {
-                typeValue = materialData.attachedFilamentMaterials[filamentIndex];
-                descriptionValue = materialData.attachedFilamentNames[filamentIndex];
-                if (materialData.attachedFilamentCustomFlags[filamentIndex])
-                    reelIcon = reelIconMap['CUSTOM'];
-                else
-                    reelIcon = reelIconMap['SMART'];
-                reelClass = 'reel-known';
+                descriptionValue = i18next.t("unknown-filament");
+                reelIcon = reelIconMap['UNKNOWN'];
             }
             else
             {
-                if (showLoaded)
-                {
-                    descriptionValue = i18next.t("unknown-filament");
-                    reelIcon = reelIconMap['UNKNOWN'];
-                }
-                else
-                {
-                    descriptionValue = i18next.t("no-filament");
-                    reelIcon = reelIconMap['NONE'];
-                }
+                descriptionValue = i18next.t("no-filament");
+                reelIcon = reelIconMap['NONE'];
             }
         }
     }
@@ -94,15 +95,17 @@ function updateFilamentStatus(materialData, filamentIndex)
         if (descriptionValue !== null)
         {
             $(descriptionField).html(descriptionValue);
-            $(remainingField).html(nbsp);
             $(colourField).html(nbsp);
         }
         else
         {
             $(descriptionField).html(nbsp);
-            $(remainingField).html(nbsp);
             $(colourField).html(nbsp);
         }
+        if (remaining > -1.0)
+            $(remainingField).html(remaining.toFixed(2));
+        else
+            $(remainingField).html(nbsp);
     }
     else
     {
@@ -138,10 +141,10 @@ function updateFilamentEjectStatus(materialData)
     var enableEject1Button = false;
     var enableEject2Button = false;
 
-    if (materialData.attachedFilamentNames !== null && materialData.canEjectFilament !== null)
+    if (materialData.attachedFilaments!== null)
     {
-        enableEject1Button = (materialData.canEjectFilament.length > 0 && materialData.canEjectFilament[0] === true);
-        enableEject2Button = (materialData.canEjectFilament.length > 1 && materialData.canEjectFilament[1] === true);
+        enableEject1Button = (materialData.attachedFilaments.length > 0 && materialData.attachedFilaments[0].canEject);
+        enableEject2Button = (materialData.attachedFilaments.length > 1 && materialData.attachedFilaments[1].canEject);
     }
     
     if (enableEject1Button)

@@ -10,7 +10,6 @@ import celtech.roboxbase.printerControl.PrinterStatus;
 import celtech.roboxbase.printerControl.model.Head;
 import celtech.roboxbase.printerControl.model.HeaterMode;
 import celtech.roboxbase.printerControl.model.Printer;
-import celtech.roboxbase.printerControl.model.PrinterAncillarySystems;
 import celtech.roboxbase.utils.ColourStringConverter;
 import celtech.roboxremote.PrinterRegistry;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -64,12 +63,8 @@ public class StatusData
     private int currentLayer;
     private int numberOfLayers;
 
-    //Material
-    private String[] attachedFilamentNames = null;
-    private String[] attachedFilamentMaterials = null;
-    private String[] attachedFilamentWebColours = null;
-    private boolean[] attachedFilamentCustomFlags = null;
-    private boolean[] materialLoaded = null;
+    // Material
+    private FilamentDetails[] attachedFilaments = null;
 
     @JsonIgnore
     private String lastPrintJobID = null;
@@ -176,27 +171,33 @@ public class StatusData
             numberOfExtruders = 2;
         }
         
-        canEjectFilament = new boolean[numberOfExtruders];
-        attachedFilamentNames = new String[numberOfExtruders];
-        attachedFilamentMaterials = new String[numberOfExtruders];
-        attachedFilamentWebColours = new String[numberOfExtruders];
-        attachedFilamentCustomFlags = new boolean[numberOfExtruders];
-        materialLoaded = new boolean[numberOfExtruders];
+        attachedFilaments = new FilamentDetails[numberOfExtruders];
         for (int extruderNumber = 0; extruderNumber < numberOfExtruders; extruderNumber++)
         {
-            canEjectFilament[extruderNumber] = (printer.extrudersProperty().get(extruderNumber) != null &&
-                                                printer.extrudersProperty().get(extruderNumber).isFittedProperty().get() &&
-                                                printer.extrudersProperty().get(extruderNumber).canEjectProperty().get());
+            String filamentName = "";
+            String materialName = "";
+            String webColour = "";
+            int filamentTemperature = -1;
+            float remainingFilament = -1.0F;
+            boolean customFlag = false;
+            boolean canEject = (printer.extrudersProperty().get(extruderNumber) != null &&
+                                printer.extrudersProperty().get(extruderNumber).isFittedProperty().get() &&
+                                printer.extrudersProperty().get(extruderNumber).canEjectProperty().get());
             if (printer.effectiveFilamentsProperty().get(extruderNumber) != FilamentContainer.UNKNOWN_FILAMENT)
             {
                 Filament filament = printer.effectiveFilamentsProperty().get(extruderNumber);
-                attachedFilamentNames[extruderNumber] = filament.getFriendlyFilamentName();
-                attachedFilamentMaterials[extruderNumber] = filament.getMaterial().toString();
-                attachedFilamentWebColours[extruderNumber] = "#" + ColourStringConverter.colourToString(filament.getDisplayColourProperty().get());
-                attachedFilamentCustomFlags[extruderNumber] = filament.isMutable();
+                filamentName = filament.getFriendlyFilamentName();
+                materialName = filament.getMaterial().toString();
+                filamentTemperature = filament.getNozzleTemperature();
+                remainingFilament = filament.getRemainingFilament();
+                webColour = "#" + ColourStringConverter.colourToString(filament.getDisplayColourProperty().get());
+                customFlag = filament.isMutable();
             }
 
-            materialLoaded[extruderNumber] = printer.extrudersProperty().get(extruderNumber).filamentLoadedProperty().get();
+            boolean materialLoaded = printer.extrudersProperty().get(extruderNumber).filamentLoadedProperty().get();
+            attachedFilaments[extruderNumber] = new FilamentDetails(filamentName, materialName, webColour,
+                                                                    filamentTemperature, remainingFilament,
+                                                                    customFlag, materialLoaded, canEject);
         }
 
         canPause = printer.canPauseProperty().get();
@@ -577,53 +578,13 @@ public class StatusData
         this.printJobProfile = printJobProfile;
     }
     
-    public String[] getAttachedFilamentNames()
+    public FilamentDetails[] getAttachedFilaments()
     {
-        return attachedFilamentNames;
+        return attachedFilaments;
     }
 
-    public void setAttachedFilamentNames(String[] attachedFilamentNames)
+    public void setAttachedFilaments(FilamentDetails[] attachedFilaments)
     {
-        this.attachedFilamentNames = attachedFilamentNames;
-    }
-
-    public String[] getAttachedFilamentMaterials()
-    {
-        return attachedFilamentMaterials;
-    }
-
-    public void setAttachedFilamentMaterials(String[] attachedFilamentMaterials)
-    {
-        this.attachedFilamentMaterials = attachedFilamentMaterials;
-    }
-
-    public String[] getAttachedFilamentWebColours()
-    {
-        return attachedFilamentWebColours;
-    }
-
-    public void setAttachedFilamentWebColours(String[] attachedFilamentWebColours)
-    {
-        this.attachedFilamentWebColours = attachedFilamentWebColours;
-    }
-
-     public boolean[] getAttachedFilamentCustomFlags()
-    {
-        return attachedFilamentCustomFlags;
-    }
-
-    public void setAttachedFilamentCustomFlags(boolean[] attachedFilamentCustomFlags)
-    {
-        this.attachedFilamentCustomFlags = attachedFilamentCustomFlags;
-    }
-
-    public boolean[] getMaterialLoaded()
-    {
-        return materialLoaded;
-    }
-
-    public void setMaterialLoaded(boolean[] materialLoaded)
-    {
-        this.materialLoaded = materialLoaded;
+        this.attachedFilaments = attachedFilaments;
     }
 }

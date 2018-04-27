@@ -68,11 +68,13 @@ public class ActiveErrorStatusData
         this.printerID = printerID;
     }
 
+    @JsonProperty
     public ArrayList<ErrorDetails> getActiveErrors()
     {
         return activeErrors;
     }
 
+    @JsonProperty
     public void setActiveErrors(ArrayList<ErrorDetails> activeErrors)
     {
         this.activeErrors = activeErrors;

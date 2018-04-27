@@ -200,10 +200,7 @@ function setActionButton(details, field)
 function menuHorzInit()
 {
     var menuDetails = null;
-    var menuId = null;
-    
-    menuId = getUrlParameter('id');
-    
+    var menuId = getUrlParameter('id');
     if (menuId != null)
         menuDetails = menuDetailsMap[menuId];
     if (menuDetails != null)
