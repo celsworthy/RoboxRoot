@@ -350,6 +350,23 @@ function performPrinterAction(printerCommand, targetPage, parameter)
         goToHomeOrPrinterSelectPage();
 }
 
+function getUrlParameter(name) 
+{
+    var menuId = null;
+    
+    if (typeof URLSearchParams === 'undefined') 
+    {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    } else {
+        var urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    }
+};
+
+
 $(document).ready(function () {
     i18next.use(i18nextBrowserLanguageDetector)
             .use(i18nextXHRBackend)

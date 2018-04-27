@@ -51,8 +51,7 @@ var maxIdleCount = 5;
 function jobProgressInit()
 {
     var jpDetails = null;
-    var urlParams = new URLSearchParams(window.location.search);
-    var jpId = urlParams.get('id');
+    var jpId = getUrlParameter('id');
     if (jpId != null)
         jpDetails = jobProgressDetailsMap[jpId];
     if (jpDetails != null)

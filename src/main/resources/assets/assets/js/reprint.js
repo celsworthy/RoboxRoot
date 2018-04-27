@@ -11,8 +11,7 @@ function reprintJob()
 
 function updateReprintData(suitablePrintJobs)
 {
-    var urlParams = new URLSearchParams(window.location.search);
-    var startPage = urlParams.get('p');
+    var startPage =  getUrlParameter('p');
     if (startPage == null)
         startPage = 0;
     var jobsPerPage = 4;

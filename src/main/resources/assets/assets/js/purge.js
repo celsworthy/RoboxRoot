@@ -177,8 +177,7 @@ function purgeInit()
         $('#nozzle-2-check').on('click', switchPanelState);
         $('#right-button').on('click', initiatePurge);
         // If we came here straight from the main menu, don't show the back button.
-        var urlParams = new URLSearchParams(window.location.search);
-        var from = urlParams.get('from');
+        var from =  getUrlParameter('from');
         if (from != null && from == 'maintenance')
             $('#left-button').removeClass('rbx-invisible');
         else        

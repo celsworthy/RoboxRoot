@@ -200,16 +200,15 @@ function setActionButton(details, field)
 function menuHorzInit()
 {
     var menuDetails = null;
-    var urlParams = new URLSearchParams(window.location.search);
-    var menuId = urlParams.get('id');
+    var menuId = null;
+    
+    menuId = getUrlParameter('id');
+    
     if (menuId != null)
         menuDetails = menuDetailsMap[menuId];
     if (menuDetails != null)
     {
         setMachineLogo();
-        var initFunc = menuDetails['init'];
-        if (initFunc != null)
-            menuDetails = initFunc(urlParams, menuDetails);
         setMenuText(menuDetails, 'menu-title');
         setActionButton(menuDetails, 'action-1');
         setActionButton(menuDetails, 'action-2');
