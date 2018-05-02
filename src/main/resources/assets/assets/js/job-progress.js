@@ -156,7 +156,7 @@ function updateJobStatus(printJobData)
     else
     {
         if (++idleCount > maxIdleCount)
-            goToPreviousPage();
+            goToHomePage();
     }
 }
 

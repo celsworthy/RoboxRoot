@@ -10,7 +10,6 @@ function clearAboutVersion(data)
 
 function aboutInit()
 {
-    var urlParams = new URLSearchParams(window.location.search);
     $('#left-button').on('click', goToPreviousPage);
     setHomeButton();
     promiseGetCommandToRoot('discovery/whoareyou', null)

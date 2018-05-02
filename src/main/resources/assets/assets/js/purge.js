@@ -177,12 +177,12 @@ function purgeInit()
         $('#nozzle-1-check').on('click', switchPanelState);
         $('#nozzle-2-check').on('click', switchPanelState);
         $('#right-button').on('click', initiatePurge);
-        // If we came here straight from the main menu, don't show the back button.
+        // Set back button to return to the correct page.
         var from =  getUrlParameter('from');
         if (from != null && from == 'maintenance')
-            $('#left-button').removeClass('rbx-invisible');
+            $('#left-button').attr('href', maintenanceMenu)
         else        
-            $('#left-button').addClass('rbx-invisible');
+            $('#left-button').attr('href', mainMenu)
         
         var ph = promiseGetCommandToRoot(selectedPrinter + '/remoteControl/headEEPROM', null)
                     .then(updatePurgeHeadData);

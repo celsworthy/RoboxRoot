@@ -179,16 +179,16 @@ function updateControlHeadStatus(headData)
 function updateControlFilamentStatus(materialData, index)
 {
     var extruder = '[extruder=' + (index + 1) + ']';
-    if (materialData.materialLoaded.length > index
-        && materialData.materialLoaded[index])
+    if (materialData.attachedFilaments.length > index
+        && materialData.attachedFilaments[index].materialLoaded)
     {
         $('.control-jog' + extruder).removeClass('disabled');
     }
     else
         $('.control-jog' + extruder).addClass('disabled');
 
-    if (materialData.canEjectFilament.length > index
-        && materialData.canEjectFilament[index])
+    if (materialData.attachedFilaments.length > index
+        && materialData.attachedFilaments[index].canEject)
     {
         $('.control-eject' + extruder).removeClass('disabled');
     }

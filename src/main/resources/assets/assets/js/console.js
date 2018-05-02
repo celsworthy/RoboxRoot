@@ -91,6 +91,11 @@ function consoleInit()
                             if (e.keyCode === 13)
                                 sendGCodeFromDialog();
                          })
-    $('#left-button').on('click', goToPreviousPage);
+    // Set back button to return to the correct page.
+    var from =  getUrlParameter('from');
+    if (from != null && from == 'main')
+        $('#left-button').attr('href', mainMenu)
+    else        
+        $('#left-button').attr('href', controlPage)
     startActiveErrorHandling();
 }
