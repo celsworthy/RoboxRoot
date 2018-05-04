@@ -103,7 +103,7 @@ function updateFilamentStatus(materialData, filamentIndex)
             $(colourField).html(nbsp);
         }
         if (remaining > -1.0)
-            $(remainingField).html(remaining.toFixed(0));
+            $(remainingField).html(remaining.toFixed(0) + 'm');
         else
             $(remainingField).html(nbsp);
     }

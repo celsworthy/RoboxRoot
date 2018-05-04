@@ -177,7 +177,7 @@ function onSpinnerClick()
     if (input.attr('no-update') !== 'true')
         input.val(newValue.toFixed(precision));
     var callback = input.attr('callback');
-    if (callback !== null && window.hasOwnProperty(callback))
+    if (callback != null && window.hasOwnProperty(callback))
         window[callback](input.attr('id'), newValue);
 }
 

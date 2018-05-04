@@ -11,11 +11,14 @@ function reprintJob()
 
 function updateReprintData(suitablePrintJobs)
 {
-    var startPage =  getUrlParameter('p');
-    if (startPage == null)
-        startPage = 0;
+    var currentPage =  getUrlParameter('p');
+    if (currentPage == null)
+        currentPage = 0;
+    else
+        currentPage = parseInt(currentPage);
+    
     var jobsPerPage = 4;
-    var startIndex = startPage * jobsPerPage;
+    var startIndex = currentPage * jobsPerPage;
 
     for (var jobIndex = 0; jobIndex < jobsPerPage; jobIndex++)
     {
@@ -44,18 +47,23 @@ function updateReprintData(suitablePrintJobs)
         }
     }
     if (startIndex == 0)
-        $('#previous-sub-button').addClass('disabled');
+        $('#previous-sub-button').addClass('disabled')
+                                 .attr('href', '#');
     else
-        $('#previous-sub-button').removeClass('disabled');
+    {   
+        $('#previous-sub-button').removeClass('disabled')
+                                 .attr('href', reprintPage + '?p=' + (currentPage - 1));
+    }
     if (startIndex + jobsPerPage >= suitablePrintJobs.length)
-        $('#next-sub-button').addClass('disabled');
+        $('#next-sub-button').addClass('disabled')
+                             .attr('href', '#');
     else
-        $('#next-sub-button').removeClass('disabled');
+        $('#next-sub-button').removeClass('disabled')
+                             .attr('href', reprintPage + '?p=' + (currentPage + 1));
 
     var pageNumber = i18next.t('page-x-of-n');
-    pageNumber = 'Page #1 of #2';
-    pageNumber = pageNumber.replace('#1', startPage + 1)
-                           .replace('#2', Math.floor(suitablePrintJobs.length / jobsPerPage) + 1);
+    pageNumber = pageNumber.replace('$1', currentPage + 1)
+                           .replace('$2', Math.floor(suitablePrintJobs.length / jobsPerPage) + 1);
     $('#page-number').html(pageNumber);
 }
 

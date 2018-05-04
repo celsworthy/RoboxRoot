@@ -99,7 +99,7 @@ function completePanelUpdate(panelId, showPanel, lastTemp, newTemp)
         var t = newTemp;
         if (lastTemp > 0)
             t = 0.5 * (lastTemp + newTemp);
-        $(panel).removeClass('hidden');
+        $(panel).removeClass('hidden');        
         $('#' + panelId + ' .purge-temp').val(t.toFixed(0));
     }
     else
@@ -126,7 +126,6 @@ function updatePurgeHeadData(headData)
 
 function updatePurgeMaterialData(materialData)
 {
-    console.log('updatePurgeMaterialData');
     if (materialData.attachedFilaments.length > 0)
         updatePanelMaterialData('nozzle-1', materialData.attachedFilaments[0].filamentTemperature, materialData.attachedFilaments[0].filamentName);
     else
@@ -141,7 +140,6 @@ function updatePurgeMaterialData(materialData)
 function completePurgeUpdate(purgeData)
 {
     // purgeData[0] is headData, purgeData[1] is materialData.
-    console.log('completePurgeUpdate');
     
      var showPanel1 = (purgeData[1].attachedFilaments.length > 0 &&
         purgeData[1].attachedFilaments[0].materialLoaded &&

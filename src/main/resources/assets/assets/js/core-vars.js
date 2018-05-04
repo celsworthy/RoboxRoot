@@ -2,7 +2,7 @@ var serverHostName = window.location.hostname;
 var serverPort = 8080;
 var serverURL = 'http://' + serverHostName + ':' + serverPort;
 var clientHostName = window.location.hostname
-//var clientPort = 54620; // For the Bootstrap preview, it has to be edited to be the allocated preview port.
+//var clientPort = 61292; // For the Bootstrap preview, it has to be edited to be the allocated preview port.
 var clientPort = 8080; // In the release version, should be 8080 (same as server port).
 var clientURL = 'http://' + clientHostName + ':' + clientPort;
 //var imageRoot = ''; // For the Boostrap preview, it has to be empty.
@@ -31,6 +31,7 @@ var printerColourPage = '/printer-colour.html';
 var printerNamePage = '/printer-name.html';
 var printerSelectPage = '/printer-select.html';
 var purgePage = '/purge.html';
+var reprintPage = '/reprint.html';
 var serverNamePage = '/server-name.html';
 var wirelessSettingsPage = '/wireless-settings.html';
 
