@@ -214,6 +214,7 @@ function setFooterButton(details, field)
         var icon = menu['icon'];
         var href = menu['href'];
         var action = menu['action'];
+        var extraClasses = menu['extra-classes'];
         if (icon != null)
             icon = '<img class = "menu-bottom-button-icon" src="' + imageRoot + icon + '" />';
         else
@@ -226,6 +227,8 @@ function setFooterButton(details, field)
                .removeClass('disabled rbx-invisible');
         if (action !== null)
             $(item).on('click', action);
+        if (extraClasses !== null)
+            $(item).addClass(extraClasses);
     }
 }
 

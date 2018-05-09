@@ -280,7 +280,8 @@ function pauseResumePrint()
 
 function cancelPrint()
 {
-    if (homeDebounceFlag !== true)
+    if (homeDebounceFlag !== true &&
+       !$('#cancel-button').hasClass('disabled'))
     {
         cancelAction();
         var selectedPrinter = localStorage.getItem(selectedPrinterVar);
