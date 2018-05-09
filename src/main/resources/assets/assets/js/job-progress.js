@@ -1,45 +1,59 @@
+function jobCancelAction()
+{
+    if (!$(this).hasClass('disabled'))
+        cancelAction();
+}
+
 var jobProgressDetailsMap = 
 {
-	'clean-nozzle-1': {'title-text': 'clean-nozzle-title-1',
-                      'description-text': 'clean-nozzle-description',
-                      'image': 'Icon-Menu-Clean-White.svg',
-				      'right-button': {'icon':'Icon-Cancel.svg',
-					                   'action':cancelAction}},
-	'clean-nozzle-2': {'title-text': 'clean-nozzle-title-2',
-                      'description-text': 'clean-nozzle-description',
-                      'image': 'Icon-Menu-Clean-White.svg',
-				      'right-button': {'icon':'Button-Cancel-White.svg',
-					                   'action':cancelAction}},
+	'clean-nozzle-right': {'title-text': 'clean-nozzle-title-right',
+                           'description-text': 'clean-nozzle-description',
+                           'image': 'Icon-Menu-Clean-White.svg',
+		                   'right-button': {'icon':'Icon-Cancel.svg',
+	                                        'action':jobCancelAction,
+                                            'add-class':'cancel-action'}},
+	'clean-nozzle-left': {'title-text': 'clean-nozzle-title-left',
+                          'description-text': 'clean-nozzle-description',
+                          'image': 'Icon-Menu-Clean-White.svg',
+			              'right-button': {'icon':'Button-Cancel-White.svg',
+					                       'action':jobCancelAction,
+                                           'add-class':'cancel-action'}},
 	'eject-stuck-1': {'title-text': 'eject-stuck-title-1',
                       'description-text': 'eject-stuck-description',
                       'image': 'Icon-Menu-Eject-White.svg',
 				      'right-button': {'icon':'Button-Cancel-White.svg',
-					                   'action':cancelAction}},
+					                   'action':jobCancelAction,
+                                       'extra-classes':'cancel-action'}},
 	'eject-stuck-2': {'title-text': 'eject-stuck-title-2',
                       'description-text': 'eject-stuck-description',
                       'image': 'Icon-Menu-Eject-White.svg',
 				      'right-button': {'icon':'Button-Cancel-White.svg',
-					                   'action':cancelAction}},
+					                   'action':jobCancelAction,
+                                       'extra-classes':'cancel-action'}},
 	'remove-head': {'title-text': 'remove-head-title',
                     'description-text': 'remove-head-description',
                     'image': 'Icon-Menu-Remove-White.svg',
 		            'right-button': {'icon':'Button-Cancel-White.svg',
-					                 'action':cancelAction}},
+					                 'action':jobCancelAction,
+                                     'extra-classes':'cancel-action'}},
 	'purge': {'title-text': 'purge-title',
               'description-text': 'purge-description',
               'image': 'Icon-Menu-Purge-White.svg',
 		      'right-button': {'icon':'Button-Cancel-White.svg',
-			                   'action':cancelAction}},
+			                   'action':jobCancelAction,
+                               'extra-classes':'cancel-action'}},
 	'test': {'title-text': 'test-title',
              'description-text': 'test-description',
              'image': 'Icon-Menu-Test-White.svg',
 			 'right-button': {'icon':'Button-Cancel-White.svg',
-	                          'action':cancelAction}},
+	                          'action':jobCancelAction,
+                              'extra-classes':'cancel-action'}},
 	'level-gantry': {'title-text': 'level-gantry-title',
                      'description-text': 'level-gantry-description',
                      'image': 'Icon-Menu-Level-White.svg',
 		             'right-button': {'icon':'Button-Cancel-White.svg',
-	                                  'action':cancelAction}}
+	                                  'action':jobCancelAction,
+                                      'extra-classes':'cancel-action'}}
 };
 
 // The printer remains in idle state for a while before switching to
@@ -151,6 +165,15 @@ function updateJobStatus(printJobData)
     if (printJobData.printerStatusEnumValue !== "IDLE")
     {
         idleCount = maxIdleCount;
+        if (printJobData.canCancel === true)
+        {
+            $('.cancel-action').removeClass('disabled');
+        }
+        else
+        {
+            $('.cancel-action').addClass('disabled');
+        }
+    
         updateJobStatusFields('#status-text', '#etc-text', '#progress-bar', printJobData)
     }
     else

@@ -115,6 +115,14 @@ body {
   background-position:50%;
 }
 
+.right-footer-button {
+  vertical-align:middle;
+  background-image:url("../../assets/img/Icon-Settings.svg");
+  background-repeat:no-repeat;
+  background-size:6vh;
+  background-position:50%;
+}
+
 .btn-default:active, .btn-default:focus, .btn-default:active:focus, .btn-default:active.focus, .btn-default:active:hover, .btn-default:active.hover {
   background-color:transparent;
   outline:none;
@@ -632,12 +640,32 @@ img.rbx-macro-panel {
   line-height:3.5vh;
 }
 
+.server-name {
+  font-size:3.5vh;
+  color:white;
+  font-weight:300;
+  line-height:4vh;
+  width:100%;
+  height:50%;
+  text-align:center;
+}
+
 .rbx-home-machine-ip {
   font-size:2.25vh;
   color:#fff;
   font-weight:300;
   margin:0;
   line-height:4vh;
+}
+
+.server-ip-address {
+  font-size:2.25vh;
+  color:white;
+  font-weight:300;
+  line-height:4vh;
+  width:100%;
+  height:50%;
+  text-align:center;
 }
 
 .home-machine-icon-state {

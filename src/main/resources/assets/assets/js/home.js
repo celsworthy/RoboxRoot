@@ -103,7 +103,7 @@ function updateFilamentStatus(materialData, filamentIndex)
             $(colourField).html(nbsp);
         }
         if (remaining > -1.0)
-            $(remainingField).html(remaining.toFixed(0));
+            $(remainingField).html(remaining.toFixed(0) + 'm');
         else
             $(remainingField).html(nbsp);
     }
@@ -280,7 +280,8 @@ function pauseResumePrint()
 
 function cancelPrint()
 {
-    if (homeDebounceFlag !== true)
+    if (homeDebounceFlag !== true &&
+       !$('#cancel-button').hasClass('disabled'))
     {
         cancelAction();
         var selectedPrinter = localStorage.getItem(selectedPrinterVar);

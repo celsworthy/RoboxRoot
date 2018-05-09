@@ -537,6 +537,7 @@ public class PublicPrinterControlAPI
     @POST
     @Timed
     @Path("/purgeToTarget")
+    @Consumes(MediaType.APPLICATION_JSON)
     public void purgeToTarget(@PathParam("printerID") String printerID, PurgeTarget target)
     {
         int nozzle0Temperature = -1;
@@ -550,7 +551,7 @@ public class PublicPrinterControlAPI
                 nozzle1Temperature = targetTemperature[1];
         }
         doPurge(printerID, nozzle0Temperature, nozzle1Temperature, target.getSafetyOn());
-}
+    }
     
     @POST
     @Timed

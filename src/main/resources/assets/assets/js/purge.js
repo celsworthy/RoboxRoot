@@ -1,3 +1,11 @@
+function sToN(s)
+{
+    var n = parseInt(s);
+    if (isNaN(n))
+        n = -1;
+    return n;
+}
+
 function initiatePurge()
 {
     var targetData = {'targetTemperature':[-1, -1],
@@ -6,18 +14,23 @@ function initiatePurge()
                       'safetyOn':safetiesOn()};
     if ($('#nozzle-1 .rbx-checkbox:visible').is(':checked'))
     {
-        targetData['lastTemperature'][0] = $('#nozzle-1 .last-temp').text();
-        targetData['newTemperature'][0] = $('#nozzle-1 .new-temp').text();
-        targetData['targetTemperature'][0] = $('#nozzle-1 .purge-temp').val();
+        targetData['lastTemperature'][0] = sToN($('#nozzle-1 .last-temp').text());
+        targetData['newTemperature'][0] = sToN($('#nozzle-1 .new-temp').text());
+        targetData['targetTemperature'][0] = sToN($('#nozzle-1 .purge-temp').val());
     }
     if ($('#nozzle-2 .rbx-checkbox:visible').is(':checked'))
     {
-        targetData['lastTemperature'][1] = $('#nozzle-2 .last-temp').text();
-        targetData['newTemperature'][1] = $('#nozzle-2 .new-temp').text();
-        targetData['targetTemperature'][1] = $('#nozzle-2 .purge-temp').val();
+        targetData['lastTemperature'][1] = sToN($('#nozzle-2 .last-temp').text());
+        targetData['newTemperature'][1] = sToN($('#nozzle-2 .new-temp').text());
+        targetData['targetTemperature'][1] = sToN($('#nozzle-2 .purge-temp').val());
     }
 
-    promisePostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/purgeToTarget", targetData);
+    promisePostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/purgeToTarget", targetData)
+            .then(function() { console.log("Purging to target"); })
+            .catch(function()
+                   {
+                        console.log("Failed to send purge command");
+                   });
     goToPage(purgeStatus);
 }
 
@@ -99,7 +112,7 @@ function completePanelUpdate(panelId, showPanel, lastTemp, newTemp)
         var t = newTemp;
         if (lastTemp > 0)
             t = 0.5 * (lastTemp + newTemp);
-        $(panel).removeClass('hidden');
+        $(panel).removeClass('hidden');        
         $('#' + panelId + ' .purge-temp').val(t.toFixed(0));
     }
     else
@@ -126,7 +139,6 @@ function updatePurgeHeadData(headData)
 
 function updatePurgeMaterialData(materialData)
 {
-    console.log('updatePurgeMaterialData');
     if (materialData.attachedFilaments.length > 0)
         updatePanelMaterialData('nozzle-1', materialData.attachedFilaments[0].filamentTemperature, materialData.attachedFilaments[0].filamentName);
     else
@@ -141,7 +153,6 @@ function updatePurgeMaterialData(materialData)
 function completePurgeUpdate(purgeData)
 {
     // purgeData[0] is headData, purgeData[1] is materialData.
-    console.log('completePurgeUpdate');
     
      var showPanel1 = (purgeData[1].attachedFilaments.length > 0 &&
         purgeData[1].attachedFilaments[0].materialLoaded &&

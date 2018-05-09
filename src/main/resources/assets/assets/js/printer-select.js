@@ -143,7 +143,7 @@ function updatePrinterStatuses()
     {
         $('.printer-selector').addClass('rbx-invisible');
     }
-    else if (connectedPrinterIDs.length = 1)
+    else if (connectedPrinterIDs.length == 1)
 	{
 		selectPrinter(connectedPrinterIDs[0]);
 	}
@@ -204,8 +204,8 @@ function updateServerStatus(serverData)
         //$('#serverVersion').text("");
         //$(".serverStatusLine").text("");
         //$(".server-name-title").text("");
-        //$("#server-name-input").val("");
-        //$(".server-ip-address").val("");
+        $('.server-name').html(nbsp);
+        $('.server-ip-address').html(nbsp);
     } else
     {
         if (lastServerData == null
@@ -216,8 +216,8 @@ function updateServerStatus(serverData)
             //$('#serverVersion').text(serverData.serverVersion);
             //$(".serverStatusLine").text(serverData.name);
             //$(".server-name-title").text(serverData.name);
-            //$("#server-name-input").val(serverData.name);
-            //$(".server-ip-address").text(serverData.serverIP);
+            $('.server-name').html(serverData.name);
+            $('.server-ip-address').html(serverData.serverIP);
             //$(".serverIP").text(serverData.serverIP);
             lastServerData = serverData;
         }
