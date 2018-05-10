@@ -140,6 +140,9 @@ function secondsToHM(secondsInput)
 function onSpinnerClick()
 {
     var btn = $(this);
+    if (btn.hasClass('disabled'))
+        return;
+    
     var b = btn.closest('.rbx-spinner');
     input = btn.parent().find('input');
     var oldValue = Number(input.val());

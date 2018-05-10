@@ -558,6 +558,11 @@ h1 {
   touch-action:none;
 }
 
+.rbx-checkbox {
+  height:4.5vh;
+  width:4.5vh;
+}
+
 .float-right {
   float:right;
 }
@@ -893,6 +898,10 @@ img.rbx-macro-panel {
 
 .rbx-grey {
   color:grey;
+}
+
+.rbx-text {
+  color:white;
 }
 
 .rbx-white {
@@ -1460,6 +1469,20 @@ img.rbx-colour-button {
   font-size:3.75vh;
   font-weight:300;
   text-align:right;
+  padding:0vh 1.5vh 0vh 0vh;
+}
+
+.rbx-field-title.xsmall {
+  font-size:3.5vh;
+  font-weight:300;
+  text-align:right;
+  padding:0vh 1.5vh 0vh 0vh;
+}
+
+.rbx-field-text.small {
+  font-size:3.75vh;
+  font-weight:300;
+  text-align:center;
   padding:0vh 1.5vh 0vh 0vh;
 }
 

@@ -56,7 +56,7 @@ var menuDetailsMap =
 		            'action-1': {'active-icon':'Icon-Menu-Purge-White.svg',
 			                     'icon':'Icon-Menu-Purge-Grey.svg',
 				                 'text':'purge',
-                                 'href':purgePage + '?from=maintenance'},
+                                 'href':purgeIntroPage + '?from=maintenance'},
 		            'action-2': {'active-icon':'Icon-Menu-Eject-White.svg',
 					             'icon':'Icon-Menu-Eject-Grey.svg',
 						         'text':'eject-stuck',

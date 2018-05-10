@@ -48,7 +48,7 @@ function switchPanelState()
 {
     var checkbox = $(this);
     var state = checkbox.is(':checked');
-    var panel = checkbox.closest('.rbx-panel');
+    var panel = checkbox.closest('.panel');
     panelId = panel.attr('id');
     setPanelState(panelId, state);
     setPurgeButtonState();
@@ -58,22 +58,28 @@ function setPanelState(panelId, state)
 {
     var materialColor = null;
     var textColor = null;
+    var inputColor = null;
     if (state)
     {
         textColor = 'white';
+        inputColor = 'black';
         if (panelId == 'nozzle-1')
             materialColor = materialColor1;
         else // nozzle-2
             materialColor = materialColor2;
+        $('#' + panelId + ' .rbx-spinner').removeClass('disabled');
     }
     else
     {
         textColor = 'grey';
+        inputColor = 'grey';
         materialColor = 'grey';
+        $('#' + panelId + ' .rbx-spinner').addClass('disabled');
     }
     
-    $('#' + panelId).css('color', textColor)
-    $('#' + panelId + ' .rbx-purge-mat').css('color', materialColor)
+    $('#' + panelId + ' .rbx-text').css('color', textColor)
+    $('#' + panelId + ' .rbx-numeric-input').css('color', inputColor)
+    $('#' + panelId + ' .rbx-colour-material').css('color', materialColor)
 }
 
 function updatePanelTemp(panelId, field, value)

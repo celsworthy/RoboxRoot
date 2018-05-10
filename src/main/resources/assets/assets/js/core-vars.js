@@ -31,6 +31,7 @@ var printerColourPage = '/printer-colour.html';
 var printerNamePage = '/printer-name.html';
 var printerSelectPage = '/printer-select.html';
 var purgePage = '/purge.html';
+var purgeIntroPage = '/purge-intro.html';
 var reprintPage = '/reprint.html';
 var serverNamePage = '/server-name.html';
 var wirelessSettingsPage = '/wireless-settings.html';
