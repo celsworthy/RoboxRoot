@@ -55,6 +55,8 @@
 	"purge":"Purge",
 	"purge-description":"Please wait while the head is purged.",
 	"purge-instructions":"Please enter the temperature and select the nozzles to purge below:",
+	"purge-intro-1":"Purging clears the previous material from the printhead when changing filament - this is essential when swapping between two different filament types (e.g. from ABS to PLA or vice-versa).",
+	"purge-intro-2":"Performing this process regularly will maximise the life of your printhead and reduce the likelihood of blockages.",
 	"purge-not-available":"Purge is not available at this time.",
 	"purge-temperature":"Purge Temperature",
 	"purge-title":"Purge",
