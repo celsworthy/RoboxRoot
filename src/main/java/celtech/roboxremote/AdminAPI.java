@@ -84,6 +84,7 @@ public class AdminAPI
             String fileName = fileDetail.getFileName();
             steno.info("Asked to upgrade using file " + fileName);
 
+            long t1 = System.currentTimeMillis();
             String uploadedFileLocation;
             if (BaseConfiguration.getMachineType() != MachineType.WINDOWS)
             {
@@ -92,17 +93,19 @@ public class AdminAPI
             {
                 uploadedFileLocation = BaseConfiguration.getUserTempDirectory() + fileName;
             }
-            steno.info("Upgrade file " + uploadedFileLocation + " has been uploaded");
 
             // save it
             utils.writeToFile(uploadedInputStream, uploadedFileLocation);
+            
+            long t2 = System.currentTimeMillis();
+            steno.info("Upgrade file " + uploadedFileLocation + " has been uploaded in " + Long.toString(t2 - t1) + "ms");
 
-            //Shut down - but allow the response to go back to the requester first
+            // Shut down - but delay by 5 seconds to allow the response to go back to the requester first.
             BaseLookup.getTaskExecutor().runOnBackgroundThread(() ->
             {
                 try
                 {
-                    Thread.sleep(2000);
+                    Thread.sleep(10000);
                     Root.getInstance().restart();
                 } catch (InterruptedException ex)
                 {
