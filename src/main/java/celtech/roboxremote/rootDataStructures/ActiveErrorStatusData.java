@@ -42,13 +42,14 @@ public class ActiveErrorStatusData
                 }
                 else
                 {
-                    activeErrors.add(new ErrorDetails(BaseLookup.i18n(currentError.getErrorTitleKey()),
+                    activeErrors.add(new ErrorDetails(currentError.getBytePosition(),
+                                                      BaseLookup.i18n(currentError.getErrorTitleKey()),
                                                       BaseLookup.i18n(currentError.getErrorMessageKey()),
                                                       currentError.isRequireUserToClear(),
                                                       currentError.getOptions()
                                                                   .stream()
                                                                   .mapToInt((o) -> o.getFlag())
-                                                                  .reduce(0, (a, b) -> a & b)));
+                                                                  .reduce(0, (a, b) -> a | b)));
                 }
             }
             if (activeErrors.isEmpty())

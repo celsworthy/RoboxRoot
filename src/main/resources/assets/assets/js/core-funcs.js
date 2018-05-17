@@ -81,7 +81,7 @@ function goToMainMenu()
 
 function logout()
 {
-    debugger;
+    //debugger;
     localStorage.setItem(applicationPINVar, "");
     location.href = clientURL + loginPage;
 }
@@ -198,7 +198,13 @@ function safetiesOn()
 function cancelAction()
 {
     var selectedPrinter = localStorage.getItem(selectedPrinterVar);
-    return promisePostCommandToRoot(selectedPrinter + "/remoteControl/cancel", safetiesOn().toString());
+    return promisePostCommandToRoot(selectedPrinter + '/remoteControl/cancel', safetiesOn().toString());
+}
+
+function resumeAction()
+{
+    var selectedPrinter = localStorage.getItem(selectedPrinterVar);
+    return promisePostCommandToRoot(selectedPrinter + '/remoteControl/resume', null);
 }
 
 function setFooterButton(details, field)

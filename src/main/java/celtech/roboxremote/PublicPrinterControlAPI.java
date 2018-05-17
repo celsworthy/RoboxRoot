@@ -1,6 +1,7 @@
 package celtech.roboxremote;
 
 import celtech.roboxbase.comms.exceptions.RoboxCommsException;
+import celtech.roboxbase.comms.remote.Configuration;
 import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxbase.configuration.datafileaccessors.FilamentContainer;
 import celtech.roboxbase.printerControl.model.Head;
@@ -19,6 +20,7 @@ import celtech.roboxremote.rootDataStructures.PrintJobStatusData;
 import celtech.roboxremote.rootDataStructures.PurgeTarget;
 import celtech.roboxremote.rootDataStructures.StatusData;
 import celtech.roboxbase.comms.remote.clear.SuitablePrintJob;
+import celtech.roboxbase.comms.rx.FirmwareError;
 import celtech.roboxbase.configuration.Macro;
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.jersey.params.BooleanParam;
@@ -47,7 +49,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
  * @author Ian
  */
 @RolesAllowed("root")
-@Path("/{printerID}/remoteControl")
+@Path("/{printerID}" + Configuration.publicAPIService)
 @Produces(MediaType.APPLICATION_JSON)
 public class PublicPrinterControlAPI
 {
@@ -418,7 +420,9 @@ public class PublicPrinterControlAPI
         {
             try
             {
-                PrinterRegistry.getInstance().getRemotePrinters().get(printerID).resume();
+                Printer p = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+                if (p != null && p.canResumeProperty().get())
+                    p.resume();
             } catch (PrinterException ex)
             {
                 steno.error("Exception whilst resuming");
@@ -435,7 +439,9 @@ public class PublicPrinterControlAPI
         {
             try
             {
-                PrinterRegistry.getInstance().getRemotePrinters().get(printerID).cancel(null, safetyOn.get());
+                Printer p = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+                if (p != null && p.canCancelProperty().get())
+                    p.cancel(null, safetyOn.get());
             } catch (PrinterException ex)
             {
                 steno.error("Exception whilst cancelling");
@@ -572,10 +578,19 @@ public class PublicPrinterControlAPI
 
     @POST
     @Timed
-    @Path("/clearErrors")
-    public void clearErrors(@PathParam("printerID") String printerID)
+    @Path("/clearAllErrors")
+    public void clearAllErrors(@PathParam("printerID") String printerID)
     {
         PrinterRegistry.getInstance().getRemotePrinters().get(printerID).clearAllErrors();
+    }
+
+    @POST
+    @Timed
+    @Path("/clearError")
+    public void clearError(@PathParam("printerID") String printerID, int errorCode)
+    {
+        
+        PrinterRegistry.getInstance().getRemotePrinters().get(printerID).clearError(FirmwareError.fromBytePosition(errorCode));
     }
 
     /**
