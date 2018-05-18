@@ -4,6 +4,7 @@ import celtech.roboxbase.comms.remote.Configuration;
 import celtech.roboxbase.comms.rx.RoboxRxPacket;
 import celtech.roboxbase.comms.tx.RoboxTxPacket;
 import celtech.roboxbase.comms.exceptions.RoboxCommsException;
+import celtech.roboxbase.comms.rx.AckResponse;
 import celtech.roboxbase.comms.rx.RoboxRxPacketFactory;
 import celtech.roboxbase.comms.rx.RxPacketTypeEnum;
 import celtech.roboxbase.comms.tx.ReadSendFileReport;
@@ -97,8 +98,12 @@ public class LowLevelAPI
                     rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getLastStatusResponse();
                 } else if (remoteTx instanceof ReportErrors)
                 {
-                    rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getLastErrorResponse();
-                } else if (remoteTx instanceof ReadSendFileReport
+                   AckResponse ackResponse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getLastErrorResponse();
+                    // The firmeware errors in the last response will be empty because it has already been processed by Root.
+                    // So replace it with the list of active errors.
+                    ackResponse.setFirmwareErrors(PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getActiveErrors());
+                    rxPacket = ackResponse;
+                 } else if (remoteTx instanceof ReadSendFileReport
                         && PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getPrintEngine().highIntensityCommsInProgressProperty().get())
                 {
                     rxPacket = RoboxRxPacketFactory.createPacket(RxPacketTypeEnum.SEND_FILE);

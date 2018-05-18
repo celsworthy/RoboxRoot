@@ -18,6 +18,7 @@ public class ErrorDetails
     //OK = 8
     //OK_ABORT = 16
     //OK_CONTINUE = 32;
+    private int errorCode = 0;
     private String errorTitle = null;
     private String errorMessage = null;
     private boolean userToClear = false;
@@ -28,12 +29,25 @@ public class ErrorDetails
         // Jackson deserialization
     }
 
-    public ErrorDetails(String errorTitle, String errorMessage, boolean userToClear, int options)
+    public ErrorDetails(int errorCode, String errorTitle, String errorMessage, boolean userToClear, int options)
     {
+        this.errorCode = errorCode;
         this.errorTitle = errorTitle;
         this.errorMessage = errorMessage;
         this.userToClear = userToClear;
         this.options = options;
+    }
+
+    @JsonProperty
+    public int getErrorCode()
+    {
+        return errorCode;
+    }
+
+    @JsonProperty
+    public void setErrorCode(int errorCode)
+    {
+        this.errorCode = errorCode;
     }
 
     @JsonProperty

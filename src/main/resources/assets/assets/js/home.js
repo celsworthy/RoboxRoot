@@ -319,6 +319,17 @@ function updateControlStatus(controlData)
         $('#cancel-button').addClass('disabled');
     }
     
+    if (controlData.printerStatusEnumValue.match("^PRINTING_PROJECT"))
+    {
+        $('#tweak-button').removeClass('disabled')
+                        .removeClass('invisible');
+    }
+    else
+    {
+        $('#tweak-button').addClass('disabled')
+                        .addClass('invisible');
+    }
+
     if (controlData.canOpenDoor === true)
     {
         $('#right-button').removeClass('disabled');
