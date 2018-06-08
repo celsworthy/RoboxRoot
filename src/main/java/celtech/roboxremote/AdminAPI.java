@@ -101,16 +101,7 @@ public class AdminAPI
             steno.info("Upgrade file " + uploadedFileLocation + " has been uploaded in " + Long.toString(t2 - t1) + "ms");
 
             // Shut down - but delay by 5 seconds to allow the response to go back to the requester first.
-            BaseLookup.getTaskExecutor().runOnBackgroundThread(() ->
-            {
-                try
-                {
-                    Thread.sleep(10000);
-                    Root.getInstance().restart();
-                } catch (InterruptedException ex)
-                {
-                }
-            });
+            BaseLookup.getTaskExecutor().runDelayedOnBackgroundThread(() -> Root.getInstance().restart(), 10000);
             response = Response.ok().build();
         } catch (IOException ex)
         {
