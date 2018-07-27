@@ -90,7 +90,7 @@ public class FilamentDetails
     @JsonProperty
     public float getRemainingFilament()
     {
-        return filamentTemperature;
+        return remainingFilament;
     }
 
     @JsonProperty
