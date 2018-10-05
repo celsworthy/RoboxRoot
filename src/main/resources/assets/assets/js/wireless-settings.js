@@ -2,14 +2,20 @@ var lastWifiData = null;
 
 function setWiFiState()
 {
-    promisePostCommandToRoot('admin/enableDisableWifi', $('#wifi-on').prop('checked'))
-        .then(promiseWiFiCredentials)
-        .then(function(data) { alert(i18next.t('wifi-set-ok')); return data; })
-        .catch(function(data) { alert(i18next.t('wifi-set-error')); return data; })
-        .then(getWifiState);
+    // Disable save button to show something is happening.
+    $('#right-button').addClass('disabled'); 
+                       
+    var p = ($('#wifi-on').prop('checked') ? promiseSetWiFiCredentials : promiseEnableDisableWiFi);
+	p().catch(function(data) { alert(i18next.t('wifi-set-error')); return data; })
+       .then(getWifiState);
 }
 
-function promiseWiFiCredentials()
+function promiseEnableDisableWiFi()
+{
+    return promisePostCommandToRoot('admin/enableDisableWifi', $('#wifi-on').prop('checked'));
+}
+
+function promiseSetWiFiCredentials()
 {
     return promisePostCommandToRoot('admin/setWiFiCredentials',
                                     $('#wifi-ssid').val() + ":" + $("#wifi-password").val());
@@ -39,10 +45,12 @@ function updateWifiState(data)
             $('#wifi-off').prop('checked', true);
         }
         $('#wifi-ssid').val(ssid);
+        $('#wifi-password').val('');
 
         lastWifiData = data;
     }
     
+	$('#right-button').removeClass('disabled');
     return data;
 }
 
@@ -52,20 +60,27 @@ function getWifiState()
             .then(updateWifiState)
             .then(function(data)
                   {
-                      console.log('Updated Wifi data');
-                      $('#right-button').removeClass('disabled');
-                      return data;
+					  return data;
                   })
             .catch(function()
                    { 
-                       alert(i18next.t('wifi-get-error')); 
+                       alert(i18next.t('wifi-get-error'));
+                       $('#wifi-ssid').val('');
+                       $('#wifi-password').val('');        
                        $('#right-button').addClass('disabled'); 
                        return false;
                    });
 }
 
+function setWifiOn()
+{
+    $('#wifi-on').prop('checked', true);
+}
+
 function wirelessSettingsInit()
 {
+    $('#wifi-ssid').on('change', setWifiOn);
+    $('#wifi-password').on('change', setWifiOn);
     $('#left-button').on('click', goToPreviousPage);
     setHomeButton();
     $('#right-button').on('click', setWiFiState);
