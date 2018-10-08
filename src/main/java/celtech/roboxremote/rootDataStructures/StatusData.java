@@ -10,6 +10,7 @@ import celtech.roboxbase.printerControl.PrinterStatus;
 import celtech.roboxbase.printerControl.model.Head;
 import celtech.roboxbase.printerControl.model.HeaterMode;
 import celtech.roboxbase.printerControl.model.Printer;
+import celtech.roboxbase.printerControl.model.Reel;
 import celtech.roboxbase.utils.ColourStringConverter;
 import celtech.roboxremote.PrinterRegistry;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -192,11 +193,18 @@ public class StatusData
                 remainingFilament = filament.getRemainingFilament();
                 webColour = "#" + ColourStringConverter.colourToString(filament.getDisplayColourProperty().get());
                 customFlag = filament.isMutable();
+                
+                if (printer.reelsProperty().containsKey(extruderNumber) && printer.reelsProperty().get(extruderNumber) != null)
+                {
+                    remainingFilament = printer.reelsProperty().get(extruderNumber).remainingFilamentProperty().get();
+                    if (remainingFilament < 0.0F)
+                        remainingFilament = 0.0F;
+                }
             }
 
             boolean materialLoaded = printer.extrudersProperty().get(extruderNumber).filamentLoadedProperty().get();
             attachedFilaments[extruderNumber] = new FilamentDetails(filamentName, materialName, webColour,
-                                                                    filamentTemperature, remainingFilament,
+                                                                    filamentTemperature, 0.001F * remainingFilament, // Remaining filament is in mm but needs to be reported in m.
                                                                     customFlag, materialLoaded, canEject);
         }
 
