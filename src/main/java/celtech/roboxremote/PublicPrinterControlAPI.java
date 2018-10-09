@@ -722,13 +722,13 @@ public class PublicPrinterControlAPI
 
     @POST
     @Timed
-    @Path("/tidyProjectDirs")
-    public Response tidyProjectDirectories(@PathParam("printerID") String printerID)
+    @Path("/tidyPrintJobDirs")
+    public Response tidyPrintJobDirectories(@PathParam("printerID") String printerID)
     {
         if (PrinterRegistry.getInstance() != null)
         {
             Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
-            printerToUse.tidyProjectDirectories();
+            printerToUse.tidyPrintJobDirectories();
         }
 
         Response response = Response.ok().build();
