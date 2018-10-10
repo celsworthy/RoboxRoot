@@ -2,6 +2,13 @@ body {
   font-family: 'Source Sans Pro', sans-serif;
 }
 
+h2 {
+  font-size: 2.25vh;
+  margin: 0px;
+  color: #fff;
+  line-height: 1.8vh;
+}
+
 .row.vertical-align {
   display: flex;
   align-items: center;
