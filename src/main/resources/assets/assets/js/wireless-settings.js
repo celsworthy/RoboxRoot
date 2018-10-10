@@ -4,10 +4,9 @@ function setWiFiState()
 {
     // Disable save button to show something is happening.
     $('#right-button').addClass('disabled'); 
-                       
     var p = ($('#wifi-on').prop('checked') ? promiseSetWiFiCredentials : promiseEnableDisableWiFi);
 	p().catch(function(data) { alert(i18next.t('wifi-set-error')); return data; })
-       .then(getWifiState);
+        .then(getWifiState);
 }
 
 function promiseEnableDisableWiFi()
@@ -50,7 +49,7 @@ function updateWifiState(data)
         lastWifiData = data;
     }
     
-	$('#right-button').removeClass('disabled');
+    $('#right-button').removeClass('disabled');
     return data;
 }
 
@@ -60,7 +59,7 @@ function getWifiState()
             .then(updateWifiState)
             .then(function(data)
                   {
-					  return data;
+                      return data;
                   })
             .catch(function()
                    { 
