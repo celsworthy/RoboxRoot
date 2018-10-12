@@ -3,7 +3,7 @@ var controlSwitches = {'ambientlight':{'state':'on'},
                        'fan':{'state':false, 'onCode':'M106', 'offCode':'M107'},
                        'heaterS':{'state':false, 'onCode':'M104 S', 'offCode':'M104 S0'},
                        'heaterT':{'state':false, 'onCode':'M104 T', 'offCode':'M104 T0'},
-                       'heaterB':{'state':false, 'onCode':'M140 S', 'offCode':'M140 S0'},
+                       'heaterB':{'state':false, 'onCode':'M140', 'offCode':'M140 S0'},
                        'lights':{'state':false, 'onCode':'M129', 'offCode':'M128'},
                        'nozzle':{'state':false, 'onCode':'T0', 'offCode':'T1'},
                        'valve':{'state':false, 'onCode':'G0 B1', 'offCode':'G0 B0'}};
@@ -129,6 +129,33 @@ function toggleSwitch()
     }
 }
 
+function toggleBedHeat()
+{
+    var switchName = $(this).attr('switch');
+    var switchData = controlSwitches[switchName];
+    var gcode = '';
+    switch(switchData.state)
+    {
+        case 'on':
+            switchData.state = 'off';
+            gcode = switchData.offCode;
+            break;
+        case 'off':
+        default:
+            switchData.state = 'on';
+            gcode = switchData.onCode;
+            if (!$('.control-eject[extruder=1]').hasClass('disabled'))
+                    gcode = gcode + ' E';
+            else if (!$('.control-eject[extruder=2]').hasClass('disabled'))
+                    gcode = gcode + ' D';
+                else
+                    gcode = gcode + ' S80';
+            break;
+    }
+    console.log(switchName + ' ' + switchData.state);
+    sendGCode(gcode);
+}
+
 function toggleAmbientLight()
 {
     var switchData = controlSwitches['ambientlight'];
@@ -210,6 +237,7 @@ function controlInit()
     $('.control-move').on('click', controlMove);
     $('.control-home').on('click', homeXYZ);
     $('.control-ambient-light').on('click', toggleAmbientLight);
+    $('.control-bed-heat').on('click', toggleBedHeat);
     getStatusData(null, '/headStatus', updateControlHeadStatus)
 	setInterval(function() { getStatusData(null, '/headStatus', updateControlHeadStatus); }, 2000);
     getStatusData(null, '/materialStatus', updateControlMaterialStatus)
