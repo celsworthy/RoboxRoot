@@ -44,11 +44,10 @@ function updateWifiState(data)
             $('#wifi-off').prop('checked', true);
         }
         $('#wifi-ssid').val(ssid);
-        $('#wifi-password').val('');
 
         lastWifiData = data;
     }
-    
+    $('#wifi-password').val('');
     $('#right-button').removeClass('disabled');
     return data;
 }
