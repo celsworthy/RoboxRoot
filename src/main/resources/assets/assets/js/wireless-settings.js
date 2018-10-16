@@ -33,11 +33,10 @@ function updateWifiState(data)
             || data.ssid !== lastWifiData.ssid)
     {
         var ssid = '';
-        if (data.poweredOn === true)
+        if (data.poweredOn === true && data.associated === true && data.ssid.length > 0)
         {
             $('#wifi-on').prop('checked', true);
-            if (data.associated === true)
-                ssid = data.ssid;
+            ssid = data.ssid;
         }
         else
         {
