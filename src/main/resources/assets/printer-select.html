@@ -16,7 +16,7 @@
 
 <body id="printer-select" class="canvas-grey no-touch-action">
     <div class="container menu">
-        <div class="row menu-grid-button">
+        <div class="row menu-grid-button ps_row rbx-hidden">
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 menu-grid-button-l">
                 <div class="row printer-select-button printer-selector" id="printer-1" role="button">
                     <div>
@@ -40,7 +40,7 @@
                 </div>
             </div>
         </div>
-        <div class="row menu-grid-button">
+        <div class="row menu-grid-button ps_row rbx-hidden">
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 menu-grid-button-l">
                 <div class="row printer-select-button printer-selector" id="printer-3" role="button">
                     <div>
@@ -64,7 +64,7 @@
                 </div>
             </div>
         </div>
-        <div class="row menu-grid-button">
+        <div class="row menu-grid-button ps_row rbx-hidden">
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 menu-grid-button-l">
                 <div class="row printer-select-button printer-selector" id="printer-5" role="button">
                     <div>
@@ -86,6 +86,12 @@
                         <p class="printer-select-name no-margins">&nbsp;</p>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="row ps_none" style="height: 89.5vh;display: flex;align-items: center;flex-wrap: wrap;">
+            <div><img src="assets/img/Icon-NoUSB.svg" style="height: 30vh;margin: auto;display: block;">
+                <h1 class="localised" style="width: 58.25vh;padding-top: 2vh;" data-i18n="no-machines-connected">No machines connected</h1>
+                <p class="rbx-text-note-white localised" data-i18n="please-connect-machine">Please connect a machine with USB.</p>
             </div>
         </div>
     </div>

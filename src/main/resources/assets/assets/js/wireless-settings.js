@@ -46,7 +46,7 @@ function updateWifiState(data)
 
         lastWifiData = data;
     }
-    $('#wifi-password').val('');
+    $('#wifi-password').val(''); // Always blank the password.
     $('#right-button').removeClass('disabled');
     return data;
 }

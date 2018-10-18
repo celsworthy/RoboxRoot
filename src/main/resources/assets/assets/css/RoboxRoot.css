@@ -1472,6 +1472,15 @@ img.rbx-colour-button {
   padding: 0px;
 }
 
+.rbx-text-note-white {
+  font-size: 2.5vh;
+  font-weight: 300;
+  color: #fff;
+  font-style: italic;
+  margin: 1vh 2vh 0vh;
+  text-align: center;
+}
+
 .rbx-field-title.small {
   font-size: 3.75vh;
   font-weight: 300;
