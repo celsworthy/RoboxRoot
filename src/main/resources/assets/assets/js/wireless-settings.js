@@ -5,8 +5,8 @@ function setWiFiState()
     // Disable save button to show something is happening.
     $('#right-button').addClass('disabled'); 
     var p = ($('#wifi-on').prop('checked') ? promiseSetWiFiCredentials : promiseEnableDisableWiFi);
-	p().catch(function(data) { alert(i18next.t('wifi-set-error')); return data; })
-        .then(getWifiState);
+	p().catch(function() { handleException('wifi-set-error', false); })
+       .then(getWifiState);
 }
 
 function promiseEnableDisableWiFi()

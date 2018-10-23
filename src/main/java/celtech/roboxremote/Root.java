@@ -11,6 +11,7 @@ import celtech.roboxremote.security.User;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.forms.MultiPartBundle;
+import io.dropwizard.jersey.jackson.JsonProcessingExceptionMapper;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import java.io.IOException;
@@ -150,9 +151,9 @@ public class Root extends Application<RoboxRemoteConfiguration>
         final PublicPrinterControlAPI highLevelAPI = new PublicPrinterControlAPI();
         final DiscoveryAPI discoveryAPI = new DiscoveryAPI();
 
-//        final AppSetupHealthCheck healthCheck
-//                = new AppSetupHealthCheck(configuration.getDefaultPIN());
-//        environment.healthChecks().register("template", healthCheck);
+        final AppSetupHealthCheck healthCheck
+                = new AppSetupHealthCheck(configuration.getDefaultPIN());
+        environment.healthChecks().register("template", healthCheck);
         environment.jersey().register(adminAPI);
         environment.jersey().register(lowLevelAPI);
         environment.jersey().register(highLevelAPI);

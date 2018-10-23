@@ -3,26 +3,36 @@ function promiseCommandToRoot(requestType, service, dataToSend)
 	return new Promise(function(resolve, reject)
 	{
 		var printerURL = serverURL + "/api/" + service + "/";
+        //console.log(printerURL);
 		var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + localStorage.getItem(applicationPINVar));
+        var aData = 
+            {
+                url: printerURL,
+                beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
+                    },
+                contentType: 'application/json', // send as JSON
+                type: requestType,
+                success:function (data, textStatus, jqXHR)
+                    {
+                        resolve(data);
+                    },
+                error:function (jqXHR, textStatus, errorThrown)
+                    {
+                        console.log('PromiseCommandToRoot error!');
+                            console.log('    textStatus = \"' + textStatus + '\"');
+                        if (errorThrown !== null)
+                            console.log('    errorThrown = \"' + errorThrown + '\"');
 
-		$.ajax({
-			url: printerURL,
-			beforeSend: function (xhr) {
-					xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
-				},
-			contentType: "application/json", // send as JSON
-			type: requestType,
-//			dataType: 'json',
-			data: JSON.stringify(dataToSend),
-			success:function (data, textStatus, jqXHR)
-				{
-					resolve(data);
-				},
-            error:function (jqXHR, textStatus, errorThrown)
-                {
-                    reject(Error(textStatus));
-                }       
-        });
+                        reject(Error(textStatus));
+                    }
+            };
+
+        if (dataToSend !== null)
+        {
+            aData.data = JSON.stringify(dataToSend);
+        }
+        $.ajax(aData);
      });
 }
 

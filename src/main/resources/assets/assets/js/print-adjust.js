@@ -8,7 +8,7 @@ function setSpinnerData(spinner, value, delta)
 
 function reportPAError(data)
 {
-    alert("Failed to set print adjust data");
+    handleException('print-adjust-error', false);
     setPrintAdjust();
 }
 
@@ -89,7 +89,7 @@ function setPrintAdjust()
 	{
         promiseGetCommandToRoot(selectedPrinter + '/remoteControl/printAdjust', null)
             .then(updatePrintAdjustData)
-            .catch(goToHomeOrPrinterSelectPage);
+            .catch(function() { handleException('print-adjust-set-error', true); });
 	}
 	else
 		goToHomeOrPrinterSelectPage();

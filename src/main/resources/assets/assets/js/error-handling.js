@@ -1,3 +1,5 @@
+var intervalID = null;
+
 function clearActiveError()
 {
     var pr = localStorage.getItem(selectedPrinterVar);
@@ -11,7 +13,7 @@ function clearActiveError()
                           $('#active-error-dialog').attr('data-error-code', '');
                           $('#active-error-dialog').modal('hide');
                       })
-                .catch(goToHomeOrPrinterSelectPage);
+                .catch(function() { handleException('active-error-clear-error', false); });
     }
 }
 
@@ -23,7 +25,7 @@ function continueActiveError()
     {
         resumeAction()
             .then(clearActiveError)
-            .catch(goToHomeOrPrinterSelectPage);
+            .catch(function() { handleException('active-error-continue-error', false); });
     }
 }
 
@@ -35,7 +37,7 @@ function abortActiveError()
     {
         cancelAction()
             .then(clearActiveError)
-            .catch(goToHomeOrPrinterSelectPage);
+            .catch(function() { handleException('active-error-abort-error', false); });
     }
 }
 
@@ -73,12 +75,6 @@ function handleActiveErrors(activeErrorData)
     }
 }
 
-function handleActiveFailure(failureData)
-{
-    console.log('Failed to report error - ' + failureData.toString());
-    goToHomeOrPrinterSelectPage();
-}
-
 function checkForActiveErrors()
 {
     var pr = localStorage.getItem(selectedPrinterVar);
@@ -87,7 +83,17 @@ function checkForActiveErrors()
     {
         promiseGetCommandToRoot(pr + '/remoteControl/activeErrorStatus', null)
             .then(handleActiveErrors)
-            .catch(handleActiveFailure);
+            .catch(function()
+                   {
+                        // Active error request returned an error,
+                        // so cancel repeat requests.
+                        if (intervalID !== null)
+                        {
+                            clearInterval(intervalID);
+                            intervalID = null;
+                        }
+                        handleException('active-error-check-error', false);
+                   });
     }
 }
 
@@ -130,7 +136,6 @@ function startActiveErrorHandling()
         $('#active-error-abort').on('click', abortActiveError);
 
         // Set off the error notifier.
-        setInterval(checkForActiveErrors, 500);
-        
+        intervalID = setInterval(checkForActiveErrors, 1000);
     }
 }

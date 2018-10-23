@@ -38,7 +38,8 @@ function setHeadEPPROMData()
 
 function reportHEError(data)
 {
-    alert("Failed to write to head EEPROM");
+    var transMessage = i18next.t('failed-to-write-to-head')
+    alert(transMessage);
     setupHeadEEPROMPage();
     hpDebounceFlag = false;
 }
@@ -146,7 +147,7 @@ function headEEPromInit()
         $('.rbx-head-change').on('click', removeHead);
         promiseGetCommandToRoot(selectedPrinter + '/remoteControl/headEEPROM', null)
             .then(updateHeadEEPROMData)
-            .catch(goToHomeOrPrinterSelectPage);
+            .catch(function() { handleException('head-eprom-init-error', true); });
 	}
 	else
 		goToHomeOrPrinterSelectPage();
