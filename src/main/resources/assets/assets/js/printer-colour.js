@@ -94,7 +94,7 @@ function printerColourInit()
         $('#right-button').on('click', savePrinterColour);
         promiseGetCommandToRoot(selectedPrinter + '/remoteControl/nameStatus', null)
             .then(updatePrinterColours)
-            .catch(function() { handleException('print-colour-init-error', true); });
+            .catch(function(error) { handleException(error, 'print-colour-init-error', true); });
 	}
 	else
 		goToHomeOrPrinterSelectPage();

@@ -8,11 +8,11 @@ function checkForMobileBrowser()
     }
 }
 
-function handleException(message, reselect)
+function handleException(error, message, reselect)
 {
-    console.log(i18next.t(message));
+    console.log(i18next.t(message) + ': ' + error);
     
-    if (reselect)
+    if (error.name === 'InternalError' || reselect)
         goToPrinterSelectPage();
 }
 
@@ -343,7 +343,7 @@ function getStatusData(printerID, statusName, callback)
     {
         promiseGetCommandToRoot(pr + '/remoteControl' + statusName, null)
             .then(callback)
-            .catch(function() { handleException('status-data-get-error', false); });
+            .catch(function(error) { handleException(error, 'status-data-get-error', false); });
     }
 }
 
@@ -355,7 +355,10 @@ function getPrinterStatus(printerID, callback)
     {
         promiseGetCommandToRoot(pr + '/remoteControl', null)
             .then(callback)
-            .catch(function() { handleException('printer-status-get-error', false); });
+            .catch(function(error) 
+                   {
+                        handleException(error, 'printer-status-get-error', false);
+                   });
     }
 }
 
@@ -366,7 +369,7 @@ function performPrinterAction(printerCommand, targetPage, parameter)
 	{
         promisePostCommandToRoot(selectedPrinter + '/remoteControl' + printerCommand, parameter)
             .then(function() { goToPage(targetPage); })
-            .catch(function() { handleException('perform-printer-action-error', false); });
+            .catch(function(error) { handleException(error, 'perform-printer-action-error', false); });
     }
     else
         goToHomeOrPrinterSelectPage();

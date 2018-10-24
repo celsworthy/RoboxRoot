@@ -3,7 +3,7 @@ function savePrinterName()
     var newName = $('#pname-input').val();
     promisePostCommandToRoot(localStorage.getItem(selectedPrinterVar) + '/remoteControl/renamePrinter', newName)
         .then(goToPage(identityMenu))
-        .catch(function() { handleException('printer-name-save-error', false); });
+        .catch(function(error) { handleException(error, 'printer-name-save-error', false); });
 }
 
 function updatePrinterName(nameData)
@@ -21,7 +21,7 @@ function printerNameInit()
         $('#right-button').on('click', savePrinterName);
         promiseGetCommandToRoot(selectedPrinter + '/remoteControl/nameStatus', null)
             .then(updatePrinterName)
-            .catch(function() { handleException('printer-name-init-error', true); });
+            .catch(function(error) { handleException(error, 'printer-name-init-error', true); });
     }
 	else
 		goToHomeOrPrinterSelectPage();

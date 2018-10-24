@@ -6,9 +6,9 @@ function setSpinnerData(spinner, value, delta)
               .attr({'min':minValue.toFixed(0), 'max':maxValue.toFixed(0)});
 }
 
-function reportPAError(data)
+function reportPAError(error)
 {
-    handleException('print-adjust-error', false);
+    handleException(error, 'print-adjust-error', false);
     setPrintAdjust();
 }
 
@@ -89,7 +89,7 @@ function setPrintAdjust()
 	{
         promiseGetCommandToRoot(selectedPrinter + '/remoteControl/printAdjust', null)
             .then(updatePrintAdjustData)
-            .catch(function() { handleException('print-adjust-set-error', true); });
+            .catch(function(error) { handleException(error, 'print-adjust-set-error', true); });
 	}
 	else
 		goToHomeOrPrinterSelectPage();

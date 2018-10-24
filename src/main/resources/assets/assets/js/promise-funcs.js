@@ -19,12 +19,18 @@ function promiseCommandToRoot(requestType, service, dataToSend)
                     },
                 error:function (jqXHR, textStatus, errorThrown)
                     {
+                        var statusCode = jqXHR.statusCode;
                         console.log('PromiseCommandToRoot error!');
                             console.log('    textStatus = \"' + textStatus + '\"');
                         if (errorThrown !== null)
                             console.log('    errorThrown = \"' + errorThrown + '\"');
+                        var e = Error(jqXHR.statusText)
+                        if (jqXHR.status === 500)
+                            e.name = 'InternalError'
+                        else
+                            e.name = textStatus
 
-                        reject(Error(textStatus));
+                        reject(e);
                     }
             };
 

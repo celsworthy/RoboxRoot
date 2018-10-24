@@ -75,7 +75,7 @@ function reprintInit()
         setMachineLogo();
         promisePostCommandToRoot(selectedPrinter + '/remoteControl/listReprintableJobs', null)
                     .then(updateReprintData)
-                    .catch(function() { handleException('reprint-init-error', true); });
+                    .catch(function(error) { handleException(error, 'reprint-init-error', true); });
     }
 	else
 		goToHomeOrPrinterSelectPage();

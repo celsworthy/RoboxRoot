@@ -1,4 +1,5 @@
 var intervalID = null;
+var intervalDwell = 1000;
 
 function clearActiveError()
 {
@@ -13,7 +14,7 @@ function clearActiveError()
                           $('#active-error-dialog').attr('data-error-code', '');
                           $('#active-error-dialog').modal('hide');
                       })
-                .catch(function() { handleException('active-error-clear-error', false); });
+                .catch(function(error) { handleException(error, 'active-error-clear-error', false); });
     }
 }
 
@@ -25,7 +26,7 @@ function continueActiveError()
     {
         resumeAction()
             .then(clearActiveError)
-            .catch(function() { handleException('active-error-continue-error', false); });
+            .catch(function(error) { handleException(error, 'active-error-continue-error', false); });
     }
 }
 
@@ -37,7 +38,7 @@ function abortActiveError()
     {
         cancelAction()
             .then(clearActiveError)
-            .catch(function() { handleException('active-error-abort-error', false); });
+            .catch(function(error) { handleException(error, 'active-error-abort-error', false); });
     }
 }
 
@@ -83,16 +84,17 @@ function checkForActiveErrors()
     {
         promiseGetCommandToRoot(pr + '/remoteControl/activeErrorStatus', null)
             .then(handleActiveErrors)
-            .catch(function()
+            .catch(function(error)
                    {
                         // Active error request returned an error,
                         // so cancel repeat requests.
-                        if (intervalID !== null)
+                        if (error.name !== 'InternalError' && intervalID !== null)
                         {
                             clearInterval(intervalID);
-                            intervalID = null;
+                            intervalDwell = 3000;
+                            intervalID = setInterval(checkForActiveErrors, intervalDwell);
                         }
-                        handleException('active-error-check-error', false);
+                        handleException(error, 'active-error-check-error', false);
                    });
     }
 }
@@ -136,6 +138,6 @@ function startActiveErrorHandling()
         $('#active-error-abort').on('click', abortActiveError);
 
         // Set off the error notifier.
-        intervalID = setInterval(checkForActiveErrors, 1000);
+        intervalID = setInterval(checkForActiveErrors, intervalDwell);
     }
 }

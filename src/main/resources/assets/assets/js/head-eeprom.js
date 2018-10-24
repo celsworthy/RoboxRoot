@@ -36,12 +36,16 @@ function setHeadEPPROMData()
     }
 }
 
-function reportHEError(data)
+function reportHEError(error)
 {
-    var transMessage = i18next.t('failed-to-write-to-head')
-    alert(transMessage);
-    setupHeadEEPROMPage();
-    hpDebounceFlag = false;
+    if (error.name === 'InternalError')
+        goToPrinterSelectPage();
+    else
+    {
+        var transMessage = i18next.t('failed-to-write-to-head')
+        alert(transMessage);
+        headEEPromInit();
+    }
 }
 
 function setSpinnerValue(spinner, value)
@@ -147,7 +151,7 @@ function headEEPromInit()
         $('.rbx-head-change').on('click', removeHead);
         promiseGetCommandToRoot(selectedPrinter + '/remoteControl/headEEPROM', null)
             .then(updateHeadEEPROMData)
-            .catch(function() { handleException('head-eprom-init-error', true); });
+            .catch(function(error) { handleException(error, 'head-eprom-init-error', true); });
 	}
 	else
 		goToHomeOrPrinterSelectPage();

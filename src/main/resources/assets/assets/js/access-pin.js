@@ -7,7 +7,7 @@ function savePIN()
                     alert('Succesfully updated PIN');
                     logout();
                   })
-                .catch(function() { handleException('pin-set-error', false); });
+                .catch(function(error) { handleException(error, 'pin-set-error', false); });
 }
 
 function filterText(event)
