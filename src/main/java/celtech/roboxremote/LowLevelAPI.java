@@ -156,10 +156,10 @@ public class LowLevelAPI
         }
 
         long t2 = System.currentTimeMillis();
-        if (rxPacket == null)
-            steno.info("Returning null packet after " + (t2 - t1) + "ms");
-        else
-            steno.info("Returning packet " + rxPacket.getPacketType() + " after " + (t2 - t1) + "ms");
+        //if (rxPacket == null)
+        //    steno.info("Returning null packet after " + (t2 - t1) + "ms");
+        //else
+        //    steno.info("Returning packet " + rxPacket.getPacketType() + " after " + (t2 - t1) + "ms");
         return rxPacket;
     }
 
@@ -175,7 +175,9 @@ public class LowLevelAPI
         String statsFileLocation = BaseConfiguration.getPrintSpoolDirectory() + statistics.getPrintJobID() + File.separator + statistics.getPrintJobID() + BaseConfiguration.statisticsFileExtension;
         try
         {
+            steno.info("Writing statistics to file \"" + statsFileLocation + "\" ...");
             statistics.writeStatisticsToFile(statsFileLocation);
+            steno.info("... done");
             response = Response.ok().build();
         } catch (IOException ex)
         {

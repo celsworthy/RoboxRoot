@@ -747,9 +747,35 @@ public class PublicPrinterControlAPI
             {
                 printerToUse.reprintJob(Utils.cleanInboundJSONString(printJobID));
             });
-        }
+         }
 
         Response response = Response.ok().build();
+        return response;
+    }
+
+    @POST
+    @Timed
+    @Path("/printGCodeFile")
+    public Response printGCodeFile(@PathParam("printerID") String printerID, String fileName)
+    {
+        Response response = null;
+        if (PrinterRegistry.getInstance() != null)
+        {
+            try
+            {
+                Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+                printerToUse.executeGCodeFile(Utils.cleanInboundJSONString(fileName), true);
+                response = Response.ok().build();
+            }
+            catch (PrinterException ex)
+            {
+                steno.error("Exception whilst printing GCode file \"" + fileName + "\": " + ex);             
+            }
+        }
+        
+        if (response == null)
+            response = Response.serverError().build();
+        
         return response;
     }
 

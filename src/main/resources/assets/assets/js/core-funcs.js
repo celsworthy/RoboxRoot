@@ -343,7 +343,7 @@ function getStatusData(printerID, statusName, callback)
     {
         promiseGetCommandToRoot(pr + '/remoteControl' + statusName, null)
             .then(callback)
-            .catch(function() { handleException('status-data-get-error', true); });
+            .catch(function() { handleException('status-data-get-error', false); });
     }
 }
 
@@ -355,7 +355,7 @@ function getPrinterStatus(printerID, callback)
     {
         promiseGetCommandToRoot(pr + '/remoteControl', null)
             .then(callback)
-            .catch(function() { handleException('printer-status-get-error', true); });
+            .catch(function() { handleException('printer-status-get-error', false); });
     }
 }
 
