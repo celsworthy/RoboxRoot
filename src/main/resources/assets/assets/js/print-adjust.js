@@ -67,7 +67,7 @@ function updatePrintAdjustData(paData)
         $('#pa-right-nozzle').addClass("hidden");
     }
     
-    if (paData.usingMaterial2)
+    if (paData.dualMaterialHead && paData.usingMaterial2)
     //if (true)
     {
         $('#pa-left-nozzle').removeClass("hidden");

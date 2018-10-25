@@ -133,7 +133,7 @@ function updatePurgeHeadData(headData)
 {
     $('#right-nozzle-check').prop('checked', true);
     updatePanelHeadData('right-nozzle', true, headData.rightNozzleLastFTemp);
-    if (headData.nozzleCount > 1)
+    if (headData.dualMaterialHead && headData.nozzleCount > 1)
     {
         $('#left-nozzle-check').prop('checked', true);
         updatePanelHeadData('left-nozzle', true, headData.leftNozzleLastFTemp);
@@ -166,7 +166,8 @@ function completePurgeUpdate(purgeData)
         purgeData[1].attachedFilaments[0].materialLoaded &&
         purgeData[1].attachedFilaments[0].canEject);
         
-    var showPanel2 = (purgeData[1].attachedFilaments.length > 1 &&
+    var showPanel2 = (purgeData[0].dualMaterialHead &&
+        purgeData[1].attachedFilaments.length > 1 &&
         purgeData[1].attachedFilaments[1].materialLoaded &&
         purgeData[1].attachedFilaments[1].canEject);
 
