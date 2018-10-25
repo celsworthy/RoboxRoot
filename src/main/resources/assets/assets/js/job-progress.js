@@ -162,10 +162,11 @@ function updateJobStatusFields(statusField, etcField, progressBar, printJobData)
 function updateJobStatus(printJobData)
 {
     console.log('updateJobStatus - printerStatus = ' + printJobData.printerStatusEnumValue);
-    if (printJobData.printerStatusEnumValue !== "IDLE")
+    if (!printJobData.printerStatusEnumValue.match("^IDLE"))
     {
         idleCount = maxIdleCount;
-        if (printJobData.canCancel === true)
+        if (//printJobData.printerStatusEnumValue.match("^HEATING") ||
+            printJobData.canCancel === true)
         {
             $('.cancel-action').removeClass('disabled');
         }

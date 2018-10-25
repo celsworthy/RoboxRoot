@@ -47,7 +47,7 @@ function updateFilamentStatus(materialData, filamentIndex)
     var descriptionValue = null;
     var reelClass = "reel-unknown";
     var showLoaded = false;
-    var reelIcon = null;
+    var reelIcon = reelIconMap['NONE'];
     var remaining = -1.0;
     
     if (materialData.attachedFilaments != null &&
@@ -310,7 +310,8 @@ function updateControlStatus(controlData)
                                  .attr('mode', 'd');
     }
     
-    if (controlData.canCancel === true)
+    if (//controlData.printerStatusEnumValue.match("^HEATING") ||
+        controlData.canCancel === true)
     {
         $('#cancel-button').removeClass('disabled');
     }
