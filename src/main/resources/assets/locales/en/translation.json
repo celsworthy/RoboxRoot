@@ -45,6 +45,8 @@
 	"no-machines-connected":"No machines connected",
 	"offline":"Offline",
 	"online":"Online",
+	"nozzle":"Nozzle",
+	"nozzles":"Nozzles",
 	"page-x-of-n":"Page $1 of $2",
 	"please-connect-machine":"Please connect a machine with USB.",
 	"print-hours":"Print Hours:",

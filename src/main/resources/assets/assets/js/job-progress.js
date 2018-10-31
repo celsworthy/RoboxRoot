@@ -165,7 +165,7 @@ function updateJobStatus(printJobData)
     if (!printJobData.printerStatusEnumValue.match("^IDLE"))
     {
         idleCount = maxIdleCount;
-        if (//printJobData.printerStatusEnumValue.match("^HEATING") ||
+        if (printJobData.printerStatusEnumValue.match("^HEATING") ||
             printJobData.canCancel === true)
         {
             $('.cancel-action').removeClass('disabled');

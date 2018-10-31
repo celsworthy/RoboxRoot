@@ -250,7 +250,7 @@ h1 {
   text-align: left;
   font-size: 4.5vh;
   font-weight: 300;
-  line-height: 6.5vh;
+  line-height: 8vh;
   padding-left: 11vh;
   background-repeat: no-repeat;
   background-size: 5vh;
@@ -399,6 +399,9 @@ h1 {
   background-color: #303030;
   margin-bottom: 0;
   border: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
 }
 
 .row.panel.rbx-home-currentjob {

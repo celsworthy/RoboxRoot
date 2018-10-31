@@ -196,9 +196,17 @@ function updateControlHeadStatus(headData)
         }
         else
         {
-            $('.nozzle-select, .mat2-heat').addClass('disabled');
+            $('.mat2-heat').addClass('disabled');
             // The right hand heater for a single material head is S.
             $('.mat1-heat').attr('switch', 'heaterS');
+        }
+        if (headData.nozzleCount < 2)
+        {
+            $('.nozzle-select').addClass('disabled');
+        }
+        if (!headData.valvesFitted)
+        {
+            $('.nozzle-valve').addClass('disabled');
         }
     }
 }

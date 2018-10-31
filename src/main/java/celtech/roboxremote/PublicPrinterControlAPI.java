@@ -22,6 +22,8 @@ import celtech.roboxremote.rootDataStructures.StatusData;
 import celtech.roboxbase.comms.remote.clear.SuitablePrintJob;
 import celtech.roboxbase.comms.rx.FirmwareError;
 import celtech.roboxbase.configuration.Macro;
+import celtech.roboxbase.printerControl.model.HeaterMode;
+import celtech.roboxbase.utils.tasks.SimpleCancellable;
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.jersey.params.BooleanParam;
 import java.io.IOException;
@@ -56,6 +58,7 @@ public class PublicPrinterControlAPI
 
     private final Stenographer steno = StenographerFactory.getStenographer(PublicPrinterControlAPI.class.getName());
     private final Utils utils = new Utils();
+    private SimpleCancellable purgeCancel = null;
 
     public PublicPrinterControlAPI()
     {
@@ -440,8 +443,16 @@ public class PublicPrinterControlAPI
             try
             {
                 Printer p = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
-                if (p != null && p.canCancelProperty().get())
-                    p.cancel(null, safetyOn.get());
+                if (p != null)
+                {
+                    if (p.canCancelProperty().get())
+                        p.cancel(null, safetyOn.get());
+                    else if (p.getPrinterAncillarySystems().bedHeaterModeProperty().get() != HeaterMode.OFF)
+                    {
+                        cancelRunningPurge(false);
+                        p.sendRawGCode("M140 S0\n", false);
+                    }
+                }
             } catch (PrinterException ex)
             {
                 steno.error("Exception whilst cancelling");
@@ -449,6 +460,23 @@ public class PublicPrinterControlAPI
         }
     }
 
+    private synchronized SimpleCancellable cancelRunningPurge(boolean reset)
+    {
+        if (purgeCancel != null)
+        {
+            purgeCancel.cancelled().set(true);
+            purgeCancel = null;
+        }
+        
+        if (reset)
+        {
+            purgeCancel = new SimpleCancellable();
+            purgeCancel.cancelled().set(false);
+        }
+        
+        return purgeCancel;
+    }
+    
     private void doPurge(String printerID, int targetTemperature0, int targetTemperature1, boolean safetyOn)
     {
         if (PrinterRegistry.getInstance() != null)
@@ -458,6 +486,8 @@ public class PublicPrinterControlAPI
             {
                 Thread purgeThread = new Thread(() ->
                 {
+                    steno.info("Starting purge.");
+                    SimpleCancellable cancel = cancelRunningPurge(true);
                     int nozzle0Temperature = targetTemperature0;
                     int nozzle1Temperature = targetTemperature1;
 
@@ -478,14 +508,16 @@ public class PublicPrinterControlAPI
                     try
                     {
                         //Set the bed to 90 degrees C
+                        if (cancel.cancelled().get())
+                            return;
                         int desiredBedTemperature = 90;
                         printer.setBedTargetTemperature(desiredBedTemperature);
                         printer.goToTargetBedTemperature();
                         boolean bedHeatFailed = PrinterUtils.waitUntilTemperatureIsReached(
                                 printer.getPrinterAncillarySystems().bedTemperatureProperty(), null,
-                                desiredBedTemperature, 5, 600, null);
+                                desiredBedTemperature, 5, 600, cancel);
 
-                        if (!bedHeatFailed)
+                        if (!bedHeatFailed && !cancel.cancelled().get())
                         {
                             if (purgeLeftNozzle)
                             {
@@ -501,29 +533,41 @@ public class PublicPrinterControlAPI
 
                             boolean nozzleHeatFailed = false;
 
-                            if (purgeLeftNozzle)
+                            if (purgeLeftNozzle && !cancel.cancelled().get())
                             {
                                 nozzleHeatFailed = PrinterUtils.waitUntilTemperatureIsReached(
                                         printer.headProperty().get().getNozzleHeaters().get(0).nozzleTemperatureProperty(),
-                                        null, nozzle0Temperature, 5, 300, null);
+                                        null, nozzle0Temperature, 5, 300, cancel);
                             }
 
-                            if (purgeRightNozzle && !nozzleHeatFailed)
+                            if (purgeRightNozzle && !nozzleHeatFailed && !cancel.cancelled().get())
                             {
                                 nozzleHeatFailed = PrinterUtils.waitUntilTemperatureIsReached(
                                         printer.headProperty().get().getNozzleHeaters().get(1).nozzleTemperatureProperty(),
-                                        null, nozzle1Temperature, 5, 300, null);
+                                        null, nozzle1Temperature, 5, 300, cancel);
                             }
 
-                            if (!nozzleHeatFailed)
+                            if (!nozzleHeatFailed && !cancel.cancelled().get())
                             {
-                                printer.purgeMaterial(purgeLeftNozzle, purgeRightNozzle, safetyOn, false, null);
+                                printer.purgeMaterial(purgeLeftNozzle, purgeRightNozzle, safetyOn, false, cancel);
                             }
+                            else
+                            {
+                                steno.info("Nozzle heat failed.");
+                            }
+                        }
+                        else
+                        {
+                            steno.info("Bed heat failed.");
                         }
                     } catch (PrinterException | InterruptedException ex)
                     {
                         steno.error("Exception whilst purging");
-
+                    }
+                    finally
+                    {
+                        cancel.cancelled().set(true);
+                        steno.info("Finishing purge.");                    
                     }
                 });
                 purgeThread.setName("Purge_" + printerID);
@@ -605,11 +649,13 @@ public class PublicPrinterControlAPI
     @Path("/ejectFilament")
     public void ejectFilament(@PathParam("printerID") String printerID, int filamentNumber)
     {
-        if (PrinterRegistry.getInstance() != null)
+        int nozzleNumber = getNozzleNumber(printerID, filamentNumber);
+
+        if (nozzleNumber != -1)
         {
             try
             {
-                PrinterRegistry.getInstance().getRemotePrinters().get(printerID).ejectFilament(filamentNumber - 1, null);
+                PrinterRegistry.getInstance().getRemotePrinters().get(printerID).ejectFilament(nozzleNumber, null);
             } catch (PrinterException ex)
             {
                 steno.error("Exception whilst ejecting filament " + filamentNumber + ": " + ex);
@@ -617,34 +663,61 @@ public class PublicPrinterControlAPI
         }
     }
 
+    private int getNozzleNumber(String printerID, int materialNumber)
+    {
+        int nozzleNumber = -1;
+        if (PrinterRegistry.getInstance() != null)
+        {
+            Printer p = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+            Head h = p.headProperty().get();
+            if (h != null)
+            {
+                if (h.headTypeProperty().get() == Head.HeadType.DUAL_MATERIAL_HEAD)
+                {
+                    if (materialNumber == 1)
+                        nozzleNumber = 1;
+                    else if (materialNumber == 2)
+                        nozzleNumber = 0;
+                }
+                else // h.headTypeProperty().get() == Head.HeadType.SINGLE_MATERIAL_HEAD
+                {
+                    if (materialNumber == 1)
+                        nozzleNumber = 0;
+                }
+            }
+        }
+        return nozzleNumber;
+    }
+
     /**
      *
-     * Expects nozzle number to be 1 (left) or 2 (right)
+     * Expects material number to be 1 (left) or 2 (right)
      *
      * @param printerID
-     * @param nozzleNumber
+     * @param materialNumber
      * @param safetyOn
     */
     @POST
     @Timed
     @Path("/ejectStuckMaterial")
-    public void ejectStuckFilament(@PathParam("printerID") String printerID, int nozzleNumber)//, BooleanParam safetyOn)
+    public void ejectStuckMaterial(@PathParam("printerID") String printerID, int materialNumber)//, BooleanParam safetyOn)
     {
-        if (PrinterRegistry.getInstance() != null)
+        int nozzleNumber = getNozzleNumber(printerID, materialNumber);
+        if (nozzleNumber != -1)
         {
             try
             {
-                PrinterRegistry.getInstance().getRemotePrinters().get(printerID).ejectStuckMaterial(nozzleNumber - 1, false, null, false);// safetyOn.get());
+                PrinterRegistry.getInstance().getRemotePrinters().get(printerID).ejectStuckMaterial(nozzleNumber, false, null, false);// safetyOn.get());
             } catch (PrinterException ex)
             {
-                steno.error("Exception whilst ejecting stuck material" + nozzleNumber + ": " + ex);
+                steno.error("Printer exception whilst ejecting stuck material" + materialNumber + ": " + ex);
             }
         }
     }
     
     /**
      *
-     * Expects nozzle number to be 1 (left) or 2 (right)
+     * Expects requiredNozzle to be 1 (left) or 2 (right)
      *
      * @param printerID
      * @param nozzleNumber
@@ -653,16 +726,40 @@ public class PublicPrinterControlAPI
     @POST
     @Timed
     @Path("/cleanNozzle")
-    public void cleanNozzle(@PathParam("printerID") String printerID, int nozzleNumber)//, BooleanParam safetyOn)
+    public void cleanNozzle(@PathParam("printerID") String printerID, int requiredNozzle)//, BooleanParam safetyOn)
     {
         if (PrinterRegistry.getInstance() != null)
         {
-            try
+            int nozzleNumber = -1;
+            Printer p = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+            Head h = p.headProperty().get();
+            if (h != null &&
+                h.valveTypeProperty().get() == Head.ValveType.FITTED &&
+                h.getNozzles().size() > 0)
             {
-                PrinterRegistry.getInstance().getRemotePrinters().get(printerID).cleanNozzle(nozzleNumber - 1, false, null, false);// safetyOn.get());
-            } catch (PrinterException ex)
+                if (h.getNozzles().size() > 1)
+                {
+                    if (requiredNozzle == 1)
+                        nozzleNumber = 0;
+                    else if (requiredNozzle == 2)
+                        nozzleNumber = 1;
+                }
+                else // h.getNozzles().size() == 1
+                {
+                    if (requiredNozzle == 2)
+                        nozzleNumber = 0;
+                }
+            }
+            
+            if (nozzleNumber != -1)
             {
-                steno.error("Exception whilst cleaning nozzle" + nozzleNumber + ": " + ex);
+                try
+                {
+                    PrinterRegistry.getInstance().getRemotePrinters().get(printerID).cleanNozzle(nozzleNumber, false, null, false);// safetyOn.get());
+                } catch (PrinterException ex)
+                {
+                    steno.error("Printer exception whilst cleaning nozzle" + nozzleNumber + ": " + ex);
+                }
             }
         }
     }

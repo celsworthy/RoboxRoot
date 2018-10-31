@@ -185,18 +185,21 @@ function updateHeadStatus(headData)
     switch (numberOfNozzleHeaters)
     {
         case 0:
-            $('#left-nozzle-temp').parent().addClass('dimmed-section');
-            $('#right-nozzle-temp').parent().addClass('dimmed-section');
+            $('#left-nozzle-title').html(nbsp);
+			$('#right-nozzle-title').html(nbsp);
             break;
         case 1:
-            $('#left-nozzle-temp').parent().addClass('dimmed-section');
-            $('#right-nozzle-temp').parent().removeClass('dimmed-section');
+            $('#left-nozzle-title').html(nbsp);
+			if (headData.headTypeCode === 'RBX01-SM' || headData.headTypeCode === 'RBX01-S2')
+				$('#right-nozzle-title').html(i18next.t('nozzles'));
+			else
+				$('#right-nozzle-title').html(i18next.t('nozzle'));
             if (headData.nozzleTemperature[0] !== null)
                 rightNozzleTemperature = headData.nozzleTemperature[0] + '\xB0' + 'C';
             break;
         case 2:
-            $('#left-nozzle-temp').removeClass('dimmed-section');
-            $('#right-nozzle-temp').removeClass('dimmed-section');
+            $('#left-nozzle-title').html(i18next.t('left-nozzle'));
+			$('#right-nozzle-title').html(i18next.t('right-nozzle'));
             if (headData.nozzleTemperature[0] !== null)
                 leftNozzleTemperature = headData.nozzleTemperature[0] + '\xB0' + 'C';
             if (headData.nozzleTemperature[1] !== null)
@@ -310,7 +313,7 @@ function updateControlStatus(controlData)
                                  .attr('mode', 'd');
     }
     
-    if (//controlData.printerStatusEnumValue.match("^HEATING") ||
+    if (controlData.printerStatusEnumValue.match("^HEATING") ||
         controlData.canCancel === true)
     {
         $('#cancel-button').removeClass('disabled');
