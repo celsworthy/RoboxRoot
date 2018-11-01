@@ -928,6 +928,24 @@ input.rbx-field {
   padding: 0 0vh 0.25vh 2.5vh;
 }
 
+.temp-col-qtr {
+  padding: 0 1vh;
+  width: 25%;
+  float: left;
+}
+
+.temp-col-third {
+  padding: 0 1vh;
+  width: 33.3333333%;
+  float: left;
+}
+
+.temp-col-half {
+  padding: 0 1vh;
+  width: 50.0%;
+  float: left;
+}
+
 .btn-default.move:hover, .btn-default.move:active, .btn-default.move:focus, .btn-default.move:active:focus, .btn-default.move:active.focus, .btn-default.move:active:hover, .btn-default.move:active.hover {
   background-color: transparent;
 }

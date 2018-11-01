@@ -181,14 +181,23 @@ function updateHeadStatus(headData)
     var numberOfNozzleHeaters = 0;
     if (headData.nozzleTemperature !== null)
         numberOfNozzleHeaters = headData.nozzleTemperature.length;
-        
     switch (numberOfNozzleHeaters)
     {
         case 0:
+            $('#left-nozzle-title').parent().addClass('rbx-hidden');
+            $('#right-nozzle-title').parent().addClass('rbx-hidden');
+            $('.temp-col').removeClass('temp-col-third');
+            $('.temp-col').removeClass('temp-col-qtr');
+            $('.temp-col').addClass('temp-col-half');
             $('#left-nozzle-title').html(nbsp);
 			$('#right-nozzle-title').html(nbsp);
             break;
         case 1:
+            $('#left-nozzle-title').parent().addClass('rbx-hidden');
+            $('#right-nozzle-title').parent().removeClass('rbx-hidden');
+            $('.temp-col').removeClass('temp-col-qtr');
+            $('.temp-col').removeClass('temp-col-half');
+            $('.temp-col').addClass('temp-col-third');
             $('#left-nozzle-title').html(nbsp);
 			if (headData.headTypeCode === 'RBX01-SM' || headData.headTypeCode === 'RBX01-S2')
 				$('#right-nozzle-title').html(i18next.t('nozzles'));
@@ -198,6 +207,11 @@ function updateHeadStatus(headData)
                 rightNozzleTemperature = headData.nozzleTemperature[0] + '\xB0' + 'C';
             break;
         case 2:
+            $('#left-nozzle-title').parent().removeClass('rbx-hidden');
+            $('#right-nozzle-title').parent().removeClass('rbx-hidden');
+            $('.temp-col').removeClass('temp-col-third');
+            $('.temp-col').removeClass('temp-col-half');
+            $('.temp-col').addClass('temp-col-qtr');
             $('#left-nozzle-title').html(i18next.t('left-nozzle'));
 			$('#right-nozzle-title').html(i18next.t('right-nozzle'));
             if (headData.nozzleTemperature[0] !== null)
