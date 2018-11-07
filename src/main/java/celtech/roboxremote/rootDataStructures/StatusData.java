@@ -171,6 +171,8 @@ public class StatusData
         {
             numberOfExtruders = 2;
         }
+
+        Head printerHead = printer.headProperty().get();
         
         attachedFilaments = new FilamentDetails[numberOfExtruders];
         for (int extruderNumber = 0; extruderNumber < numberOfExtruders; extruderNumber++)
@@ -181,9 +183,15 @@ public class StatusData
             int filamentTemperature = -1;
             float remainingFilament = -1.0F;
             boolean customFlag = false;
-            boolean canEject = (printer.extrudersProperty().get(extruderNumber) != null &&
-                                printer.extrudersProperty().get(extruderNumber).isFittedProperty().get() &&
+            boolean extruderFitter = (printer.extrudersProperty().get(extruderNumber) != null &&
+                                      printer.extrudersProperty().get(extruderNumber).isFittedProperty().get());
+            boolean canEject = (extruderFitter &&
                                 printer.extrudersProperty().get(extruderNumber).canEjectProperty().get());
+            boolean materialLoaded = (extruderFitter &&
+                                      printer.extrudersProperty().get(extruderNumber).filamentLoadedProperty().get());
+            boolean canExtrude = materialLoaded &&
+                                (printerHead == null || extruderNumber < printerHead.getNozzleHeaters().size());
+
             if (printer.effectiveFilamentsProperty().get(extruderNumber) != FilamentContainer.UNKNOWN_FILAMENT)
             {
                 Filament filament = printer.effectiveFilamentsProperty().get(extruderNumber);
@@ -202,10 +210,9 @@ public class StatusData
                 }
             }
 
-            boolean materialLoaded = printer.extrudersProperty().get(extruderNumber).filamentLoadedProperty().get();
             attachedFilaments[extruderNumber] = new FilamentDetails(filamentName, materialName, webColour,
                                                                     filamentTemperature, 0.001F * remainingFilament, // Remaining filament is in mm but needs to be reported in m.
-                                                                    customFlag, materialLoaded, canEject);
+                                                                    customFlag, materialLoaded, canEject, canExtrude);
         }
 
         canPause = printer.canPauseProperty().get();
@@ -214,7 +221,6 @@ public class StatusData
         canResume = printer.canResumeProperty().get();
 
         //Head
-        Head printerHead = printer.headProperty().get();
         if (printerHead != null)
         {
             headName = printerHead.nameProperty().get();

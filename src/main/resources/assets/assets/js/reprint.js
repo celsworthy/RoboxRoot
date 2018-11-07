@@ -62,8 +62,12 @@ function updateReprintData(suitablePrintJobs)
                              .attr('href', reprintPage + '?p=' + (currentPage + 1));
 
     var pageNumber = i18next.t('page-x-of-n');
+    var nPages = Math.floor(suitablePrintJobs.length / jobsPerPage);
+    if ((suitablePrintJobs.length % jobsPerPage) > 0 || nPages == 0)
+        nPages++;
+
     pageNumber = pageNumber.replace('$1', currentPage + 1)
-                           .replace('$2', Math.floor(suitablePrintJobs.length / jobsPerPage) + 1);
+                           .replace('$2', nPages);
     $('#page-number').html(pageNumber);
 }
 

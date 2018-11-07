@@ -214,14 +214,25 @@ function updateControlHeadStatus(headData)
 function updateControlFilamentStatus(materialData, index)
 {
     var extruder = '[extruder=' + (index + 1) + ']';
-    if (materialData.attachedFilaments.length > index
-        && materialData.attachedFilaments[index].materialLoaded)
+    if (materialData.attachedFilaments.length > index)
     {
-        $('.control-jog' + extruder).removeClass('disabled');
+        if (materialData.attachedFilaments[index].canExtrude)
+        {
+            $('.control-extrude' + extruder).removeClass('disabled');
+        }
+        else
+        {
+            $('.control-extrude' + extruder).addClass('disabled');
+        }
+        if (materialData.attachedFilaments[index].materialLoaded)
+        {
+            $('.control-retract' + extruder).removeClass('disabled');
+        }
+        else
+        {
+            $('.control-retract' + extruder).addClass('disabled');
+        }
     }
-    else
-        $('.control-jog' + extruder).addClass('disabled');
-
     if (materialData.attachedFilaments.length > index
         && materialData.attachedFilaments[index].canEject)
     {

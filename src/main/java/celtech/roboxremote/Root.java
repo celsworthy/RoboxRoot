@@ -132,13 +132,12 @@ public class Root extends Application<RoboxRemoteConfiguration>
                 = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
 //
         // Configure CORS parameters
-        cors.setInitParameter("allowedOrigins", "*");
-// From https://stackoverflow.com/questions/25775364/enabling-cors-in-dropwizard-not-working
-//        cors.setInitParameter("allowedHeaders", "X-Requested-With,Content-Type,Accept,Origin");
-        cors.setInitParameter("allowedHeaders", "*");
-        cors.setInitParameter("allowedMethods", "OPTIONS,GET,POST,HEAD");
-//
-//        // Add URL mapping
+        cors.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
+        cors.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "x-requested-with, x-request-by, content-type, content-length, accept, origin");
+        cors.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "OPTIONS,GET,POST");
+        cors.setInitParameter(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM, "true");
+        
+        // Add URL mapping
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
 
         // From https://stackoverflow.com/questions/25775364/enabling-cors-in-dropwizard-not-working
