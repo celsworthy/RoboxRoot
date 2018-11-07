@@ -97,53 +97,6 @@ public class Root extends Application<RoboxRemoteConfiguration>
         });
 
         environment.jersey().setUrlPattern("/api/*");
-//
-//        try
-//        {
-//            final byte[] key = configuration.getJwtTokenSecret();
-//
-//            final JwtConsumer consumer = new JwtConsumerBuilder()
-//                    .setAllowedClockSkewInSeconds(30) // allow some leeway in validating time based claims to account for clock skew
-//                    .setRequireExpirationTime() // the JWT must have an expiration time
-//                    .setRequireSubject() // the JWT must have a subject claim
-//                    .setVerificationKey(new HmacKey(key)) // verify the signature with the public key
-//                    .setRelaxVerificationKeyValidation() // relaxes key length requirement
-//                    .build(); // create the JwtConsumer instance
-//
-//            environment.jersey().register(new AuthDynamicFeature(
-//                    new JwtAuthFilter.Builder<User>()
-//                    .setJwtConsumer(consumer)
-//                    .setRealm("realm")
-//                    .setPrefix("Bearer")
-//                    .setAuthenticator(new JWTAuthenticator())
-//                    .buildAuthFilter()));
-//
-//            environment.jersey().register(new AuthValueFactoryProvider.Binder<>(Principal.class));
-//            environment.jersey().register(RolesAllowedDynamicFeature.class);
-//
-//            environment.jersey().register(new TestSecuredResource(configuration.getJwtTokenSecret()));
-//        } catch (UnsupportedEncodingException ex)
-//        {
-//            steno.info("Exception whilst setting up security");
-//        }
-//        environment.jersey().register(MultiPartFeature.class);
-        // Enable CORS headers
-        final FilterRegistration.Dynamic cors
-                = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
-//
-        // Configure CORS parameters
-        cors.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
-        cors.setInitParameter(CrossOriginFilter.ALLOWED_HEADERS_PARAM, "x-requested-with, x-request-by, content-type, content-length, accept, origin");
-        cors.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "OPTIONS,GET,POST");
-        cors.setInitParameter(CrossOriginFilter.ALLOW_CREDENTIALS_PARAM, "true");
-        
-        // Add URL mapping
-        cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
-
-        // From https://stackoverflow.com/questions/25775364/enabling-cors-in-dropwizard-not-working
-        // DO NOT pass a preflight request to down-stream auth filters
-        // unauthenticated preflight requests should be permitted by spec
-        cors.setInitParameter(CrossOriginFilter.CHAIN_PREFLIGHT_PARAM, Boolean.FALSE.toString());
 
         final AdminAPI adminAPI = new AdminAPI();
         final LowLevelAPI lowLevelAPI = new LowLevelAPI();
@@ -157,6 +110,7 @@ public class Root extends Application<RoboxRemoteConfiguration>
         environment.jersey().register(lowLevelAPI);
         environment.jersey().register(highLevelAPI);
         environment.jersey().register(discoveryAPI);
+        environment.jersey().register(CORSFilter.class);
 
         environment.jersey().register(new AuthDynamicFeature(new RootAPIAuthFilter.Builder<User>()
                 .setAuthenticator(new RootAPIAuthenticator())
