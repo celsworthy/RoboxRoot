@@ -4,7 +4,9 @@ import celtech.roboxbase.BaseLookup;
 import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxbase.postprocessor.PrintJobStatistics;
 import celtech.roboxbase.printerControl.PrinterStatus;
+import celtech.roboxbase.printerControl.model.Head;
 import celtech.roboxbase.printerControl.model.HeaterMode;
+import celtech.roboxbase.printerControl.model.NozzleHeater;
 import celtech.roboxbase.printerControl.model.Printer;
 import celtech.roboxremote.PrinterRegistry;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -17,7 +19,6 @@ import java.io.IOException;
  */
 public class PrintJobStatusData
 {
-
     private String printerID;
     private String printerStatusString;
     private String printerStatusEnumValue;
@@ -37,6 +38,8 @@ public class PrintJobStatusData
     private int currentLayer;
     private int numberOfLayers;
 
+    private int heatingProgress;
+    
     //Errors
     private String[] activeErrors;
 
@@ -49,6 +52,7 @@ public class PrintJobStatusData
         // Jackson deserialization
     }
 
+    @JsonIgnore
     public void updateFromPrinterData(String printerID)
     {
         this.printerID = printerID;
@@ -113,9 +117,45 @@ public class PrintJobStatusData
             }
         }
 
+        heatingProgress = -1;
+        if (!statusProcessed)
+        {
+            Head head = printer.headProperty().get();
+            if (head != null && head.getNozzleHeaters().size() > 0)
+            {
+                if (head.getNozzleHeaters().size() == 1)
+                {
+                    statusProcessed = updateHeaterStatus(head.getNozzleHeaters().get(0), "heating-nozzle");
+                }
+                else
+                {
+                    statusProcessed = updateHeaterStatus(head.getNozzleHeaters().get(0), "heating-left");
+                    if (!statusProcessed && head.getNozzleHeaters().size() > 1)
+                        statusProcessed = updateHeaterStatus(head.getNozzleHeaters().get(1), "heating-right");
+                }
+            }
+        }
+
         if (!statusProcessed && printer.getPrinterAncillarySystems().bedHeaterModeProperty().get() != HeaterMode.OFF)
         {
-            printerStatusString = "Heating";
+            double currentTemperature = printer.getPrinterAncillarySystems().bedTemperatureProperty().get();
+            double targetTemperature = 0.0;
+            switch (printer.getPrinterAncillarySystems().bedHeaterModeProperty().get())
+            {
+                case FIRST_LAYER:
+                    targetTemperature = printer.getPrinterAncillarySystems().bedFirstLayerTargetTemperatureProperty().get();
+                    break;
+
+                case NORMAL:
+                default:
+                    targetTemperature = printer.getPrinterAncillarySystems().bedTargetTemperatureProperty().get();
+                    break;
+            }
+            
+            if (targetTemperature > 0)
+                heatingProgress = (int)(Math.floor(0.5 + 100.0 * currentTemperature / targetTemperature));
+
+            printerStatusString = "heating-bed";
             printerStatusEnumValue = "HEATING";
             statusProcessed = true;
         }
@@ -176,6 +216,42 @@ public class PrintJobStatusData
             }
         }
     }
+    
+    private static final double EJECT_TEMPERATURE = 140.0;
+
+    @JsonIgnore
+    private boolean updateHeaterStatus(NozzleHeater heater, String statusString)
+    {
+        if (heater.heaterModeProperty().get() != HeaterMode.OFF)
+        {
+            double currentTemperature = heater.nozzleTemperatureProperty().get();
+            double targetTemperature = 0.0;
+            switch (heater.heaterModeProperty().get())
+            {
+                case FIRST_LAYER:
+                    targetTemperature = heater.nozzleFirstLayerTargetTemperatureProperty().get();
+                    break;
+                    
+                case FILAMENT_EJECT:
+                    targetTemperature = EJECT_TEMPERATURE;
+                    break;
+
+                case NORMAL:
+                default:
+                    targetTemperature = heater.nozzleTargetTemperatureProperty().get();
+                    break;
+            }
+            
+            if (targetTemperature > 0)
+                heatingProgress = (int)(Math.floor(0.5 + 100.0 * currentTemperature / targetTemperature));
+
+            printerStatusString = statusString;
+            printerStatusEnumValue = "HEATING";
+            return true;
+        }
+        else
+            return false;
+    }
 
     @JsonProperty
     public String getPrinterID()
@@ -195,142 +271,181 @@ public class PrintJobStatusData
         this.printerStatusString = printerStatusString;
     }
 
+    @JsonProperty
     public String getPrinterStatusEnumValue()
     {
         return printerStatusEnumValue;
     }
 
+    @JsonProperty
     public void setPrinterStatusEnumValue(String printerStatusEnumValue)
     {
         this.printerStatusEnumValue = printerStatusEnumValue;
     }
 
+    @JsonProperty
     public boolean isCanPrint()
     {
         return canPrint;
     }
 
+    @JsonProperty
     public void setCanPrint(boolean canPrint)
     {
         this.canPrint = canPrint;
     }
 
+    @JsonProperty
     public boolean isCanCancel()
     {
         return canCancel;
     }
 
+    @JsonProperty
     public void setCanCancel(boolean canCancel)
     {
         this.canCancel = canCancel;
     }
 
+    @JsonProperty
     public boolean isCanOpenDoor()
     {
         return canOpenDoor;
     }
 
+    @JsonProperty
     public void setCanOpenDoor(boolean canOpenDoor)
     {
         this.canOpenDoor = canOpenDoor;
     }
 
+    @JsonProperty
     public boolean isCanPause()
     {
         return canPause;
     }
 
+    @JsonProperty
     public void setCanPause(boolean canPause)
     {
         this.canPause = canPause;
     }
 
+    @JsonProperty
     public boolean isCanResume()
     {
         return canResume;
     }
 
+    @JsonProperty
     public void setCanResume(boolean canResume)
     {
         this.canResume = canResume;
     }
 
+    @JsonProperty
     public String getPrintJobName()
     {
         return printJobName;
     }
 
+    @JsonProperty
     public void setPrintJobName(String printJobName)
     {
         this.printJobName = printJobName;
     }
 
+    @JsonProperty
     public int getEtcSeconds()
     {
         return etcSeconds;
     }
 
+    @JsonProperty
     public void setEtcSeconds(int etcSeconds)
     {
         this.etcSeconds = etcSeconds;
     }
 
+    @JsonProperty
     public int getTotalDurationSeconds()
     {
         return totalDurationSeconds;
     }
 
+    @JsonProperty
     public void setTotalDurationSeconds(int totalDurationSeconds)
     {
         this.totalDurationSeconds = totalDurationSeconds;
     }
 
+    @JsonProperty
     public int getCurrentLayer()
     {
         return currentLayer;
     }
 
+    @JsonProperty
     public void setCurrentLayer(int currentLayer)
     {
         this.currentLayer = currentLayer;
     }
     
-
+    @JsonProperty
     public int getNumberOfLayers()
     {
         return numberOfLayers;
     }
 
+    @JsonProperty
     public void setNumberOfLayers(int numberOfLayers)
     {
         this.totalDurationSeconds = numberOfLayers;
     }
 
+    @JsonProperty
     public String getPrintJobSettings()
     {
         return printJobSettings;
     }
 
+    @JsonProperty
     public void setPrintJobSettings(String printJobSettings)
     {
         this.printJobSettings = printJobSettings;
     }
 
+    @JsonProperty
     public String getPrintJobProfile()
     {
         return printJobProfile;
     }
 
+    @JsonProperty
     public void setPrintJobProfile(String printJobProfile)
     {
         this.printJobProfile = printJobProfile;
     }
     
+    @JsonProperty
+    public int getHeatingProgress()
+    {
+        return heatingProgress;
+    }
+
+    @JsonProperty
+    public void setHeatingProgress(int heatingProgress)
+    {
+        this.heatingProgress = heatingProgress;
+    }
+
+    @JsonProperty
     public String[] getActiveErrors()
     {
         return activeErrors;
     }
 
+    @JsonProperty
     public void setActiveErrors(String[] activeErrors)
     {
         this.activeErrors = activeErrors;

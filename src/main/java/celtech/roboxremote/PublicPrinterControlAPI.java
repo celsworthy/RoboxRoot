@@ -447,13 +447,35 @@ public class PublicPrinterControlAPI
                 {
                     if (p.canCancelProperty().get())
                         p.cancel(null, safetyOn.get());
-                    else if (p.getPrinterAncillarySystems().bedHeaterModeProperty().get() != HeaterMode.OFF)
+                    else
                     {
                         cancelRunningPurge(false);
-                        p.sendRawGCode("M140 S0\n", false);
+                        if (p.getPrinterAncillarySystems().bedHeaterModeProperty().get() != HeaterMode.OFF)
+                            p.sendRawGCode("M140 S0\n", false);
+
+                        Head head = p.headProperty().get();
+                        if (head != null && head.getNozzleHeaters().size() > 0)
+                        {
+                            if (head.getNozzleHeaters().size() == 1 &&
+                                head.getNozzleHeaters().get(0).heaterModeProperty().get() != HeaterMode.OFF)
+                            {
+                                p.sendRawGCode("M104 S0\n", false);
+                            }
+                            else
+                            {
+                                if (head.getNozzleHeaters().get(0).heaterModeProperty().get() != HeaterMode.OFF)
+                                    p.sendRawGCode("M104 S0\n", false);
+                                if (head.getNozzleHeaters().size() > 1 &&
+                                    head.getNozzleHeaters().get(1).heaterModeProperty().get() != HeaterMode.OFF)
+                                {
+                                    p.sendRawGCode("M104 T0\n", false);
+                                }
+                            }
+                        }
                     }
                 }
-            } catch (PrinterException ex)
+            }
+            catch (PrinterException ex)
             {
                 steno.error("Exception whilst cancelling");
             }

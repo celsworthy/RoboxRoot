@@ -20,10 +20,7 @@ function initiatePurge()
     }
     if ($('#right-nozzle .rbx-checkbox:visible').is(':checked'))
     {
-        // For a single nozzle head, the nozzle is physically on the right,
-        // but it is nozzle 0 in the array.
-        // For a dual nozzle head, the left nozzle is nozzle 0, the right nozzle is nozzle 1.
-        var rIndex = ($('#left-nozzle').is(':visible') ? 1 : 0);
+        var rIndex = $('#right-nozzle').attr('nozzle-index');
         targetData['lastTemperature'][rIndex] = sToN($('#right-nozzle .last-temp').text());
         targetData['newTemperature'][rIndex] = sToN($('#right-nozzle .new-temp').text());
         targetData['targetTemperature'][rIndex] = sToN($('#right-nozzle .purge-temp').val());
@@ -131,6 +128,10 @@ function completePanelUpdate(panelId, showPanel, lastTemp, newTemp)
 
 function updatePurgeHeadData(headData)
 {
+    // For a single nozzle head, the nozzle is physically on the right,
+    // but it is nozzle 0 in the array.
+    // For a dual nozzle head, the left nozzle is nozzle 0, the right nozzle is nozzle 1.
+    $('#right-nozzle').attr('nozzle-index', headData.nozzleCount - 1);
     $('#right-nozzle-check').prop('checked', true);
     updatePanelHeadData('right-nozzle', true, headData.rightNozzleLastFTemp);
     if (headData.dualMaterialHead && headData.nozzleCount > 1)
