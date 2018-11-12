@@ -191,7 +191,6 @@ function setActionButton(details, field)
         $(item).html(text)
                .attr('href', href)
                .off('click') // Remove all callbacks
-               .on('click', action)
                .closest('.row')
 			   .removeClass('disabled rbx-hidden');
         if (action !== null)
