@@ -25,6 +25,8 @@ import javafx.scene.paint.Color;
  */
 public class StatusData
 {
+    private static final double HEATING_THREASHOLD = 5;
+    private static final double EJECT_TEMPERATURE = 140.0;
 
     private String printerID;
     private String printerName;
@@ -157,13 +159,27 @@ public class StatusData
             {
                 if (head.getNozzleHeaters().size() == 1)
                 {
-                    statusProcessed = updateHeaterStatus(head.getNozzleHeaters().get(0), "heating-nozzle");
+                    if (head.getNozzles().size() == 1)
+                        statusProcessed = updateHeaterStatus(head.getNozzleHeaters().get(0), "heating-nozzle");
+                    else
+                        statusProcessed = updateHeaterStatus(head.getNozzleHeaters().get(0), "heating-nozzles");
                 }
                 else
                 {
                     statusProcessed = updateHeaterStatus(head.getNozzleHeaters().get(0), "heating-left");
-                    if (!statusProcessed && head.getNozzleHeaters().size() > 1)
-                        statusProcessed = updateHeaterStatus(head.getNozzleHeaters().get(1), "heating-right");
+                    if (head.getNozzleHeaters().size() > 1)
+                    {
+                        if (statusProcessed)
+                        {
+                            // If heating both nozzles, progress is the lesser of the two.
+                            int leftHeatingProgress = heatingProgress;
+                            if (updateHeaterStatus(head.getNozzleHeaters().get(1), "heating-nozzles"))
+                                if (leftHeatingProgress < heatingProgress)
+                                    heatingProgress = leftHeatingProgress;
+                        }
+                        else
+                            statusProcessed = updateHeaterStatus(head.getNozzleHeaters().get(1), "heating-right");
+                    }
                 }
             }
         }
@@ -183,13 +199,13 @@ public class StatusData
                     targetTemperature = printer.getPrinterAncillarySystems().bedTargetTemperatureProperty().get();
                     break;
             }
-            
-            if (targetTemperature > 0)
+            if (targetTemperature > 0 && (Math.abs(currentTemperature - targetTemperature) > HEATING_THREASHOLD))
+            {
                 heatingProgress = (int)(Math.floor(0.5 + 100.0 * currentTemperature / targetTemperature));
-
-            printerStatusString = "heating-bed";
-            printerStatusEnumValue = "HEATING";
-            statusProcessed = true;
+                printerStatusString = "heating-bed";
+                printerStatusEnumValue = "HEATING";
+                statusProcessed = true;
+            }
         }
                 
         if (!statusProcessed)
@@ -327,7 +343,6 @@ public class StatusData
     }
     
     @JsonIgnore
-    private static final double EJECT_TEMPERATURE = 140.0;
     private boolean updateHeaterStatus(NozzleHeater heater, String statusString)
     {
         if (heater.heaterModeProperty().get() != HeaterMode.OFF)
@@ -350,15 +365,17 @@ public class StatusData
                     break;
             }
             
-            if (targetTemperature > 0)
+            if (targetTemperature > 0 && (Math.abs(currentTemperature - targetTemperature) > HEATING_THREASHOLD))
+            {
                 heatingProgress = (int)(Math.floor(0.5 + 100.0 * currentTemperature / targetTemperature));
 
-            printerStatusString = statusString;
-            printerStatusEnumValue = "HEATING";
-            return true;
+                printerStatusString = statusString;
+                printerStatusEnumValue = "HEATING";
+                return true;
+            }
         }
-        else
-            return false;
+
+        return false;
     }
 
     @JsonProperty

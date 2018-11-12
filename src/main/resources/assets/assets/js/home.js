@@ -27,7 +27,7 @@ function updateNameStatus(nameData)
     var machineDetails = getMachineDetails();
     
     $('#'+ machineDetails['icon-class']).removeClass('hidden');
-    $('#idle-image').attr('src', imageRoot + machineDetails['icon-background-light'])
+    $('#idle-image').attr('src', imageRoot + machineDetails['icon-background-light']);
     $('#machine-model').html(i18next.t(machineDetails['model']));
     $('#machine-name').html(nameData.printerName);
 
@@ -109,7 +109,7 @@ function updateFilamentStatus(materialData, filamentIndex)
     }
     else
     {
-        $(typeField).html(nbsp)
+        $(typeField).html(nbsp);
         $(descriptionField).html(nbsp);
         $(remainingField).html(nbsp);
         $(colourField).html(nbsp);
@@ -127,7 +127,7 @@ function updateFilamentStatus(materialData, filamentIndex)
 
 function eject(materialNumber)
 {
-    var selectedPrinter = localStorage.getItem(selectedPrinterVar)
+    var selectedPrinter = localStorage.getItem(selectedPrinterVar);
     promisePostCommandToRoot(selectedPrinter + '/remoteControl/ejectFilament', materialNumber + 1)
         .then(function() 
               {
@@ -290,8 +290,8 @@ function pauseResumePrint()
             default:
                 break;
         }
-	    getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus)
-	    getStatusData(selectedPrinter, '/controlStatus', updateControlStatus)
+	    getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus);
+	    getStatusData(selectedPrinter, '/controlStatus', updateControlStatus);
     }
 }
 
@@ -302,8 +302,8 @@ function cancelPrint()
     {
         cancelAction();
         var selectedPrinter = localStorage.getItem(selectedPrinterVar);
-        getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus)
-        getStatusData(selectedPrinter, '/controlStatus', updateControlStatus)
+        getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus);
+        getStatusData(selectedPrinter, '/controlStatus', updateControlStatus);
         homeDebounceFlag = true;
     }
 }
@@ -320,7 +320,8 @@ function updateControlStatus(controlData)
     {
         $('#pause-resume-button').removeClass('disabled pause')
                                  .attr('mode', 'r')
-                                 .addClass('resume');    }
+                                 .addClass('resume');
+    }
     else
     {
         $('#pause-resume-button').addClass('disabled')
@@ -340,12 +341,12 @@ function updateControlStatus(controlData)
     if (controlData.printerStatusEnumValue.match("^PRINTING_PROJECT"))
     {
         $('#tweak-button').removeClass('disabled')
-                        .removeClass('invisible');
+                          .removeClass('invisible');
     }
     else
     {
         $('#tweak-button').addClass('disabled')
-                        .addClass('invisible');
+                          .addClass('invisible');
     }
 
     if (controlData.canOpenDoor === true)

@@ -1,2 +1,5 @@
 /target/
 *.log
+*.gz
+src/main/bootstrap/export/
+src/main/bootstrap/export_loading/

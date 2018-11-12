@@ -524,6 +524,17 @@ public class PublicPrinterControlAPI
                             nozzle0Temperature = printer.effectiveFilamentsProperty().get(1).getNozzleTemperature();
                         }
                     }
+                    else // Single material head
+                    {
+                        // This very confusing. For a single material head, always use the left nozzle, with material 0.
+                        // even though it may only have one nozzle, which is on the right.
+                        if (nozzle1Temperature > 0)
+                            nozzle0Temperature = nozzle1Temperature;
+                        else if ((nozzle1Temperature == 0 && nozzle0Temperature <= 0) || nozzle0Temperature == 0)
+                            nozzle0Temperature = printer.effectiveFilamentsProperty().get(0).getNozzleTemperature();
+                        nozzle1Temperature= -1;
+                    }
+                    
                     boolean purgeLeftNozzle = (nozzle0Temperature > 0);
                     boolean purgeRightNozzle = (nozzle1Temperature > 0);
 
@@ -671,49 +682,18 @@ public class PublicPrinterControlAPI
     @Path("/ejectFilament")
     public void ejectFilament(@PathParam("printerID") String printerID, int filamentNumber)
     {
-        int nozzleNumber = getNozzleNumber(printerID, filamentNumber);
-
-        if (nozzleNumber != -1)
+        try
         {
-            try
-            {
-                PrinterRegistry.getInstance().getRemotePrinters().get(printerID).ejectFilament(nozzleNumber, null);
-            } catch (PrinterException ex)
-            {
-                steno.error("Exception whilst ejecting filament " + filamentNumber + ": " + ex);
-            }
-        }
-    }
-
-    private int getNozzleNumber(String printerID, int materialNumber)
-    {
-        int nozzleNumber = -1;
-        if (PrinterRegistry.getInstance() != null)
+            PrinterRegistry.getInstance().getRemotePrinters().get(printerID).ejectFilament(filamentNumber - 1, null);
+        } catch (PrinterException ex)
         {
-            Printer p = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
-            Head h = p.headProperty().get();
-            if (h != null)
-            {
-                if (h.headTypeProperty().get() == Head.HeadType.DUAL_MATERIAL_HEAD)
-                {
-                    if (materialNumber == 1)
-                        nozzleNumber = 1;
-                    else if (materialNumber == 2)
-                        nozzleNumber = 0;
-                }
-                else // h.headTypeProperty().get() == Head.HeadType.SINGLE_MATERIAL_HEAD
-                {
-                    if (materialNumber == 1)
-                        nozzleNumber = 0;
-                }
-            }
+            steno.error("Exception whilst ejecting filament " + filamentNumber + ": " + ex);
         }
-        return nozzleNumber;
     }
 
     /**
      *
-     * Expects material number to be 1 (left) or 2 (right)
+     * Expects material number to be 1 or 2
      *
      * @param printerID
      * @param materialNumber
@@ -724,16 +704,12 @@ public class PublicPrinterControlAPI
     @Path("/ejectStuckMaterial")
     public void ejectStuckMaterial(@PathParam("printerID") String printerID, int materialNumber)//, BooleanParam safetyOn)
     {
-        int nozzleNumber = getNozzleNumber(printerID, materialNumber);
-        if (nozzleNumber != -1)
+        try
         {
-            try
-            {
-                PrinterRegistry.getInstance().getRemotePrinters().get(printerID).ejectStuckMaterial(nozzleNumber, false, null, false);// safetyOn.get());
-            } catch (PrinterException ex)
-            {
-                steno.error("Printer exception whilst ejecting stuck material" + materialNumber + ": " + ex);
-            }
+            PrinterRegistry.getInstance().getRemotePrinters().get(printerID).ejectStuckMaterial(materialNumber - 1, false, null, false);// safetyOn.get());
+        } catch (PrinterException ex)
+        {
+            steno.error("Printer exception whilst ejecting stuck material" + materialNumber + ": " + ex);
         }
     }
     

@@ -76,8 +76,9 @@ function controlEject()
     if ($(this).hasClass('disabled'))
         return;
 
-    var selectedPrinter = localStorage.getItem(selectedPrinterVar)
-    promisePostCommandToRoot(selectedPrinter + '/remoteControl/ejectFilament', materialNumber + 1)
+    var selectedPrinter = localStorage.getItem(selectedPrinterVar);
+    var extruderNumber = $(this).attr('extruder');
+    promisePostCommandToRoot(selectedPrinter + '/remoteControl/ejectFilament', extruderNumber)
         .then(getStatusData(null, '/materialStatus', updateControlMaterialStatus));
 }
 
