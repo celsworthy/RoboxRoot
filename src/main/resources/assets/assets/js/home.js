@@ -128,7 +128,7 @@ function updateFilamentStatus(materialData, filamentIndex)
 function eject(materialNumber)
 {
     var selectedPrinter = localStorage.getItem(selectedPrinterVar);
-    promisePostCommandToRoot(selectedPrinter + '/remoteControl/ejectFilament', materialNumber + 1)
+    promisePostCommandToRoot(selectedPrinter + '/remoteControl/ejectFilament', materialNumber)
         .then(function() 
               {
 	               getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus);
@@ -436,8 +436,8 @@ function startHomeLeftButtonUpdates()
 function homeInit()
 {
     localStorage.setItem(printerTypeVar, "RBX01");
-    $('#filament-1-eject').on('click', function() { eject(0); });
-    $('#filament-2-eject').on('click', function() { eject(1); });
+    $('#filament-1-eject').on('click', function() { eject(1); });
+    $('#filament-2-eject').on('click', function() { eject(2); });
     $('#pause-resume-button').on('click', pauseResumePrint);
     $('#cancel-button').on('click', cancelPrint);
     setFooterButton({'right-button': {'icon': 'Icon-Move-Unlock.svg',

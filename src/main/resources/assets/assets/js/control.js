@@ -61,6 +61,9 @@ function decodeStep(element)
 
 function controlJog()
 {
+    if ($(this).hasClass('disabled'))
+        return;
+
     var step = decodeStep(this);
     var extruder = decodeExtruder(this);
     if (step != null && step != 0 && extruder != null)
@@ -99,14 +102,17 @@ function controlMove()
         {
             s = 'G91:G0 ' + axis + step + ':G90';
         }
-        console.log('Sending GCode : "' + s + '".');
+        //console.log('Sending GCode : "' + s + '".');
         sendGCode(s);
     }
 }
 
 function homeXYZ()
 {
-    console.log('homeXYZ');
+    if ($(this).hasClass('disabled'))
+        return;
+
+    //console.log('homeXYZ');
     runMacroFile("HOME_ALL");
 }
 
@@ -132,6 +138,9 @@ function toggleSwitch()
 
 function toggleBedHeat()
 {
+    if ($(this).hasClass('disabled'))
+        return;
+
     var switchName = $(this).attr('switch');
     var switchData = controlSwitches[switchName];
     var gcode = '';
@@ -153,12 +162,15 @@ function toggleBedHeat()
                     gcode = gcode + ' S80';
             break;
     }
-    console.log(switchName + ' ' + switchData.state);
+    //console.log(switchName + ' ' + switchData.state);
     sendGCode(gcode);
 }
 
 function toggleAmbientLight()
 {
+    if ($(this).hasClass('disabled'))
+        return;
+
     var switchData = controlSwitches['ambientlight'];
     switch(switchData.state)
     {
@@ -173,7 +185,7 @@ function toggleAmbientLight()
             switchData.state = 'on';
             break;
     }
-    console.log('ambientlight ' + switchData.state);
+    //console.log('ambientlight ' + switchData.state);
     promisePostCommandToRoot(localStorage.getItem(selectedPrinterVar) + '/remoteControl/setAmbientLED', switchData.state);
 }
 
@@ -233,6 +245,11 @@ function updateControlFilamentStatus(materialData, index)
         {
             $('.control-retract' + extruder).addClass('disabled');
         }
+    }
+    else
+    {
+        $('.control-extrude' + extruder).addClass('disabled');
+        $('.control-retract' + extruder).addClass('disabled');
     }
     if (materialData.attachedFilaments.length > index
         && materialData.attachedFilaments[index].canEject)
