@@ -237,7 +237,7 @@ function updateControlFilamentStatus(materialData, index)
         {
             $('.control-extrude' + extruder).addClass('disabled');
         }
-        if (materialData.attachedFilaments[index].materialLoaded)
+        if (materialData.attachedFilaments[index].canRetract)
         {
             $('.control-retract' + extruder).removeClass('disabled');
         }

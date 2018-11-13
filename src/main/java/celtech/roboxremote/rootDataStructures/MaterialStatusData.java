@@ -54,8 +54,8 @@ public class MaterialStatusData
                                 printer.extrudersProperty().get(extruderNumber).canEjectProperty().get());
             boolean materialLoaded = (extruderFitter &&
                                       printer.extrudersProperty().get(extruderNumber).filamentLoadedProperty().get());
-            boolean canExtrude = materialLoaded &&
-                                (head == null || extruderNumber < head.getNozzleHeaters().size());
+            boolean canExtrude = (head == null) || (materialLoaded && extruderNumber < head.getNozzleHeaters().size());
+            boolean canRetract = (head == null) || materialLoaded;
             
             if (printer.effectiveFilamentsProperty().get(extruderNumber) != FilamentContainer.UNKNOWN_FILAMENT)
             {
@@ -77,7 +77,7 @@ public class MaterialStatusData
 
             attachedFilaments[extruderNumber] = new FilamentDetails(filamentName, materialName, webColour,
                                                                     filamentTemperature, 0.001F * remainingFilament, // Remaining filament is in mm but needs to be reported in m.
-                                                                    customFlag, materialLoaded, canEject, canExtrude);
+                                                                    customFlag, materialLoaded, canEject, canExtrude, canRetract);
         }
     }
 

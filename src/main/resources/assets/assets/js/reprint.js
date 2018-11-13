@@ -6,7 +6,7 @@ function reprintJob()
         var printJobID = $(this).attr('job-id');
         promisePostCommandToRoot(selectedPrinter + "/remoteControl/reprintJob",
                                  printJobID)
-            .then(goToHomeOrPrinterSelectPage);
+            .then(goToHomePage);
     }
 }
 

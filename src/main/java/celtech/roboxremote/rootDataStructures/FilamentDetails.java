@@ -21,6 +21,7 @@ public class FilamentDetails
     private boolean materialLoaded = false;
     private boolean canEject = false;
     private boolean canExtrude = false;
+    private boolean canRetract = false;
     
     public FilamentDetails()
     {
@@ -29,7 +30,7 @@ public class FilamentDetails
 
     public FilamentDetails(String filamentName, String materialName, String webColour, int filamentTemperature,
                            float remainingFilament, boolean customFlag, boolean materialLoaded, boolean canEject,
-                           boolean canExtrude)
+                           boolean canExtrude, boolean canRetract)
     {
         this.filamentName = filamentName;
         this.materialName = materialName;
@@ -40,6 +41,7 @@ public class FilamentDetails
         this.materialLoaded = materialLoaded;
         this.canEject = canEject;
         this.canExtrude = canExtrude;
+        this.canRetract = canRetract;
     }
 
     @JsonProperty
@@ -148,5 +150,17 @@ public class FilamentDetails
     public void setCanExtrude(boolean canExtrude)
     {
         this.canExtrude = canExtrude;
+    }
+
+    @JsonProperty
+    public boolean getCanRetract()
+    {
+        return canRetract;
+    }
+
+    @JsonProperty
+    public void setCanRetract(boolean canRetract)
+    {
+        this.canRetract = canRetract;
     }
 }
