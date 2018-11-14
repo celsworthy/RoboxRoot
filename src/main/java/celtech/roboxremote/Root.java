@@ -151,6 +151,8 @@ public class Root extends Application<RoboxRemoteConfiguration>
 
     public void stop()
     {
+        steno.info("Stopping Root");
+
         BaseConfiguration.shutdown();
         System.exit(0);
     }
@@ -158,18 +160,18 @@ public class Root extends Application<RoboxRemoteConfiguration>
     public void restart()
     {
         //Rely on the system process manager to restart us...
-        //Kill the browser to make sure that the cache is zapped
-        if (BaseConfiguration.getMachineType() == MachineType.LINUX_X64
-                || BaseConfiguration.getMachineType() == MachineType.LINUX_X86)
-        {
-            try
-            {
-                Runtime.getRuntime().exec("killall chromium-browser");
-            } catch (IOException ex)
-            {
-                steno.exception("Failed to shut down browser", ex);
-            }
-        }
+        // Kill the browser to make sure that the cache is zapped
+        //if (BaseConfiguration.getMachineType() == MachineType.LINUX_X64
+        //        || BaseConfiguration.getMachineType() == MachineType.LINUX_X86)
+        //{
+        //    try
+        //    {
+        //        Runtime.getRuntime().exec("killall chromium-browser");
+        //    } catch (IOException ex)
+        //    {
+        //        steno.exception("Failed to shut down browser", ex);
+        //    }
+        //}
         stop();
     }
 

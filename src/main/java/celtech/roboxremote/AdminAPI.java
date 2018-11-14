@@ -44,18 +44,13 @@ public class AdminAPI
     @POST
     @Timed
     @Path(Configuration.shutdown)
-    public void shutdown()
+    public Response shutdown()
     {
-        new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                steno.info("Running shutdown thread");
-                Root.getInstance().stop();
-                steno.info("Shutdown thread finished");
-            }
-        }.run();
+        steno.info("Shutdown requested");
+        // Shut down - but delay by 5 seconds to allow the response to go back to the requester first.
+        BaseLookup.getTaskExecutor().runDelayedOnBackgroundThread(() -> Root.getInstance().stop(), 5000);
+        steno.info("Shutdown in 5 seconds.");
+        return Response.ok().build();    
     }
 
     @RolesAllowed("root")
@@ -100,7 +95,7 @@ public class AdminAPI
             long t2 = System.currentTimeMillis();
             steno.info("Upgrade file " + uploadedFileLocation + " has been uploaded in " + Long.toString(t2 - t1) + "ms");
 
-            // Shut down - but delay by 5 seconds to allow the response to go back to the requester first.
+            // Shut down - but delay by 10 seconds to allow the response to go back to the requester first.
             BaseLookup.getTaskExecutor().runDelayedOnBackgroundThread(() -> Root.getInstance().restart(), 10000);
             response = Response.ok().build();
         } catch (IOException ex)
