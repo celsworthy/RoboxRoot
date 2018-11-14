@@ -47,10 +47,9 @@ public class AdminAPI
     public Response shutdown()
     {
         steno.info("Shutdown requested");
-        // Shut down - but delay by 5 seconds to allow the response to go back to the requester first.
-        BaseLookup.getTaskExecutor().runDelayedOnBackgroundThread(() -> Root.getInstance().stop(), 5000);
-        steno.info("Shutdown in 5 seconds.");
-        return Response.ok().build();    
+        Root.getInstance().stop();
+        // Should never get here.
+        return Response.serverError().build();    
     }
 
     @RolesAllowed("root")

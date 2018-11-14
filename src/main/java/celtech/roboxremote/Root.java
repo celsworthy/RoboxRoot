@@ -151,7 +151,7 @@ public class Root extends Application<RoboxRemoteConfiguration>
 
     public void stop()
     {
-        steno.info("Stopping Root");
+        steno.info("Stopping ...");
 
         BaseConfiguration.shutdown();
         System.exit(0);
