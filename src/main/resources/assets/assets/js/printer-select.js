@@ -1,5 +1,4 @@
 var connectedPrinterIDs = new Array();
-var connectedPrinters = new Array();
 
 function selectPrinter(printerID)
 {
@@ -99,7 +98,6 @@ function deletePrinter(printerID)
 {
     var indexToDelete = connectedPrinterIDs.indexOf(printerID);
     connectedPrinterIDs.splice(indexToDelete, 1);
-    connectedPrinters.splice(indexToDelete, 1);
     
     // Hide the printer selector for this printer.
     $('.printer-selector[printer-id="' + printerID + '"]')
@@ -133,6 +131,17 @@ function processAddedAndRemovedPrinters(printerIDs)
 
     printersToDelete.forEach(deletePrinter);
     printersToAdd.forEach(addPrinter);
+    
+	if (connectedPrinterIDs.length > 0)
+	{
+		$('.ps_row').removeClass('rbx-hidden');
+		$('.ps_none').addClass('rbx-hidden');
+	}
+	else
+	{
+		$('.ps_row').addClass('rbx-hidden');
+		$('.ps_none').removeClass('rbx-hidden');
+	}
     return (printersToDelete.length > 0
             || printersToAdd.length > 0);
 }

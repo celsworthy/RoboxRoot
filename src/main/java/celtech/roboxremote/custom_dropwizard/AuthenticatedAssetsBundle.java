@@ -21,7 +21,7 @@ public class AuthenticatedAssetsBundle implements Bundle
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticatedAssetsBundle.class);
 
     private static final String DEFAULT_ASSETS_NAME = "assets";
-    private static final String DEFAULT_INDEX_FILE = "index.htm";
+    private static final String DEFAULT_INDEX_FILE = "index.html";
     private static final String DEFAULT_PATH = "/assets";
 
     protected final String resourcePath;

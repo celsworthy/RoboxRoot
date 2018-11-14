@@ -3,7 +3,7 @@ var controlSwitches = {'ambientlight':{'state':'on'},
                        'fan':{'state':false, 'onCode':'M106', 'offCode':'M107'},
                        'heaterS':{'state':false, 'onCode':'M104 S', 'offCode':'M104 S0'},
                        'heaterT':{'state':false, 'onCode':'M104 T', 'offCode':'M104 T0'},
-                       'heaterB':{'state':false, 'onCode':'M140 S', 'offCode':'M140 S0'},
+                       'heaterB':{'state':false, 'onCode':'M140', 'offCode':'M140 S0'},
                        'lights':{'state':false, 'onCode':'M129', 'offCode':'M128'},
                        'nozzle':{'state':false, 'onCode':'T0', 'offCode':'T1'},
                        'valve':{'state':false, 'onCode':'G0 B1', 'offCode':'G0 B0'}};
@@ -61,6 +61,9 @@ function decodeStep(element)
 
 function controlJog()
 {
+    if ($(this).hasClass('disabled'))
+        return;
+
     var step = decodeStep(this);
     var extruder = decodeExtruder(this);
     if (step != null && step != 0 && extruder != null)
@@ -76,8 +79,9 @@ function controlEject()
     if ($(this).hasClass('disabled'))
         return;
 
-    var selectedPrinter = localStorage.getItem(selectedPrinterVar)
-    promisePostCommandToRoot(selectedPrinter + '/remoteControl/ejectFilament', materialNumber + 1)
+    var selectedPrinter = localStorage.getItem(selectedPrinterVar);
+    var extruderNumber = $(this).attr('extruder');
+    promisePostCommandToRoot(selectedPrinter + '/remoteControl/ejectFilament', extruderNumber)
         .then(getStatusData(null, '/materialStatus', updateControlMaterialStatus));
 }
 
@@ -98,14 +102,17 @@ function controlMove()
         {
             s = 'G91:G0 ' + axis + step + ':G90';
         }
-        console.log('Sending GCode : "' + s + '".');
+        //console.log('Sending GCode : "' + s + '".');
         sendGCode(s);
     }
 }
 
 function homeXYZ()
 {
-    console.log('homeXYZ');
+    if ($(this).hasClass('disabled'))
+        return;
+
+    //console.log('homeXYZ');
     runMacroFile("HOME_ALL");
 }
 
@@ -129,8 +136,41 @@ function toggleSwitch()
     }
 }
 
+function toggleBedHeat()
+{
+    if ($(this).hasClass('disabled'))
+        return;
+
+    var switchName = $(this).attr('switch');
+    var switchData = controlSwitches[switchName];
+    var gcode = '';
+    switch(switchData.state)
+    {
+        case 'on':
+            switchData.state = 'off';
+            gcode = switchData.offCode;
+            break;
+        case 'off':
+        default:
+            switchData.state = 'on';
+            gcode = switchData.onCode;
+            if (!$('.control-eject[extruder=1]').hasClass('disabled'))
+                    gcode = gcode + ' E';
+            else if (!$('.control-eject[extruder=2]').hasClass('disabled'))
+                    gcode = gcode + ' D';
+                else
+                    gcode = gcode + ' S80';
+            break;
+    }
+    //console.log(switchName + ' ' + switchData.state);
+    sendGCode(gcode);
+}
+
 function toggleAmbientLight()
 {
+    if ($(this).hasClass('disabled'))
+        return;
+
     var switchData = controlSwitches['ambientlight'];
     switch(switchData.state)
     {
@@ -145,7 +185,7 @@ function toggleAmbientLight()
             switchData.state = 'on';
             break;
     }
-    console.log('ambientlight ' + switchData.state);
+    //console.log('ambientlight ' + switchData.state);
     promisePostCommandToRoot(localStorage.getItem(selectedPrinterVar) + '/remoteControl/setAmbientLED', switchData.state);
 }
 
@@ -169,9 +209,17 @@ function updateControlHeadStatus(headData)
         }
         else
         {
-            $('.nozzle-select, .mat2-heat').addClass('disabled');
+            $('.mat2-heat').addClass('disabled');
             // The right hand heater for a single material head is S.
             $('.mat1-heat').attr('switch', 'heaterS');
+        }
+        if (headData.nozzleCount < 2)
+        {
+            $('.nozzle-select').addClass('disabled');
+        }
+        if (!headData.valvesFitted)
+        {
+            $('.nozzle-valve').addClass('disabled');
         }
     }
 }
@@ -179,14 +227,30 @@ function updateControlHeadStatus(headData)
 function updateControlFilamentStatus(materialData, index)
 {
     var extruder = '[extruder=' + (index + 1) + ']';
-    if (materialData.attachedFilaments.length > index
-        && materialData.attachedFilaments[index].materialLoaded)
+    if (materialData.attachedFilaments.length > index)
     {
-        $('.control-jog' + extruder).removeClass('disabled');
+        if (materialData.attachedFilaments[index].canExtrude)
+        {
+            $('.control-extrude' + extruder).removeClass('disabled');
+        }
+        else
+        {
+            $('.control-extrude' + extruder).addClass('disabled');
+        }
+        if (materialData.attachedFilaments[index].canRetract)
+        {
+            $('.control-retract' + extruder).removeClass('disabled');
+        }
+        else
+        {
+            $('.control-retract' + extruder).addClass('disabled');
+        }
     }
     else
-        $('.control-jog' + extruder).addClass('disabled');
-
+    {
+        $('.control-extrude' + extruder).addClass('disabled');
+        $('.control-retract' + extruder).addClass('disabled');
+    }
     if (materialData.attachedFilaments.length > index
         && materialData.attachedFilaments[index].canEject)
     {
@@ -210,6 +274,7 @@ function controlInit()
     $('.control-move').on('click', controlMove);
     $('.control-home').on('click', homeXYZ);
     $('.control-ambient-light').on('click', toggleAmbientLight);
+    $('.control-bed-heat').on('click', toggleBedHeat);
     getStatusData(null, '/headStatus', updateControlHeadStatus)
 	setInterval(function() { getStatusData(null, '/headStatus', updateControlHeadStatus); }, 2000);
     getStatusData(null, '/materialStatus', updateControlMaterialStatus)

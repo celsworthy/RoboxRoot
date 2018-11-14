@@ -60,10 +60,19 @@ public class WifiControl
         return scriptOutput;
     }
 
-    public static void enableWifi(boolean enableWifi)
+    public static boolean enableWifi(boolean enableWifi)
     {
         String wifiControl = (enableWifi == true) ? "on" : "off";
-        String output = runScript("enableDisableWifi.sh", wifiControl);
+        boolean result = false;
+        if (BaseConfiguration.getMachineType() == MachineType.WINDOWS)
+        {
+        } else
+        {
+            String output = runScript("enableDisableWifi.sh", wifiControl);
+            steno.info(output);
+            result = (output != null);
+        }
+        return result;
     }
 
     public static WifiStatusResponse getCurrentWifiState()
@@ -92,9 +101,17 @@ public class WifiControl
         return response;
     }
 
-    public static void setupWiFiCredentials(String ssidAndPassword)
+    public static boolean setupWiFiCredentials(String ssidAndPassword)
     {
-        String output = runScript("setupWifi.sh", ssidAndPassword);
-        steno.info(output);
+        boolean result = false;
+        if (BaseConfiguration.getMachineType() == MachineType.WINDOWS)
+        {
+        } else
+        {
+            String output = runScript("setupWifi.sh", ssidAndPassword);
+            steno.info(output);
+            result = (output != null);
+        }
+        return result;
     }
 }

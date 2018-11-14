@@ -2,6 +2,7 @@ package celtech.roboxremote.rootDataStructures;
 
 import celtech.roboxbase.configuration.Filament;
 import celtech.roboxbase.configuration.datafileaccessors.FilamentContainer;
+import celtech.roboxbase.printerControl.model.Head;
 import celtech.roboxbase.printerControl.model.Printer;
 import celtech.roboxbase.utils.ColourStringConverter;
 import celtech.roboxremote.PrinterRegistry;
@@ -36,6 +37,8 @@ public class MaterialStatusData
             numberOfExtruders = 2;
         }
                 
+        Head head = printer.headProperty().get();
+
         attachedFilaments = new FilamentDetails[numberOfExtruders];
         for (int extruderNumber = 0; extruderNumber < numberOfExtruders; extruderNumber++)
         {
@@ -45,9 +48,15 @@ public class MaterialStatusData
             int filamentTemperature = -1;
             float remainingFilament = -1.0F;
             boolean customFlag = false;
-            boolean canEject = (printer.extrudersProperty().get(extruderNumber) != null &&
-                                printer.extrudersProperty().get(extruderNumber).isFittedProperty().get() &&
+            boolean extruderFitter = (printer.extrudersProperty().get(extruderNumber) != null &&
+                                      printer.extrudersProperty().get(extruderNumber).isFittedProperty().get());
+            boolean canEject = (extruderFitter &&
                                 printer.extrudersProperty().get(extruderNumber).canEjectProperty().get());
+            boolean materialLoaded = (extruderFitter &&
+                                      printer.extrudersProperty().get(extruderNumber).filamentLoadedProperty().get());
+            boolean canExtrude = (head == null) || (materialLoaded && extruderNumber < head.getNozzleHeaters().size());
+            boolean canRetract = (head == null) || materialLoaded;
+            
             if (printer.effectiveFilamentsProperty().get(extruderNumber) != FilamentContainer.UNKNOWN_FILAMENT)
             {
                 Filament filament = printer.effectiveFilamentsProperty().get(extruderNumber);
@@ -57,12 +66,18 @@ public class MaterialStatusData
                 remainingFilament = filament.getRemainingFilament();
                 webColour = "#" + ColourStringConverter.colourToString(filament.getDisplayColourProperty().get());
                 customFlag = filament.isMutable();
+                
+                if (printer.reelsProperty().containsKey(extruderNumber) && printer.reelsProperty().get(extruderNumber) != null)
+                {
+                    remainingFilament = printer.reelsProperty().get(extruderNumber).remainingFilamentProperty().get();
+                    if (remainingFilament < 0.0F)
+                        remainingFilament = 0.0F;
+                }
             }
 
-            boolean materialLoaded = printer.extrudersProperty().get(extruderNumber).filamentLoadedProperty().get();
             attachedFilaments[extruderNumber] = new FilamentDetails(filamentName, materialName, webColour,
-                                                                    filamentTemperature, remainingFilament,
-                                                                    customFlag, materialLoaded, canEject);
+                                                                    filamentTemperature, 0.001F * remainingFilament, // Remaining filament is in mm but needs to be reported in m.
+                                                                    customFlag, materialLoaded, canEject, canExtrude, canRetract);
         }
     }
 

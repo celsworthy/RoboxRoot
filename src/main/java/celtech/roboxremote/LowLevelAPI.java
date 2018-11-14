@@ -7,6 +7,7 @@ import celtech.roboxbase.comms.exceptions.RoboxCommsException;
 import celtech.roboxbase.comms.rx.AckResponse;
 import celtech.roboxbase.comms.rx.RoboxRxPacketFactory;
 import celtech.roboxbase.comms.rx.RxPacketTypeEnum;
+import celtech.roboxbase.comms.tx.AbortPrint;
 import celtech.roboxbase.comms.tx.ReadSendFileReport;
 import celtech.roboxbase.comms.tx.ReportErrors;
 import celtech.roboxbase.comms.tx.SendDataFileChunk;
@@ -14,11 +15,13 @@ import celtech.roboxbase.comms.tx.SendDataFileEnd;
 import celtech.roboxbase.comms.tx.SendDataFileStart;
 import celtech.roboxbase.comms.tx.SendPrintFileStart;
 import celtech.roboxbase.comms.tx.StatusRequest;
+import celtech.roboxbase.comms.tx.TxPacketTypeEnum;
 import celtech.roboxbase.comms.tx.WritePrinterID;
 import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxbase.configuration.Filament;
 import celtech.roboxbase.configuration.datafileaccessors.FilamentContainer;
 import celtech.roboxbase.postprocessor.PrintJobStatistics;
+import celtech.roboxbase.printerControl.model.PrinterException;
 import com.codahale.metrics.annotation.Timed;
 import java.io.File;
 import java.io.IOException;
@@ -79,12 +82,12 @@ public class LowLevelAPI
     {
         RoboxRxPacket rxPacket = null;
         long t1 = System.currentTimeMillis();
-        steno.info("Request to write to printer with ID " + printerID + " and packet type " + remoteTx.getPacketType());
-        String messagePayload = remoteTx.getMessagePayload();
-        if (messagePayload != null)
-             steno.info("    Payload length " + Integer.toString(messagePayload.length()));
-        if (remoteTx.getIncludeSequenceNumber())
-             steno.info("    Sequence number = " + Integer.toString(remoteTx.getSequenceNumber()));
+//        steno.info("Request to write to printer with ID " + printerID + " and packet type " + remoteTx.getPacketType());
+//        String messagePayload = remoteTx.getMessagePayload();//
+//        if (messagePayload != null)
+//             steno.info("    Payload length " + Integer.toString(messagePayload.length()));
+//        if (remoteTx.getIncludeSequenceNumber())
+//             steno.info("    Sequence number = " + Integer.toString(remoteTx.getSequenceNumber()));
         try
         {
             if (PrinterRegistry.getInstance() != null
@@ -107,7 +110,8 @@ public class LowLevelAPI
                         && PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getPrintEngine().highIntensityCommsInProgressProperty().get())
                 {
                     rxPacket = RoboxRxPacketFactory.createPacket(RxPacketTypeEnum.SEND_FILE);
-                } else
+                }
+                else
                 {
                     try
                     {
@@ -152,10 +156,10 @@ public class LowLevelAPI
         }
 
         long t2 = System.currentTimeMillis();
-        if (rxPacket == null)
-            steno.info("Returning null packet after " + (t2 - t1) + "ms");
-        else
-            steno.info("Returning packet " + rxPacket.getPacketType() + " after " + (t2 - t1) + "ms");
+        //if (rxPacket == null)
+        //    steno.info("Returning null packet after " + (t2 - t1) + "ms");
+        //else
+        //    steno.info("Returning packet " + rxPacket.getPacketType() + " after " + (t2 - t1) + "ms");
         return rxPacket;
     }
 
@@ -171,7 +175,9 @@ public class LowLevelAPI
         String statsFileLocation = BaseConfiguration.getPrintSpoolDirectory() + statistics.getPrintJobID() + File.separator + statistics.getPrintJobID() + BaseConfiguration.statisticsFileExtension;
         try
         {
+            steno.info("Writing statistics to file \"" + statsFileLocation + "\" ...");
             statistics.writeStatisticsToFile(statsFileLocation);
+            steno.info("... done");
             response = Response.ok().build();
         } catch (IOException ex)
         {

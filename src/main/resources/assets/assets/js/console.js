@@ -35,7 +35,8 @@ function processGCodeResponse(responseData)
 function sendGCode(gcodeToSend)
 {
     promisePostCommandToRoot(localStorage.getItem(selectedPrinterVar) + "/remoteControl/executeGCode", gcodeToSend)
-        .then(processGCodeResponse);
+        .then(processGCodeResponse)
+        .catch(function(error) { handleException(error, 'send-gcode-error', false); });
 }
 
 function sendGCodeFromDialog()

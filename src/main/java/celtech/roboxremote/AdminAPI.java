@@ -160,8 +160,10 @@ public class AdminAPI
     public Response setWiFiCredentials(String ssidAndPassword)
     {
         steno.info("Asked to change wifi creds to " + ssidAndPassword);
-        WifiControl.setupWiFiCredentials(Utils.cleanInboundJSONString(ssidAndPassword));
-        return Response.ok().build();
+        if (WifiControl.setupWiFiCredentials(Utils.cleanInboundJSONString(ssidAndPassword)))
+            return Response.ok().build();
+        else
+            return Response.serverError().build();
     }
 
     @RolesAllowed("root")
@@ -171,8 +173,10 @@ public class AdminAPI
     @Path("/enableDisableWifi")
     public Response enableDisableWifi(boolean enableWifi)
     {
-        WifiControl.enableWifi(enableWifi);
-        return Response.ok().build();
+        if (WifiControl.enableWifi(enableWifi))
+            return Response.ok().build();
+        else
+            return Response.serverError().build();
     }
 
     @RolesAllowed("root")

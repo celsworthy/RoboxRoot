@@ -51,18 +51,23 @@ public class PrintAdjustData
         Printer printer = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
         PrintJob currentPrintJob = printer.getPrintEngine().printJobProperty().get();
         PrintJobStatistics currentPrintJobStatistics = null;
+        Head head = printer.headProperty().get();
+        dualMaterialHead = ((head != null) && (head.headTypeProperty().get() == Head.HeadType.DUAL_MATERIAL_HEAD));
+
         try
         {
             currentPrintJobStatistics = currentPrintJob.getStatistics();
             if (currentPrintJobStatistics != null)
             {
                 usingMaterial1 = (currentPrintJobStatistics.geteVolumeUsed() > 0);
-                usingMaterial2 = (currentPrintJobStatistics.getdVolumeUsed() > 0);
+                usingMaterial2 = (dualMaterialHead && currentPrintJobStatistics.getdVolumeUsed() > 0);
             }
         } catch (Exception ex)
         {
 //            steno.error("Failed to get print job statistics for tweaks page");
         }
+        
+        // Materials - need to know if the head is a dual material head.
         
         nMaterials = 1;
         if (printer.extrudersProperty().size() == 2
@@ -100,12 +105,10 @@ public class PrintAdjustData
         }
 
         //Head
-        Head head = printer.headProperty().get();
         if (head != null)
         {
             printingFirstLayer = (head.getNozzleHeaters().get(0).heaterModeProperty().get() == HeaterMode.FIRST_LAYER);
 
-            dualMaterialHead = head.headTypeProperty().get() == Head.HeadType.DUAL_MATERIAL_HEAD;
             nNozzleHeaters = head.getNozzleHeaters().size();
             rightNozzleTargetTemp = 0.0F;
             leftNozzleTargetTemp = 0.0F;

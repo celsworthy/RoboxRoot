@@ -112,10 +112,11 @@ function updateJobStatusFields(statusField, etcField, progressBar, printJobData)
         case "OPENING_DOOR":
         case "PURGING_HEAD":
         case "REMOVING_HEAD":
+        case "HEATING":
         default:
             break;
     }
-    statusText = statusText + printJobData.printerStatusString;
+    statusText = statusText + i18next.t(printJobData.printerStatusString);
     $(statusField).html(statusText);    
     
     if ((printJobData.printerStatusEnumValue.match("^PRINTING_PROJECT")
@@ -152,20 +153,33 @@ function updateJobStatusFields(statusField, etcField, progressBar, printJobData)
         $(etcField).html("&nbsp;")
                    .closest('div')
                    .addClass('invisible');
-        $(progressBar + " .progress-bar").width("0%")
-                                         .html("")
-                                         .closest('.row')
-                                         .addClass('invisible');
+        if (printJobData.printerStatusEnumValue.match("^HEATING") &&
+           printJobData.heatingProgress >= 0 &&
+           printJobData.heatingProgress <= 100)
+        {
+            $(progressBar + " .progress-bar").width(printJobData.heatingProgress + "%")
+                 .html("")
+                 .closest('.row')
+                 .removeClass('invisible');
+        }
+        else
+        {
+            $(progressBar + " .progress-bar").width("0%")
+                                             .html("")
+                                             .closest('.row')
+                                             .addClass('invisible');
+        }
     }
 }
 
 function updateJobStatus(printJobData)
 {
     console.log('updateJobStatus - printerStatus = ' + printJobData.printerStatusEnumValue);
-    if (printJobData.printerStatusEnumValue !== "IDLE")
+    if (!printJobData.printerStatusEnumValue.match("^IDLE"))
     {
         idleCount = maxIdleCount;
-        if (printJobData.canCancel === true)
+        if (printJobData.printerStatusEnumValue.match("^HEATING") ||
+            printJobData.canCancel === true)
         {
             $('.cancel-action').removeClass('disabled');
         }

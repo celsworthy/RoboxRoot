@@ -27,7 +27,7 @@ function updateNameStatus(nameData)
     var machineDetails = getMachineDetails();
     
     $('#'+ machineDetails['icon-class']).removeClass('hidden');
-    $('#idle-image').attr('src', imageRoot + machineDetails['icon-background-light'])
+    $('#idle-image').attr('src', imageRoot + machineDetails['icon-background-light']);
     $('#machine-model').html(i18next.t(machineDetails['model']));
     $('#machine-name').html(nameData.printerName);
 
@@ -47,7 +47,7 @@ function updateFilamentStatus(materialData, filamentIndex)
     var descriptionValue = null;
     var reelClass = "reel-unknown";
     var showLoaded = false;
-    var reelIcon = null;
+    var reelIcon = reelIconMap['NONE'];
     var remaining = -1.0;
     
     if (materialData.attachedFilaments != null &&
@@ -109,7 +109,7 @@ function updateFilamentStatus(materialData, filamentIndex)
     }
     else
     {
-        $(typeField).html(nbsp)
+        $(typeField).html(nbsp);
         $(descriptionField).html(nbsp);
         $(remainingField).html(nbsp);
         $(colourField).html(nbsp);
@@ -127,8 +127,8 @@ function updateFilamentStatus(materialData, filamentIndex)
 
 function eject(materialNumber)
 {
-    var selectedPrinter = localStorage.getItem(selectedPrinterVar)
-    promisePostCommandToRoot(selectedPrinter + '/remoteControl/ejectFilament', materialNumber + 1)
+    var selectedPrinter = localStorage.getItem(selectedPrinterVar);
+    promisePostCommandToRoot(selectedPrinter + '/remoteControl/ejectFilament', materialNumber)
         .then(function() 
               {
 	               getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus);
@@ -181,22 +181,39 @@ function updateHeadStatus(headData)
     var numberOfNozzleHeaters = 0;
     if (headData.nozzleTemperature !== null)
         numberOfNozzleHeaters = headData.nozzleTemperature.length;
-        
     switch (numberOfNozzleHeaters)
     {
         case 0:
-            $('#left-nozzle-temp').parent().addClass('dimmed-section');
-            $('#right-nozzle-temp').parent().addClass('dimmed-section');
+            $('#left-nozzle-title').parent().addClass('rbx-hidden');
+            $('#right-nozzle-title').parent().addClass('rbx-hidden');
+            $('.temp-col').removeClass('temp-col-third');
+            $('.temp-col').removeClass('temp-col-qtr');
+            $('.temp-col').addClass('temp-col-half');
+            $('#left-nozzle-title').html(nbsp);
+			$('#right-nozzle-title').html(nbsp);
             break;
         case 1:
-            $('#left-nozzle-temp').parent().addClass('dimmed-section');
-            $('#right-nozzle-temp').parent().removeClass('dimmed-section');
+            $('#left-nozzle-title').parent().addClass('rbx-hidden');
+            $('#right-nozzle-title').parent().removeClass('rbx-hidden');
+            $('.temp-col').removeClass('temp-col-qtr');
+            $('.temp-col').removeClass('temp-col-half');
+            $('.temp-col').addClass('temp-col-third');
+            $('#left-nozzle-title').html(nbsp);
+			if (headData.headTypeCode === 'RBX01-SM' || headData.headTypeCode === 'RBX01-S2')
+				$('#right-nozzle-title').html(i18next.t('nozzles'));
+			else
+				$('#right-nozzle-title').html(i18next.t('nozzle'));
             if (headData.nozzleTemperature[0] !== null)
                 rightNozzleTemperature = headData.nozzleTemperature[0] + '\xB0' + 'C';
             break;
         case 2:
-            $('#left-nozzle-temp').removeClass('dimmed-section');
-            $('#right-nozzle-temp').removeClass('dimmed-section');
+            $('#left-nozzle-title').parent().removeClass('rbx-hidden');
+            $('#right-nozzle-title').parent().removeClass('rbx-hidden');
+            $('.temp-col').removeClass('temp-col-third');
+            $('.temp-col').removeClass('temp-col-half');
+            $('.temp-col').addClass('temp-col-qtr');
+            $('#left-nozzle-title').html(i18next.t('left-nozzle'));
+			$('#right-nozzle-title').html(i18next.t('right-nozzle'));
             if (headData.nozzleTemperature[0] !== null)
                 leftNozzleTemperature = headData.nozzleTemperature[0] + '\xB0' + 'C';
             if (headData.nozzleTemperature[1] !== null)
@@ -273,8 +290,8 @@ function pauseResumePrint()
             default:
                 break;
         }
-	    getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus)
-	    getStatusData(selectedPrinter, '/controlStatus', updateControlStatus)
+	    getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus);
+	    getStatusData(selectedPrinter, '/controlStatus', updateControlStatus);
     }
 }
 
@@ -285,8 +302,8 @@ function cancelPrint()
     {
         cancelAction();
         var selectedPrinter = localStorage.getItem(selectedPrinterVar);
-        getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus)
-        getStatusData(selectedPrinter, '/controlStatus', updateControlStatus)
+        getStatusData(selectedPrinter, '/printJobStatus', updatePrintJobStatus);
+        getStatusData(selectedPrinter, '/controlStatus', updateControlStatus);
         homeDebounceFlag = true;
     }
 }
@@ -303,14 +320,16 @@ function updateControlStatus(controlData)
     {
         $('#pause-resume-button').removeClass('disabled pause')
                                  .attr('mode', 'r')
-                                 .addClass('resume');    }
+                                 .addClass('resume');
+    }
     else
     {
         $('#pause-resume-button').addClass('disabled')
                                  .attr('mode', 'd');
     }
     
-    if (controlData.canCancel === true)
+    if (controlData.printerStatusEnumValue.match("^HEATING") ||
+        controlData.canCancel === true)
     {
         $('#cancel-button').removeClass('disabled');
     }
@@ -319,16 +338,16 @@ function updateControlStatus(controlData)
         $('#cancel-button').addClass('disabled');
     }
     
-    //if (controlData.printerStatusEnumValue.match("^PRINTING_PROJECT"))
-    //{
-    //    $('#tweak-button').removeClass('disabled')
-    //                    .removeClass('invisible');
-    //}
-    //else
-    //{
-    //    $('#tweak-button').addClass('disabled')
-    //                    .addClass('invisible');
-    //}
+    if (controlData.printerStatusEnumValue.match("^PRINTING_PROJECT"))
+    {
+        $('#tweak-button').removeClass('disabled')
+                          .removeClass('invisible');
+    }
+    else
+    {
+        $('#tweak-button').addClass('disabled')
+                          .addClass('invisible');
+    }
 
     if (controlData.canOpenDoor === true)
     {
@@ -417,8 +436,8 @@ function startHomeLeftButtonUpdates()
 function homeInit()
 {
     localStorage.setItem(printerTypeVar, "RBX01");
-    $('#filament-1-eject').on('click', function() { eject(0); });
-    $('#filament-2-eject').on('click', function() { eject(1); });
+    $('#filament-1-eject').on('click', function() { eject(1); });
+    $('#filament-2-eject').on('click', function() { eject(2); });
     $('#pause-resume-button').on('click', pauseResumePrint);
     $('#cancel-button').on('click', cancelPrint);
     setFooterButton({'right-button': {'icon': 'Icon-Move-Unlock.svg',

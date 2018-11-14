@@ -23,22 +23,22 @@ var menuDetailsMap =
 		              'action-1': {'active-icon':'Icon-Menu-Clean-White.svg',
 						           'icon':'Icon-Menu-Clean-Grey.svg',
 							       'text':'clean-nozzle-right',
-				    			   'action':function() { performPrinterAction('/cleanNozzle', cleanNozzleStatus + '-right', 1); }},
+				    			   'action':function() { performPrinterAction('/cleanNozzle', cleanNozzleStatus + '-right', 2); }},
 		              'action-2': {'active-icon':'Icon-Menu-Clean-White.svg',
 						    	   'icon':'Icon-Menu-Clean-Grey.svg',
 							       'text':'clean-nozzle-left',
-			    				   'action':function() { performPrinterAction('/cleanNozzle', cleanNozzleStatus + '-left', 2); }},
+			    				   'action':function() { performPrinterAction('/cleanNozzle', cleanNozzleStatus + '-left', 1); }},
 			          'left-button': {'icon':'Icon_Menu_Back.svg',
 					    			  'href':maintenanceMenu}},
 	'eject-stuck': {'menu-title': 'eject-stuck',
 	    			'action-1': {'active-icon':'Icon-Menu-Eject-White.svg',
 					    		 'icon':'Icon-Menu-Eject-Grey.svg',
 						    	 'text':'eject-stuck-1',
-							     'action':function() { performPrinterAction('/ejectStuckMaterial', ejectStuckStatus + '-1', 2); }},
+							     'action':function() { performPrinterAction('/ejectStuckMaterial', ejectStuckStatus + '-1', 1); }},
 				    'action-2': {'active-icon':'Icon-Menu-Eject-White.svg',
 					    		 'icon':'Icon-Menu-Eject-Grey.svg',
 					    		 'text':'eject-stuck-2',
-					    	     'action':function() { performPrinterAction('/ejectStuckMaterial', ejectStuckStatus + '-2', 1); }},
+					    	     'action':function() { performPrinterAction('/ejectStuckMaterial', ejectStuckStatus + '-2', 2); }},
 				    'left-button': {'icon':'Icon_Menu_Back.svg',
 					    			'href':maintenanceMenu}},
 	'identity': {'menu-title': 'identity',
@@ -69,8 +69,7 @@ var menuDetailsMap =
 					    		 'icon':'Icon-Menu-Remove-Grey.svg',
 						    	 'text':'remove-head',
 							     'action':function() { performPrinterAction('/removeHead',
-                                                                            removeHeadStatus,
-                                                                            safetiesOn().toString()); }},
+                                                                            removeHeadStatus, safetiesOn().toString()); }},
 				    'action-5': {'active-icon':'Icon-Menu-Level-White.svg',
 					    		 'icon':'Icon-Menu-Level-Grey.svg',
 						    	 'text':'level-gantry',
@@ -104,7 +103,11 @@ var menuDetailsMap =
                               'icon':'Icon-Security-Grey.svg',
                               'text':'security-settings',
                               'href':securitySettingsMenu},
-                 'action-4': {'active-icon':'Icon-About-White.svg',
+                 'action-4': {'active-icon':'Icon-Rubbish-Bin-White.svg',
+                              'icon':'Icon-Rubbish-Bin-Grey.svg',
+                              'text':'empty-rubbish-bin',
+                              'action':function() { performPrinterAction('/tidyPrintJobDirs', homePage, null); }},
+                 'action-5': {'active-icon':'Icon-About-White.svg',
                               'icon':'Icon-About-Grey.svg',
                               'text':'about',
                               'href':aboutPage},
@@ -188,7 +191,6 @@ function setActionButton(details, field)
         $(item).html(text)
                .attr('href', href)
                .off('click') // Remove all callbacks
-               .on('click', action)
                .closest('.row')
 			   .removeClass('disabled rbx-hidden');
         if (action !== null)

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Robox :: Printer Control</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
@@ -19,11 +19,10 @@
         <div class="row panel" style="padding: 2.25vh 2.5vh; margin-bottom: 1.25vh; font-size: 0;">
             <div>
                 <div class="row vertical-align">
-                    <div><button class="btn btn-default move mat1--50 control-jog" type="button" step="-50" extruder="1"></button><button class="btn btn-default move mat1--20 control-jog" type="button" step="-20" extruder="1"></button><button class="btn btn-default move mat1-eject control-eject"
-                            type="button" extruder="1"></button><button class="btn btn-default move mat1-20 control-jog" type="button" step="20" extruder="1"></button><button class="btn btn-default move mat1-50 control-jog" type="button" step="50" extruder="1"></button>
-                        <button
-                            class="btn btn-default move mat1-heat control-toggle require-head" type="button" switch="heaterT"></button>
-                    </div>
+                    <div><button class="btn btn-default move mat1--50 control-jog control-retract disabled" type="button" step="-50" extruder="1"></button><button class="btn btn-default move mat1--20 control-jog control-retract disabled" type="button" step="-20"
+                            extruder="1"></button><button class="btn btn-default move mat1-eject control-eject disabled" type="button" extruder="1"></button><button class="btn btn-default move mat1-20 control-jog control-extrude disabled" type="button" step="20"
+                            extruder="1"></button><button class="btn btn-default move mat1-50 control-jog control-extrude disabled" type="button" step="50" extruder="1"></button><button class="btn btn-default move mat1-heat control-toggle require-head disabled"
+                            type="button" switch="heaterT"></button></div>
                 </div>
                 <div class="row vertical-align" style="height: 2vh">
                     <div style="width: 15.875vh; padding: 0vh 2.5vh 0.5vh 0vh;">
@@ -40,11 +39,10 @@
                     </div>
                 </div>
                 <div class="row vertical-align">
-                    <div><button class="btn btn-default move mat2--50 control-jog" type="button" step="-50" extruder="2"></button><button class="btn btn-default move mat2--20 control-jog" type="button" step="-20" extruder="2"></button><button class="btn btn-default move mat2-eject control-eject"
-                            type="button" extruder="2"></button><button class="btn btn-default move mat2-20 control-jog" type="button" step="20" extruder="2"></button><button class="btn btn-default move mat2-50 control-jog" type="button" step="50" extruder="2"></button>
-                        <button
-                            class="btn btn-default move mat2-heat control-toggle require-head" type="button" switch="heaterS"></button>
-                    </div>
+                    <div><button class="btn btn-default move mat2--50 control-jog control-retract disabled" type="button" step="-50" extruder="2"></button><button class="btn btn-default move mat2--20 control-jog control-retract disabled" type="button" step="-20"
+                            extruder="2"></button><button class="btn btn-default move mat2-eject control-eject disabled" type="button" extruder="2"></button><button class="btn btn-default move mat2-20 control-jog control-extrude disabled" type="button" step="20"
+                            extruder="2"></button><button class="btn btn-default move mat2-50 control-jog control-extrude disabled" type="button" step="50" extruder="2"></button><button class="btn btn-default move mat2-heat control-toggle require-head disabled"
+                            type="button" switch="heaterS"></button></div>
                 </div>
             </div>
         </div>
@@ -66,7 +64,7 @@
                         <div class="col-md-12">
                             <div></div>
                         </div>
-                    </div><button class="btn btn-default pull-right move unlock control-toggle" type="button" switch="doorlock"></button><button class="btn btn-default pull-right move bed-heat control-toggle" type="button" switch="heaterB"></button></div>
+                    </div><button class="btn btn-default pull-right move unlock control-toggle" type="button" switch="doorlock"></button><button class="btn btn-default pull-right move bed-heat control-bed-heat" type="button" switch="heaterB"></button></div>
             </div>
         </div>
     </div>

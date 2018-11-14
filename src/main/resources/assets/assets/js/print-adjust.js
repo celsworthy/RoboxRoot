@@ -6,9 +6,9 @@ function setSpinnerData(spinner, value, delta)
               .attr({'min':minValue.toFixed(0), 'max':maxValue.toFixed(0)});
 }
 
-function reportPAError(data)
+function reportPAError(error)
 {
-    alert("Failed to set print adjust data");
+    handleException(error, 'print-adjust-error', false);
     setPrintAdjust();
 }
 
@@ -67,7 +67,7 @@ function updatePrintAdjustData(paData)
         $('#pa-right-nozzle').addClass("hidden");
     }
     
-    if (paData.usingMaterial2)
+    if (paData.dualMaterialHead && paData.usingMaterial2)
     //if (true)
     {
         $('#pa-left-nozzle').removeClass("hidden");
@@ -89,7 +89,7 @@ function setPrintAdjust()
 	{
         promiseGetCommandToRoot(selectedPrinter + '/remoteControl/printAdjust', null)
             .then(updatePrintAdjustData)
-            .catch(goToHomeOrPrinterSelectPage);
+            .catch(function(error) { handleException(error, 'print-adjust-set-error', true); });
 	}
 	else
 		goToHomeOrPrinterSelectPage();

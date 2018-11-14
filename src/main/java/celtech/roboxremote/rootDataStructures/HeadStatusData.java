@@ -29,6 +29,8 @@ public class HeadStatusData
     private String headName;
     private String headTypeCode;
     private boolean dualMaterialHead;
+    private boolean valvesFitted;
+    private int nozzleCount;
     private int[] nozzleTemperature;
 
     private boolean canCalibrateHead;
@@ -46,13 +48,13 @@ public class HeadStatusData
         // Jackson deserialization
     }
 
+    @JsonIgnore
     public void updateFromPrinterData(String printerID)
     {
         this.printerID = printerID;
         Printer printer = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
 
         canCalibrateHead = printer.canCalibrateHeadProperty().get();
-        canPurgeHead = false;
         canRemoveHead = printer.canRemoveHeadProperty().get();
      
         //Head
@@ -62,6 +64,7 @@ public class HeadStatusData
             headName = printerHead.nameProperty().get();
             headTypeCode = printerHead.typeCodeProperty().get().trim();
             dualMaterialHead = printerHead.headTypeProperty().get() == Head.HeadType.DUAL_MATERIAL_HEAD;
+            valvesFitted = printerHead.valveTypeProperty().get() == Head.ValveType.FITTED;
 
             if (dualMaterialHead)
             {
@@ -71,6 +74,7 @@ public class HeadStatusData
                 canPurgeHead = printer.reelsProperty().containsKey(0) && printer.canPurgeHeadProperty().get();
             }
 
+            nozzleCount = printerHead.getNozzles().size();
             nozzleTemperature = new int[printerHead.getNozzleHeaters().size()];
             for (int heaterNumber = 0; heaterNumber < printerHead.getNozzleHeaters().size(); heaterNumber++)
             {
@@ -79,6 +83,12 @@ public class HeadStatusData
         } else
         {
             headName = "";
+            headTypeCode = "";
+            canPurgeHead = false;
+            dualMaterialHead = false;
+            valvesFitted = false;
+            nozzleCount = 0;
+            nozzleTemperature = null;
         }
 
         bedTemperature = printer.getPrinterAncillarySystems().bedTemperatureProperty().get();
@@ -98,84 +108,124 @@ public class HeadStatusData
         this.printerID = printerID;
     }
 
+    @JsonProperty
     public boolean isCanCalibrateHead()
     {
         return canCalibrateHead;
     }
 
+    @JsonProperty
     public void setCanCalibrateHead(boolean canCalibrateHead)
     {
         this.canCalibrateHead = canCalibrateHead;
     }
 
+    @JsonProperty
     public boolean isCanPurgeHead()
     {
         return canPurgeHead;
     }
 
+    @JsonProperty
     public void setCanPurgeHead(boolean canPurgeHead)
     {
         this.canPurgeHead = canPurgeHead;
     }
 
+    @JsonProperty
     public boolean isCanRemoveHead()
     {
         return canRemoveHead;
     }
 
+    @JsonProperty
     public void setCanRemoveHead(boolean canRemoveHead)
     {
         this.canRemoveHead = canRemoveHead;
     }
 
+    @JsonProperty
     public String getHeadName()
     {
         return headName;
     }
 
+    @JsonProperty
     public void setHeadName(String headName)
     {
         this.headName = headName;
     }
 
+    @JsonProperty
     public String getHeadTypeCode()
     {
         return headTypeCode;
     }
 
+    @JsonProperty
     public void setHeadTypeCode(String headTypeCode)
     {
         this.headTypeCode = headTypeCode;
     }
     
+    @JsonProperty
     public boolean isDualMaterialHead()
     {
         return dualMaterialHead;
     }
 
+    @JsonProperty
     public void setDualMaterialHead(boolean dualMaterialHead)
     {
         this.dualMaterialHead = dualMaterialHead;
     }
 
+    @JsonProperty
+    public boolean isValvesFitted()
+    {
+        return valvesFitted;
+    }
+
+    @JsonProperty
+    public void setValvesFitted(boolean valvesFitted)
+    {
+        this.valvesFitted = valvesFitted;
+    }
+
+    @JsonProperty
     public int getBedTemperature()
     {
         return bedTemperature;
     }
 
+    @JsonProperty
     public void setBedTemperature(int bedTemperature)
     {
         this.bedTemperature = bedTemperature;
     }
 
+    @JsonProperty
     public int getAmbientTemperature()
     {
         return ambientTemperature;
     }
 
+    @JsonProperty
     public void setAmbientTemperature(int ambientTemperature)
     {
         this.ambientTemperature = ambientTemperature;
+    }
+
+    @JsonProperty
+    public int getNozzleCount()
+    {
+        return nozzleCount;
+    }
+
+    @JsonProperty
+    public void getNozzleCount(int nozzleCount)
+    {
+        this.nozzleCount = nozzleCount;
     }
 
     @JsonProperty

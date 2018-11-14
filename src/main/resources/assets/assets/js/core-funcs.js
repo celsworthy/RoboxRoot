@@ -8,25 +8,34 @@ function checkForMobileBrowser()
     }
 }
 
+function handleException(error, message, reselect)
+{
+    console.log(i18next.t(message) + ': ' + error);
+    
+    if (error.name === 'InternalError' || reselect)
+        goToPrinterSelectPage();
+}
+
 function goToPage(page)
 {
     var enteredPIN = localStorage.getItem(applicationPINVar);
-    if (enteredPIN !== null && enteredPIN !== "")
+    if (enteredPIN !== null && enteredPIN !== '')
     {
-        var base64EncodedCredentials = $.base64.encode(defaultUser + ":" + enteredPIN);
-        console.log(" goToPage - modified url = \"" + 'http://' + window.location.host + page + "\"");
+        var base64EncodedCredentials = $.base64.encode(defaultUser + ':' + enteredPIN);
+        //console.log(' goToPage - modified url = \"' + 'http://' + window.location.host + page + '\"');
         $.ajax({
             url: clientURL + page,
             cache: true,
             beforeSend: function (xhr) {
-                xhr.setRequestHeader("Authorization", "Basic " + base64EncodedCredentials);
+                xhr.setRequestHeader('Authorization', 'Basic ' + base64EncodedCredentials);
             },
             type: 'GET',
             success: function (data, textStatus, jqXHR) {
-                console.log(" goToPage - modified location.href = \"" + 'http://' + window.location.host + page + "\"");
+                //console.log(' goToPage - modified location.href = \"' + 'http://' + window.location.host + page + '\"');
                 location.href = clientURL + page;
             },
             error: function (data, textStatus, jqXHR) {
+                console.log('goToPage error: ' + textStatus);
                 logout();
             }
         });
@@ -63,7 +72,8 @@ function goToHomeOrPrinterSelectPage()
                     goToPrinterSelectPage();        
                 }
             })
-        .catch(function() {
+        .catch(function(errorData) {
+                console.log('goToHomeOrPrinterSelectPage caught error: ' + errorData);
                 connectedToServer = false;
                 logout();
             });
@@ -82,7 +92,7 @@ function goToMainMenu()
 function logout()
 {
     //debugger;
-    localStorage.setItem(applicationPINVar, "");
+    localStorage.setItem(applicationPINVar, '');
     location.href = clientURL + loginPage;
 }
 
@@ -95,7 +105,7 @@ function updateLocalisation()
             $(this).localize();
         });
 
-        $(".language-selector").val(i18next.language);
+        $('.language-selector').val(i18next.language);
     }
 }
 
@@ -122,7 +132,7 @@ function secondsToHMS(secondsInput)
     var minutesString = ('00' + minutes).slice(-2);
     var secondsString = ('00' + seconds).slice(-2);
 
-    return hoursString + ":" + minutesString + ":" + secondsString;
+    return hoursString + ':' + minutesString + ':' + secondsString;
 }
 
 function secondsToHM(secondsInput)
@@ -134,7 +144,7 @@ function secondsToHM(secondsInput)
     var hoursString = ('00' + hours).slice(-2);
     var minutesString = ('00' + minutes).slice(-2);
 
-    return hoursString + ":" + minutesString;
+    return hoursString + ':' + minutesString;
 }
 
 function onSpinnerClick()
@@ -225,7 +235,7 @@ function setFooterButton(details, field)
         var action = menu['action'];
         var extraClasses = menu['extra-classes'];
         if (icon != null)
-            icon = '<img class = "menu-bottom-button-icon" src="' + imageRoot + icon + '" />';
+            icon = '<img class = \"menu-bottom-button-icon\" src=\"' + imageRoot + icon + '\" />';
         else
             icon = '&nbsp;';
         if (href == null)
@@ -272,7 +282,7 @@ function setTextFromField(details, field)
     var text = details[field];
     if (text == null)
     {
-        $(item).html("&nbsp;")
+        $(item).html('&nbsp;')
                .closest('.row')
                .addClass('rbx-hidden');      
     }
@@ -333,7 +343,7 @@ function getStatusData(printerID, statusName, callback)
     {
         promiseGetCommandToRoot(pr + '/remoteControl' + statusName, null)
             .then(callback)
-            .catch(goToHomeOrPrinterSelectPage);
+            .catch(function(error) { handleException(error, 'status-data-get-error', false); });
     }
 }
 
@@ -345,7 +355,10 @@ function getPrinterStatus(printerID, callback)
     {
         promiseGetCommandToRoot(pr + '/remoteControl', null)
             .then(callback)
-            .catch(goToHomeOrPrinterSelectPage);
+            .catch(function(error) 
+                   {
+                        handleException(error, 'printer-status-get-error', false);
+                   });
     }
 }
 
@@ -356,7 +369,7 @@ function performPrinterAction(printerCommand, targetPage, parameter)
 	{
         promisePostCommandToRoot(selectedPrinter + '/remoteControl' + printerCommand, parameter)
             .then(function() { goToPage(targetPage); })
-            .catch(function() { alert('Failed to perform action!'); });
+            .catch(function(error) { handleException(error, 'perform-printer-action-error', false); });
     }
     else
         goToHomeOrPrinterSelectPage();
@@ -402,7 +415,7 @@ $(document).ready(function () {
 
                 checkForMobileBrowser();
 
-                if (typeof page_initialiser === "function")
+                if (typeof page_initialiser === 'function')
                 {
                     $('img').on('dragstart', function (event) {
                         event.preventDefault();

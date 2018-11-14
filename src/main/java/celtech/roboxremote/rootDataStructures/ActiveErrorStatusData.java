@@ -7,6 +7,8 @@ import celtech.roboxbase.printerControl.model.Printer;
 import celtech.roboxremote.PrinterRegistry;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
+import libertysystems.stenographer.Stenographer;
+import libertysystems.stenographer.StenographerFactory;
 
 /**
  *
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 public class ActiveErrorStatusData
 {
 
+    private final Stenographer steno = StenographerFactory.getStenographer(ActiveErrorStatusData.class.getName());
     private String printerID;
     //Errors
     private ArrayList<ErrorDetails> activeErrors;
@@ -26,34 +29,42 @@ public class ActiveErrorStatusData
 
     public void updateFromPrinterData(String printerID)
     {
-        this.printerID = printerID;
-        Printer printer = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
-
-        if (!printer.getActiveErrors().isEmpty())
+        try
         {
-            activeErrors = new ArrayList<>();
-            for (int errorCounter = 0; errorCounter < printer.getActiveErrors().size(); errorCounter++)
+            this.printerID = printerID;
+            Printer printer = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+
+            if (printer != null && !printer.getActiveErrors().isEmpty())
             {
-                FirmwareError currentError = printer.getActiveErrors().get(errorCounter);
-                if (currentError == FirmwareError.NOZZLE_FLUSH_NEEDED &&
-                    printer.printerStatusProperty().get() == PrinterStatus.IDLE)
+                activeErrors = new ArrayList<>();
+                for (int errorCounter = 0; errorCounter < printer.getActiveErrors().size(); errorCounter++)
                 {
-                    //Suppress NOZZLE_FLUSH if the printer is idle.
+                    FirmwareError currentError = printer.getActiveErrors().get(errorCounter);
+                    if (currentError == FirmwareError.NOZZLE_FLUSH_NEEDED &&
+                        printer.printerStatusProperty().get() == PrinterStatus.IDLE)
+                    {
+                        //Suppress NOZZLE_FLUSH if the printer is idle.
+                    }
+                    else
+                    {
+                        activeErrors.add(new ErrorDetails(currentError.getBytePosition(),
+                                                          BaseLookup.i18n(currentError.getErrorTitleKey()),
+                                                          BaseLookup.i18n(currentError.getErrorMessageKey()),
+                                                          currentError.isRequireUserToClear(),
+                                                          currentError.getOptions()
+                                                                      .stream()
+                                                                      .mapToInt((o) -> o.getFlag())
+                                                                      .reduce(0, (a, b) -> a | b)));
+                    }
                 }
-                else
-                {
-                    activeErrors.add(new ErrorDetails(currentError.getBytePosition(),
-                                                      BaseLookup.i18n(currentError.getErrorTitleKey()),
-                                                      BaseLookup.i18n(currentError.getErrorMessageKey()),
-                                                      currentError.isRequireUserToClear(),
-                                                      currentError.getOptions()
-                                                                  .stream()
-                                                                  .mapToInt((o) -> o.getFlag())
-                                                                  .reduce(0, (a, b) -> a | b)));
-                }
+                if (activeErrors.isEmpty())
+                    activeErrors = null;
             }
-            if (activeErrors.isEmpty())
-                activeErrors = null;
+        }
+        catch (Exception ex)
+        {
+            steno.exception("ActiveErrorStatusData.updateFromPrinterData threw exception", ex);
+            activeErrors = null;
         }
     }
 

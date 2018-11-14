@@ -36,11 +36,16 @@ function setHeadEPPROMData()
     }
 }
 
-function reportHEError(data)
+function reportHEError(error)
 {
-    alert("Failed to write to head EEPROM");
-    setupHeadEEPROMPage();
-    hpDebounceFlag = false;
+    if (error.name === 'InternalError')
+        goToPrinterSelectPage();
+    else
+    {
+        var transMessage = i18next.t('failed-to-write-to-head')
+        alert(transMessage);
+        headEEPromInit();
+    }
 }
 
 function setSpinnerValue(spinner, value)
@@ -146,7 +151,7 @@ function headEEPromInit()
         $('.rbx-head-change').on('click', removeHead);
         promiseGetCommandToRoot(selectedPrinter + '/remoteControl/headEEPROM', null)
             .then(updateHeadEEPROMData)
-            .catch(goToHomeOrPrinterSelectPage);
+            .catch(function(error) { handleException(error, 'head-eprom-init-error', true); });
 	}
 	else
 		goToHomeOrPrinterSelectPage();
