@@ -48,7 +48,7 @@ public class DiscoveryAPI
         if (PrinterRegistry.getInstance() != null)
         {
             ListPrintersResponse response = new ListPrintersResponse(PrinterRegistry.getInstance().getRemotePrinterIDs());
-            steno.debug("Returning " + response.getPrinterIDs().size() + "printers");
+            steno.trace("Returning " + response.getPrinterIDs().size() + " printers");
             
             return response;
         } else
@@ -93,7 +93,7 @@ public class DiscoveryAPI
                 steno.error("/whoareyou(" + request.getRemoteAddr() + "): unable to get current IP " + e.getMessage());
             }
 
-            steno.debug("/whoareyou(" + request.getRemoteAddr() + "): " + PrinterRegistry.getInstance().getServerName() + " - " + hostAddress);
+            steno.trace("/whoareyou(" + request.getRemoteAddr() + "): " + PrinterRegistry.getInstance().getServerName() + " - " + hostAddress);
             return new WhoAreYouResponse(PrinterRegistry.getInstance().getServerName(),
                     BaseConfiguration.getApplicationVersion(),
                     hostAddress);
