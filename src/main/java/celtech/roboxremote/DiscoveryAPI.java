@@ -3,13 +3,18 @@ package celtech.roboxremote;
 import celtech.roboxbase.comms.remote.clear.ListPrintersResponse;
 import celtech.roboxbase.comms.remote.clear.WhoAreYouResponse;
 import celtech.roboxbase.configuration.BaseConfiguration;
+import celtech.roboxbase.printerControl.model.Printer;
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
+import javafx.scene.paint.Color;
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -92,11 +97,22 @@ public class DiscoveryAPI
             {
                 steno.error("/whoareyou(" + request.getRemoteAddr() + "): unable to get current IP " + e.getMessage());
             }
+            
+            List<String> printerColours = new ArrayList<>();
+            Map<String, Printer> remotePrinters = PrinterRegistry.getInstance().getRemotePrinters();
+            if(remotePrinters != null) {
+                for(Printer printer : remotePrinters.values()) {
+                    Color printerColour = printer.getPrinterIdentity().printerColourProperty().get();
+                    printerColours.add(printerColour.toString());
+                }
+            }
 
-            steno.trace("/whoareyou(" + request.getRemoteAddr() + "): " + PrinterRegistry.getInstance().getServerName() + " - " + hostAddress);
+            steno.trace("/whoareyou(" + request.getRemoteAddr() + "): " + PrinterRegistry.getInstance().getServerName() + " - " + hostAddress
+                + " - Printer Colours: " + printerColours.toString());
             return new WhoAreYouResponse(PrinterRegistry.getInstance().getServerName(),
                     BaseConfiguration.getApplicationVersion(),
-                    hostAddress);
+                    hostAddress,
+                    printerColours);
         } else
         {
             return null;
