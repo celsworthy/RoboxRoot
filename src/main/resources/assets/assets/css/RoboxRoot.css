@@ -219,7 +219,7 @@ h1 {
 
 .container.menu {
   width: 60vh;
-  height: 89.5vh;
+  height: 80.75vh;
   padding: 0.875vh;
   background-color: #414141;
 }
@@ -260,10 +260,10 @@ h1 {
 
 .btn.btn-default.menu-grid-button {
   width: 28.75vh;
-  height: 28.75vh;
+  height: 25.75vh;
   text-align: center;
   font-size: 4vh;
-  line-height: 8vh;
+  line-height: 4vh;
   white-space: normal;
   background-repeat: no-repeat;
   background-size: 17.5vh;
@@ -847,6 +847,17 @@ img.rbx-macro-panel {
   color: #009ee3;
 }
 
+.rbx-usbprint-job {
+  margin: 0vh 0vh 1.25vh;
+  padding: 1.5vh 0vh;
+  height: 16.25vh;
+  background-image: url("../../assets/img/Icon-Model-Blue.svg");
+  background-repeat: no-repeat;
+  background-size: 6vh;
+  background-position: 96.5% 78%;
+  color: #009ee3;
+}
+
 .rbx-reprint-job {
   margin: 0vh 0vh 1.25vh;
   padding: 1.5vh 0vh;
@@ -898,6 +909,12 @@ img.rbx-macro-panel {
   text-align: right;
   width: 12vh;
   margin-left: 2vh;
+}
+
+.rbx-usbprint-job:hover {
+  background-color: #009ee3;
+  background-image: url("../../assets/img/Icon-Model-White.svg");
+  color: #fff;
 }
 
 .rbx-reprint-job:hover {
@@ -1680,5 +1697,14 @@ img.rbx-colour-button {
     margin-bottom: 0;
     vertical-align: middle;
   }
+}
+
+.btn.btn-default.menu-grid-button.menu-main-usb-print {
+  background-image: url("../../assets/img/Icon-Menu-Grid-Reprint.svg");
+}
+
+.btn.btn-default.menu-grid-button.menu-main-usb-print:hover {
+  background-color: #009ee3;
+  background-image: url("../../assets/img/Icon-Menu-Grid-Reprint-Inverse.svg");
 }
 

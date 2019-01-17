@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Robox :: Menu</title>
+    <title>Robox :: Main Menu</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:200,300,400,500,600,700,900">
@@ -14,38 +14,35 @@
     <link rel="stylesheet" href="assets/css/RootFonts.css">
 </head>
 
-<body id="menu-horz" class="canvas-grey no-touch-action">
-    <div class="container page">
-        <div class="row">
-            <div style="padding:4vh 6.5vh 2vh;"><img src="assets/img/Logo-Blank.svg" class="machine-logo"></div>
+<body id="menu-grid" class="canvas-grey no-touch-action">
+    <div class="container menu">
+        <div class="row menu-grid-button">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 menu-grid-button-l"><a class="btn btn-default menu-grid-button menu-main-usb-print" role="button" href="usb-print.html">Print from USB</a></div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-sm-offset-1 col-xs-6 menu-grid-button-r"></div>
         </div>
-        <div class="row rbx-hidden">
-            <div>
-                <h1 id="menu-title" style="padding:0vh 0vh 1vh 0vh">Title</h1>
+        <div class="row menu-grid-button">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 menu-grid-button-l"></div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-sm-offset-1 col-xs-6 menu-grid-button-r"></div>
+        </div>
+        <div class="row menu-grid-button">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 menu-grid-button-l"></div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-sm-offset-1 col-xs-6 menu-grid-button-r"></div>
+        </div>
+    </div>
+    <div class="container page next-prev">
+        <div class="row vertical-align" id="navigator">
+            <div class="no-padding text-center"><a class="btn btn-default menu-sub-button prev" role="button" href="menu-grid.html" id="previous-sub-button"></a></div>
+            <div class="no-padding" style="width: 20vh">
+                <p id="page-number" class="rbx-text-medium no-margins text-center rbx-white" style="text-align: center; color: #fff;">Page 2 of 2</p>
             </div>
-        </div>
-        <div class="row menu-horz-button rbx-hidden">
-            <div><a class="btn btn-default menu-horz-button" role="button" href="#" id="action-1">Action 1</a></div>
-        </div>
-        <div class="row menu-horz-button rbx-hidden">
-            <div><a class="btn btn-default menu-horz-button" role="button" href="#" id="action-2">Action 2</a></div>
-        </div>
-        <div class="row menu-horz-button rbx-hidden">
-            <div><a class="btn btn-default menu-horz-button" role="button" href="#" id="action-3">Action 3</a></div>
-        </div>
-        <div class="row menu-horz-button rbx-hidden">
-            <div><a class="btn btn-default menu-horz-button" role="button" href="#" id="action-4">Action 4</a></div>
-        </div>
-        <div class="row menu-horz-button rbx-hidden">
-            <div><a class="btn btn-default menu-horz-button" role="button" href="#" id="action-5">Action 5</a></div>
-        </div>
-        <div class="row menu-horz-button rbx-hidden">
-            <div><a class="btn btn-default menu-horz-button" role="button" href="#" id="action-6">Action 6</a></div>
+            <div class="no-padding text-center"><a class="btn btn-default menu-sub-button next" role="button" href="#" id="next-sub-button"> </a></div>
         </div>
     </div>
     <div class="container footer">
-        <div class="btn-group btn-group-justified" role="group"><a class="btn btn-default menu-bottom-button rbx-invisible" role="button" href="#" id="left-button"> <img src="assets/img/Icon_Menu_Back.svg" class="menu-bottom-button-icon"></a><a class="btn btn-default disabled menu-bottom-button rbx-invisible" role="button"
-                href="home.html" id="middle-button"> <img src="assets/img/Icon-Home.svg" style="height:6.5vh;"></a><a class="btn btn-default menu-bottom-button rbx-invisible" role="button" href="#" id="right-button"> <img src="assets/img/Icon_Menu_Next.svg" class="menu-bottom-button-icon"></a></div>
+        <div class="btn-group btn-group-justified" role="group"><a class="btn btn-default menu-bottom-button rbx-invisible" role="button" href="#" id="left-button"> </a><a class="btn btn-default menu-bottom-button" role="button" href="home.html" id="middle-button"> <img src="assets/img/Icon-Home.svg" style="height:6.5vh;"></a>
+            <a
+                class="btn btn-default menu-bottom-button" role="button" href="menu-horz.html?id=settings&amp;from=main" id="right-button"> <img src="assets/img/Icon-Settings.svg" class="menu-bottom-button-icon"></a>
+        </div>
     </div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>

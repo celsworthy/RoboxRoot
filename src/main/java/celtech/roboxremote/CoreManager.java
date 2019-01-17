@@ -45,6 +45,7 @@ public class CoreManager implements Managed
 
         commsManager = RoboxCommsManager.getInstance(BaseConfiguration.getBinariesDirectory(), false, true, false);
         PrinterRegistry.getInstance();
+        MountableMediaRegistry.getInstance();
         commsManager.start();
     }
 

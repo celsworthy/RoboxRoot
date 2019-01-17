@@ -2,12 +2,18 @@ package celtech.roboxremote;
 
 import celtech.roboxbase.comms.exceptions.RoboxCommsException;
 import celtech.roboxbase.comms.remote.Configuration;
+import celtech.roboxbase.comms.remote.clear.SuitablePrintJob;
+import celtech.roboxbase.comms.rx.FirmwareError;
 import celtech.roboxbase.configuration.BaseConfiguration;
+import celtech.roboxbase.configuration.Macro;
 import celtech.roboxbase.configuration.datafileaccessors.FilamentContainer;
+import celtech.roboxbase.postprocessor.PrintJobStatistics;
 import celtech.roboxbase.printerControl.model.Head;
+import celtech.roboxbase.printerControl.model.HeaterMode;
 import celtech.roboxbase.printerControl.model.Printer;
 import celtech.roboxbase.printerControl.model.PrinterException;
 import celtech.roboxbase.utils.PrinterUtils;
+import celtech.roboxbase.utils.tasks.SimpleCancellable;
 import celtech.roboxremote.rootDataStructures.ActiveErrorStatusData;
 import celtech.roboxremote.rootDataStructures.ControlStatusData;
 import celtech.roboxremote.rootDataStructures.HeadEEPROMData;
@@ -19,11 +25,7 @@ import celtech.roboxremote.rootDataStructures.PrintAdjustData;
 import celtech.roboxremote.rootDataStructures.PrintJobStatusData;
 import celtech.roboxremote.rootDataStructures.PurgeTarget;
 import celtech.roboxremote.rootDataStructures.StatusData;
-import celtech.roboxbase.comms.remote.clear.SuitablePrintJob;
-import celtech.roboxbase.comms.rx.FirmwareError;
-import celtech.roboxbase.configuration.Macro;
-import celtech.roboxbase.printerControl.model.HeaterMode;
-import celtech.roboxbase.utils.tasks.SimpleCancellable;
+import celtech.roboxremote.rootDataStructures.UsbPrintData;
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.jersey.params.BooleanParam;
 import java.io.IOException;
@@ -814,6 +816,27 @@ public class PublicPrinterControlAPI
         }
         return returnVal;
     }
+    
+    @POST
+    @Timed
+    @Path("/listUSBPrintableJobs")
+    public List<SuitablePrintJob> listUSBPrintableJobs(@PathParam("printerID") String printerID) 
+    {
+        steno.debug("API call made to " + printerID + "/remoteControl/listUSBPrintableJobs");
+        
+        List<SuitablePrintJob> returnVal = new ArrayList<>();
+        if (PrinterRegistry.getInstance() != null)
+        {
+            Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+            
+            if (MountableMediaRegistry.getInstance() != null)
+            {
+                List<PrintJobStatistics> printJobStats = MountableMediaRegistry.getInstance().getPrintableProjectStats();
+                returnVal = printerToUse.createSuitablePrintJobsFromStatistics(printJobStats);
+            }
+        }
+        return returnVal;
+    }
 
     @POST
     @Timed
@@ -841,6 +864,24 @@ public class PublicPrinterControlAPI
             Platform.runLater(() ->
             {
                 printerToUse.reprintJob(Utils.cleanInboundJSONString(printJobID));
+            });
+         }
+
+        Response response = Response.ok().build();
+        return response;
+    }
+    
+    @POST
+    @Timed
+    @Path("/printUSBJob")
+    public Response printUSBJob(@PathParam("printerID") String printerID, UsbPrintData usbPrintData)
+    {
+        if (PrinterRegistry.getInstance() != null)
+        {
+            Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+            Platform.runLater(() ->
+            {
+                printerToUse.printJobFromDirectory(usbPrintData.getPrintJobID(), usbPrintData.getPrintJobPath());
             });
          }
 

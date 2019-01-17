@@ -17,6 +17,7 @@ var pageInitMap = {'about':aboutInit,
                    'purge':purgeInit,
                    'reprint':reprintInit,
                    'server-name':serverNameInit,
+                   'usb-print':usbPrintInit,
                    'wireless-settings':wirelessSettingsInit};
 var pageTitleMap = {};
 
