@@ -13,7 +13,8 @@ function reprintJob()
 function updateReprintData(suitablePrintJobs)
 {
     var currentPage =  getUrlParameter('p');
-    if (currentPage == null)
+    if (suitablePrintJobs.length == 0 ||
+        currentPage == null)
         currentPage = 0;
     else
         currentPage = parseInt(currentPage);
@@ -21,30 +22,37 @@ function updateReprintData(suitablePrintJobs)
     var jobsPerPage = 4;
     var startIndex = currentPage * jobsPerPage;
 
-    for (var jobIndex = 0; jobIndex < jobsPerPage; jobIndex++)
-    {
-        var jobRow = "#job-row-" + (jobIndex + 1);
-        var pjIndex = startIndex + jobIndex;
-        if (pjIndex < suitablePrintJobs.length)
+    if (suitablePrintJobs.length == 0) {
+        $("#job-row-none").removeClass('rbx-hidden')
+        $(".rbx-reprint-job").addClass('rbx-hidden')
+    }
+    else {
+        $("#job-row-none").addClass('rbx-hidden')
+        for (var jobIndex = 0; jobIndex < jobsPerPage; jobIndex++)
         {
-            $(jobRow).removeClass('rbx-invisible')
-                     .attr('job-id', suitablePrintJobs[pjIndex].printJobID)
-                     .off('click') // Remove all callbacks
-                     .on('click', reprintJob);
-            $(jobRow + " .job-name").html(suitablePrintJobs[pjIndex].printJobName);
-            $(jobRow + " .job-created").html(nbsp);
-            $(jobRow + " .job-duration").html(secondsToHM(suitablePrintJobs[pjIndex].durationInSeconds));
-            $(jobRow + " .job-profile").html(suitablePrintJobs[pjIndex].printProfileName);
-        }
-        else
-        {
-            $(jobRow).addClass('rbx-invisible')
-                     .attr('job-id', "")
-                     .off('click');
-            $(jobRow + " .job-name").html(nbsp);
-            $(jobRow + " .job-created").html(nbsp);
-            $(jobRow + " .job-duration").html(nbsp);
-            $(jobRow + " .job-profile").html(nbsp);
+            var jobRow = "#job-row-" + (jobIndex + 1);
+            var pjIndex = startIndex + jobIndex;
+            if (pjIndex < suitablePrintJobs.length)
+            {
+                $(jobRow).removeClass('rbx-hidden')
+                         .attr('job-id', suitablePrintJobs[pjIndex].printJobID)
+                         .off('click') // Remove all callbacks
+                         .on('click', reprintJob);
+                $(jobRow + " .job-name").html(suitablePrintJobs[pjIndex].printJobName);
+                $(jobRow + " .job-created").html(nbsp);
+                $(jobRow + " .job-duration").html(secondsToHM(suitablePrintJobs[pjIndex].durationInSeconds));
+                $(jobRow + " .job-profile").html(suitablePrintJobs[pjIndex].printProfileName);
+            }
+            else
+            {
+                $(jobRow).addClass('rbx-hidden')
+                         .attr('job-id', "")
+                         .off('click');
+                $(jobRow + " .job-name").html(nbsp);
+                $(jobRow + " .job-created").html(nbsp);
+                $(jobRow + " .job-duration").html(nbsp);
+                $(jobRow + " .job-profile").html(nbsp);
+            }
         }
     }
     if (startIndex == 0)
