@@ -10,10 +10,10 @@ function reprintJob()
     }
 }
 
-function updateReprintData(suitablePrintJobs)
+function updateSuitableJobData(suitablePrintJobs, detailsPrefix)
 {
     var currentPage =  getUrlParameter('p');
-    if (suitablePrintJobs.length == 0 ||
+    if (suitablePrintJobs.jobs.length == 0 ||
         currentPage == null)
         currentPage = 0;
     else
@@ -22,26 +22,25 @@ function updateReprintData(suitablePrintJobs)
     var jobsPerPage = 4;
     var startIndex = currentPage * jobsPerPage;
 
-    if (suitablePrintJobs.length == 0) {
-        $("#job-row-none").removeClass('rbx-hidden')
-        $(".rbx-reprint-job").addClass('rbx-hidden')
-    }
-    else {
+    if (suitablePrintJobs.status == "OK") 
+    {
         $("#job-row-none").addClass('rbx-hidden')
         for (var jobIndex = 0; jobIndex < jobsPerPage; jobIndex++)
         {
             var jobRow = "#job-row-" + (jobIndex + 1);
             var pjIndex = startIndex + jobIndex;
-            if (pjIndex < suitablePrintJobs.length)
+            if (pjIndex < suitablePrintJobs.jobs.length)
             {
+                var job = suitablePrintJobs.jobs[pjIndex]
+
                 $(jobRow).removeClass('rbx-hidden')
-                         .attr('job-id', suitablePrintJobs[pjIndex].printJobID)
+                         .attr('job-id', job.printJobID)
                          .off('click') // Remove all callbacks
                          .on('click', reprintJob);
-                $(jobRow + " .job-name").html(suitablePrintJobs[pjIndex].printJobName);
+                $(jobRow + " .job-name").html(job.printJobName);
                 $(jobRow + " .job-created").html(nbsp);
-                $(jobRow + " .job-duration").html(secondsToHM(suitablePrintJobs[pjIndex].durationInSeconds));
-                $(jobRow + " .job-profile").html(suitablePrintJobs[pjIndex].printProfileName);
+                $(jobRow + " .job-duration").html(secondsToHM(job.durationInSeconds));
+                $(jobRow + " .job-profile").html(job.printProfileName);
             }
             else
             {
@@ -55,6 +54,21 @@ function updateReprintData(suitablePrintJobs)
             }
         }
     }
+    else
+    {
+        $("#job-row-none").removeClass('rbx-hidden')
+        $(".rbx-reprint-job").addClass('rbx-hidden')
+                              .attr('job-id', "")
+                              .attr('job-path', "")
+                              .off('click');
+        $(".rbx-reprint-job" + " .job-name").html(nbsp);
+        $(".rbx-reprint-job" + " .job-created").html(nbsp);
+        $(".rbx-reprint-job" + " .job-duration").html(nbsp);
+        $(".rbx-reprint-job" + " .job-profile").html(nbsp);
+        $("#job-row-none").removeClass('rbx-hidden')
+        $("#" + detailsPrefix + "details").html(i18next.t(detailsPrefix+ suitablePrintJobs.status.toLowerCase()));
+    }
+
     if (startIndex == 0)
         $('#previous-sub-button').addClass('disabled')
                                  .attr('href', '#');
@@ -63,7 +77,7 @@ function updateReprintData(suitablePrintJobs)
         $('#previous-sub-button').removeClass('disabled')
                                  .attr('href', reprintPage + '?p=' + (currentPage - 1));
     }
-    if (startIndex + jobsPerPage >= suitablePrintJobs.length)
+    if (startIndex + jobsPerPage >= suitablePrintJobs.jobs.length)
         $('#next-sub-button').addClass('disabled')
                              .attr('href', '#');
     else
@@ -71,13 +85,18 @@ function updateReprintData(suitablePrintJobs)
                              .attr('href', reprintPage + '?p=' + (currentPage + 1));
 
     var pageNumber = i18next.t('page-x-of-n');
-    var nPages = Math.floor(suitablePrintJobs.length / jobsPerPage);
+    var nPages = Math.floor(suitablePrintJobs.jobs.length / jobsPerPage);
     if ((suitablePrintJobs.length % jobsPerPage) > 0 || nPages == 0)
         nPages++;
 
     pageNumber = pageNumber.replace('$1', currentPage + 1)
                            .replace('$2', nPages);
     $('#page-number').html(pageNumber);
+}
+
+function updateReprintData(suitablePrintJobs)
+{
+    updateSuitableJobData(suitablePrintJobs, "no-reprints-")
 }
 
 function reprintInit()

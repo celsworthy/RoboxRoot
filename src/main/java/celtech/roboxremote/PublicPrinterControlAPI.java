@@ -22,6 +22,7 @@ import celtech.roboxremote.rootDataStructures.MaterialStatusData;
 import celtech.roboxremote.rootDataStructures.NameStatusData;
 import celtech.roboxremote.rootDataStructures.NameTagFloat;
 import celtech.roboxremote.rootDataStructures.PrintAdjustData;
+import celtech.roboxremote.rootDataStructures.SuitablePrintJobListData;
 import celtech.roboxremote.rootDataStructures.PrintJobStatusData;
 import celtech.roboxremote.rootDataStructures.PurgeTarget;
 import celtech.roboxremote.rootDataStructures.StatusData;
@@ -806,25 +807,43 @@ public class PublicPrinterControlAPI
     @POST
     @Timed
     @Path("/listReprintableJobs")
-    public List<SuitablePrintJob> listReprintableJobs(@PathParam("printerID") String printerID)
+    public SuitablePrintJobListData listReprintableJobs(@PathParam("printerID") String printerID)
     {
-        List<SuitablePrintJob> returnVal = null;
+        SuitablePrintJobListData suitableJobData = new SuitablePrintJobListData();
         if (PrinterRegistry.getInstance() != null)
         {
             Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
-            returnVal = printerToUse.listJobsReprintableByMe();
+            if (printerToUse != null)
+            {
+                List<PrintJobStatistics> printJobStats = printerToUse.listReprintableJobs();
+                if (!printJobStats.isEmpty())
+                {
+                    suitableJobData.setJobs(printerToUse.createSuitablePrintJobsFromStatistics(printJobStats));
+                    if (!suitableJobData.getJobs().isEmpty())
+                        suitableJobData.setStatus(SuitablePrintJobListData.ListStatus.OK);
+                    else
+                        suitableJobData.setStatus(SuitablePrintJobListData.ListStatus.NO_SUITABLE_JOBS);
+                }
+                else
+                    suitableJobData.setStatus(SuitablePrintJobListData.ListStatus.NO_JOBS);
+            }
+            else
+                suitableJobData.setStatus(SuitablePrintJobListData.ListStatus.NO_PRINTER);
         }
-        return returnVal;
+        else
+            suitableJobData.setStatus(SuitablePrintJobListData.ListStatus.ERROR);
+
+        return suitableJobData;
     }
     
     @POST
     @Timed
     @Path("/listUSBPrintableJobs")
-    public List<SuitablePrintJob> listUSBPrintableJobs(@PathParam("printerID") String printerID) 
+    public SuitablePrintJobListData listUSBPrintableJobs(@PathParam("printerID") String printerID) 
     {
         steno.debug("API call made to " + printerID + "/remoteControl/listUSBPrintableJobs");
         
-        List<SuitablePrintJob> returnVal = new ArrayList<>();
+        SuitablePrintJobListData suitableJobData = new SuitablePrintJobListData();
         if (PrinterRegistry.getInstance() != null)
         {
             Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
@@ -832,10 +851,27 @@ public class PublicPrinterControlAPI
             if (MountableMediaRegistry.getInstance() != null)
             {
                 List<PrintJobStatistics> printJobStats = MountableMediaRegistry.getInstance().getPrintableProjectStats();
-                returnVal = printerToUse.createSuitablePrintJobsFromStatistics(printJobStats);
+                if (!printJobStats.isEmpty())
+                {
+                    suitableJobData.setJobs(printerToUse.createSuitablePrintJobsFromStatistics(printJobStats));
+                
+                    if (!suitableJobData.getJobs().isEmpty())
+                        suitableJobData.setStatus(SuitablePrintJobListData.ListStatus.OK);
+                    else
+                        suitableJobData.setStatus(SuitablePrintJobListData.ListStatus.NO_SUITABLE_JOBS);
+                }
+                else if (!MountableMediaRegistry.getInstance().getMountedUSBDirectories().isEmpty())
+                    suitableJobData.setStatus(SuitablePrintJobListData.ListStatus.NO_JOBS);
+                else
+                    suitableJobData.setStatus(SuitablePrintJobListData.ListStatus.NO_MEDIA);
             }
+            else
+                suitableJobData.setStatus(SuitablePrintJobListData.ListStatus.NO_PRINTER);
         }
-        return returnVal;
+        else
+            suitableJobData.setStatus(SuitablePrintJobListData.ListStatus.ERROR);
+        
+        return suitableJobData;
     }
 
     @POST
