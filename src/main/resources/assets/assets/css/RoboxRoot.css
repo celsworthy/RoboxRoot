@@ -219,7 +219,7 @@ h1 {
 
 .container.menu {
   width: 60vh;
-  height: 80.75vh;
+  height: 89.5vh;
   padding: 0.875vh;
   background-color: #414141;
 }
@@ -260,10 +260,10 @@ h1 {
 
 .btn.btn-default.menu-grid-button {
   width: 28.75vh;
-  height: 25.75vh;
+  height: 28.75vh;
   text-align: center;
   font-size: 4vh;
-  line-height: 4vh;
+  line-height: 8vh;
   white-space: normal;
   background-repeat: no-repeat;
   background-size: 17.5vh;
@@ -440,8 +440,8 @@ h1 {
   background-image: url("../../assets/img/Icon-Menu-Grid-Control.svg");
 }
 
-.btn.btn-default.menu-grid-button.menu-main-reprint {
-  background-image: url("../../assets/img/Icon-Menu-Grid-Reprint.svg");
+.btn.btn-default.menu-grid-button.menu-main-print {
+  background-image: url("../../assets/img/Icon-Menu-Grid-Print.svg");
 }
 
 .btn.btn-default.menu-grid-button.menu-main-cal {
@@ -469,8 +469,8 @@ h1 {
   background-color: #009ee3;
 }
 
-.btn.btn-default.menu-grid-button.menu-main-reprint:hover {
-  background-image: url("../../assets/img/Icon-Menu-Grid-Reprint-Inverse.svg");
+.btn.btn-default.menu-grid-button.menu-main-print:hover {
+  background-image: url("../../assets/img/Icon-Menu-Grid-Print-Inverse.svg");
 }
 
 .btn.btn-default.menu-grid-button.menu-main-cal:hover {
@@ -1683,11 +1683,11 @@ img.rbx-colour-button {
 }
 
 .btn.btn-default.menu-grid-button.menu-main-usb-print {
-  background-image: url("../../assets/img/Icon-Menu-Grid-Reprint.svg");
+  background-image: url("Icon-Menu-Grid-Reprint.svg");
 }
 
 .btn.btn-default.menu-grid-button.menu-main-usb-print:hover {
   background-color: #009ee3;
-  background-image: url("../../assets/img/Icon-Menu-Grid-Reprint-Inverse.svg");
+  background-image: url("Icon-Menu-Grid-Reprint-Inverse.svg");
 }
 

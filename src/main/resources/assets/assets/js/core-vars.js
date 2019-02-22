@@ -34,6 +34,7 @@ var purgePage = '/purge.html';
 var purgeIntroPage = '/purge-intro.html';
 var reprintPage = '/reprint.html';
 var serverNamePage = '/server-name.html';
+var usbPrintPage = '/usb-print.html';
 var wirelessSettingsPage = '/wireless-settings.html';
 
 // Status pages.
