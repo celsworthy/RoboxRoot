@@ -1,1 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 100"><title>Icon-Menu-Grid-Control-Inverse</title><circle cx="34.71" cy="38.01" r="7.5" style="fill:#fff"/><circle cx="27.35" cy="81.72" r="5" style="fill:#fff"/><path d="M108.79,34h-9.5v-9.5a4,4,0,0,0-8,0V34h-9.5a4,4,0,0,0,0,8h9.5v9.5a4,4,0,1,0,8,0V42h9.5a4,4,0,0,0,0-8Z" style="fill:#fff;fill-rule:evenodd"/><path d="M110,0H20A20,20,0,0,0,0,20V80a20,20,0,0,0,20,20h90a20,20,0,0,0,20-20V20A20,20,0,0,0,110,0ZM46.35,88.72h-24a7,7,0,0,1,0-14h24a7,7,0,0,1,0,14Zm-11.64-25A25.71,25.71,0,1,1,60.43,38,25.71,25.71,0,0,1,34.71,63.72Zm50.08,25a7,7,0,1,1,7-7A7,7,0,0,1,84.79,88.72Zm21,0a7,7,0,1,1,7-7A7,7,0,0,1,105.79,88.72Zm-10.5-25A25.71,25.71,0,1,1,121,38,25.72,25.72,0,0,1,95.29,63.72Z" style="fill:#fff;fill-rule:evenodd"/><circle cx="105.79" cy="81.72" r="4" style="fill:#fff"/></svg>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 23.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 141 141" style="enable-background:new 0 0 141 141;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#FFFFFF;}
+	.st1{fill-rule:evenodd;clip-rule:evenodd;fill:#FFFFFF;}
+</style>
+<title>Icon-Menu-Grid-Control-Inverse</title>
+<circle class="st0" cx="40.2" cy="58.5" r="7.5"/>
+<circle class="st0" cx="32.8" cy="102.2" r="5"/>
+<path class="st1" d="M114.3,54.5h-9.5V45c0-2.2-1.8-4-4-4s-4,1.8-4,4v9.5h-9.5c-2.2,0-4,1.8-4,4s1.8,4,4,4h9.5V72c0,2.2,1.8,4,4,4
+	s4-1.8,4-4v-9.5h9.5c2.2,0,4-1.8,4-4S116.5,54.5,114.3,54.5z"/>
+<path class="st1" d="M115.5,20.5h-90c-11,0-20,9-20,20v60c0,11,9,20,20,20h90c11,0,20-9,20-20v-60C135.5,29.5,126.5,20.5,115.5,20.5
+	z M51.8,109.2h-24c-3.9,0-7-3.1-7-7s3.1-7,7-7h24c3.9,0,7,3.1,7,7S55.7,109.2,51.8,109.2L51.8,109.2z M40.2,84.2
+	c-14.2,0-25.7-11.5-25.7-25.7c0-14.2,11.5-25.7,25.7-25.7c14.2,0,25.7,11.5,25.7,25.7C65.9,72.7,54.4,84.2,40.2,84.2
+	C40.2,84.2,40.2,84.2,40.2,84.2z M90.3,109.2c-3.9,0-7-3.1-7-7s3.1-7,7-7s7,3.1,7,7S94.2,109.2,90.3,109.2z M111.3,109.2
+	c-3.9,0-7-3.1-7-7s3.1-7,7-7s7,3.1,7,7S115.2,109.2,111.3,109.2z M100.8,84.2c-14.2,0-25.7-11.5-25.7-25.7s11.5-25.7,25.7-25.7
+	c14.2,0,25.7,11.5,25.7,25.7C126.5,72.7,115,84.2,100.8,84.2z"/>
+<circle class="st0" cx="111.3" cy="102.2" r="4"/>
+</svg>

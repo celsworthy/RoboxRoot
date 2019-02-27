@@ -55,6 +55,7 @@ var maintenanceMenu = '/menu-horz.html?id=maintenance';
 var securitySettingsMenu = '/menu-horz.html?id=security-settings';
 var settingsMenu = '/menu-horz.html?id=settings';
 var serverSettingsMenu = '/menu-horz.html?id=settings-s';
+var printMenu = '/menu-horz.html?id=print';
 
 var machineDetailsMap = 
 {

@@ -14,17 +14,17 @@
     <link rel="stylesheet" href="assets/css/RootFonts.css">
 </head>
 
-<body id="reprint" class="canvas-grey no-touch-action">
+<body id="reprint" class="no-touch-action" style="background-color: #9f9f9f">
     <div class="container page reprint">
         <div class="row">
             <div>
-                <h1 class="localised page-title" data-i18n="reprint-title">RePrint</h1>
+                <h1 class="localised page-title" data-i18n="reprint-title">Reprint</h1>
             </div>
         </div>
-        <div class="row rbx-hidden" id="job-row-none" style="height: 60vh;display: flex;align-items: center;flex-wrap: wrap;">
-            <div><img src="assets/img/Icon-NoReprint.svg" style="height: 30vh;margin: auto;display: block;">
-                <h1 class="localised" style="width: 58.25vh;padding-top: 2vh;" data-i18n="no-reprints-heading">No reprint projects found.</h1>
-                <p id="no-reprints-details" class="rbx-text-note-white localised" data-i18n="no-reprints-details">No suitable reprint projects were found on this device.</p>
+        <div class="row rbx-hidden" id="job-row-none" style="height: 70vh;display: flex;align-items: center;flex-wrap: wrap;">
+            <div><img src="assets/img/Icon-NoRePrints.svg" style="height: 30vh;margin: auto;display: block;">
+                <h1 class="localised" style="width: 58.25vh;padding-top: 2vh;" data-i18n="no-reprints-heading">&nbsp;</h1>
+                <p id="no-reprints-details" class="rbx-text-note-white localised" data-i18n="no-reprints-details">&nbsp;</p>
             </div>
         </div>
         <div class="row panel rbx-reprint-job rbx-hidden" id="job-row-1" role="button">
@@ -84,8 +84,8 @@
             </div>
         </div>
     </div>
-    <div class="container page next-prev">
-        <div class="row vertical-align" id="navigator">
+    <div class="container page next-prev inactive">
+        <div class="row vertical-align rbx-hidden" id="navigator">
             <div class="no-padding text-center"><a class="btn btn-default menu-sub-button prev" role="button" href="#" id="previous-sub-button"></a></div>
             <div class="no-padding" style="width: 20vh">
                 <p id="page-number" class="rbx-text-medium no-margins text-center rbx-white" style="text-align: center; color: #fff;">-</p>
