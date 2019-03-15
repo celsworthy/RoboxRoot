@@ -24,6 +24,10 @@ function updateSuitableJobData(suitablePrintJobs, detailsPrefix)
 
     if (suitablePrintJobs.status == "OK") 
     {
+        $("#navigator").removeClass('rbx-hidden')
+                        .parent()
+                        .removeClass('inactive')
+                        .addClass('active')
         $("#job-row-none").addClass('rbx-hidden')
         for (var jobIndex = 0; jobIndex < jobsPerPage; jobIndex++)
         {
@@ -56,6 +60,10 @@ function updateSuitableJobData(suitablePrintJobs, detailsPrefix)
     }
     else
     {
+        $("#navigator").addClass('rbx-hidden')
+                       .parent()
+                       .removeClass('active')
+                       .addClass('inactive')
         $("#job-row-none").removeClass('rbx-hidden')
         $(".rbx-reprint-job").addClass('rbx-hidden')
                               .attr('job-id', "")
@@ -86,7 +94,7 @@ function updateSuitableJobData(suitablePrintJobs, detailsPrefix)
 
     var pageNumber = i18next.t('page-x-of-n');
     var nPages = Math.floor(suitablePrintJobs.jobs.length / jobsPerPage);
-    if ((suitablePrintJobs.length % jobsPerPage) > 0 || nPages == 0)
+    if ((suitablePrintJobs.jobs.length % jobsPerPage) > 0 || nPages == 0)
         nPages++;
 
     pageNumber = pageNumber.replace('$1', currentPage + 1)

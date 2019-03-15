@@ -21,10 +21,10 @@
                 <h1 class="localised page-title" data-i18n="usb-print-title">Print from USB</h1>
             </div>
         </div>
-        <div class="row rbx-hidden" id="job-row-none" style="height: 60vh;display: flex;align-items: center;flex-wrap: wrap;">
-            <div><img src="assets/img/Icon-NoUSBStick.svg" style="height: 30vh;margin: auto;display: block;">
-                <h1 class="localised" style="width: 58.25vh;padding-top: 2vh;" data-i18n="no-usb-job-heading">No reprint projects found</h1>
-                <p id="no-usb-job-details" class="rbx-text-note-white localised" data-i18n="no-usb-job-details">Please connect a USB stick containing suitable reprint projects for this device.</p>
+        <div class="row rbx-hidden" id="job-row-none" style="height: 70vh;display: flex;align-items: center;flex-wrap: wrap;">
+            <div><img src="assets/img/Icon-NoPrintJobs.svg" style="height: 30vh;margin: auto;display: block;">
+                <h1 class="localised" style="width: 58.25vh;padding-top: 2vh;" data-i18n="no-usb-job-heading">&nbsp;</h1>
+                <p id="no-usb-job-details" class="rbx-text-note-white localised" data-i18n="no-usb-job-details">&nbsp;</p>
             </div>
         </div>
         <div class="row panel rbx-reprint-job rbx-hidden" id="job-row-1" role="button">
@@ -84,8 +84,8 @@
             </div>
         </div>
     </div>
-    <div class="container page next-prev">
-        <div class="row vertical-align" id="navigator">
+    <div class="container page next-prev inactive">
+        <div class="row vertical-align rbx-hidden" id="navigator">
             <div class="no-padding text-center"><a class="btn btn-default menu-sub-button prev" role="button" href="#" id="previous-sub-button"></a></div>
             <div class="no-padding" style="width: 20vh">
                 <p id="page-number" class="rbx-text-medium no-margins text-center rbx-white" style="text-align: center; color: #fff;">-</p>

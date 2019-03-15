@@ -165,7 +165,7 @@ h1 {
   background-image: url("../../assets/img/Logo-CEL-White.svg");
   background-repeat: no-repeat;
   background-size: 17vh;
-  background-position: 91% 95%;
+  background-position: 91% 96%;
 }
 
 .container.page.reprint {
@@ -210,11 +210,18 @@ h1 {
   margin: 0 -1.25vh;
 }
 
+.container.page.next-prev.inactive {
+  background-color: #414141;
+}
+
+.container.page.next-prev.active {
+  background-color: #009ee3;
+}
+
 .container.page.next-prev {
   width: 60vh;
   height: 8.75vh;
   padding: 0vh;
-  background-color: #009ee3;
 }
 
 .container.menu {
@@ -466,11 +473,10 @@ h1 {
 
 .btn.btn-default.menu-grid-button.menu-main-control:hover {
   background-image: url("../../assets/img/Icon-Menu-Grid-Control-Inverse.svg");
-  background-color: #009ee3;
 }
 
 .btn.btn-default.menu-grid-button.menu-main-print:hover {
-  background-image: url("../../assets/img/Icon-Menu-Grid-Print-Inverse.svg");
+  background-image: url("../../assets/img/Icon-Menu-Grid-Print-Hover.svg");
 }
 
 .btn.btn-default.menu-grid-button.menu-main-cal:hover {
