@@ -94,7 +94,7 @@ function updateSuitableJobData(suitablePrintJobs, detailsPrefix)
 
     var pageNumber = i18next.t('page-x-of-n');
     var nPages = Math.floor(suitablePrintJobs.jobs.length / jobsPerPage);
-    if ((suitablePrintJobs.length % jobsPerPage) > 0 || nPages == 0)
+    if ((suitablePrintJobs.jobs.length % jobsPerPage) > 0 || nPages == 0)
         nPages++;
 
     pageNumber = pageNumber.replace('$1', currentPage + 1)
