@@ -20,7 +20,7 @@ public class ActiveErrorStatusData
     private final Stenographer steno = StenographerFactory.getStenographer(ActiveErrorStatusData.class.getName());
     private String printerID;
     //Errors
-    private ArrayList<ErrorDetails> activeErrors;
+    private ArrayList<ErrorDetails> currentErrors;
 
     public ActiveErrorStatusData()
     {
@@ -34,12 +34,15 @@ public class ActiveErrorStatusData
             this.printerID = printerID;
             Printer printer = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
 
-            if (printer != null && !printer.getActiveErrors().isEmpty())
+            // The activeErrors list only contains those uncleared errors for which isRequireUserToClear() returns true.
+            // The Root interface needs all the current errors, so the currentError list is used, as it contains
+            // all the uncleared errors that have not been suppressed.
+            if (printer != null && !printer.getCurrentErrors().isEmpty())
             {
-                activeErrors = new ArrayList<>();
-                for (int errorCounter = 0; errorCounter < printer.getActiveErrors().size(); errorCounter++)
+                currentErrors = new ArrayList<>();
+                for (int errorCounter = 0; errorCounter < printer.getCurrentErrors().size(); errorCounter++)
                 {
-                    FirmwareError currentError = printer.getActiveErrors().get(errorCounter);
+                    FirmwareError currentError = printer.getCurrentErrors().get(errorCounter);
                     if (currentError == FirmwareError.NOZZLE_FLUSH_NEEDED &&
                         printer.printerStatusProperty().get() == PrinterStatus.IDLE)
                     {
@@ -47,9 +50,12 @@ public class ActiveErrorStatusData
                     }
                     else
                     {
-                        activeErrors.add(new ErrorDetails(currentError.getBytePosition(),
+                        String errorMessage = BaseLookup.i18n(currentError.getErrorMessageKey());
+                        if (errorMessage.length() > 64)
+                            errorMessage = BaseLookup.i18n(currentError.getErrorMessageKey() + ".short");
+                        currentErrors.add(new ErrorDetails(currentError.getBytePosition(),
                                                           BaseLookup.i18n(currentError.getErrorTitleKey()),
-                                                          BaseLookup.i18n(currentError.getErrorMessageKey()),
+                                                          errorMessage,
                                                           currentError.isRequireUserToClear(),
                                                           currentError.getOptions()
                                                                       .stream()
@@ -57,14 +63,14 @@ public class ActiveErrorStatusData
                                                                       .reduce(0, (a, b) -> a | b)));
                     }
                 }
-                if (activeErrors.isEmpty())
-                    activeErrors = null;
+                if (currentErrors.isEmpty())
+                    currentErrors = null;
             }
         }
         catch (Exception ex)
         {
             steno.exception("ActiveErrorStatusData.updateFromPrinterData threw exception", ex);
-            activeErrors = null;
+            currentErrors = null;
         }
     }
 
@@ -83,12 +89,12 @@ public class ActiveErrorStatusData
     @JsonProperty
     public ArrayList<ErrorDetails> getActiveErrors()
     {
-        return activeErrors;
+        return currentErrors;
     }
 
     @JsonProperty
     public void setActiveErrors(ArrayList<ErrorDetails> activeErrors)
     {
-        this.activeErrors = activeErrors;
+        this.currentErrors = activeErrors;
     }
 }
