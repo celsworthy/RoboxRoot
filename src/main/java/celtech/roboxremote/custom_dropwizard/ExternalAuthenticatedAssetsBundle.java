@@ -8,6 +8,7 @@ package celtech.roboxremote.custom_dropwizard;
 import celtech.roboxremote.security.User;
 import io.dropwizard.auth.Authenticator;
 import io.dropwizard.auth.basic.BasicCredentials;
+import java.nio.file.Path;
 
 /**
  *
@@ -15,9 +16,9 @@ import io.dropwizard.auth.basic.BasicCredentials;
  */
 public class ExternalAuthenticatedAssetsBundle extends AuthenticatedAssetsBundle {
 
-    private final String externalStaticDir;
+    private final Path externalStaticDir;
 
-    public ExternalAuthenticatedAssetsBundle(String externalStaticDir,
+    public ExternalAuthenticatedAssetsBundle(Path externalStaticDir,
             String resourcePath, String uriPath,
             Authenticator<BasicCredentials, User> authenticator) {
         super(resourcePath, uriPath, authenticator);

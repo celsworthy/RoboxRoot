@@ -11,22 +11,19 @@ import celtech.roboxremote.security.User;
 import io.dropwizard.Application;
 import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.forms.MultiPartBundle;
-import io.dropwizard.jersey.jackson.JsonProcessingExceptionMapper;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
-import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.util.EnumSet;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Enumeration;
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterRegistration;
 import libertysystems.stenographer.Stenographer;
 import libertysystems.stenographer.StenographerFactory;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlets.CrossOriginFilter;
 
 /**
  *
@@ -68,13 +65,20 @@ public class Root extends Application<RoboxRemoteConfiguration>
         bootstrap.addBundle(new MultiPartBundle());
 		
         String externalStaticDir = BaseConfiguration.getExternalStaticDirectory();
-        AuthenticatedAssetsBundle webControlAssetsBundle;
-
-        if (externalStaticDir != null)
+        AuthenticatedAssetsBundle webControlAssetsBundle = null;
+        
+        if (externalStaticDir != null && !externalStaticDir.isEmpty())
         {
-            webControlAssetsBundle = new ExternalAuthenticatedAssetsBundle(externalStaticDir,
-                    "/assets", "/", new RootAPIAuthenticator());
-        } else
+            Path externalStaticDirPath = Paths.get(externalStaticDir);
+            if (Files.isDirectory(externalStaticDirPath) &&
+                Files.isReadable(externalStaticDirPath))
+            {
+                webControlAssetsBundle = new ExternalAuthenticatedAssetsBundle(externalStaticDirPath,
+                        "/assets", "/", new RootAPIAuthenticator());
+            }
+        }
+        
+        if (webControlAssetsBundle == null)
         {
             webControlAssetsBundle = new AuthenticatedAssetsBundle(
                     "/assets", "/", new RootAPIAuthenticator());

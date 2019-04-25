@@ -51,8 +51,6 @@ public class ActiveErrorStatusData
                     else
                     {
                         String errorMessage = BaseLookup.i18n(currentError.getErrorMessageKey());
-                        if (errorMessage.length() > 64)
-                            errorMessage = BaseLookup.i18n(currentError.getErrorMessageKey() + ".short");
                         currentErrors.add(new ErrorDetails(currentError.getBytePosition(),
                                                           BaseLookup.i18n(currentError.getErrorTitleKey()),
                                                           errorMessage,
