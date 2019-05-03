@@ -26,9 +26,9 @@ public class ExternalAuthenticatedAssetServlet extends AuthenticatedAssetServlet
 
     private static final Stenographer steno = StenographerFactory.getStenographer(BaseConfiguration.class.getName());
 
-    private final String externalStaticDir;
+    private final Path externalStaticDir;
 
-    public ExternalAuthenticatedAssetServlet(String externalStaticDir,
+    public ExternalAuthenticatedAssetServlet(Path externalStaticDir,
             String resourcePath,
             String uriPath,
             String indexFile,
@@ -45,12 +45,10 @@ public class ExternalAuthenticatedAssetServlet extends AuthenticatedAssetServlet
 
         int assetsIx = absPath.lastIndexOf("assets");
         String relPath = absPath.substring(assetsIx + 7);
-        String newPath = externalStaticDir + relPath;
-
-        Path fileLocation = Paths.get(newPath);
+        Path fileLocation = externalStaticDir.resolve(relPath);
         if (Files.isReadable(fileLocation))
         {
-            steno.info("Get external resource: " + absPath);
+            System.out.println("Get external resource: " + absPath);
             return Files.readAllBytes(fileLocation);
         } else
         {

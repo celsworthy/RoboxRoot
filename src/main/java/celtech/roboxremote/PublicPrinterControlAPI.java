@@ -669,7 +669,6 @@ public class PublicPrinterControlAPI
     @Path("/clearError")
     public void clearError(@PathParam("printerID") String printerID, int errorCode)
     {
-        
         PrinterRegistry.getInstance().getRemotePrinters().get(printerID).clearError(FirmwareError.fromBytePosition(errorCode));
     }
 
