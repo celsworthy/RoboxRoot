@@ -174,11 +174,26 @@ function completePurgeUpdate(purgeData)
 
     if (showPanel1 || showPanel2)
     {
+        var filament1Temp = -1;
+        var filament2Temp = -1;
+        if (purgeData[1].attachedFilaments[0] !== undefined)
+        {
+            filament1Temp = purgeData[1].attachedFilaments[0].filamentTemperature;
+        }
+        if (purgeData[1].attachedFilaments[1] !== undefined)
+        {
+            filament1Temp = purgeData[1].attachedFilaments[1].filamentTemperature;
+        }
+        
         $('.purge-description').html(i18next.t('purge-instructions'));
-        completePanelUpdate('right-nozzle', showPanel1, purgeData[0].nozzle0LastFTemp,
-                            purgeData[1].attachedFilaments[0].filamentTemperature);
-        completePanelUpdate('left-nozzle', showPanel2, purgeData[0].nozzle1LastFTemp,
-                            purgeData[1].attachedFilaments[1].filamentTemperature);
+        completePanelUpdate('right-nozzle', 
+                            showPanel1, 
+                            purgeData[0].nozzle0LastFTemp, 
+                            filament1Temp);
+        completePanelUpdate('left-nozzle',
+                            showPanel2, 
+                            purgeData[0].nozzle1LastFTemp,
+                            filament2Temp);
         setPurgeButtonState();
     }
     else
