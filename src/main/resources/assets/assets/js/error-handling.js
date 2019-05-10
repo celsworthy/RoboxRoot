@@ -51,7 +51,7 @@ function handleActiveErrors(activeErrorData)
         if (errorMessage.length > 64)
             errorMessage = errorMessage.substring(0, 60).concat(" ...");
         $('#active-error-dialog').attr('data-error-code', activeErrorData.activeErrors[0].errorCode);
-        $('#active-error-title').text(activeErrorData.activeErrors[0].errorTitle);        
+        $('#active-error-title').text(activeErrorData.activeErrors[0].errorTitle);
         $('#active-error-summary').text(errorMessage);
         var options = activeErrorData.activeErrors[0].options;
         // ABORT(1),
