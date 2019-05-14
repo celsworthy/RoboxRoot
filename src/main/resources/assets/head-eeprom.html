@@ -24,7 +24,7 @@
         <div class="row rbx-white vertical-align" style="margin-bottom: 1.25vh; height: 13.75vh">
             <div class="panel" style="width: 42.5vh">
                 <div class="row vertical-align" style="width: 42.5vh">
-                    <div style="width:15vh; height: 13.75vh;"><img src="assets/img/Icon-RBX01-DM.svg" id="head-icon" style="margin: 1.875vh 2.5vh; width:10vh; height: 10vh;"></div>
+                    <div style="width:15vh; height: 13.75vh;"><img id="head-icon" style="margin: 1.875vh 2.5vh; width:10vh; height: 10vh;" src="assets/img/Icon-RBX01-DM.svg"></div>
                     <div style="line-height: 1.1; padding-bottom: 0.25vh"><span id="head-title-bold" class="rbx-text-bigbody" style="font-weight: 400;"></span><span id="head-title-light" class="rbx-text-bigbody" style="margin-bottom: 0.5vh;"></span><span class="rbx-text-bigbody" style="vertical-align: super; font-size: 2.1vh">™</span>
                         <span
                             class="rbx-text-bigbody">&nbsp;</span><span id="head-title-edition" class="rbx-text-bigbody" style="margin-bottom: 0.5vh;"></span>
@@ -75,7 +75,7 @@
                 <div class="row panel vertical-align rbx-text-bigbody" style="padding: 2vh 1.25vh 0vh;">
                     <div id="left-nozzle-heading" style="width: 26.125vh;">
                         <div class="row vertical-align" style="justify-content: center">
-                            <div style="display:inline-block; float:none; text-align:left;"><img src="assets/img/Icon-Tweak-Mat2.svg" style="width: 4.5vh"></div>
+                            <div style="display:inline-block; float:none; text-align:left;"><img style="width: 4.5vh" src="assets/img/Icon-Tweak-Mat2.svg"></div>
                             <div style="margin-left: 1.5vh; line-height: 1.1; display:inline-block; float:none; text-align:left;">
                                 <p class="no-margins localised" data-i18n="left-nozzle">Left Nozzle</p>
                                 <p class="no-margins localised rbx-colour-material-2" data-i18n="material-two" style="font-style: italic;">&nbsp;</p>
@@ -86,7 +86,7 @@
                     <div style="border-left: 0.5px solid #b2b2b2; width: 2.625vh; height:7.5vh"></div>
                     <div id="right-nozzle-title" style="width: 26.125vh;">
                         <div class="row vertical-align" style="justify-content: center;">
-                            <div><img src="assets/img/Icon-Tweak-Mat1.svg" style="width: 4.5vh"></div>
+                            <div><img style="width: 4.5vh" src="assets/img/Icon-Tweak-Mat1.svg"></div>
                             <div style="margin-left: 1.5vh;  line-height: 1.1">
                                 <p class="no-margins localised" data-i18n="right-nozzle">Right Nozzle</p>
                                 <p class="no-margins localised rbx-colour-material-1" data-i18n="material-one" style="font-style: italic;">&nbsp;</p>
@@ -101,19 +101,15 @@
                 <div class="row panel vertical-align" style="padding: 0vh 1.25vh; font-size: 0;">
                     <div style="width: 24.875vh">
                         <form class="form-inline">
-                            <div class="form-group no-margins rbx-invisible"><button class="btn btn-default rbx-spinner minus mat2" type="button" data-dir="down"></button><input class="form-control rbx-numeric-input small" type="text" readonly="" id="hp-left-x" step="0.05" precision="2" style="width:11vh; margin: 0vh 0.9375vh">
-                                <button
-                                    class="btn btn-default rbx-spinner add mat2" type="button" data-dir="up"></button>
-                            </div>
+                            <div class="form-group no-margins rbx-invisible"><button class="btn btn-default rbx-spinner minus mat2" data-dir="down" type="button"></button><input class="form-control rbx-numeric-input small" type="text" id="hp-left-x" step="0.05" precision="2" style="width:11vh; margin: 0vh 0.9375vh"
+                                    readonly=""><button class="btn btn-default rbx-spinner add mat2" data-dir="up" type="button"></button></div>
                         </form>
                     </div>
                     <div class="no-padding text-center localised" i18n-data="b" style="width:5.25vh;"><span class="localised" data-i18n="x" style="font-size:5vh;line-height:1;">X</span></div>
                     <div style="width: 24.875vh">
                         <form class="form-inline">
-                            <div class="form-group no-margins"><button class="btn btn-default rbx-spinner minus mat1" type="button" data-dir="down"></button><input class="form-control rbx-numeric-input small" type="text" readonly="" id="hp-right-x" step="0.05" precision="2" style="width:11vh; margin: 0vh 0.9375vh">
-                                <button
-                                    class="btn btn-default rbx-spinner add mat1" type="button" data-dir="up"></button>
-                            </div>
+                            <div class="form-group no-margins"><button class="btn btn-default rbx-spinner minus mat1" data-dir="down" type="button"></button><input class="form-control rbx-numeric-input small" type="text" id="hp-right-x" step="0.05" precision="2" style="width:11vh; margin: 0vh 0.9375vh"
+                                    readonly=""><button class="btn btn-default rbx-spinner add mat1" data-dir="up" type="button"></button></div>
                         </form>
                     </div>
                 </div>
@@ -124,19 +120,15 @@
                 <div class="row panel vertical-align" style="padding: 0vh 1.25vh; font-size: 0;">
                     <div style="width: 24.875vh">
                         <form class="form-inline">
-                            <div class="form-group no-margins rbx-invisible"><button class="btn btn-default rbx-spinner minus mat2" type="button" data-dir="down"></button><input class="form-control rbx-numeric-input small" type="text" readonly="" id="hp-left-y" step="0.05" precision="2" style="width:11vh; margin: 0vh 0.9375vh">
-                                <button
-                                    class="btn btn-default rbx-spinner add mat2" type="button" data-dir="up"></button>
-                            </div>
+                            <div class="form-group no-margins rbx-invisible"><button class="btn btn-default rbx-spinner minus mat2" data-dir="down" type="button"></button><input class="form-control rbx-numeric-input small" type="text" id="hp-left-y" step="0.05" precision="2" style="width:11vh; margin: 0vh 0.9375vh"
+                                    readonly=""><button class="btn btn-default rbx-spinner add mat2" data-dir="up" type="button"></button></div>
                         </form>
                     </div>
                     <div class="no-padding text-center localised" i18n-data="b" style="width:5.25vh;"><span class="localised" data-i18n="y" style="font-size:5vh;line-height:1;">Y</span></div>
                     <div style="width: 24.875vh">
                         <form class="form-inline">
-                            <div class="form-group no-margins"><button class="btn btn-default rbx-spinner minus mat1" type="button" data-dir="down"></button><input class="form-control rbx-numeric-input small" type="text" readonly="" id="hp-right-y" step="0.05" precision="2" style="width:11vh; margin: 0vh 0.9375vh">
-                                <button
-                                    class="btn btn-default rbx-spinner add mat1" type="button" data-dir="up"></button>
-                            </div>
+                            <div class="form-group no-margins"><button class="btn btn-default rbx-spinner minus mat1" data-dir="down" type="button"></button><input class="form-control rbx-numeric-input small" type="text" id="hp-right-y" step="0.05" precision="2" style="width:11vh; margin: 0vh 0.9375vh"
+                                    readonly=""><button class="btn btn-default rbx-spinner add mat1" data-dir="up" type="button"></button></div>
                         </form>
                     </div>
                 </div>
@@ -147,19 +139,15 @@
                 <div class="row panel vertical-align" style="padding: 0vh 1.25vh; font-size: 0;">
                     <div style="width: 24.875vh">
                         <form class="form-inline">
-                            <div class="form-group no-margins rbx-invisible"><button class="btn btn-default rbx-spinner minus mat2" type="button" data-dir="down"></button><input class="form-control rbx-numeric-input small" type="text" readonly="" id="hp-left-z" step="0.05" precision="2" style="width:11vh; margin: 0vh 0.9375vh">
-                                <button
-                                    class="btn btn-default rbx-spinner add mat2" type="button" data-dir="up"></button>
-                            </div>
+                            <div class="form-group no-margins rbx-invisible"><button class="btn btn-default rbx-spinner minus mat2" data-dir="down" type="button"></button><input class="form-control rbx-numeric-input small" type="text" id="hp-left-z" step="0.05" precision="2" style="width:11vh; margin: 0vh 0.9375vh"
+                                    readonly=""><button class="btn btn-default rbx-spinner add mat2" data-dir="up" type="button"></button></div>
                         </form>
                     </div>
                     <div class="no-padding text-center localised" i18n-data="b" style="width:5.25vh;"><span class="localised" data-i18n="z" style="font-size:5vh;line-height:1;">Z</span></div>
                     <div style="width: 24.875vh">
                         <form class="form-inline">
-                            <div class="form-group no-margins"><button class="btn btn-default rbx-spinner minus mat1" type="button" data-dir="down"></button><input class="form-control rbx-numeric-input small" type="text" readonly="" id="hp-right-z" step="0.05" precision="2" style="width:11vh; margin: 0vh 0.9375vh">
-                                <button
-                                    class="btn btn-default rbx-spinner add mat1" type="button" data-dir="up"></button>
-                            </div>
+                            <div class="form-group no-margins"><button class="btn btn-default rbx-spinner minus mat1" data-dir="down" type="button"></button><input class="form-control rbx-numeric-input small" type="text" id="hp-right-z" step="0.05" precision="2" style="width:11vh; margin: 0vh 0.9375vh"
+                                    readonly=""><button class="btn btn-default rbx-spinner add mat1" data-dir="up" type="button"></button></div>
                         </form>
                     </div>
                 </div>
@@ -170,19 +158,15 @@
                 <div class="row panel vertical-align" style="padding: 0vh 1.25vh 2vh; font-size: 0;">
                     <div style="width: 24.875vh">
                         <form class="form-inline">
-                            <div class="form-group no-margins rbx-invisible"><button class="btn btn-default rbx-spinner minus mat2" type="button" data-dir="down"></button><input class="form-control rbx-numeric-input small" type="text" readonly="" id="hp-left-b" step="0.05" precision="2" style="width:11vh; margin: 0vh 0.9375vh">
-                                <button
-                                    class="btn btn-default rbx-spinner add mat2" type="button" data-dir="up"></button>
-                            </div>
+                            <div class="form-group no-margins rbx-invisible"><button class="btn btn-default rbx-spinner minus mat2" data-dir="down" type="button"></button><input class="form-control rbx-numeric-input small" type="text" id="hp-left-b" step="0.05" precision="2" style="width:11vh; margin: 0vh 0.9375vh"
+                                    readonly=""><button class="btn btn-default rbx-spinner add mat2" data-dir="up" type="button"></button></div>
                         </form>
                     </div>
                     <div class="no-padding text-center localised" i18n-data="b" style="width:5.25vh;"><span id="b-heading" class="localised" data-i18n="b" style="font-size:5vh;line-height:1;">B</span></div>
                     <div style="width: 24.875vh">
                         <form class="form-inline">
-                            <div class="form-group no-margins rbx-invisible"><button class="btn btn-default rbx-spinner minus mat1" type="button" data-dir="down"></button><input class="form-control rbx-numeric-input small" type="text" readonly="" id="hp-right-b" step="0.05" precision="2" style="width:11vh; margin: 0vh 0.9375vh">
-                                <button
-                                    class="btn btn-default rbx-spinner add mat1" type="button" data-dir="up"></button>
-                            </div>
+                            <div class="form-group no-margins rbx-invisible"><button class="btn btn-default rbx-spinner minus mat1" data-dir="down" type="button"></button><input class="form-control rbx-numeric-input small" type="text" id="hp-right-b" step="0.05" precision="2" style="width:11vh; margin: 0vh 0.9375vh"
+                                    readonly=""><button class="btn btn-default rbx-spinner add mat1" data-dir="up" type="button"></button></div>
                         </form>
                     </div>
                 </div>
@@ -190,8 +174,8 @@
         </div>
     </div>
     <div class="container footer">
-        <div class="btn-group btn-group-justified" role="group"><a class="btn btn-default menu-bottom-button" role="button" href="menu-grid.html?id=main" id="left-button"> <img src="assets/img/Icon_Menu_Back.svg" class="menu-bottom-button-icon"></a><a class="btn btn-default menu-bottom-button" role="button" href="home.html"
-                id="middle-button"> <img src="assets/img/Icon-Home.svg" id="home-button" style="height:6.5vh;"></a><a class="btn btn-default menu-bottom-button" role="button" href="#" id="right-button"> <img src="assets/img/Icon-Menu-Save.svg" class="menu-bottom-button-icon"></a></div>
+        <div class="btn-group btn-group-justified" role="group"><a class="btn btn-default menu-bottom-button" role="button" id="left-button" href="menu-grid.html?id=main"> <img class="menu-bottom-button-icon" src="assets/img/Icon_Menu_Back.svg"></a><a class="btn btn-default menu-bottom-button" role="button" id="middle-button"
+                href="home.html"> <img id="home-button" style="height:6.5vh;" src="assets/img/Icon-Home.svg"></a><a class="btn btn-default menu-bottom-button" role="button" id="right-button" href="#"> <img class="menu-bottom-button-icon" src="assets/img/Icon-Menu-Save.svg"></a></div>
     </div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
