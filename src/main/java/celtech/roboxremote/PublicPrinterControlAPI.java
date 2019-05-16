@@ -706,12 +706,41 @@ public class PublicPrinterControlAPI
     @Path("/ejectStuckMaterial")
     public void ejectStuckMaterial(@PathParam("printerID") String printerID, int materialNumber)//, BooleanParam safetyOn)
     {
-        try
+        Printer selectedPrinter =  PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+        if (selectedPrinter != null && selectedPrinter.headProperty().get() != null)
         {
-            PrinterRegistry.getInstance().getRemotePrinters().get(printerID).ejectStuckMaterial(materialNumber - 1, false, null, false);// safetyOn.get());
-        } catch (PrinterException ex)
-        {
-            steno.error("Printer exception whilst ejecting stuck material" + materialNumber + ": " + ex);
+            try
+            {
+                int nozzleNumber = -1;
+                Head.HeadType ht = selectedPrinter.headProperty().get().headTypeProperty().get();
+                if (materialNumber == 2 && ht == Head.HeadType.DUAL_MATERIAL_HEAD)
+                    nozzleNumber = 0;
+                else if (materialNumber == 1)
+                {
+                    switch (ht)
+                    {
+                        case DUAL_MATERIAL_HEAD:
+                            nozzleNumber = 1;
+                            break;
+
+                        case SINGLE_MATERIAL_HEAD:
+                            nozzleNumber = 0;
+                            break;
+                        
+                        default:
+                            break;
+                    }
+                }
+
+                if (nozzleNumber >= 0)
+                    PrinterRegistry.getInstance().getRemotePrinters().get(printerID).ejectStuckMaterial(nozzleNumber, false, null, false);// safetyOn.get());
+                else
+                    steno.error("Invalid material number " + materialNumber);
+            } 
+            catch (PrinterException ex)
+            {
+                steno.error("Printer exception whilst ejecting stuck material" + materialNumber + ": " + ex);
+            }
         }
     }
     
