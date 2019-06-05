@@ -3,6 +3,7 @@ package celtech.roboxremote;
 import celtech.roboxbase.comms.remote.clear.WifiStatusResponse;
 import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxbase.configuration.MachineType;
+import celtech.roboxbase.utils.ScriptUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import libertysystems.stenographer.Stenographer;
