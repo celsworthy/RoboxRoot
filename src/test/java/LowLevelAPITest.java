@@ -2,7 +2,7 @@
 import celtech.roboxbase.comms.tx.QueryFirmwareVersion;
 import celtech.roboxbase.comms.tx.RoboxTxPacketFactory;
 import celtech.roboxbase.comms.tx.TxPacketTypeEnum;
-import celtech.roboxremote.LowLevelAPI;
+import celtech.roboxremote.api.LowLevelAPI;
 import io.dropwizard.jackson.Jackson;
 import org.junit.After;
 import org.junit.Before;

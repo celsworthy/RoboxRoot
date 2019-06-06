@@ -1,4 +1,4 @@
-import celtech.roboxremote.PublicPrinterControlAPI;
+import celtech.roboxremote.api.PublicPrinterControlAPI;
 import io.dropwizard.jackson.Jackson;
 import org.junit.After;
 import org.junit.Before;

@@ -1,4 +1,4 @@
-package celtech.roboxremote;
+package celtech.roboxremote.api;
 
 import celtech.roboxbase.comms.remote.Configuration;
 import celtech.roboxbase.comms.rx.RoboxRxPacket;
@@ -22,6 +22,8 @@ import celtech.roboxbase.configuration.Filament;
 import celtech.roboxbase.configuration.datafileaccessors.FilamentContainer;
 import celtech.roboxbase.postprocessor.PrintJobStatistics;
 import celtech.roboxbase.printerControl.model.PrinterException;
+import celtech.roboxremote.PrintJobPersister;
+import celtech.roboxremote.PrinterRegistry;
 import com.codahale.metrics.annotation.Timed;
 import java.io.File;
 import java.io.IOException;
