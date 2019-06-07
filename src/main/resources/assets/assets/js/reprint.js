@@ -39,6 +39,7 @@ function updateSuitableJobData(suitablePrintJobs, detailsPrefix)
 
                 $(jobRow).removeClass('rbx-hidden')
                          .attr('job-id', job.printJobID)
+                         .attr('job-path', job.printJobPath)
                          .off('click') // Remove all callbacks
                          .on('click', reprintJob);
                 $(jobRow + " .job-name").html(job.printJobName);
