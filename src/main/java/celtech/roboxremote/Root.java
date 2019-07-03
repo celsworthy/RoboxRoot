@@ -1,12 +1,12 @@
 package celtech.roboxremote;
 
-import celtech.roboxremote.api.PublicPrinterControlAPI;
-import celtech.roboxremote.api.LowLevelAPI;
-import celtech.roboxremote.api.DiscoveryAPI;
-import celtech.roboxremote.api.AdminAPI;
 import celtech.roboxbase.configuration.BaseConfiguration;
-import celtech.roboxbase.configuration.MachineType;
 import celtech.roboxbase.utils.ApplicationUtils;
+import celtech.roboxremote.api.AdminAPI;
+import celtech.roboxremote.api.DiscoveryAPI;
+import celtech.roboxremote.api.LowLevelAPI;
+import celtech.roboxremote.api.PublicPrinterControlAPI;
+import celtech.roboxremote.comms.CameraCommsManager;
 import celtech.roboxremote.custom_dropwizard.AuthenticatedAssetsBundle;
 import celtech.roboxremote.custom_dropwizard.ExternalAuthenticatedAssetsBundle;
 import celtech.roboxremote.security.RootAPIAuthFilter;
@@ -42,6 +42,8 @@ public class Root extends Application<RoboxRemoteConfiguration>
     private CoreManager coreManager = null;
     private String defaultApplicationPIN = "";
     private static final String accessPINKey = "AccessPIN";
+    
+    private CameraCommsManager cameraCommsManager;
 
     public static void main(String[] args) throws Exception
     {
@@ -66,6 +68,8 @@ public class Root extends Application<RoboxRemoteConfiguration>
         BaseConfiguration.initialise(Root.class);
         coreManager = new CoreManager();
 
+        cameraCommsManager = new CameraCommsManager();
+        
         bootstrap.addBundle(new MultiPartBundle());
 		
         String externalStaticDir = BaseConfiguration.getExternalStaticDirectory();
@@ -109,7 +113,7 @@ public class Root extends Application<RoboxRemoteConfiguration>
         final AdminAPI adminAPI = new AdminAPI();
         final LowLevelAPI lowLevelAPI = new LowLevelAPI();
         final PublicPrinterControlAPI highLevelAPI = new PublicPrinterControlAPI();
-        final DiscoveryAPI discoveryAPI = new DiscoveryAPI();
+        final DiscoveryAPI discoveryAPI = new DiscoveryAPI(cameraCommsManager);
 
         final AppSetupHealthCheck healthCheck
                 = new AppSetupHealthCheck(configuration.getDefaultPIN());
@@ -153,6 +157,8 @@ public class Root extends Application<RoboxRemoteConfiguration>
             steno.error("unable to get current IP " + e.getMessage());
         }
 
+        cameraCommsManager.start();
+        
         ApplicationUtils.outputApplicationStartupBanner(this.getClass());
         steno.info("Root started up with IP " + hostAddress);
     }
@@ -161,6 +167,8 @@ public class Root extends Application<RoboxRemoteConfiguration>
     {
         steno.info("Stopping ...");
 
+        cameraCommsManager.shutdown();
+        
         BaseConfiguration.shutdown();
         System.exit(0);
     }

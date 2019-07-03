@@ -1,10 +1,12 @@
 package celtech.roboxremote.api;
 
+import celtech.roboxbase.comms.remote.clear.ListCamerasResponse;
 import celtech.roboxbase.comms.remote.clear.ListPrintersResponse;
 import celtech.roboxbase.comms.remote.clear.WhoAreYouResponse;
 import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxbase.printerControl.model.Printer;
 import celtech.roboxremote.PrinterRegistry;
+import celtech.roboxremote.comms.CameraCommsManager;
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.net.Inet4Address;
@@ -40,8 +42,11 @@ public class DiscoveryAPI
     @JsonIgnore
     private static Stenographer steno = StenographerFactory.getStenographer(DiscoveryAPI.class.getName());
 
-    public DiscoveryAPI()
+    private final CameraCommsManager cameraCommsManager;
+    
+    public DiscoveryAPI(CameraCommsManager cameraCommsManager)
     {
+        this.cameraCommsManager = cameraCommsManager;
     }
     
     
@@ -62,6 +67,18 @@ public class DiscoveryAPI
         {
             return null;
         }
+    }
+    
+    @RolesAllowed("root")
+    @GET
+    @Timed
+    @Path("/listCameras")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public ListCamerasResponse listCameras()
+    {
+        ListCamerasResponse response = new ListCamerasResponse(cameraCommsManager.getAllCameraInfo());
+        return response;
+        // I think we want to call this from detected server
     }
 
     @GET
