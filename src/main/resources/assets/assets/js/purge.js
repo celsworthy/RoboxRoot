@@ -182,7 +182,7 @@ function completePurgeUpdate(purgeData)
         }
         if (purgeData[1].attachedFilaments[1] !== undefined)
         {
-            filament1Temp = purgeData[1].attachedFilaments[1].filamentTemperature;
+            filament2Temp = purgeData[1].attachedFilaments[1].filamentTemperature;
         }
         
         $('.purge-description').html(i18next.t('purge-instructions'));
