@@ -888,6 +888,12 @@ img.rbx-macro-panel {
   margin: 0px;
 }
 
+.overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .rbx-home-job-details {
   line-height: 3.3vh;
   text-align: left;
