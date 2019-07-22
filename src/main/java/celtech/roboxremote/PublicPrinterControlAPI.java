@@ -1,4 +1,4 @@
-package celtech.roboxremote.api;
+package celtech.roboxremote;
 
 import celtech.roboxbase.comms.exceptions.RoboxCommsException;
 import celtech.roboxbase.comms.remote.Configuration;
@@ -13,9 +13,6 @@ import celtech.roboxbase.printerControl.model.Printer;
 import celtech.roboxbase.printerControl.model.PrinterException;
 import celtech.roboxbase.utils.PrinterUtils;
 import celtech.roboxbase.utils.tasks.SimpleCancellable;
-import celtech.roboxremote.MountableMediaRegistry;
-import celtech.roboxremote.PrinterRegistry;
-import celtech.roboxremote.Utils;
 import celtech.roboxremote.rootDataStructures.ActiveErrorStatusData;
 import celtech.roboxremote.rootDataStructures.ControlStatusData;
 import celtech.roboxremote.rootDataStructures.HeadEEPROMData;

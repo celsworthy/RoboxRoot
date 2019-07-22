@@ -1,9 +1,5 @@
 package celtech.roboxremote;
 
-import celtech.roboxremote.api.PublicPrinterControlAPI;
-import celtech.roboxremote.api.LowLevelAPI;
-import celtech.roboxremote.api.DiscoveryAPI;
-import celtech.roboxremote.api.AdminAPI;
 import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxbase.configuration.MachineType;
 import celtech.roboxbase.utils.ApplicationUtils;
