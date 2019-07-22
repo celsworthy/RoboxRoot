@@ -35,5 +35,12 @@ public class UsbPrintData
         this.printJobPath = printJobPath;
     }
     
-    
+    @Override
+    public String toString()
+    {
+        String usbPrintDataString = "USBPrintData:\n"
+                + "Print Job ID: " + printJobID + "\n"
+                + "Print Job path: " + printJobPath;
+        return usbPrintDataString;
+    }
 }

@@ -58,7 +58,10 @@ function pinKeyClick()
 {
     var key_char = $(this).attr('char');
     var value = $(apinFocus).val();
-    $(apinFocus).val(value + key_char);
+    if (value.length < 4)
+    {
+        $(apinFocus).val(value + key_char);
+    }
 }
 
 function pinKeyBackspace()

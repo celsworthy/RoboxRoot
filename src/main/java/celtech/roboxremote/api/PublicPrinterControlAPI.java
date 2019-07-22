@@ -2,7 +2,6 @@ package celtech.roboxremote.api;
 
 import celtech.roboxbase.comms.exceptions.RoboxCommsException;
 import celtech.roboxbase.comms.remote.Configuration;
-import celtech.roboxbase.comms.remote.clear.SuitablePrintJob;
 import celtech.roboxbase.comms.rx.FirmwareError;
 import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxbase.configuration.Macro;
@@ -25,10 +24,10 @@ import celtech.roboxremote.rootDataStructures.MaterialStatusData;
 import celtech.roboxremote.rootDataStructures.NameStatusData;
 import celtech.roboxremote.rootDataStructures.NameTagFloat;
 import celtech.roboxremote.rootDataStructures.PrintAdjustData;
-import celtech.roboxremote.rootDataStructures.SuitablePrintJobListData;
 import celtech.roboxremote.rootDataStructures.PrintJobStatusData;
 import celtech.roboxremote.rootDataStructures.PurgeTarget;
 import celtech.roboxremote.rootDataStructures.StatusData;
+import celtech.roboxremote.rootDataStructures.SuitablePrintJobListData;
 import celtech.roboxremote.rootDataStructures.UsbPrintData;
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.jersey.params.BooleanParam;
@@ -943,6 +942,8 @@ public class PublicPrinterControlAPI
     @Path("/printUSBJob")
     public Response printUSBJob(@PathParam("printerID") String printerID, UsbPrintData usbPrintData)
     {
+        steno.info("Request to /printUSBJob with printer ID of - " + printerID + " and data - " + usbPrintData);
+        
         if (PrinterRegistry.getInstance() != null)
         {
             Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);

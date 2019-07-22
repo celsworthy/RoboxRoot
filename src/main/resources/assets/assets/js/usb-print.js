@@ -15,7 +15,7 @@ function printUSBJob()
 function updateUSBPrintData(suitablePrintJobs)
 {
     // From reprint.js
-    updateSuitableJobData(suitablePrintJobs, "no-usb-job-")
+    updateSuitableJobData(suitablePrintJobs, "no-usb-job-", printUSBJob)
 }
 
 function usbPrintInit()
