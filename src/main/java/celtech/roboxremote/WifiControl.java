@@ -25,7 +25,7 @@ public class WifiControl
         {
         } else
         {
-            String output = ScriptUtils.runScript(BaseConfiguration.getBinariesDirectory() + "enableDisableWifi.sh", wifiControl);
+            String output = ScriptUtils.runScript("enableDisableWifi.sh", wifiControl);
             STENO.info(output);
             result = (output != null);
         }
@@ -38,10 +38,10 @@ public class WifiControl
         String scriptOutput;
         if (BaseConfiguration.getMachineType() == MachineType.WINDOWS)
         {
-            scriptOutput = ScriptUtils.runScript(BaseConfiguration.getBinariesDirectory() + SCRIPT_BASE + ".bat");
+            scriptOutput = ScriptUtils.runScript(SCRIPT_BASE + ".bat");
         } else
         {
-            scriptOutput = ScriptUtils.runScript(BaseConfiguration.getBinariesDirectory() + SCRIPT_BASE + ".sh");
+            scriptOutput = ScriptUtils.runScript(SCRIPT_BASE + ".sh");
         }
 
         WifiStatusResponse response = null;
@@ -65,7 +65,7 @@ public class WifiControl
         {
         } else
         {
-            String output = ScriptUtils.runScript(BaseConfiguration.getBinariesDirectory() + "setupWifi.sh", ssidAndPassword);
+            String output = ScriptUtils.runScript("setupWifi.sh", ssidAndPassword);
             STENO.info(output);
             result = (output != null);
         }
