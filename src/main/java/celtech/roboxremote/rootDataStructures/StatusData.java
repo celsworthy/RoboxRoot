@@ -48,7 +48,7 @@ public class StatusData
     //Head
     private String headName;
     private String headTypeCode;
-            
+    private boolean valvesFitted;            
     private boolean dualMaterialHead;
     private int[] nozzleTemperature;
 
@@ -282,6 +282,7 @@ public class StatusData
             headTypeCode = printerHead.typeCodeProperty().get().trim();
 
             dualMaterialHead = printerHead.headTypeProperty().get() == Head.HeadType.DUAL_MATERIAL_HEAD;
+            valvesFitted = printerHead.valveTypeProperty().get() == Head.ValveType.FITTED;
 
             if (dualMaterialHead)
             {
@@ -300,6 +301,11 @@ public class StatusData
         else
         {
             headName = "";
+            headTypeCode = "";
+            dualMaterialHead = false;
+            valvesFitted = false;
+            canPurgeHead = false;
+            nozzleTemperature = null;
         }
 
         bedTemperature = printer.getPrinterAncillarySystems().bedTemperatureProperty().get();
@@ -595,6 +601,18 @@ public class StatusData
     }
 
     @JsonProperty
+    public boolean areValvesFitted()
+    {
+        return valvesFitted;
+    }
+
+    @JsonProperty
+    public void setValvesFitted(boolean valvesFitted)
+    {
+        this.valvesFitted = valvesFitted;
+    }
+
+    @JsonProperty
     public int getBedTemperature()
     {
         return bedTemperature;
@@ -709,7 +727,7 @@ public class StatusData
     @JsonProperty
     public void setNumberOfLayers(int numberOfLayers)
     {
-        this.totalDurationSeconds = numberOfLayers;
+        this.numberOfLayers = numberOfLayers;
     }
 
     @JsonProperty
