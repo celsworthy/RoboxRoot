@@ -55,7 +55,10 @@ function handleActiveErrors(activeErrorData)
         for (i = 0; i < activeErrorData.activeErrors.length; i++)
         {
             var errorCode = activeErrorData.activeErrors[i].errorCode;
-            if (errorAlreadySeen(errorCode))
+            if (errorCode === 25 || errorCode === 33 || errorCode === 41)
+            {
+                // Ignore these errors for now
+            } else if (errorAlreadySeen(errorCode))
             {
                 errorsToStore.push(errorCode);
             } else if (!$('#active-error-dialog').hasClass(activeErrorClass))
