@@ -74,6 +74,15 @@ function disableSpinnerValue(spinner)
                .addClass('rbx-invisible');
 }
 
+function getHeadSerialString(eData)
+{
+   return eData.typeCode +
+            '-' + eData.week + eData.year +
+            '-' + eData.ponumber +
+            '-' + eData.serialNumber +
+            '-' + eData.checksum;
+}
+
 function updateHeadEEPROMData(eData)
 {
     var typeCode = eData.typeCode;
@@ -91,12 +100,7 @@ function updateHeadEEPROMData(eData)
         $('#head-icon').attr('src', imageRoot + "Icon-" + typeCode + '.svg');
         $('#change-head-icon').attr('src', 'Icon-Head-Change-White.svg');
         
-        var serial = eData.typeCode +
-                     '-' + eData.week + eData.year +
-                     '-' + eData.ponumber +
-                     '-' + eData.serialNumber +
-                     '-' + eData.checksum;
-        $('#head-serial-number').html(serial);
+        $('#head-serial-number').html(getHeadSerialString(eData));
         var hoursUnit = i18next.t("hours");
         $('#head-print-hours').html(eData.hourCount.toFixed(0) + ' ' + hoursUnit);
         $('#head-max-temp').html(eData.maxTemp.toFixed(0) + '\xB0' + 'C');
@@ -157,6 +161,14 @@ function updateHeadEEPROMData(eData)
     lastEData = eData;
 }
 
+function checkForHeadChange(eData)
+{
+    var newSerial = getHeadSerialString(eData);
+    var currentSerial = $('#head-serial-number').html();
+    if (newSerial !== currentSerial)
+        updateHeadEEPROMData(eData);
+}
+
 function removeHead()
 {
     if ($(this).hasClass('disabled'))
@@ -181,7 +193,7 @@ function headEEPromInit()
             .catch(function(error) { handleException(error, 'head-eprom-init-error', true); });
         setInterval(function() {
             promiseGetCommandToRoot(selectedPrinter + '/remoteControl/headEEPROM', null)
-            .then(updateHeadEEPROMData)
+            .then(checkForHeadChange)
             .catch(function(error) { handleException(error, 'head-eprom-init-error', true); }) 
         }, 2000);
 	}
