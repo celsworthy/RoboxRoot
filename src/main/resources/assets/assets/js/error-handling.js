@@ -51,10 +51,10 @@ function handleActiveErrors(activeErrorData)
     
     if (activeErrorData.activeErrors !== null &&
 	    activeErrorData.activeErrors.length > 0)
-    {   
-        for (i = 0; i < activeErrorData.activeErrors.length; i++)
+    {
+        for (activeError of activeErrorData.activeErrors)
         {
-            var errorCode = activeErrorData.activeErrors[i].errorCode;
+            var errorCode = activeError.errorCode;
             if (errorCode === 25 || errorCode === 33 || errorCode === 41)
             {
                 // Ignore these errors for now
@@ -65,13 +65,13 @@ function handleActiveErrors(activeErrorData)
             {
                 errorsToStore.push(errorCode);
                 // Error needs to be raised for the user
-                var errorMessage = activeErrorData.activeErrors[0].errorMessage;
+                var errorMessage = activeError.errorMessage;
                 if (errorMessage.length > 64)
                     errorMessage = errorMessage.substring(0, 60).concat(" ...");
                 $('#active-error-dialog').attr('data-error-code', errorCode);
-                $('#active-error-title').text(activeErrorData.activeErrors[0].errorTitle);
+                $('#active-error-title').text(activeError.errorTitle);
                 $('#active-error-summary').text(errorMessage);
-                var options = activeErrorData.activeErrors[0].options;
+                var options = activeError.options;
                 // ABORT(1),
                 // CLEAR_CONTINUE(2),
                 // RETRY(4),
@@ -127,9 +127,9 @@ function errorAlreadySeen(errorCode)
     var storedErrorCodes = JSON.parse(sessionStorage.getItem(errorsStorageKey));
     if (storedErrorCodes !== null && storedErrorCodes.length > 0)
     {
-        for (i = 0; i < storedErrorCodes.length; i++)
+        for (storedCode of storedErrorCodes)
         {
-            if (storedErrorCodes[i] === errorCode)
+            if (storedCode === errorCode)
             {
                 return true;
             }

@@ -29,7 +29,7 @@ function updateSuitableJobData(suitablePrintJobs, detailsPrefix, printFunction)
                         .removeClass('inactive')
                         .addClass('active')
         $("#job-row-none").addClass('rbx-hidden')
-        for (var jobIndex = 0; jobIndex < jobsPerPage; jobIndex++)
+        for (let jobIndex = 0; jobIndex < jobsPerPage; jobIndex++)
         {
             var jobRow = "#job-row-" + (jobIndex + 1);
             var pjIndex = startIndex + jobIndex;

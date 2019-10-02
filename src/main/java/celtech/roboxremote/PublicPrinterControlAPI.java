@@ -223,6 +223,7 @@ public class PublicPrinterControlAPI
                                     HeadEEPROMData eData)
     {
         Response response = null;
+        //steno.info("setNozzleParams(\"" + printerID + "\",)");
         try
         {
             Printer printer = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
