@@ -4,7 +4,7 @@ var lastEData = null;
 function getHeadText(typeCode, field)
 {
     var headText = i18next.t(typeCode + field);
-    if (headText === null || headText.length <1)
+    if (typeCode === null || headText.length <1)
         headText = "&nbsp;";
     return headText;
 }
@@ -74,6 +74,15 @@ function disableSpinnerValue(spinner)
                .addClass('rbx-invisible');
 }
 
+function getHeadSerialString(eData)
+{
+   return eData.typeCode +
+            '-' + eData.week + eData.year +
+            '-' + eData.ponumber +
+            '-' + eData.serialNumber +
+            '-' + eData.checksum;
+}
+
 function updateHeadEEPROMData(eData)
 {
     var typeCode = eData.typeCode;
@@ -84,21 +93,40 @@ function updateHeadEEPROMData(eData)
     $('#head-description').html(getHeadText(typeCode, "-description"));
     $('#head-nozzles').html(getHeadText(typeCode, "-nozzles"));
     $('#head-feeds').html(getHeadText(typeCode, "-feeds"));
-    $('#head-icon').attr('src', imageRoot + "Icon-" + typeCode + '.svg');
     
-    var serial = eData.typeCode +
-                     '-' + eData.week + eData.year +
-                     '-' + eData.ponumber +
-                     '-' + eData.serialNumber +
-                     '-' + eData.checksum;
-    $('#head-serial-number').html(serial);
-    var hoursUnit = i18next.t("hours");
-    $('#head-print-hours').html(eData.hourCount.toFixed(0) + ' ' + hoursUnit);
-    $('#head-max-temp').html(eData.maxTemp.toFixed(0) + '\xB0' + 'C');
+    if (typeCode !== null)
+    {
+        $('#head-icon').css('visibility', 'visible');
+        $('#head-icon').attr('src', imageRoot + "Icon-" + typeCode + '.svg');
+        $('#change-head-icon').attr('src', 'Icon-Head-Change-White.svg');
+        
+        $('#head-serial-number').html(getHeadSerialString(eData));
+        var hoursUnit = i18next.t("hours");
+        $('#head-print-hours').html(eData.hourCount.toFixed(0) + ' ' + hoursUnit);
+        $('#head-max-temp').html(eData.maxTemp.toFixed(0) + '\xB0' + 'C');
+
+        setSpinnerValue('#hp-right-x', eData.rightNozzleXOffset);
+        setSpinnerValue('#hp-right-y', eData.rightNozzleYOffset);
+        setSpinnerValue('#hp-right-z', eData.rightNozzleZOverrun);
+        
+        $('.require-head').removeClass('disabled');
+        $('.tm-symbol').css('visibility', 'visible');
+    }
+    else
+    {
+        $('#head-icon').css('visibility', 'hidden');
+        $('#change-head-icon').attr('src', 'Icon-Head-Change-Grey.svg');
+        $('#head-serial-number').html("&nbsp;");
+        $('#head-print-hours').html("&nbsp;");
+        $('#head-max-temp').html("&nbsp;");
+        disableSpinnerValue('#hp-right-x');
+        disableSpinnerValue('#hp-right-y');
+        disableSpinnerValue('#hp-right-z');
+        
+        $('.require-head').addClass('disabled');
+        $('.tm-symbol').css('visibility', 'hidden');
+    }
     
-    setSpinnerValue('#hp-right-x', eData.rightNozzleXOffset);
-    setSpinnerValue('#hp-right-y', eData.rightNozzleYOffset);
-    setSpinnerValue('#hp-right-z', eData.rightNozzleZOverrun);
     if (eData.valveFitted)
     {
         $('#b-heading').removeClass('dimmed-section');
@@ -133,8 +161,19 @@ function updateHeadEEPROMData(eData)
     lastEData = eData;
 }
 
+function checkForHeadChange(eData)
+{
+    var newSerial = getHeadSerialString(eData);
+    var currentSerial = $('#head-serial-number').html();
+    if (newSerial !== currentSerial)
+        updateHeadEEPROMData(eData);
+}
+
 function removeHead()
 {
+    if ($(this).hasClass('disabled'))
+        return;
+    
     performPrinterAction('/removeHead',
                          removeHeadStatus,
                          safetiesOn().toString());
@@ -152,6 +191,11 @@ function headEEPromInit()
         promiseGetCommandToRoot(selectedPrinter + '/remoteControl/headEEPROM', null)
             .then(updateHeadEEPROMData)
             .catch(function(error) { handleException(error, 'head-eprom-init-error', true); });
+        setInterval(function() {
+            promiseGetCommandToRoot(selectedPrinter + '/remoteControl/headEEPROM', null)
+            .then(checkForHeadChange)
+            .catch(function(error) { handleException(error, 'head-eprom-init-error', true); }) 
+        }, 2000);
 	}
 	else
 		goToHomeOrPrinterSelectPage();

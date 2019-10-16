@@ -1,8 +1,7 @@
-package celtech.roboxremote.api;
+package celtech.roboxremote;
 
 import celtech.roboxbase.comms.exceptions.RoboxCommsException;
 import celtech.roboxbase.comms.remote.Configuration;
-import celtech.roboxbase.comms.remote.clear.SuitablePrintJob;
 import celtech.roboxbase.comms.rx.FirmwareError;
 import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxbase.configuration.Macro;
@@ -14,9 +13,6 @@ import celtech.roboxbase.printerControl.model.Printer;
 import celtech.roboxbase.printerControl.model.PrinterException;
 import celtech.roboxbase.utils.PrinterUtils;
 import celtech.roboxbase.utils.tasks.SimpleCancellable;
-import celtech.roboxremote.MountableMediaRegistry;
-import celtech.roboxremote.PrinterRegistry;
-import celtech.roboxremote.Utils;
 import celtech.roboxremote.rootDataStructures.ActiveErrorStatusData;
 import celtech.roboxremote.rootDataStructures.ControlStatusData;
 import celtech.roboxremote.rootDataStructures.HeadEEPROMData;
@@ -25,10 +21,10 @@ import celtech.roboxremote.rootDataStructures.MaterialStatusData;
 import celtech.roboxremote.rootDataStructures.NameStatusData;
 import celtech.roboxremote.rootDataStructures.NameTagFloat;
 import celtech.roboxremote.rootDataStructures.PrintAdjustData;
-import celtech.roboxremote.rootDataStructures.SuitablePrintJobListData;
 import celtech.roboxremote.rootDataStructures.PrintJobStatusData;
 import celtech.roboxremote.rootDataStructures.PurgeTarget;
 import celtech.roboxremote.rootDataStructures.StatusData;
+import celtech.roboxremote.rootDataStructures.SuitablePrintJobListData;
 import celtech.roboxremote.rootDataStructures.UsbPrintData;
 import com.codahale.metrics.annotation.Timed;
 import io.dropwizard.jersey.params.BooleanParam;
@@ -205,7 +201,7 @@ public class PublicPrinterControlAPI
             @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException
     {
         String uploadedFileLocation = BaseConfiguration.getPrintSpoolDirectory() + printerID + fileDetail.getFileName();
-        steno.info("Printing gcode file " + uploadedFileLocation);
+        steno.debug("Printing gcode file " + uploadedFileLocation);
         // save it
         utils.writeToFile(uploadedInputStream, uploadedFileLocation);
 
@@ -227,6 +223,7 @@ public class PublicPrinterControlAPI
                                     HeadEEPROMData eData)
     {
         Response response = null;
+        //steno.info("setNozzleParams(\"" + printerID + "\",)");
         try
         {
             Printer printer = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
@@ -338,13 +335,13 @@ public class PublicPrinterControlAPI
                         {
                             case "r":
                                 printer.changeEFeedRateMultiplier(0.01 * ntfData.getValue());
-                                steno.info("Setting R feed rate to " + 0.01 * ntfData.getValue());
-                                steno.info("feedRateEMultiplierProperty now " + printer.getPrinterAncillarySystems().feedRateEMultiplierProperty().floatValue() * 100.0F);
+                                steno.debug("Setting R feed rate to " + 0.01 * ntfData.getValue());
+                                steno.debug("feedRateEMultiplierProperty now " + printer.getPrinterAncillarySystems().feedRateEMultiplierProperty().floatValue() * 100.0F);
                                 break;
                             case "l":
                                 printer.changeDFeedRateMultiplier(0.01 * ntfData.getValue());
-                                steno.info("Setting L feed rate to " + 0.01 * ntfData.getValue());
-                                steno.info("feedRateDMultiplierProperty now " + printer.getPrinterAncillarySystems().feedRateDMultiplierProperty().floatValue() * 100.0F);
+                                steno.debug("Setting L feed rate to " + 0.01 * ntfData.getValue());
+                                steno.debug("feedRateDMultiplierProperty now " + printer.getPrinterAncillarySystems().feedRateDMultiplierProperty().floatValue() * 100.0F);
                                 break;
                             default:
                                 ok = false;
@@ -514,7 +511,7 @@ public class PublicPrinterControlAPI
             {
                 Thread purgeThread = new Thread(() ->
                 {
-                    steno.info("Starting purge.");
+                    steno.debug("Starting purge.");
                     SimpleCancellable cancel = cancelRunningPurge(true);
                     int nozzle0Temperature = targetTemperature0;
                     int nozzle1Temperature = targetTemperature1;
@@ -606,7 +603,7 @@ public class PublicPrinterControlAPI
                     finally
                     {
                         cancel.cancelled().set(true);
-                        steno.info("Finishing purge.");                    
+                        steno.debug("Finishing purge.");                    
                     }
                 });
                 purgeThread.setName("Purge_" + printerID);
@@ -943,6 +940,8 @@ public class PublicPrinterControlAPI
     @Path("/printUSBJob")
     public Response printUSBJob(@PathParam("printerID") String printerID, UsbPrintData usbPrintData)
     {
+        steno.debug("Request to /printUSBJob with printer ID of - " + printerID + " and data - " + usbPrintData);
+        
         if (PrinterRegistry.getInstance() != null)
         {
             Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);

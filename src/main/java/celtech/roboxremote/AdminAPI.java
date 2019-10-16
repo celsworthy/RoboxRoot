@@ -1,4 +1,4 @@
-package celtech.roboxremote.api;
+package celtech.roboxremote;
 
 import celtech.roboxbase.BaseLookup;
 import celtech.roboxbase.comms.remote.Configuration;
@@ -9,10 +9,6 @@ import celtech.roboxbase.configuration.Filament;
 import celtech.roboxbase.configuration.MachineType;
 import celtech.roboxbase.configuration.datafileaccessors.FilamentContainer;
 import celtech.roboxbase.printerControl.model.Printer;
-import celtech.roboxremote.PrinterRegistry;
-import celtech.roboxremote.Root;
-import celtech.roboxremote.Utils;
-import celtech.roboxremote.WifiControl;
 import com.codahale.metrics.annotation.Timed;
 import java.io.IOException;
 import java.io.InputStream;

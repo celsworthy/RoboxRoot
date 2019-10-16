@@ -888,6 +888,12 @@ img.rbx-macro-panel {
   margin: 0px;
 }
 
+.overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .rbx-home-job-details {
   line-height: 3.3vh;
   text-align: left;
@@ -1695,5 +1701,8 @@ img.rbx-colour-button {
 .btn.btn-default.menu-grid-button.menu-main-usb-print:hover {
   background-color: #009ee3;
   background-image: url("Icon-Menu-Grid-Reprint-Inverse.svg");
+}
+
+.machine-logo {
 }
 

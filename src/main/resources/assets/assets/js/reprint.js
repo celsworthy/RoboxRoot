@@ -10,7 +10,7 @@ function reprintJob()
     }
 }
 
-function updateSuitableJobData(suitablePrintJobs, detailsPrefix)
+function updateSuitableJobData(suitablePrintJobs, detailsPrefix, printFunction)
 {
     var currentPage =  getUrlParameter('p');
     if (suitablePrintJobs.jobs.length == 0 ||
@@ -29,7 +29,7 @@ function updateSuitableJobData(suitablePrintJobs, detailsPrefix)
                         .removeClass('inactive')
                         .addClass('active')
         $("#job-row-none").addClass('rbx-hidden')
-        for (var jobIndex = 0; jobIndex < jobsPerPage; jobIndex++)
+        for (let jobIndex = 0; jobIndex < jobsPerPage; jobIndex++)
         {
             var jobRow = "#job-row-" + (jobIndex + 1);
             var pjIndex = startIndex + jobIndex;
@@ -41,7 +41,7 @@ function updateSuitableJobData(suitablePrintJobs, detailsPrefix)
                          .attr('job-id', job.printJobID)
                          .attr('job-path', job.printJobPath)
                          .off('click') // Remove all callbacks
-                         .on('click', reprintJob);
+                         .on('click', printFunction);
                 $(jobRow + " .job-name").html(job.printJobName);
                 $(jobRow + " .job-created").html(nbsp);
                 $(jobRow + " .job-duration").html(secondsToHM(job.durationInSeconds));
@@ -105,7 +105,7 @@ function updateSuitableJobData(suitablePrintJobs, detailsPrefix)
 
 function updateReprintData(suitablePrintJobs)
 {
-    updateSuitableJobData(suitablePrintJobs, "no-reprints-")
+    updateSuitableJobData(suitablePrintJobs, "no-reprints-", reprintJob)
 }
 
 function reprintInit()

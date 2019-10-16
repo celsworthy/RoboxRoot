@@ -109,9 +109,8 @@ function processAddedAndRemovedPrinters(printerIDs)
 {
     var printersToDelete = new Array();
     var printersToAdd = new Array();
-    for (var printerIDIndex = 0; printerIDIndex < connectedPrinterIDs.length; printerIDIndex++)
+    for (printerIDToConsider of connectedPrinterIDs)
     {
-        var printerIDToConsider = connectedPrinterIDs[printerIDIndex];
         if (printerIDs.indexOf(printerIDToConsider) < 0)
         {
             //Not in the list of discovered printers - we need to delete it
@@ -119,9 +118,8 @@ function processAddedAndRemovedPrinters(printerIDs)
         }
     }
 
-    for (var printerIDIndex = 0; printerIDIndex < printerIDs.length; printerIDIndex++)
+    for (printerIDToConsider of printerIDs)
     {
-        var printerIDToConsider = printerIDs[printerIDIndex];
         if (connectedPrinterIDs.indexOf(printerIDToConsider) < 0)
         {
             //Not in the list - we need to add it
@@ -158,9 +156,8 @@ function updatePrinterStatuses()
 	}
     else
     {
-		for (var printerIndex = 0; printerIndex < connectedPrinterIDs.length; printerIndex++)
+		for (printerID of connectedPrinterIDs)
 		{
-			var printerID = connectedPrinterIDs[printerIndex];
 			promisePrinterStatus(printerID)
                 .then(updatePrinterStatus)
                 .catch()

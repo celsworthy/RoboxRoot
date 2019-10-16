@@ -1,11 +1,10 @@
-package celtech.roboxremote.api;
+package celtech.roboxremote;
 
 import celtech.roboxbase.comms.remote.clear.ListCamerasResponse;
 import celtech.roboxbase.comms.remote.clear.ListPrintersResponse;
 import celtech.roboxbase.comms.remote.clear.WhoAreYouResponse;
 import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxbase.printerControl.model.Printer;
-import celtech.roboxremote.PrinterRegistry;
 import celtech.roboxremote.comms.CameraCommsManager;
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.annotation.JsonIgnore;
