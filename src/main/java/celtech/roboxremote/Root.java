@@ -2,10 +2,6 @@ package celtech.roboxremote;
 
 import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxbase.utils.ApplicationUtils;
-import celtech.roboxremote.api.AdminAPI;
-import celtech.roboxremote.api.DiscoveryAPI;
-import celtech.roboxremote.api.LowLevelAPI;
-import celtech.roboxremote.api.PublicPrinterControlAPI;
 import celtech.roboxremote.comms.CameraCommsManager;
 import celtech.roboxremote.custom_dropwizard.AuthenticatedAssetsBundle;
 import celtech.roboxremote.custom_dropwizard.ExternalAuthenticatedAssetsBundle;
