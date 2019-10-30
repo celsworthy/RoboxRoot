@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import libertysystems.stenographer.Stenographer;
 import libertysystems.stenographer.StenographerFactory;
 
@@ -19,7 +20,7 @@ public class CameraCommsManager extends Thread
     
     private final CameraDeviceDetector cameraDeviceDetector;
     
-    private final Map<DetectedDevice, CameraInfo> activeCameras;
+    private Map<DetectedDevice, CameraInfo> activeCameras;
     
     private boolean keepRunning = true;
     
@@ -42,27 +43,32 @@ public class CameraCommsManager extends Thread
             List<DetectedDevice> attachedCameras = cameraDeviceDetector.searchForDevices();
 
             //Now new connections
-            List<DetectedDevice> camerasToConnect = new ArrayList<>();
+            Map<DetectedDevice, CameraInfo> newActiveCameras = new HashMap<>();
+            Set<DetectedDevice> currentActiveCameras = activeCameras.keySet();
+            
             attachedCameras.forEach(connectedCam ->
             {
-                if (!activeCameras.keySet().contains(connectedCam))
+                if (!currentActiveCameras.contains(connectedCam))
                 {
-                    camerasToConnect.add(connectedCam);
-                }
-            });
-
-            camerasToConnect.forEach((detectedCameraToConnect) -> {
-                if (detectedCameraToConnect instanceof DetectedCamera)
-                {
-                    STENO.debug("We have found a new camera " + detectedCameraToConnect);
-                    CameraInfo cameraInfo = assessCamera((DetectedCamera) detectedCameraToConnect);
-                    activeCameras.put(detectedCameraToConnect, cameraInfo);
+                    if (connectedCam instanceof DetectedCamera)
+                    {
+                        // Add new Cameras
+                        STENO.debug("We have found a new camera " + connectedCam);
+                        CameraInfo cameraInfo = assessCamera((DetectedCamera) connectedCam);
+                        newActiveCameras.put(connectedCam, cameraInfo);
+                    } else
+                    {
+                        STENO.debug("We have found a device that is not a camera with handle " + connectedCam);
+                    }
                 } else
                 {
-                    STENO.debug("We have found a device that is not a camera with handle " + detectedCameraToConnect);
+                    // Retain cameras that are not new
+                    newActiveCameras.put(connectedCam, activeCameras.get(connectedCam));
                 }
             });
 
+            activeCameras = newActiveCameras;
+            
             long endOfRunTime = System.currentTimeMillis();
             long runTime = endOfRunTime - startOfRunTime;
             long sleepTime = 500 - runTime;
