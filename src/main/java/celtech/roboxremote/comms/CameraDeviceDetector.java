@@ -23,8 +23,8 @@ public class CameraDeviceDetector extends DeviceDetector
     private static final String CAM_DETECTOR_COMMAND = "/home/pi/ARM-32bit/Root/cameraDetector.sh";
     private static final String CAM_FIND_INFO_COMMAND = "/home/pi/ARM-32bit/Root/findCameraInfo.sh";
     
-    private static final String BASE_MOTION_CONTROL_HANDLE = "http://localhost:8101/";
-    private static final String BASE_MOTION_STREAM_HANDLE = "http://localhost:8102/";
+    private static final String MOTION_CONTROL_HANDLE_PORT = ":8101/";
+    private static final String MOTION_STREAM_HANDLE_PORT = ":8102/";
     
     @Override
     public List<DetectedDevice> searchForDevices()
@@ -66,7 +66,7 @@ public class CameraDeviceDetector extends DeviceDetector
         return detectedCameras;
     }
     
-    public CameraInfo findCameraInformation(String detectedCameraHandle)
+    public CameraInfo findCameraInformation(String detectedCameraHandle, String serverIP)
     {
         List<String> cameraInformation = new ArrayList<>();
 
@@ -91,12 +91,15 @@ public class CameraDeviceDetector extends DeviceDetector
         String cameraName = cameraInformation.get(0);
         String cameraNumber = cameraInformation.get(1);
         
+        String motionControlHandle = "http://" + serverIP + MOTION_CONTROL_HANDLE_PORT;
+        String motionStreamHandle = "http://" + serverIP + MOTION_STREAM_HANDLE_PORT;
+        
         CameraInfo cameraInfo = new CameraInfo();
         cameraInfo.setUdevName(detectedCameraHandle);
         cameraInfo.setCameraName(cameraName);
         cameraInfo.setCameraNumber(Integer.parseInt(cameraNumber));
-        cameraInfo.setMotionControlHandle(BASE_MOTION_CONTROL_HANDLE + cameraNumber + "/");
-        cameraInfo.setMotionStreamHandle(BASE_MOTION_STREAM_HANDLE + cameraNumber + "/");
+        cameraInfo.setMotionControlHandle(motionControlHandle + cameraNumber + "/");
+        cameraInfo.setMotionStreamHandle(motionStreamHandle + cameraNumber + "/");
         return cameraInfo;
     }
 }

@@ -24,6 +24,8 @@ public class CameraCommsManager extends Thread
     
     private boolean keepRunning = true;
     
+    private String serverIP = "Unknown";
+    
     public CameraCommsManager()
     {
         cameraDeviceDetector = new CameraDeviceDetector();
@@ -88,7 +90,7 @@ public class CameraCommsManager extends Thread
     
     private CameraInfo assessCamera(DetectedCamera detectedCamera)
     {
-        CameraInfo cameraInfo = cameraDeviceDetector.findCameraInformation(detectedCamera.getConnectionHandle());
+        CameraInfo cameraInfo = cameraDeviceDetector.findCameraInformation(detectedCamera.getConnectionHandle(), serverIP);
         STENO.info(cameraInfo.toString());
         return cameraInfo;
     }
@@ -102,5 +104,10 @@ public class CameraCommsManager extends Thread
     public List<CameraInfo> getAllCameraInfo()
     {
         return new ArrayList<>(activeCameras.values());
+    }
+    
+    public void setServerIP(String serverIP)
+    {
+        this.serverIP = serverIP;
     }
 }

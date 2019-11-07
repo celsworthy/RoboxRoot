@@ -73,11 +73,21 @@ public class DiscoveryAPI
     @Timed
     @Path("/listCameras")
     @Consumes(MediaType.APPLICATION_JSON)
-    public ListCamerasResponse listCameras()
+    public ListCamerasResponse listCameras(@Context HttpServletRequest request)
     {
+        String hostAddress = "Unknown";
+
+        try
+        {
+            hostAddress = determineIPAddress();
+        } catch (SocketException e)
+        {
+            steno.error("/listCameras(" + request.getRemoteAddr() + "): unable to get current IP " + e.getMessage());
+        }
+        
+        cameraCommsManager.setServerIP(hostAddress);
         ListCamerasResponse response = new ListCamerasResponse(cameraCommsManager.getAllCameraInfo());
         return response;
-        // I think we want to call this from detected server
     }
 
     @GET
@@ -92,25 +102,7 @@ public class DiscoveryAPI
 
             try
             {
-                Enumeration<NetworkInterface> networkInterfaces = NetworkInterface
-                        .getNetworkInterfaces();
-                while (networkInterfaces.hasMoreElements())
-                {
-                    NetworkInterface ni = (NetworkInterface) networkInterfaces
-                            .nextElement();
-                    Enumeration<InetAddress> nias = ni.getInetAddresses();
-                    while (nias.hasMoreElements())
-                    {
-                        InetAddress ia = (InetAddress) nias.nextElement();
-                        if (!ia.isLinkLocalAddress()
-                                && !ia.isLoopbackAddress()
-                                && ia instanceof Inet4Address)
-                        {
-                            hostAddress = ia.getHostAddress();
-                            break;
-                        }
-                    }
-                }
+                hostAddress = determineIPAddress();
             } catch (SocketException e)
             {
                 steno.error("/whoareyou(" + request.getRemoteAddr() + "): unable to get current IP " + e.getMessage());
@@ -142,5 +134,32 @@ public class DiscoveryAPI
         {
             return null;
         }
+    }
+    
+    private String determineIPAddress() throws SocketException
+    {
+        String hostAddress = "Unknown";
+        
+        Enumeration<NetworkInterface> networkInterfaces = NetworkInterface
+                        .getNetworkInterfaces();
+        while (networkInterfaces.hasMoreElements())
+        {
+            NetworkInterface ni = (NetworkInterface) networkInterfaces
+                    .nextElement();
+            Enumeration<InetAddress> nias = ni.getInetAddresses();
+            while (nias.hasMoreElements())
+            {
+                InetAddress ia = (InetAddress) nias.nextElement();
+                if (!ia.isLinkLocalAddress()
+                        && !ia.isLoopbackAddress()
+                        && ia instanceof Inet4Address)
+                {
+                    hostAddress = ia.getHostAddress();
+                    break;
+                }
+            }
+        }
+        
+        return hostAddress;
     }
 }
