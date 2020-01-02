@@ -102,9 +102,10 @@ public class LowLevelAPI
                 } else if (remoteTx instanceof ReportErrors)
                 {
                    AckResponse ackResponse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getLastErrorResponse();
-                    // The firmeware errors in the last response will be empty because it has already been processed by Root.
+                    // The firmware errors in the last response will be empty because it has already been processed by Root.
                     // So replace it with the list of active errors.
-                    ackResponse.setFirmwareErrors(PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getActiveErrors());
+        //            ackResponse.setFirmwareErrors(PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getActiveErrors());
+                    ackResponse.setFirmwareErrors(PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getCurrentErrors());
                     rxPacket = ackResponse;
                  } else if (remoteTx instanceof ReadSendFileReport
                         && PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getPrintEngine().highIntensityCommsInProgressProperty().get())
