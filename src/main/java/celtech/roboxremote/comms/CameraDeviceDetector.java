@@ -3,10 +3,12 @@ package celtech.roboxremote.comms;
 import celtech.roboxbase.camera.CameraInfo;
 import celtech.roboxbase.comms.DetectedDevice;
 import celtech.roboxbase.comms.DeviceDetector;
+import celtech.roboxremote.utils.NetworkUtils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 import libertysystems.stenographer.Stenographer;
@@ -66,7 +68,7 @@ public class CameraDeviceDetector extends DeviceDetector
         return detectedCameras;
     }
     
-    public CameraInfo findCameraInformation(String detectedCameraHandle, String serverIP)
+    public CameraInfo findCameraInformation(String detectedCameraHandle)
     {
         List<String> cameraInformation = new ArrayList<>();
 
@@ -90,6 +92,15 @@ public class CameraDeviceDetector extends DeviceDetector
         
         String cameraName = cameraInformation.get(0);
         String cameraNumber = cameraInformation.get(1);
+        
+        String serverIP = "Unknown";
+        try
+        {
+            serverIP = NetworkUtils.determineIPAddress();
+        } catch (SocketException e)
+        {
+            STENO.error("Error when determining our IP address. " + e.getMessage());
+        }
         
         String motionControlHandle = "http://" + serverIP + MOTION_CONTROL_HANDLE_PORT;
         String motionStreamHandle = "http://" + serverIP + MOTION_STREAM_HANDLE_PORT;

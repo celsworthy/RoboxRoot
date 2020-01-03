@@ -6,14 +6,11 @@ import celtech.roboxbase.comms.remote.clear.WhoAreYouResponse;
 import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxbase.printerControl.model.Printer;
 import celtech.roboxremote.comms.CameraCommsManager;
+import celtech.roboxremote.utils.NetworkUtils;
 import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import javafx.scene.paint.Color;
@@ -75,17 +72,6 @@ public class DiscoveryAPI
     @Consumes(MediaType.APPLICATION_JSON)
     public ListCamerasResponse listCameras(@Context HttpServletRequest request)
     {
-        String hostAddress = "Unknown";
-
-        try
-        {
-            hostAddress = determineIPAddress();
-        } catch (SocketException e)
-        {
-            steno.error("/listCameras(" + request.getRemoteAddr() + "): unable to get current IP " + e.getMessage());
-        }
-        
-        cameraCommsManager.setServerIP(hostAddress);
         ListCamerasResponse response = new ListCamerasResponse(cameraCommsManager.getAllCameraInfo());
         return response;
     }
@@ -102,7 +88,7 @@ public class DiscoveryAPI
 
             try
             {
-                hostAddress = determineIPAddress();
+                hostAddress = NetworkUtils.determineIPAddress();
             } catch (SocketException e)
             {
                 steno.error("/whoareyou(" + request.getRemoteAddr() + "): unable to get current IP " + e.getMessage());
@@ -134,32 +120,5 @@ public class DiscoveryAPI
         {
             return null;
         }
-    }
-    
-    private String determineIPAddress() throws SocketException
-    {
-        String hostAddress = "Unknown";
-        
-        Enumeration<NetworkInterface> networkInterfaces = NetworkInterface
-                        .getNetworkInterfaces();
-        while (networkInterfaces.hasMoreElements())
-        {
-            NetworkInterface ni = (NetworkInterface) networkInterfaces
-                    .nextElement();
-            Enumeration<InetAddress> nias = ni.getInetAddresses();
-            while (nias.hasMoreElements())
-            {
-                InetAddress ia = (InetAddress) nias.nextElement();
-                if (!ia.isLinkLocalAddress()
-                        && !ia.isLoopbackAddress()
-                        && ia instanceof Inet4Address)
-                {
-                    hostAddress = ia.getHostAddress();
-                    break;
-                }
-            }
-        }
-        
-        return hostAddress;
     }
 }
