@@ -129,8 +129,9 @@ function updateJobStatusFields(statusField, etcField, progressBar, printJobData)
     {
         $(etcField).html(secondsToHM(printJobData.etcSeconds))
                    .closest('div')
-                   .removeClass('invisible');
-
+                   .removeClass('invisible')  // Show etc text.
+                   .next()
+                   .removeClass('invisible'); // Show etc icon.
         var timeElapsed = printJobData.totalDurationSeconds - printJobData.etcSeconds;
         if (timeElapsed < 0)
         {
@@ -152,7 +153,9 @@ function updateJobStatusFields(statusField, etcField, progressBar, printJobData)
     {
         $(etcField).html("&nbsp;")
                    .closest('div')
-                   .addClass('invisible');
+                   .addClass('invisible') // Hide etc text.
+                   .next()                   
+                   .addClass('invisible'); // Hide etc icon.
         if (printJobData.printerStatusEnumValue.match("^HEATING") &&
            printJobData.heatingProgress >= 0 &&
            printJobData.heatingProgress <= 100)
