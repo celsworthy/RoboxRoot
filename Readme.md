@@ -5,14 +5,14 @@ Building Root
 
 Root depends on a number of other projects. Download each project from GitHub:
 
-    git clone https://github.com/George-CEL/Configuration.git
-    git clone https://github.com/George-CEL/Stenographer.git
-    git clone https://github.com/George-CEL/Licence.git
-    git clone https://github.com/George-CEL/Language.git
-    git clone https://github.com/George-CEL/RoboxBase.git
-    git clone https://github.com/George-CEL/RoboxRoot.git
-    git clone https://github.com/George-CEL/GRoot.git
-    git clone https://github.com/George-CEL/Installer.git
+    git clone https://github.com/celsworthy/Configuration.git
+    git clone https://github.com/celsworthy/Stenographer.git
+    git clone https://github.com/celsworthy/Licence.git
+    git clone https://github.com/celsworthy/Language.git
+    git clone https://github.com/celsworthy/RoboxBase.git
+    git clone https://github.com/celsworthy/RoboxRoot.git
+    git clone https://github.com/celsworthy/GRoot.git
+    git clone https://github.com/celsworthy/Installer.git
 
 For development and debugging, use the NetBeans IDE (v9 or later).
 
