@@ -1,4 +1,4 @@
-Root is a http server for remotely controlling Robox 3D printers. It is intended to run on a Raspberry Pi with an optional 800x480 touch screen, but can be run on another platform, such as Windows 10.
+Root is an http server for remotely controlling Robox 3D printers. It is intended to run on a Raspberry Pi with an optional 800x480 touch screen, but can be run on another platform, such as Windows 10.
 
 Building Root
 =============
@@ -31,6 +31,7 @@ Build the projects in the following order:
 Each project can be built from the command line using Maven:
 
     cd <Project directory containing pom.xml>
+	set JAVA_HOME=<Path to JDK>
     mvn clean install
 
 Debugging Root
@@ -77,7 +78,7 @@ to
 
     %CEL_HOME%\Root\application.properties
 
-or create the later file containing text:
+or create the latter file containing text:
 
 	version = <version number>
 	
@@ -124,6 +125,9 @@ where the environment variable INSTALLER_HOME is set to the directory of the Ins
     export INSTALLER_HOME=/dev/Installer
     export RELEASE_VERSION=4.01.00
 
+Installing Root on a Raspberry Pi
+=================================
+
 To install Root on a clean version of Raspian, transfer the install package to /home/pi on the Raspberry Pi. Unzip it:
 
 	cd /home/pi
@@ -137,7 +141,7 @@ Install the Root service:
 
 	ARM-32bit/Root/installRoot.sh
 
-To upgrade an existing Root installation, transer the install package to /tmp on the Raspberry Pi. Restart Root:
+To upgrade an existing Root installation, transfer the install package to /tmp on the Raspberry Pi. Restart Root without rebooting (which would empty the /tmp folder):
 
 	/home/pi/ARM-32bit/Root/restartRoot.sh
 
