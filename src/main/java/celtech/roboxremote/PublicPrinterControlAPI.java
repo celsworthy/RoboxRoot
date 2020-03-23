@@ -927,7 +927,25 @@ public class PublicPrinterControlAPI
             Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
             Platform.runLater(() ->
             {
-                printerToUse.reprintJob(Utils.cleanInboundJSONString(printJobID));
+                printerToUse.printJob(Utils.cleanInboundJSONString(printJobID));
+            });
+         }
+
+        Response response = Response.ok().build();
+        return response;
+    }
+    
+    @POST
+    @Timed
+    @Path("/printJob")
+    public Response printJob(@PathParam("printerID") String printerID, String printJobID)
+    {
+        if (PrinterRegistry.getInstance() != null)
+        {
+            Printer printerToUse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID);
+            Platform.runLater(() ->
+            {
+                printerToUse.printJob(Utils.cleanInboundJSONString(printJobID));
             });
          }
 
