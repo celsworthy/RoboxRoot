@@ -237,7 +237,7 @@ function updatePrintJobStatus(printJobData)
         $('#idle-row').addClass('hidden');
         $('#progress-row').removeClass('hidden');
         var showJobRow = false;
-        if (printJobData.printJobName == null)
+        if (printJobData.printJobName == null || printJobData.printJobName.length == 0)
             $('#job-name').html(nbsp);
         else
         {
@@ -250,14 +250,16 @@ function updatePrintJobStatus(printJobData)
         else
         {
             $('#job-duration').html(secondsToHM(printJobData.totalDurationSeconds));
-            showJobRow = true;
+            // Only show panel if there is a name.
+            // showJobRow = true;
         }
-        if (printJobData.printJobSettings == null)
+        if (printJobData.printJobSettings == null || printJobData.printJobSettings.length == 0)
             $('#job-profile').html(nbsp);
         else
         {
             $('#job-profile').html(printJobData.printJobSettings);
-            showJobRow = true;
+            // Only show panel if there is a name.
+            // showJobRow = true;
         }
         if (showJobRow)
             $('#job-row').removeClass('hidden');

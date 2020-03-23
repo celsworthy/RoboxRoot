@@ -910,6 +910,7 @@ img.rbx-macro-panel {
   text-align: right;
   width: 12vh;
   margin-left: 2vh;
+  margin-right: 1vh;
 }
 
 .rbx-reprint-job:hover {
