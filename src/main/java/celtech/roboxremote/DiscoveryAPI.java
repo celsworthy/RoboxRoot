@@ -67,7 +67,7 @@ public class DiscoveryAPI
     @Timed(name = "getFingerprint")
     @Path("/whoareyou")
     @Consumes(MediaType.APPLICATION_JSON)
-    public WhoAreYouResponse getFingerprint(@Context HttpServletRequest request, @QueryParam("pc")String pc)
+    public WhoAreYouResponse getFingerprint(@Context HttpServletRequest request, @QueryParam("pc")String pc, @QueryParam("rid")String rid)
     {
         if (PrinterRegistry.getInstance() != null)
         {
@@ -117,10 +117,15 @@ public class DiscoveryAPI
                 }
             } 
             
+            String rootUUID = null;
+            if (rid != null && rid.equalsIgnoreCase("yes")) 
+                rootUUID = RootUUID.get();
+
             return new WhoAreYouResponse(PrinterRegistry.getInstance().getServerName(),
                     BaseConfiguration.getApplicationVersion(),
                     hostAddress,
-                    printerColours);
+                    printerColours,
+                    rootUUID);
         } else
         {
             return null;
