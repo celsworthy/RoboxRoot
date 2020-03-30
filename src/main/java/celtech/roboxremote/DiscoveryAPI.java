@@ -72,7 +72,12 @@ public class DiscoveryAPI
     @Consumes(MediaType.APPLICATION_JSON)
     public ListCamerasResponse listCameras(@Context HttpServletRequest request)
     {
-        ListCamerasResponse response = new ListCamerasResponse(cameraCommsManager.getAllCameraInfo());
+        ListCamerasResponse response = null;
+        try {
+            response = new ListCamerasResponse(cameraCommsManager.getAllCameraInfo());
+        } catch(Exception e) {
+            steno.exception("Exception in list camera response", e);
+        }
         return response;
     }
 
