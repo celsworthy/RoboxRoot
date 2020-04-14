@@ -11,7 +11,6 @@ import celtech.roboxbase.printerControl.model.Head;
 import celtech.roboxbase.printerControl.model.HeaterMode;
 import celtech.roboxbase.printerControl.model.NozzleHeater;
 import celtech.roboxbase.printerControl.model.Printer;
-import celtech.roboxbase.printerControl.model.Reel;
 import celtech.roboxbase.utils.ColourStringConverter;
 import celtech.roboxremote.PrinterRegistry;
 import com.fasterxml.jackson.annotation.JsonIgnore;

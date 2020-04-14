@@ -64,9 +64,9 @@ function setPanelState(panelId, state)
     {
         textColor = 'white';
         inputColor = 'black';
-        if (panelId == 'right-nozzle')
+        if (panelId == 'left-nozzle')
             materialColor = materialColor1;
-        else // left-nozzle
+        else // right-nozzle
             materialColor = materialColor2;
         $('#' + panelId + ' .rbx-spinner').removeClass('disabled');
     }
@@ -128,20 +128,19 @@ function completePanelUpdate(panelId, showPanel, lastTemp, newTemp)
 
 function updatePurgeHeadData(headData)
 {
-    // For a single nozzle head, the nozzle is physically on the right,
-    // but it is nozzle 0 in the array.
-    // For a dual nozzle head, the left nozzle is nozzle 0, the right nozzle is nozzle 1.
-    $('#right-nozzle').attr('nozzle-index', headData.nozzleCount - 1);
-    $('#right-nozzle-check').prop('checked', true);
-    updatePanelHeadData('right-nozzle', true, headData.rightNozzleLastFTemp);
+    // For a single nozzle head, the left nozzle is nozzle 0 in the array.
+    // For a dual nozzle head, the right nozzle is nozzle 0, the left nozzle is nozzle 1.
+    $('#left-nozzle').attr('nozzle-index', headData.nozzleCount - 1);
+    $('#left-nozzle-check').prop('checked', true);
+    updatePanelHeadData('left-nozzle', true, headData.leftNozzleLastFTemp);
     if (headData.dualMaterialHead && headData.nozzleCount > 1)
     {
-        $('#left-nozzle-check').prop('checked', true);
-        updatePanelHeadData('left-nozzle', true, headData.leftNozzleLastFTemp);
+        $('#right-nozzle-check').prop('checked', true);
+        updatePanelHeadData('right-nozzle', true, headData.rightNozzleLastFTemp);
     }
     else
     {
-        updatePanelHeadData('left-nozzle', false, 0);
+        updatePanelHeadData('right-nozzle', false, 0);
     }
     return headData;
 }
@@ -149,13 +148,13 @@ function updatePurgeHeadData(headData)
 function updatePurgeMaterialData(materialData)
 {
     if (materialData.attachedFilaments.length > 0)
-        updatePanelMaterialData('right-nozzle', materialData.attachedFilaments[0].filamentTemperature, materialData.attachedFilaments[0].filamentName);
-    else
-        updatePanelMaterialData('right-nozzle', null, null);
-    if (materialData.attachedFilaments.length > 1)
-        updatePanelMaterialData('left-nozzle', materialData.attachedFilaments[1].filamentTemperature, materialData.attachedFilaments[1].filamentName);
+        updatePanelMaterialData('left-nozzle', materialData.attachedFilaments[0].filamentTemperature, materialData.attachedFilaments[0].filamentName);
     else
         updatePanelMaterialData('left-nozzle', null, null);
+    if (materialData.attachedFilaments.length > 1)
+        updatePanelMaterialData('right-nozzle', materialData.attachedFilaments[1].filamentTemperature, materialData.attachedFilaments[1].filamentName);
+    else
+        updatePanelMaterialData('right-nozzle', null, null);
     return materialData;
 }
 
@@ -186,11 +185,11 @@ function completePurgeUpdate(purgeData)
         }
         
         $('.purge-description').html(i18next.t('purge-instructions'));
-        completePanelUpdate('right-nozzle', 
+        completePanelUpdate('left-nozzle', 
                             showPanel1, 
                             purgeData[0].nozzle0LastFTemp, 
                             filament1Temp);
-        completePanelUpdate('left-nozzle',
+        completePanelUpdate('right-nozzle',
                             showPanel2, 
                             purgeData[0].nozzle1LastFTemp,
                             filament2Temp);
@@ -210,8 +209,8 @@ function purgeInit()
 	{
         setMachineLogo();
         $('.rbx-spinner').on('click', onSpinnerClick);
-        $('#right-nozzle-check').on('click', switchPanelState);
         $('#left-nozzle-check').on('click', switchPanelState);
+        $('#right-nozzle-check').on('click', switchPanelState);
         $('#right-button').on('click', initiatePurge);
         // Set back button to return to the correct page.
         var from =  getUrlParameter('from');

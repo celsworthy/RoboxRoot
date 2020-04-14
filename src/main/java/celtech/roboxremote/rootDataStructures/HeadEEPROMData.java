@@ -74,11 +74,11 @@ public class HeadEEPROMData
                 tCal = printerHead.getNozzleHeaters().get(0).tCalProperty().get();
                 if (heaterCount > 1)
                 {
-                    leftNozzleLastFTemp = printerHead.getNozzleHeaters().get(0).lastFilamentTemperatureProperty().get();
-                    rightNozzleLastFTemp = printerHead.getNozzleHeaters().get(1).lastFilamentTemperatureProperty().get();
+                    rightNozzleLastFTemp = printerHead.getNozzleHeaters().get(0).lastFilamentTemperatureProperty().get();
+                    leftNozzleLastFTemp = printerHead.getNozzleHeaters().get(1).lastFilamentTemperatureProperty().get();
                 }
                 else
-                    rightNozzleLastFTemp = printerHead.getNozzleHeaters().get(0).lastFilamentTemperatureProperty().get();
+                    leftNozzleLastFTemp = printerHead.getNozzleHeaters().get(0).lastFilamentTemperatureProperty().get();
                 
             }
 
@@ -86,32 +86,32 @@ public class HeadEEPROMData
             nozzleCount = printerHead.getNozzles().size();
             if (nozzleCount > 1)
             {
-                leftNozzleXOffset = printerHead.getNozzles().get(0).xOffsetProperty().get();
-                leftNozzleYOffset = printerHead.getNozzles().get(0).yOffsetProperty().get();
-                rightNozzleXOffset = printerHead.getNozzles().get(1).xOffsetProperty().get();
-                rightNozzleYOffset = printerHead.getNozzles().get(1).yOffsetProperty().get();
+                rightNozzleXOffset = printerHead.getNozzles().get(0).xOffsetProperty().get();
+                rightNozzleYOffset = printerHead.getNozzles().get(0).yOffsetProperty().get();
+                leftNozzleXOffset = printerHead.getNozzles().get(1).xOffsetProperty().get();
+                leftNozzleYOffset = printerHead.getNozzles().get(1).yOffsetProperty().get();
                 if (valveFitted)
                 {
-                    leftNozzleBOffset = printerHead.getNozzles().get(0).bOffsetProperty().get();
-                    rightNozzleBOffset = printerHead.getNozzles().get(1).bOffsetProperty().get();
+                    rightNozzleBOffset = printerHead.getNozzles().get(0).bOffsetProperty().get();
+                    leftNozzleBOffset = printerHead.getNozzles().get(1).bOffsetProperty().get();
                 }
 
                 float leftNozzleOffset = printerHead.getNozzles().get(0).zOffsetProperty().get();
                 float rightNozzleOffset = printerHead.getNozzles().get(1).zOffsetProperty().get();
 
-                leftNozzleZOverrun = PrinterUtils.deriveNozzle1OverrunFromOffsets(leftNozzleOffset, rightNozzleOffset);
-                rightNozzleZOverrun = PrinterUtils.deriveNozzle2OverrunFromOffsets(leftNozzleOffset, rightNozzleOffset);
+                rightNozzleZOverrun = PrinterUtils.deriveNozzle1OverrunFromOffsets(leftNozzleOffset, rightNozzleOffset);
+                leftNozzleZOverrun = PrinterUtils.deriveNozzle2OverrunFromOffsets(leftNozzleOffset, rightNozzleOffset);
             }
             else
             {
-                rightNozzleXOffset = printerHead.getNozzles().get(0).xOffsetProperty().get();
-                rightNozzleYOffset = printerHead.getNozzles().get(0).yOffsetProperty().get();
+                leftNozzleXOffset = printerHead.getNozzles().get(0).xOffsetProperty().get();
+                leftNozzleYOffset = printerHead.getNozzles().get(0).yOffsetProperty().get();
                 if (valveFitted)
                 {
-                    rightNozzleBOffset = printerHead.getNozzles().get(0).bOffsetProperty().get();
+                    leftNozzleXOffset = printerHead.getNozzles().get(0).bOffsetProperty().get();
                 }
-                float rightNozzleOffset = printerHead.getNozzles().get(0).zOffsetProperty().get();
-                rightNozzleZOverrun = PrinterUtils.deriveNozzle1OverrunFromOffsets(rightNozzleOffset, rightNozzleOffset);
+                float leftNozzleXOffset = printerHead.getNozzles().get(0).zOffsetProperty().get();
+                leftNozzleXOffset = PrinterUtils.deriveNozzle1OverrunFromOffsets(leftNozzleXOffset, leftNozzleXOffset);
             }
         }
     }
