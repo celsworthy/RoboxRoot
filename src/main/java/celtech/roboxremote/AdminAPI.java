@@ -47,9 +47,11 @@ public class AdminAPI
     public Response shutdown()
     {
         steno.info("Shutdown requested");
-        Root.getInstance().stop();
-        // Should never get here.
-        return Response.serverError().build();    
+        if (!Root.getInstance().getIsStopping()) {
+            Root.getInstance().setIsStopping(true);
+            BaseLookup.getTaskExecutor().runDelayedOnBackgroundThread(() -> Root.getInstance().stop(), 10000);
+        }
+        return Response.ok().build();
     }
 
     @RolesAllowed("root")
@@ -59,8 +61,12 @@ public class AdminAPI
     @Path("/setServerName")
     public Response setServerName(String serverName)
     {
-        PrinterRegistry.getInstance().setServerName(Utils.cleanInboundJSONString(serverName));
-        return Response.ok().build();
+        if (Root.isResponding()) {
+            PrinterRegistry.getInstance().setServerName(Utils.cleanInboundJSONString(serverName));
+            return Response.ok().build();
+        }
+        else
+            return Response.serverError().status(503).build();
     }
 
     @RolesAllowed("root")
@@ -71,35 +77,43 @@ public class AdminAPI
             @FormDataParam("name") InputStream uploadedInputStream,
             @FormDataParam("name") FormDataContentDisposition fileDetail) throws IOException
     {
-        Response response = Response.serverError().build();
-
-        try
-        {
-            String fileName = fileDetail.getFileName();
-            steno.info("Asked to upgrade using file " + fileName);
-
-            long t1 = System.currentTimeMillis();
-            String uploadedFileLocation;
-            if (BaseConfiguration.getMachineType() != MachineType.WINDOWS)
+        Response response = null;
+        if (Root.isResponding()) {
+            try
             {
-                uploadedFileLocation = "/tmp/" + fileName;
-            } else
-            {
-                uploadedFileLocation = BaseConfiguration.getUserTempDirectory() + fileName;
+                String fileName = fileDetail.getFileName();
+                steno.info("Asked to upgrade using file " + fileName);
+
+                Root.getInstance().setIsUpgrading(true);
+                long t1 = System.currentTimeMillis();
+                String uploadedFileLocation;
+                if (BaseConfiguration.getMachineType() != MachineType.WINDOWS)
+                {
+                    uploadedFileLocation = "/tmp/" + fileName;
+                } else
+                {
+                    uploadedFileLocation = BaseConfiguration.getUserTempDirectory() + fileName;
+                }
+
+                // save it
+                utils.writeToFile(uploadedInputStream, uploadedFileLocation);
+
+                long t2 = System.currentTimeMillis();
+                steno.info("Upgrade file " + uploadedFileLocation + " has been uploaded in " + Long.toString(t2 - t1) + "ms");
+
+                // Shut down - but delay by 10 seconds to allow the response to go back to the requester first.
+                Root.getInstance().setIsStopping(true);
+                BaseLookup.getTaskExecutor().runDelayedOnBackgroundThread(() -> Root.getInstance().restart(), 10000);
+                response = Response.ok().build();
             }
-
-            // save it
-            utils.writeToFile(uploadedInputStream, uploadedFileLocation);
-            
-            long t2 = System.currentTimeMillis();
-            steno.info("Upgrade file " + uploadedFileLocation + " has been uploaded in " + Long.toString(t2 - t1) + "ms");
-
-            // Shut down - but delay by 10 seconds to allow the response to go back to the requester first.
-            BaseLookup.getTaskExecutor().runDelayedOnBackgroundThread(() -> Root.getInstance().restart(), 10000);
-            response = Response.ok().build();
-        } catch (IOException ex)
-        {
+            catch (IOException ex){
+                Root.getInstance().setIsUpgrading(false);
+                response = Response.serverError().build();
+            }
         }
+        else
+            response = Response.serverError().status(503).build();
+        
         return response;
     }
 
@@ -110,8 +124,12 @@ public class AdminAPI
     @Path("/updatePIN")
     public Response updatePIN(String newPIN)
     {
-        Root.getInstance().setApplicationPIN(Utils.cleanInboundJSONString(newPIN));
-        return Response.ok().build();
+        if (Root.isResponding()) {
+            Root.getInstance().setApplicationPIN(Utils.cleanInboundJSONString(newPIN));
+            return Response.ok().build();
+        }
+        else
+            return Response.serverError().status(503).build();
     }
 
     @POST
@@ -120,30 +138,33 @@ public class AdminAPI
     @Path("/resetPIN")
     public Response resetPIN(String printerSerial)
     {
+        if (Root.isResponding()) {
+            boolean serialMatches = false;
 
-        boolean serialMatches = false;
-
-        String serialToUse = Utils.cleanInboundJSONString(printerSerial);
-        if (serialToUse != null)
-        {
-            for (Printer printer : PrinterRegistry.getInstance().getRemotePrinters().values())
+            String serialToUse = Utils.cleanInboundJSONString(printerSerial);
+            if (serialToUse != null)
             {
-                if (printer.getPrinterIdentity().printerUniqueIDProperty().get().toLowerCase().endsWith(serialToUse.toLowerCase()))
+                for (Printer printer : PrinterRegistry.getInstance().getRemotePrinters().values())
                 {
-                    serialMatches = true;
-                    break;
+                    if (printer.getPrinterIdentity().printerUniqueIDProperty().get().toLowerCase().endsWith(serialToUse.toLowerCase()))
+                    {
+                        serialMatches = true;
+                        break;
+                    }
                 }
             }
-        }
 
-        if (serialMatches)
-        {
-            Root.getInstance().resetApplicationPINToDefault();
-            return Response.ok().build();
-        } else
-        {
-            return Response.serverError().build();
+            if (serialMatches)
+            {
+                Root.getInstance().resetApplicationPINToDefault();
+                return Response.ok().build();
+            } else
+            {
+                return Response.serverError().build();
+            }
         }
+        else
+            return Response.serverError().status(503).build();
     }
 
     @RolesAllowed("root")
@@ -153,11 +174,15 @@ public class AdminAPI
     @Path("/setWiFiCredentials")
     public Response setWiFiCredentials(String ssidAndPassword)
     {
-        steno.info("Asked to change wifi creds to " + ssidAndPassword);
-        if (WifiControl.setupWiFiCredentials(Utils.cleanInboundJSONString(ssidAndPassword)))
-            return Response.ok().build();
+        if (Root.isResponding()) {
+            steno.info("Asked to change wifi creds to " + ssidAndPassword);
+            if (WifiControl.setupWiFiCredentials(Utils.cleanInboundJSONString(ssidAndPassword)))
+                return Response.ok().build();
+            else
+                return Response.serverError().build();
+        }
         else
-            return Response.serverError().build();
+            return Response.serverError().status(503).build();
     }
 
     @RolesAllowed("root")
@@ -167,10 +192,14 @@ public class AdminAPI
     @Path("/enableDisableWifi")
     public Response enableDisableWifi(boolean enableWifi)
     {
-        if (WifiControl.enableWifi(enableWifi))
-            return Response.ok().build();
+        if (Root.isResponding()) {
+            if (WifiControl.enableWifi(enableWifi))
+                return Response.ok().build();
+            else
+                return Response.serverError().build();
+        }
         else
-            return Response.serverError().build();
+            return Response.serverError().status(503).build();
     }
 
     @RolesAllowed("root")
@@ -179,7 +208,10 @@ public class AdminAPI
     @Path("/getCurrentWifiState")
     public WifiStatusResponse getCurrentWifiSSID()
     {
-        return WifiControl.getCurrentWifiState();
+        if (Root.isResponding())
+            return WifiControl.getCurrentWifiState();
+        else
+            return null;
     }
 
     @RolesAllowed("root")
@@ -189,9 +221,13 @@ public class AdminAPI
     @Path("/saveFilament")
     public Response saveFilament(SerializableFilament serializableFilament)
     {
-        Filament filament = serializableFilament.getFilament();
-        FilamentContainer.getInstance().saveFilament(filament);
-        return Response.ok().build();
+        if (Root.isResponding()) {
+            Filament filament = serializableFilament.getFilament();
+            FilamentContainer.getInstance().saveFilament(filament);
+            return Response.ok().build();
+        }
+        else
+            return Response.serverError().status(503).build();
     }
 
     @RolesAllowed("root")
@@ -201,8 +237,27 @@ public class AdminAPI
     @Path("/deleteFilament")
     public Response deleteFilament(SerializableFilament serializableFilament)
     {
-        Filament filament = serializableFilament.getFilament();
-        FilamentContainer.getInstance().deleteFilament(filament);
-        return Response.ok().build();
+        if (Root.isResponding()) {
+            Filament filament = serializableFilament.getFilament();
+            FilamentContainer.getInstance().deleteFilament(filament);
+            return Response.ok().build();
+        }
+        else
+            return Response.serverError().status(503).build();
+    }
+
+    @RolesAllowed("root")
+    @POST
+    @Timed
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/setUpgradeState")
+    public Response setUpgradeState(boolean isUpgrading)
+    {
+        if (!Root.getInstance().getIsStopping()) {
+            Root.getInstance().setIsUpgrading(isUpgrading);
+            return Response.ok().build();
+        }
+        else
+            return Response.serverError().status(503).build();
     }
 }
