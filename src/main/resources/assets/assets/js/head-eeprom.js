@@ -15,18 +15,18 @@ function setHeadEPPROMData()
     {
         hpDebounceFlag = true;
         var eData = lastEData;
-		   eData.leftNozzleXOffset = $('#hp-left-x').val();
-		   eData.leftNozzleYOffset = $('#hp-left-y').val();
-		   eData.leftNozzleZOverrun = $('#hp-left-z').val();
+		   eData.rightNozzleXOffset = $('#hp-right-x').val();
+		   eData.rightNozzleYOffset = $('#hp-right-y').val();
+		   eData.rightNozzleZOverrun = $('#hp-right-z').val();
         if (eData.valveFitted)
-            eData.leftNozzleBOffset = $('#hp-left-b').val();
+            eData.rightNozzleBOffset = $('#hp-right-b').val();
         if (eData.nozzleCount > 1)
         {
-            eData.rightNozzleXOffset = $('#hp-right-x').val();
-            eData.rightNozzleYOffset = $('#hp-right-y').val();
-            eData.rightNozzleZOverrun = $('#hp-right-z').val();
+            eData.leftNozzleXOffset = $('#hp-left-x').val();
+            eData.leftNozzleYOffset = $('#hp-left-y').val();
+            eData.leftNozzleZOverrun = $('#hp-left-z').val();
             if (eData.valveFitted)
-                eData.rightNozzleBOffset = $('#hp-right-b').val();
+                eData.leftNozzleBOffset = $('#hp-left-b').val();
         }
         
         var selectedPrinter = localStorage.getItem(selectedPrinterVar);
@@ -42,7 +42,7 @@ function reportHEError(error)
         goToPrinterSelectPage();
     else
     {
-        var transMessage = i18next.t('failed-to-wright-to-head')
+        var transMessage = i18next.t('failed-to-write-to-head')
         alert(transMessage);
         headEEPromInit();
     }
@@ -105,9 +105,9 @@ function updateHeadEEPROMData(eData)
         $('#head-print-hours').html(eData.hourCount.toFixed(0) + ' ' + hoursUnit);
         $('#head-max-temp').html(eData.maxTemp.toFixed(0) + '\xB0' + 'C');
 
-        setSpinnerValue('#hp-left-x', eData.leftNozzleXOffset);
-        setSpinnerValue('#hp-left-y', eData.leftNozzleYOffset);
-        setSpinnerValue('#hp-left-z', eData.leftNozzleZOverrun);
+        setSpinnerValue('#hp-right-x', eData.rightNozzleXOffset);
+        setSpinnerValue('#hp-right-y', eData.rightNozzleYOffset);
+        setSpinnerValue('#hp-right-z', eData.rightNozzleZOverrun);
         
         $('.require-head').removeClass('disabled');
         $('.tm-symbol').css('visibility', 'visible');
@@ -119,9 +119,9 @@ function updateHeadEEPROMData(eData)
         $('#head-serial-number').html("&nbsp;");
         $('#head-print-hours').html("&nbsp;");
         $('#head-max-temp').html("&nbsp;");
-        disableSpinnerValue('#hp-left-x');
-        disableSpinnerValue('#hp-left-y');
-        disableSpinnerValue('#hp-left-z');
+        disableSpinnerValue('#hp-right-x');
+        disableSpinnerValue('#hp-right-y');
+        disableSpinnerValue('#hp-right-z');
         
         $('.require-head').addClass('disabled');
         $('.tm-symbol').css('visibility', 'hidden');
@@ -130,31 +130,31 @@ function updateHeadEEPROMData(eData)
     if (eData.valveFitted)
     {
         $('#b-heading').removeClass('dimmed-section');
-        setSpinnerValue('#hp-left-b', eData.leftNozzleBOffset);
+        setSpinnerValue('#hp-right-b', eData.rightNozzleBOffset);
     }
     else
     {
         $('#b-heading').addClass('dimmed-section');
-        disableSpinnerValue('#hp-left-b');
+        disableSpinnerValue('#hp-right-b');
     }
     if (eData.nozzleCount > 1)
     {
-        $('#right-nozzle-heading').removeClass('dimmed-section');
-        setSpinnerValue('#hp-right-x', eData.rightNozzleXOffset);
-        setSpinnerValue('#hp-right-y', eData.rightNozzleYOffset);
-        setSpinnerValue('#hp-right-z', eData.rightNozzleZOverrun);
+        $('#left-nozzle-heading').removeClass('dimmed-section');
+        setSpinnerValue('#hp-left-x', eData.leftNozzleXOffset);
+        setSpinnerValue('#hp-left-y', eData.leftNozzleYOffset);
+        setSpinnerValue('#hp-left-z', eData.leftNozzleZOverrun);
         if (eData.valveFitted)
-            setSpinnerValue('#hp-right-b', eData.rightNozzleBOffset);
+            setSpinnerValue('#hp-left-b', eData.leftNozzleBOffset);
         else
-            disableSpinnerValue('#hp-right-b');
+            disableSpinnerValue('#hp-left-b');
     }
     else
     {
-        $('#right-nozzle-heading').addClass('dimmed-section');
-        disableSpinnerValue('#hp-right-x');
-        disableSpinnerValue('#hp-right-y');
-        disableSpinnerValue('#hp-right-z');
-        disableSpinnerValue('#hp-right-b');
+        $('#left-nozzle-heading').addClass('dimmed-section');
+        disableSpinnerValue('#hp-left-x');
+        disableSpinnerValue('#hp-left-y');
+        disableSpinnerValue('#hp-left-z');
+        disableSpinnerValue('#hp-left-b');
     }
     
     hpDebounceFlag = false;
@@ -185,7 +185,7 @@ function headEEPromInit()
 	if (selectedPrinter !== null)
 	{
         setMachineLogo();
-        $('#left-button').on('click', setHeadEPPROMData);
+        $('#right-button').on('click', setHeadEPPROMData);
         $('.rbx-spinner').on('click', onSpinnerClick);
         $('.rbx-head-change').on('click', removeHead);
         promiseGetCommandToRoot(selectedPrinter + '/remoteControl/headEEPROM', null)

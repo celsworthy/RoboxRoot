@@ -193,18 +193,18 @@ function updateHeadStatus(headData)
 			$('#right-nozzle-title').html(nbsp);
             break;
         case 1:
-            $('#left-nozzle-title').parent().removeClass('rbx-hidden');
-            $('#right-nozzle-title').parent().addClass('rbx-hidden');
+            $('#left-nozzle-title').parent().addClass('rbx-hidden');
+            $('#right-nozzle-title').parent().removeClass('rbx-hidden');
             $('.temp-col').removeClass('temp-col-qtr');
             $('.temp-col').removeClass('temp-col-half');
             $('.temp-col').addClass('temp-col-third');
-            $('#right-nozzle-title').html(nbsp);
+            $('#left-nozzle-title').html(nbsp);
 			if (headData.headTypeCode === 'RBX01-SM' || headData.headTypeCode === 'RBX01-S2')
-				$('#left-nozzle-title').html(i18next.t('nozzles'));
+				$('#right-nozzle-title').html(i18next.t('nozzles'));
 			else
-				$('#left-nozzle-title').html(i18next.t('nozzle'));
+				$('#right-nozzle-title').html(i18next.t('nozzle'));
             if (headData.nozzleTemperature[0] !== null)
-                leftNozzleTemperature = headData.nozzleTemperature[0] + '\xB0' + 'C';
+                rightNozzleTemperature = headData.nozzleTemperature[0] + '\xB0' + 'C';
             break;
         case 2:
             $('#left-nozzle-title').parent().removeClass('rbx-hidden');
@@ -215,9 +215,9 @@ function updateHeadStatus(headData)
             $('#left-nozzle-title').html(i18next.t('left-nozzle'));
 			$('#right-nozzle-title').html(i18next.t('right-nozzle'));
             if (headData.nozzleTemperature[0] !== null)
-                rightNozzleTemperature = headData.nozzleTemperature[0] + '\xB0' + 'C';
+                leftNozzleTemperature = headData.nozzleTemperature[0] + '\xB0' + 'C';
             if (headData.nozzleTemperature[1] !== null)
-                leftNozzleTemperature = headData.nozzleTemperature[1] + '\xB0' + 'C';
+                rightNozzleTemperature = headData.nozzleTemperature[1] + '\xB0' + 'C';
             break;
     }
     $('#left-nozzle-temp').html(leftNozzleTemperature);
