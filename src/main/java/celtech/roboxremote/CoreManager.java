@@ -23,8 +23,6 @@ public class CoreManager implements Managed
     private RoboxCommsManager commsManager = null;
     private DiscoveryAgentRemoteEnd discoveryAgent = null;
 
-    private boolean isStopping = false;
-
     @Override
     public void start() throws Exception
     {
@@ -55,5 +53,4 @@ public class CoreManager implements Managed
         steno.info("Asked to shutdown Root");
         //com.sun.javafx.application.PlatformImpl.exit();
     }
-
 }

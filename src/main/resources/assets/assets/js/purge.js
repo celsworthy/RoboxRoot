@@ -128,8 +128,7 @@ function completePanelUpdate(panelId, showPanel, lastTemp, newTemp)
 
 function updatePurgeHeadData(headData)
 {
-    // For a single nozzle head, the nozzle is physically on the right,
-    // but it is nozzle 0 in the array.
+    // For a single nozzle head, the right nozzle is nozzle 0 in the array.
     // For a dual nozzle head, the left nozzle is nozzle 0, the right nozzle is nozzle 1.
     $('#right-nozzle').attr('nozzle-index', headData.nozzleCount - 1);
     $('#right-nozzle-check').prop('checked', true);
@@ -210,8 +209,8 @@ function purgeInit()
 	{
         setMachineLogo();
         $('.rbx-spinner').on('click', onSpinnerClick);
-        $('#right-nozzle-check').on('click', switchPanelState);
         $('#left-nozzle-check').on('click', switchPanelState);
+        $('#right-nozzle-check').on('click', switchPanelState);
         $('#right-button').on('click', initiatePurge);
         // Set back button to return to the correct page.
         var from =  getUrlParameter('from');

@@ -38,8 +38,9 @@ public class Root extends Application<RoboxRemoteConfiguration>
     private CoreManager coreManager = null;
     private String defaultApplicationPIN = "";
     private static final String accessPINKey = "AccessPIN";
-    
     private CameraCommsManager cameraCommsManager;
+    private boolean isStopping = false;
+    private boolean isUpgrading = false;
 
     public static void main(String[] args) throws Exception
     {
@@ -162,6 +163,13 @@ public class Root extends Application<RoboxRemoteConfiguration>
     public void stop()
     {
         steno.info("Stopping ...");
+        isStopping = true;
+        try {
+            coreManager.stop();
+        }
+        catch (Exception ex) {
+            steno.error("Caught exception during stop.");
+        }
 
         cameraCommsManager.shutdown();
         
@@ -206,5 +214,25 @@ public class Root extends Application<RoboxRemoteConfiguration>
     public void resetApplicationPINToDefault()
     {
         setApplicationPIN(defaultApplicationPIN);
+    }
+    
+    public boolean getIsStopping() {
+        return isStopping;
+    }
+
+    public void setIsStopping(boolean isStopping) {
+        this.isStopping = isStopping;
+    }
+
+    public boolean getIsUpgrading() {
+        return isUpgrading;
+    }
+
+    public void setIsUpgrading(boolean isUpgrading) {
+        this.isUpgrading = isUpgrading;
+    }
+
+    public static boolean isResponding() {
+        return instance != null && !(instance.isStopping || instance.isUpgrading);
     }
 }

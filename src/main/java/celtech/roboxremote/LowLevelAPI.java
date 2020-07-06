@@ -7,7 +7,6 @@ import celtech.roboxbase.comms.exceptions.RoboxCommsException;
 import celtech.roboxbase.comms.rx.AckResponse;
 import celtech.roboxbase.comms.rx.RoboxRxPacketFactory;
 import celtech.roboxbase.comms.rx.RxPacketTypeEnum;
-import celtech.roboxbase.comms.tx.AbortPrint;
 import celtech.roboxbase.comms.tx.ReadSendFileReport;
 import celtech.roboxbase.comms.tx.ReportErrors;
 import celtech.roboxbase.comms.tx.SendDataFileChunk;
@@ -15,13 +14,11 @@ import celtech.roboxbase.comms.tx.SendDataFileEnd;
 import celtech.roboxbase.comms.tx.SendDataFileStart;
 import celtech.roboxbase.comms.tx.SendPrintFileStart;
 import celtech.roboxbase.comms.tx.StatusRequest;
-import celtech.roboxbase.comms.tx.TxPacketTypeEnum;
 import celtech.roboxbase.comms.tx.WritePrinterID;
 import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxbase.configuration.Filament;
 import celtech.roboxbase.configuration.datafileaccessors.FilamentContainer;
 import celtech.roboxbase.postprocessor.PrintJobStatistics;
-import celtech.roboxbase.printerControl.model.PrinterException;
 import com.codahale.metrics.annotation.Timed;
 import java.io.File;
 import java.io.IOException;
@@ -59,8 +56,12 @@ public class LowLevelAPI
     @Path(Configuration.connectService)
     public Response connect(@PathParam("printerID") String printerID)
     {
-        steno.info("Was asked to connect to " + printerID);
-        return Response.ok().build();
+        if (Root.isResponding()) {
+            steno.info("Was asked to connect to " + printerID);
+            return Response.ok().build();
+        }
+        else
+            return Response.serverError().status(503).build();
     }
 
     @POST
@@ -68,8 +69,12 @@ public class LowLevelAPI
     @Path(Configuration.disconnectService)
     public Response disconnect(@PathParam("printerID") String printerID)
     {
-        steno.info("Was asked to disconnect from " + printerID);
-        return Response.ok().build();
+        if (Root.isResponding()) {
+            steno.info("Was asked to disconnect from " + printerID);
+            return Response.ok().build();
+        }
+        else
+            return Response.serverError().status(503).build();
     }
 
     @POST
@@ -80,88 +85,92 @@ public class LowLevelAPI
     public RoboxRxPacket writeToPrinter(@PathParam("printerID") String printerID,
             RoboxTxPacket remoteTx)
     {
-        RoboxRxPacket rxPacket = null;
-        long t1 = System.currentTimeMillis();
-//        steno.info("Request to write to printer with ID " + printerID + " and packet type " + remoteTx.getPacketType());
-//        String messagePayload = remoteTx.getMessagePayload();//
-//        if (messagePayload != null)
-//             steno.info("    Payload length " + Integer.toString(messagePayload.length()));
-//        if (remoteTx.getIncludeSequenceNumber())
-//             steno.info("    Sequence number = " + Integer.toString(remoteTx.getSequenceNumber()));
-        try
-        {
-            if (PrinterRegistry.getInstance() != null
-                    && !PrinterRegistry.getInstance().getRemotePrinterIDs().contains(printerID))
+        if (Root.isResponding()) {
+            RoboxRxPacket rxPacket = null;
+            long t1 = System.currentTimeMillis();
+    //        steno.info("Request to write to printer with ID " + printerID + " and packet type " + remoteTx.getPacketType());
+    //        String messagePayload = remoteTx.getMessagePayload();//
+    //        if (messagePayload != null)
+    //             steno.info("    Payload length " + Integer.toString(messagePayload.length()));
+    //        if (remoteTx.getIncludeSequenceNumber())
+    //             steno.info("    Sequence number = " + Integer.toString(remoteTx.getSequenceNumber()));
+            try
             {
-                rxPacket = RoboxRxPacketFactory.createPacket(RxPacketTypeEnum.PRINTER_NOT_FOUND);
-            } else
-            {
-                if (remoteTx instanceof StatusRequest)
+                if (PrinterRegistry.getInstance() != null
+                        && !PrinterRegistry.getInstance().getRemotePrinterIDs().contains(printerID))
                 {
-                    rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getLastStatusResponse();
-                } else if (remoteTx instanceof ReportErrors)
+                    rxPacket = RoboxRxPacketFactory.createPacket(RxPacketTypeEnum.PRINTER_NOT_FOUND);
+                } else
                 {
-                   AckResponse ackResponse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getLastErrorResponse();
-                    // The firmware errors in the last response will be empty because it has already been processed by Root.
-                    // So replace it with the list of active errors.
-        //            ackResponse.setFirmwareErrors(PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getActiveErrors());
-                    ackResponse.setFirmwareErrors(PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getCurrentErrors());
-                    rxPacket = ackResponse;
-                 } else if (remoteTx instanceof ReadSendFileReport
-                        && PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getPrintEngine().highIntensityCommsInProgressProperty().get())
-                {
-                    rxPacket = RoboxRxPacketFactory.createPacket(RxPacketTypeEnum.SEND_FILE);
-                }
-                else
-                {
-                    try
+                    if (remoteTx instanceof StatusRequest)
                     {
-                        rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getCommandInterface().writeToPrinter(remoteTx, false);
-                    } catch (RoboxCommsException ex)
+                        rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getLastStatusResponse();
+                    } else if (remoteTx instanceof ReportErrors)
                     {
-                        steno.error("Failed whilst writing to local printer with ID" + printerID);
+                       AckResponse ackResponse = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getLastErrorResponse();
+                        // The firmware errors in the last response will be empty because it has already been processed by Root.
+                        // So replace it with the list of active errors.
+            //            ackResponse.setFirmwareErrors(PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getActiveErrors());
+                        ackResponse.setFirmwareErrors(PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getCurrentErrors());
+                        rxPacket = ackResponse;
+                     } else if (remoteTx instanceof ReadSendFileReport
+                            && PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getPrintEngine().highIntensityCommsInProgressProperty().get())
+                    {
+                        rxPacket = RoboxRxPacketFactory.createPacket(RxPacketTypeEnum.SEND_FILE);
                     }
+                    else
+                    {
+                        try
+                        {
+                            rxPacket = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getCommandInterface().writeToPrinter(remoteTx, false);
+                        } catch (RoboxCommsException ex)
+                        {
+                            steno.error("Failed whilst writing to local printer with ID" + printerID);
+                        }
 
-                    if (remoteTx instanceof SendPrintFileStart
-                            || remoteTx instanceof SendDataFileStart)
-                    {
-                        PrintJobPersister.getInstance().startFile(remoteTx.getMessagePayload());
-                        PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getPrintEngine().takingItThroughTheBackDoor(true);
-                    } else if (remoteTx instanceof SendDataFileChunk)
-                    {
-                        String payload = remoteTx.getMessagePayload();
-                        PrintJobPersister.getInstance().writeSegment(payload);
-                    } else if (remoteTx instanceof SendDataFileEnd)
-                    {
-                        PrintJobPersister.getInstance().closeFile(remoteTx.getMessagePayload());
-                        PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getPrintEngine().takingItThroughTheBackDoor(false);
-                    }
-                    else if (remoteTx instanceof WritePrinterID &&
-                              PrinterRegistry.getInstance().getRemotePrinters().size() == 1 &&
-                              PrinterRegistry.getInstance().getRemotePrinters().get(printerID).printerConfigurationProperty().get().getTypeCode().equals("RBX10"))
-                    {
-                        // If only one printer is connected and it is an RBX10, then this is a Robox Pro printer.
-                        // Keep the server name the same as the printer name.
-                        WritePrinterID wpid = ((WritePrinterID) remoteTx);
-                        PrinterRegistry.getInstance().setServerName(wpid.getPrinterFriendlyName());                    
+                        if (remoteTx instanceof SendPrintFileStart
+                                || remoteTx instanceof SendDataFileStart)
+                        {
+                            PrintJobPersister.getInstance().startFile(remoteTx.getMessagePayload());
+                            PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getPrintEngine().takingItThroughTheBackDoor(true);
+                        } else if (remoteTx instanceof SendDataFileChunk)
+                        {
+                            String payload = remoteTx.getMessagePayload();
+                            PrintJobPersister.getInstance().writeSegment(payload);
+                        } else if (remoteTx instanceof SendDataFileEnd)
+                        {
+                            PrintJobPersister.getInstance().closeFile(remoteTx.getMessagePayload());
+                            PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getPrintEngine().takingItThroughTheBackDoor(false);
+                        }
+                        else if (remoteTx instanceof WritePrinterID &&
+                                  PrinterRegistry.getInstance().getRemotePrinters().size() == 1 &&
+                                  PrinterRegistry.getInstance().getRemotePrinters().get(printerID).printerConfigurationProperty().get().getTypeCode().equals("RBX10"))
+                        {
+                            // If only one printer is connected and it is an RBX10, then this is a Robox Pro printer.
+                            // Keep the server name the same as the printer name.
+                            WritePrinterID wpid = ((WritePrinterID) remoteTx);
+                            PrinterRegistry.getInstance().setServerName(wpid.getPrinterFriendlyName());                    
+                        }
                     }
                 }
+
+            }
+            catch (Exception ex)
+            {
+                long t2 = System.currentTimeMillis();
+                steno.error("LowLevelAPI.writeToPrinter() after " + (t2 - t1) + "ms caught exception " + ex.getClass().getCanonicalName() + " with message " + ex.getMessage());
+                throw ex;
             }
 
-        }
-        catch (Exception ex)
-        {
             long t2 = System.currentTimeMillis();
-            steno.error("LowLevelAPI.writeToPrinter() after " + (t2 - t1) + "ms caught exception " + ex.getClass().getCanonicalName() + " with message " + ex.getMessage());
-            throw ex;
+            //if (rxPacket == null)
+            //    steno.info("Returning null packet after " + (t2 - t1) + "ms");
+            //else
+            //    steno.info("Returning packet " + rxPacket.getPacketType() + " after " + (t2 - t1) + "ms");
+            return rxPacket;
         }
-
-        long t2 = System.currentTimeMillis();
-        //if (rxPacket == null)
-        //    steno.info("Returning null packet after " + (t2 - t1) + "ms");
-        //else
-        //    steno.info("Returning packet " + rxPacket.getPacketType() + " after " + (t2 - t1) + "ms");
-        return rxPacket;
+        else
+            return null;
     }
 
     @RolesAllowed("root")
@@ -172,18 +181,23 @@ public class LowLevelAPI
     public Response provideStatistics(@PathParam("printerID") String printerID,
             PrintJobStatistics statistics)
     {
-        Response response;
-        String statsFileLocation = BaseConfiguration.getPrintSpoolDirectory() + statistics.getPrintJobID() + File.separator + statistics.getPrintJobID() + BaseConfiguration.statisticsFileExtension;
-        try
-        {
-            steno.info("Writing statistics to file \"" + statsFileLocation + "\" ...");
-            statistics.writeStatisticsToFile(statsFileLocation);
-            steno.info("... done");
-            response = Response.ok().build();
-        } catch (IOException ex)
-        {
-            response = Response.serverError().build();
-        }
+        Response response = null;
+        if (Root.isResponding()) {
+            String statsFileLocation = BaseConfiguration.getPrintSpoolDirectory() + statistics.getPrintJobID() + File.separator + statistics.getPrintJobID() + BaseConfiguration.statisticsFileExtension;
+            try
+            {
+                steno.info("Writing statistics to file \"" + statsFileLocation + "\" ...");
+                statistics.writeStatisticsToFile(statsFileLocation);
+                steno.info("... done");
+                response = Response.ok().build();
+            } catch (IOException ex)
+            {
+                response = Response.serverError().build();
+            }
+            }
+        else
+            response = Response.serverError().status(503).build();
+        
         return response;
     }
 
@@ -196,14 +210,15 @@ public class LowLevelAPI
             String printJobID)
     {
         PrintJobStatistics statistics = null;
-        try
-        {
-            statistics = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getPrintEngine().printJobProperty().get().getStatistics();
-        } catch (IOException ex)
-        {
+        if (Root.isResponding()) {
+            try
+            {
+                statistics = PrinterRegistry.getInstance().getRemotePrinters().get(printerID).getPrintEngine().printJobProperty().get().getStatistics();
+            } catch (IOException ex)
+            {
 
+            }
         }
-
         return statistics;
     }
 
@@ -215,17 +230,21 @@ public class LowLevelAPI
     public Response overrideFilament(@PathParam("printerID") String printerID,
             Map<Integer, String> filamentMap)
     {
-        Response response;
-        Entry<Integer, String> filamentEntry = filamentMap.entrySet().iterator().next();
-        Filament chosenFilament = FilamentContainer.getInstance().getFilamentByID(filamentEntry.getValue());
-        if (chosenFilament != null)
-        {
-            PrinterRegistry.getInstance().getRemotePrinters().get(printerID).overrideFilament(filamentEntry.getKey(), chosenFilament);
-            response = Response.ok().build();
-        } else
-        {
-            response = Response.serverError().build();
+        Response response = null;
+        if (Root.isResponding()) {
+            Entry<Integer, String> filamentEntry = filamentMap.entrySet().iterator().next();
+            Filament chosenFilament = FilamentContainer.getInstance().getFilamentByID(filamentEntry.getValue());
+            if (chosenFilament != null)
+            {
+                PrinterRegistry.getInstance().getRemotePrinters().get(printerID).overrideFilament(filamentEntry.getKey(), chosenFilament);
+                response = Response.ok().build();
+            } else
+            {
+                response = Response.serverError().build();
+            }
         }
+        else
+            response = Response.serverError().status(503).build();
         return response;
     }
 }

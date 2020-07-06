@@ -45,7 +45,6 @@ public class DiscoveryAPI
         this.cameraCommsManager = cameraCommsManager;
     }
     
-    
     @RolesAllowed("root")
     @GET
     @Timed
@@ -53,7 +52,7 @@ public class DiscoveryAPI
     @Consumes(MediaType.APPLICATION_JSON)
     public ListPrintersResponse listPrinters()
     {
-        if (PrinterRegistry.getInstance() != null)
+        if (Root.isResponding() && PrinterRegistry.getInstance() != null)
         {
             ListPrintersResponse response = new ListPrintersResponse(PrinterRegistry.getInstance().getRemotePrinterIDs());
             steno.trace("Returning " + response.getPrinterIDs().size() + " printers");
@@ -85,9 +84,13 @@ public class DiscoveryAPI
     @Timed(name = "getFingerprint")
     @Path("/whoareyou")
     @Consumes(MediaType.APPLICATION_JSON)
-    public WhoAreYouResponse getFingerprint(@Context HttpServletRequest request, @QueryParam("pc")String pc, @QueryParam("rid")String rid)
+    public WhoAreYouResponse getFingerprint(@Context HttpServletRequest request, @QueryParam("pc")String pc, @QueryParam("rid")String rid, @QueryParam("ru")String ru)
     {
-        if (PrinterRegistry.getInstance() != null)
+        boolean reportUpgrading = (ru != null && ru.equalsIgnoreCase("yes"));
+        Root r = Root.getInstance();
+        if (!r.getIsStopping() &&
+            (reportUpgrading || !r.getIsUpgrading()) &&
+            PrinterRegistry.getInstance() != null)
         {
             String hostAddress = "Unknown";
 
@@ -120,12 +123,17 @@ public class DiscoveryAPI
             String rootUUID = null;
             if (rid != null && rid.equalsIgnoreCase("yes")) 
                 rootUUID = RootUUID.get();
+            
+            String upgradeStatus = null;
+            if (reportUpgrading) 
+                upgradeStatus = r.getIsUpgrading() ? "upgrading" : "";
 
             return new WhoAreYouResponse(PrinterRegistry.getInstance().getServerName(),
                     BaseConfiguration.getApplicationVersion(),
                     hostAddress,
                     printerColours,
-                    rootUUID);
+                    rootUUID,
+                    upgradeStatus);
         } else
         {
             return null;
