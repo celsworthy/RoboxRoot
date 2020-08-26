@@ -1,0 +1,79 @@
+package celtech.roboxremote;
+
+import celtech.roboxbase.comms.remote.Configuration;
+import celtech.roboxbase.configuration.BaseConfiguration;
+import celtech.roboxbase.configuration.fileRepresentation.CameraSettings;
+import celtech.roboxbase.utils.ScriptUtils;
+import celtech.roboxremote.comms.CameraCommsManager;
+import com.codahale.metrics.annotation.Timed;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import javax.annotation.security.RolesAllowed;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import libertysystems.stenographer.Stenographer;
+import libertysystems.stenographer.StenographerFactory;
+/**
+ *
+ * @author Tony Aldhous
+ */
+@RolesAllowed("root")
+@Path(Configuration.cameraAPIService+ "/{cameraNumber}")
+@Produces(MediaType.APPLICATION_JSON)
+public class CameraAPI
+{
+
+    private final Stenographer STENO = StenographerFactory.getStenographer(LowLevelAPI.class.getName());
+
+    private final CameraCommsManager cameraCommsManager;
+    
+    public CameraAPI(CameraCommsManager cameraCommsManager)
+    {
+        this.cameraCommsManager = cameraCommsManager;
+    }
+    
+    private byte[] takeSnapshot(CameraSettings settings) {
+        //STENO.info("Taking snapshot for camera " + camera.toString());
+        List<String> parameters = settings.encodeSettingsForRootScript(null);
+        byte[] imageData = ScriptUtils.runScriptB(BaseConfiguration.getApplicationInstallDirectory(CameraAPI.class) + "takeSnapshot.sh",
+                                                  parameters.toArray(new String[0]));
+       // STENO.info("ImageData length = " + imageData.length);
+        return imageData;
+    }
+
+    private Optional<byte[]> getCameraSnapshot(CameraSettings settings)
+    {
+        return cameraCommsManager.getAllCameraInfo()
+            .stream()
+            .filter(c -> c.getUdevName().equals(settings.getCamera().getUdevName()))
+            .findAny()
+            .map((c) -> takeSnapshot(settings));
+    }
+    
+    @POST
+    @Timed
+    @Path("snapshot")
+    @Produces("image/jpg")
+    public Response getSnapshot(@PathParam("cameraNumber") String cameraNumber,
+                                           CameraSettings settings)
+    {
+        // Camera number should match settings.
+        int cameraNo = -1;
+        try {
+            cameraNo = Integer.parseInt(cameraNumber);
+        }
+        catch (NumberFormatException ex) {
+            cameraNo = -2;
+        }   
+        if (cameraNo != settings.getCamera().getCameraNumber())
+            return Response.serverError().build();
+        
+        return getCameraSnapshot(settings).map((imageData) -> Response.ok(imageData).build())
+                                          .orElseGet(() -> Response.serverError().build());
+    }
+}

@@ -25,9 +25,6 @@ public class CameraDeviceDetector extends DeviceDetector
     private static final String CAM_DETECTOR_COMMAND = "/home/pi/ARM-32bit/Root/cameraDetector.sh";
     private static final String CAM_FIND_INFO_COMMAND = "/home/pi/ARM-32bit/Root/findCameraInfo.sh";
     
-    private static final String MOTION_CONTROL_HANDLE_PORT = ":8101/";
-    private static final String MOTION_STREAM_HANDLE_PORT = ":8102/";
-    
     @Override
     public List<DetectedDevice> searchForDevices()
     {
@@ -93,7 +90,7 @@ public class CameraDeviceDetector extends DeviceDetector
         String cameraName = cameraInformation.get(0);
         String cameraNumber = cameraInformation.get(1);
         
-        String serverIP = "Unknown";
+        String serverIP = "";
         try
         {
             serverIP = NetworkUtils.determineIPAddress();
@@ -102,15 +99,11 @@ public class CameraDeviceDetector extends DeviceDetector
             STENO.error("Error when determining our IP address. " + e.getMessage());
         }
         
-        String motionControlHandle = "http://" + serverIP + MOTION_CONTROL_HANDLE_PORT;
-        String motionStreamHandle = "http://" + serverIP + MOTION_STREAM_HANDLE_PORT;
-        
         CameraInfo cameraInfo = new CameraInfo();
         cameraInfo.setUdevName(detectedCameraHandle);
         cameraInfo.setCameraName(cameraName);
         cameraInfo.setCameraNumber(Integer.parseInt(cameraNumber));
-        cameraInfo.setMotionControlHandle(motionControlHandle + cameraNumber + "/");
-        cameraInfo.setMotionStreamHandle(motionStreamHandle + cameraNumber + "/");
+        cameraInfo.setServerIP(serverIP);
         return cameraInfo;
     }
 }

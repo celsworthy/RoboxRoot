@@ -3,11 +3,6 @@ package celtech.roboxremote.rootDataStructures;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * This is a localised form of FirmwareError, which is 
- * over the web interface. The error title and error message
- * are translated into the locale language. The options are
- * the FirmwareError options, ANDED to together.
- * 
  * @author taldhous
  */
 public class FilamentDetails

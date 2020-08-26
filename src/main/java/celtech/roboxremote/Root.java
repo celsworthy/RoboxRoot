@@ -111,6 +111,7 @@ public class Root extends Application<RoboxRemoteConfiguration>
         final LowLevelAPI lowLevelAPI = new LowLevelAPI();
         final PublicPrinterControlAPI highLevelAPI = new PublicPrinterControlAPI();
         final DiscoveryAPI discoveryAPI = new DiscoveryAPI(cameraCommsManager);
+        final CameraAPI cameraAPI = new CameraAPI(cameraCommsManager);
 
         final AppSetupHealthCheck healthCheck
                 = new AppSetupHealthCheck(configuration.getDefaultPIN());
@@ -119,6 +120,7 @@ public class Root extends Application<RoboxRemoteConfiguration>
         environment.jersey().register(lowLevelAPI);
         environment.jersey().register(highLevelAPI);
         environment.jersey().register(discoveryAPI);
+        environment.jersey().register(cameraAPI);
         environment.jersey().register(CORSFilter.class);
 
         environment.jersey().register(new AuthDynamicFeature(new RootAPIAuthFilter.Builder<User>()

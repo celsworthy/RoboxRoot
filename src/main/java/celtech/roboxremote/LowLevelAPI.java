@@ -19,6 +19,8 @@ import celtech.roboxbase.configuration.BaseConfiguration;
 import celtech.roboxbase.configuration.Filament;
 import celtech.roboxbase.configuration.datafileaccessors.FilamentContainer;
 import celtech.roboxbase.postprocessor.PrintJobStatistics;
+import celtech.roboxbase.camera.CameraInfo;
+import celtech.roboxbase.configuration.fileRepresentation.CameraSettings;
 import com.codahale.metrics.annotation.Timed;
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +28,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -207,7 +210,7 @@ public class LowLevelAPI
     @Path(Configuration.retrieveStatisticsService)
     @Produces(MediaType.APPLICATION_JSON)
     public PrintJobStatistics retrieveStatistics(@PathParam("printerID") String printerID,
-            String printJobID)
+                                                 String printJobID)
     {
         PrintJobStatistics statistics = null;
         if (Root.isResponding()) {
@@ -220,6 +223,58 @@ public class LowLevelAPI
             }
         }
         return statistics;
+    }
+
+    @RolesAllowed("root")
+    @POST
+    @Timed
+    @Path("/{printJobID}" + Configuration.sendCameraDataService)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response provideCameraData(@PathParam("printerID") String printerID,
+                                         @PathParam("printJobID") String printJobID,
+                                         CameraSettings cameraData)
+    {
+        Response response = null;
+        if (Root.isResponding()) {
+            String dataFileLocation = BaseConfiguration.getPrintSpoolDirectory() + printJobID + File.separator + printJobID + BaseConfiguration.cameraDataFileExtension;
+            try
+            {
+                steno.info("Writing camera data to file \"" + dataFileLocation + "\" ...");
+                cameraData.writeToFile(dataFileLocation);
+                steno.info("... done");
+                response = Response.ok().build();
+            } 
+            catch (IOException ex) {
+                response = Response.serverError().build();
+            }
+        }
+        else
+            response = Response.serverError().status(503).build();
+        
+        return response;
+    }
+
+    @RolesAllowed("root")
+    @GET
+    @Timed
+    @Path("/{printJobID}" + Configuration.retrieveCameraDataService)
+    @Produces(MediaType.APPLICATION_JSON)
+    public CameraSettings retrieveCameraData(@PathParam("printerID") String printerID,
+                                             @PathParam("printJobID") String printJobID)
+    {
+        CameraSettings cameraData = null;
+        if (Root.isResponding()) {
+            String dataFileLocation = BaseConfiguration.getPrintSpoolDirectory() + printJobID + File.separator + printJobID + BaseConfiguration.cameraDataFileExtension;
+            try
+            {
+                    //steno.info("Reading camera data from file \"" + dataFileLocation + "\" ...");
+                    cameraData= CameraSettings.readFromFile(dataFileLocation);
+                    //steno.info("... done");
+            }
+            catch (IOException ex) {
+            }
+        }
+        return cameraData;
     }
 
     @RolesAllowed("root")

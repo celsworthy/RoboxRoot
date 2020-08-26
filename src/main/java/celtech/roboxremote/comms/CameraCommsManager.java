@@ -33,7 +33,7 @@ public class CameraCommsManager extends Thread
     @Override
     public void run()
     {
-        STENO.info("Camera comms manager started");
+        STENO.debug("Camera comms manager started");
         
         while(keepRunning)
         {
@@ -55,7 +55,11 @@ public class CameraCommsManager extends Thread
                         // Add new Cameras
                         STENO.debug("We have found a new camera " + connectedCam);
                         CameraInfo cameraInfo = assessCamera((DetectedCamera) connectedCam);
-                        newActiveCameras.put(connectedCam, cameraInfo);
+                        // Filter out the multitude of Broadcom VideoCore devices on a Pi.
+                        if (!cameraInfo.getCameraName().matches("bcm\\d+.*"))
+                            newActiveCameras.put(connectedCam, cameraInfo);
+                        else
+                            STENO.debug("Ignored Broadcom VideoCore device " + cameraInfo.getCameraName());
                     } else
                     {
                         STENO.debug("We have found a device that is not a camera with handle " + connectedCam);
@@ -80,7 +84,7 @@ public class CameraCommsManager extends Thread
                     Thread.sleep(sleepTime);
                 } catch (InterruptedException ex)
                 {
-                    STENO.info("Camera comms manager was interrupted during sleep");
+                    STENO.debug("Camera comms manager was interrupted during sleep");
                 }
             }
         }
@@ -89,14 +93,13 @@ public class CameraCommsManager extends Thread
     private CameraInfo assessCamera(DetectedCamera detectedCamera)
     {
         CameraInfo cameraInfo = cameraDeviceDetector.findCameraInformation(detectedCamera.getConnectionHandle());
-        STENO.info(cameraInfo.toString());
         return cameraInfo;
     }
     
     public void shutdown()
     {
         keepRunning = false;
-        STENO.info("Camera comms manager shutdown");
+        STENO.debug("Camera comms manager shutdown");
     }
     
     public List<CameraInfo> getAllCameraInfo()
