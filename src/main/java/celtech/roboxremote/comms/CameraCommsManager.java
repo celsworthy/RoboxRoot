@@ -56,10 +56,14 @@ public class CameraCommsManager extends Thread
                         STENO.debug("We have found a new camera " + connectedCam);
                         CameraInfo cameraInfo = assessCamera((DetectedCamera) connectedCam);
                         // Filter out the multitude of Broadcom VideoCore devices on a Pi.
-                        if (!cameraInfo.getCameraName().matches("bcm\\d+.*"))
-                            newActiveCameras.put(connectedCam, cameraInfo);
+                        if (cameraInfo != null) {
+                            if (!cameraInfo.getCameraName().matches("bcm\\d+.*"))
+                                newActiveCameras.put(connectedCam, cameraInfo);
+                            else
+                                STENO.debug("Ignored Broadcom VideoCore device " + cameraInfo.getCameraName());
+                        }
                         else
-                            STENO.debug("Ignored Broadcom VideoCore device " + cameraInfo.getCameraName());
+                            STENO.debug("No information returned for detected camera " + ((DetectedCamera)connectedCam).getConnectionHandle());
                     } else
                     {
                         STENO.debug("We have found a device that is not a camera with handle " + connectedCam);

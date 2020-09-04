@@ -67,6 +67,7 @@ public class CameraDeviceDetector extends DeviceDetector
     
     public CameraInfo findCameraInformation(String detectedCameraHandle)
     {
+        CameraInfo cameraInfo = null;
         List<String> cameraInformation = new ArrayList<>();
 
         ProcessBuilder builder = new ProcessBuilder(CAM_FIND_INFO_COMMAND, detectedCameraHandle);
@@ -87,23 +88,26 @@ public class CameraDeviceDetector extends DeviceDetector
             STENO.error("Error " + ex);
         }
         
-        String cameraName = cameraInformation.get(0);
-        String cameraNumber = cameraInformation.get(1);
-        
-        String serverIP = "";
-        try
-        {
-            serverIP = NetworkUtils.determineIPAddress();
-        } catch (SocketException e)
-        {
-            STENO.error("Error when determining our IP address. " + e.getMessage());
+        if (cameraInformation.size() > 1) {
+            String cameraName = cameraInformation.get(0);
+            String cameraNumber = cameraInformation.get(1);
+
+            String serverIP = "";
+            try
+            {
+                serverIP = NetworkUtils.determineIPAddress();
+            } catch (SocketException e)
+            {
+                STENO.error("Error when determining our IP address. " + e.getMessage());
+            }
+
+            cameraInfo = new CameraInfo();
+            cameraInfo.setUdevName(detectedCameraHandle);
+            cameraInfo.setCameraName(cameraName);
+            cameraInfo.setCameraNumber(Integer.parseInt(cameraNumber));
+            cameraInfo.setServerIP(serverIP);
         }
         
-        CameraInfo cameraInfo = new CameraInfo();
-        cameraInfo.setUdevName(detectedCameraHandle);
-        cameraInfo.setCameraName(cameraName);
-        cameraInfo.setCameraNumber(Integer.parseInt(cameraNumber));
-        cameraInfo.setServerIP(serverIP);
         return cameraInfo;
     }
 }
