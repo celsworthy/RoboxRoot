@@ -6,7 +6,6 @@ import celtech.roboxbase.configuration.fileRepresentation.CameraSettings;
 import celtech.roboxbase.utils.ScriptUtils;
 import celtech.roboxremote.comms.CameraCommsManager;
 import com.codahale.metrics.annotation.Timed;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.security.RolesAllowed;
@@ -39,10 +38,20 @@ public class CameraAPI
     
     private byte[] takeSnapshot(CameraSettings settings) {
         //STENO.info("Taking snapshot for camera " + camera.toString());
-        List<String> parameters = settings.encodeSettingsForRootScript(null);
-        byte[] imageData = ScriptUtils.runScriptB(BaseConfiguration.getApplicationInstallDirectory(CameraAPI.class) + "takeSnapshot.sh",
+        List<String> parameters = settings.encodeSettingsForRootScript();
+        byte[] imageData = null;
+        // Synchronized access with CameraTriggerManager::triggerUSBCamera, so both are not trying to access the
+        // camera at the same time. Synchronize on the CameraSettings class object as it
+        // is easily accessable to both methods.
+        synchronized(CameraSettings.class){
+            imageData = ScriptUtils.runScriptB(BaseConfiguration.getApplicationInstallDirectory(CameraAPI.class) + "takeSnapshot.sh",
                                                   parameters.toArray(new String[0]));
-       // STENO.info("ImageData length = " + imageData.length);
+        }
+        //if (imageData == null)
+        //    STENO.info("ImageData = null");
+        //else
+        //    STENO.info("ImageData length = " + imageData.length);
+
         return imageData;
     }
 
