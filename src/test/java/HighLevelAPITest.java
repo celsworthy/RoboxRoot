@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
 import io.dropwizard.testing.junit.ResourceTestRule;
+import org.junit.Test;
 
 /**
  *
@@ -11,11 +12,11 @@ import io.dropwizard.testing.junit.ResourceTestRule;
  */
 public class HighLevelAPITest
 {
-    @ClassRule
-    public static final ResourceTestRule resources = ResourceTestRule.builder()
-            .setMapper(Jackson.newObjectMapper())
-            .addResource(new PublicPrinterControlAPI())
-            .build();
+//    @ClassRule
+//    public static final ResourceTestRule resources = ResourceTestRule.builder()
+//            .setMapper(Jackson.newObjectMapper())
+//            .addResource(new PublicPrinterControlAPI())
+//            .build();
 
     @Before
     public void setup()
@@ -31,9 +32,9 @@ public class HighLevelAPITest
 //        reset(dao);
     }
 
-//    @Test
-//    public void testOpenDoor()
-//    {
+    @Test
+    public void testOpenDoor()
+    {
 ////        WebTarget target = resources.client().target("/123456/remoteControl/openDoor");
 //
 ////        QueryFirmwareVersion fw = (QueryFirmwareVersion)RoboxTxPacketFactory.createPacket(TxPacketTypeEnum.QUERY_FIRMWARE_VERSION);
@@ -61,5 +62,5 @@ public class HighLevelAPITest
 //        Invocation invocation = resources.client().target("/12345678/printerControl/writeData")
 //                .request().buildPost(requestEntity);
 //        Response response = invocation.invoke();
-//    }
+    }
 }
