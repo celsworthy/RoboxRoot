@@ -41,6 +41,7 @@ function updatePrinterStatus(printerData)
         statusClass = 'printing';
     }
     else if (printerData.printerStatusEnumValue.match("^PAUSED") ||
+             printerData.printerStatusEnumValue.match("^SELFIE_PAUSE") ||
              printerData.printerStatusEnumValue.match("^PAUSE_PENDING"))
     {
         statusClass = 'paused';

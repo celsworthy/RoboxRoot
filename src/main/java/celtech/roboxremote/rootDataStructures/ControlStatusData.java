@@ -58,6 +58,7 @@ public class ControlStatusData
             switch (printer.pauseStatusProperty().get())
             {
                 case PAUSED:
+                case SELFIE_PAUSE:
                 case PAUSE_PENDING:
                 case RESUME_PENDING:
                     printerStatusEnumValue = printer.pauseStatusProperty().get().name();
