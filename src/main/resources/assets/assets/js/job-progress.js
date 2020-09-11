@@ -94,6 +94,7 @@ function updateJobStatusFields(statusField, etcField, progressBar, printJobData)
             statusText='<img src="' + imageRoot + 'Icon-Play.svg" class="print-status-icon">';
             break;
         case "PAUSED":
+        case "SELFIE_PAUSE":
         case "PAUSE_PENDING":
             statusText='<img src="' + imageRoot + 'Icon-Pause.svg" class="print-status-icon">';
             break;

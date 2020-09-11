@@ -86,6 +86,7 @@ public class PrintJobStatusData
             switch (printer.pauseStatusProperty().get())
             {
                 case PAUSED:
+				case SELFIE_PAUSE:
                 case PAUSE_PENDING:
                 case RESUME_PENDING:
                     printerStatusString = BaseLookup.i18n(printer.pauseStatusProperty().get().getI18nString());
