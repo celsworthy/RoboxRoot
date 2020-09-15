@@ -58,7 +58,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 public class PublicPrinterControlAPI
 {
 
-    private final Stenographer steno = StenographerFactory.getStenographer(PublicPrinterControlAPI.class.getName());
+    private final Stenographer STENO = StenographerFactory.getStenographer(PublicPrinterControlAPI.class.getName());
     private final Utils utils = new Utils();
     private SimpleCancellable purgeCancel = null;
 
@@ -71,10 +71,22 @@ public class PublicPrinterControlAPI
     public StatusData getPrinterStatus(@PathParam("printerID") String printerID)
     {
         StatusData returnVal = null;
-        if (Root.isResponding() && PrinterRegistry.getInstance() != null)
-        {
-            returnVal = new StatusData();
-            returnVal.updateFromPrinterData(printerID);
+        try {
+            if (Root.isResponding() &&
+                PrinterRegistry.getInstance() != null &&
+                PrinterRegistry.getInstance().getRemotePrinters() != null &&
+                PrinterRegistry.getInstance().getRemotePrinters().get(printerID) != null)
+            {
+                returnVal = new StatusData();
+                returnVal.updateFromPrinterData(printerID);
+            }
+            else
+            {
+                STENO.error("Unrecognised printer " + printerID);
+            }
+        }
+        catch(Exception ex) {
+            STENO.exception("Exception whilst getting status of printer " + printerID, ex);
         }
         return returnVal;
     }
@@ -202,7 +214,7 @@ public class PublicPrinterControlAPI
     {
         if (Root.isResponding()) {
             String uploadedFileLocation = BaseConfiguration.getPrintSpoolDirectory() + printerID + fileDetail.getFileName();
-            steno.debug("Printing gcode file " + uploadedFileLocation);
+            STENO.debug("Printing gcode file " + uploadedFileLocation);
             // save it
             utils.writeToFile(uploadedInputStream, uploadedFileLocation);
 
@@ -211,7 +223,7 @@ public class PublicPrinterControlAPI
                 PrinterRegistry.getInstance().getRemotePrinters().get(printerID).executeGCodeFile(uploadedFileLocation, true);
             } catch (PrinterException ex)
             {
-                steno.exception("Exception whilst trying to print gcode file " + uploadedFileLocation, ex);
+                STENO.exception("Exception whilst trying to print gcode file " + uploadedFileLocation, ex);
             }
             return Response.ok().build();
         }
@@ -345,13 +357,13 @@ public class PublicPrinterControlAPI
                             {
                                 case "r":
                                     printer.changeEFeedRateMultiplier(0.01 * ntfData.getValue());
-                                    steno.debug("Setting R feed rate to " + 0.01 * ntfData.getValue());
-                                    steno.debug("feedRateEMultiplierProperty now " + printer.getPrinterAncillarySystems().feedRateEMultiplierProperty().floatValue() * 100.0F);
+                                    STENO.debug("Setting R feed rate to " + 0.01 * ntfData.getValue());
+                                    STENO.debug("feedRateEMultiplierProperty now " + printer.getPrinterAncillarySystems().feedRateEMultiplierProperty().floatValue() * 100.0F);
                                     break;
                                 case "l":
                                     printer.changeDFeedRateMultiplier(0.01 * ntfData.getValue());
-                                    steno.debug("Setting L feed rate to " + 0.01 * ntfData.getValue());
-                                    steno.debug("feedRateDMultiplierProperty now " + printer.getPrinterAncillarySystems().feedRateDMultiplierProperty().floatValue() * 100.0F);
+                                    STENO.debug("Setting L feed rate to " + 0.01 * ntfData.getValue());
+                                    STENO.debug("feedRateDMultiplierProperty now " + printer.getPrinterAncillarySystems().feedRateDMultiplierProperty().floatValue() * 100.0F);
                                     break;
                                 default:
                                     ok = false;
@@ -404,7 +416,7 @@ public class PublicPrinterControlAPI
                 PrinterRegistry.getInstance().getRemotePrinters().get(printerID).goToOpenDoorPosition(null, safetyOn.get());
             } catch (PrinterException ex)
             {
-                steno.error("Exception whilst opening door");
+                STENO.error("Exception whilst opening door");
                 return false;
             }
         }
@@ -424,7 +436,7 @@ public class PublicPrinterControlAPI
                 PrinterRegistry.getInstance().getRemotePrinters().get(printerID).pause();
             } catch (PrinterException ex)
             {
-                steno.error("Exception whilst pausing");
+                STENO.error("Exception whilst pausing");
             }
         }
     }
@@ -443,7 +455,7 @@ public class PublicPrinterControlAPI
                     p.resume();
             } catch (PrinterException ex)
             {
-                steno.error("Exception whilst resuming");
+                STENO.error("Exception whilst resuming");
             }
         }
     }
@@ -492,7 +504,7 @@ public class PublicPrinterControlAPI
             }
             catch (PrinterException ex)
             {
-                steno.error("Exception whilst cancelling");
+                STENO.error("Exception whilst cancelling");
             }
         }
     }
@@ -523,7 +535,7 @@ public class PublicPrinterControlAPI
             {
                 Thread purgeThread = new Thread(() ->
                 {
-                    steno.debug("Starting purge.");
+                    STENO.debug("Starting purge.");
                     SimpleCancellable cancel = cancelRunningPurge(true);
                     int nozzle0Temperature = targetTemperature0;
                     int nozzle1Temperature = targetTemperature1;
@@ -601,21 +613,21 @@ public class PublicPrinterControlAPI
                             }
                             else
                             {
-                                steno.info("Nozzle heat failed.");
+                                STENO.info("Nozzle heat failed.");
                             }
                         }
                         else
                         {
-                            steno.info("Bed heat failed.");
+                            STENO.info("Bed heat failed.");
                         }
                     } catch (PrinterException | InterruptedException ex)
                     {
-                        steno.error("Exception whilst purging");
+                        STENO.error("Exception whilst purging");
                     }
                     finally
                     {
                         cancel.cancelled().set(true);
-                        steno.debug("Finishing purge.");                    
+                        STENO.debug("Finishing purge.");                    
                     }
                 });
                 purgeThread.setName("Purge_" + printerID);
@@ -666,7 +678,7 @@ public class PublicPrinterControlAPI
                 PrinterRegistry.getInstance().getRemotePrinters().get(printerID).removeHead(null, safetyOn.get());
             } catch (PrinterException ex)
             {
-                steno.error("Exception whilst removing head");
+                STENO.error("Exception whilst removing head");
             }
         }
     }
@@ -707,7 +719,7 @@ public class PublicPrinterControlAPI
                 PrinterRegistry.getInstance().getRemotePrinters().get(printerID).ejectFilament(filamentNumber - 1, null);
             } catch (PrinterException ex)
             {
-                steno.error("Exception whilst ejecting filament " + filamentNumber + ": " + ex);
+                STENO.error("Exception whilst ejecting filament " + filamentNumber + ": " + ex);
             }
         }
     }
@@ -755,11 +767,11 @@ public class PublicPrinterControlAPI
                     if (nozzleNumber >= 0)
                         PrinterRegistry.getInstance().getRemotePrinters().get(printerID).ejectStuckMaterial(nozzleNumber, false, null, false);// safetyOn.get());
                     else
-                        steno.error("Invalid material number " + materialNumber);
+                        STENO.error("Invalid material number " + materialNumber);
                 } 
                 catch (PrinterException ex)
                 {
-                    steno.error("Printer exception whilst ejecting stuck material" + materialNumber + ": " + ex);
+                    STENO.error("Printer exception whilst ejecting stuck material" + materialNumber + ": " + ex);
                 }
             }
         }
@@ -808,7 +820,7 @@ public class PublicPrinterControlAPI
                     PrinterRegistry.getInstance().getRemotePrinters().get(printerID).cleanNozzle(nozzleNumber, false, null, false);// safetyOn.get());
                 } catch (PrinterException ex)
                 {
-                    steno.error("Printer exception whilst cleaning nozzle" + nozzleNumber + ": " + ex);
+                    STENO.error("Printer exception whilst cleaning nozzle" + nozzleNumber + ": " + ex);
                 }
             }
         }
@@ -848,7 +860,7 @@ public class PublicPrinterControlAPI
                 
             } catch (PrinterException ex)
             {
-                steno.error("Exception whilst performing test " + test + ": " + ex);
+                STENO.error("Exception whilst performing test " + test + ": " + ex);
             }
         }
     }
@@ -890,7 +902,7 @@ public class PublicPrinterControlAPI
     @Path("/listUSBPrintableJobs")
     public SuitablePrintJobListData listUSBPrintableJobs(@PathParam("printerID") String printerID) 
     {
-        steno.debug("API call made to " + printerID + "/remoteControl/listUSBPrintableJobs");
+        STENO.debug("API call made to " + printerID + "/remoteControl/listUSBPrintableJobs");
         
         SuitablePrintJobListData suitableJobData = new SuitablePrintJobListData();
         if (Root.isResponding() && PrinterRegistry.getInstance() != null)
@@ -982,7 +994,7 @@ public class PublicPrinterControlAPI
     @Path("/printUSBJob")
     public Response printUSBJob(@PathParam("printerID") String printerID, UsbPrintData usbPrintData)
     {
-        steno.debug("Request to /printUSBJob with printer ID of - " + printerID + " and data - " + usbPrintData);
+        STENO.debug("Request to /printUSBJob with printer ID of - " + printerID + " and data - " + usbPrintData);
         
         if (Root.isResponding() && PrinterRegistry.getInstance() != null)
         {
@@ -1013,7 +1025,7 @@ public class PublicPrinterControlAPI
             }
             catch (PrinterException ex)
             {
-                steno.error("Exception whilst printing GCode file \"" + fileName + "\": " + ex);
+                STENO.error("Exception whilst printing GCode file \"" + fileName + "\": " + ex);
                 response = Response.serverError().build();
             }
         }
@@ -1116,7 +1128,7 @@ public class PublicPrinterControlAPI
                 } 
                 catch (PrinterException ex)
                 {
-                    steno.exception("Exception whilst attempting to run macro with name " + macroName, ex);
+                    STENO.exception("Exception whilst attempting to run macro with name " + macroName, ex);
                     response = Response.serverError().build();
                 }
             } else
@@ -1132,7 +1144,7 @@ public class PublicPrinterControlAPI
                 } 
                 catch (PrinterException ex)
                 {
-                    steno.exception("Exception whilst attempting to run macro with name " + macroName, ex);
+                    STENO.exception("Exception whilst attempting to run macro with name " + macroName, ex);
                     response = Response.serverError().build();
                 }
             }
