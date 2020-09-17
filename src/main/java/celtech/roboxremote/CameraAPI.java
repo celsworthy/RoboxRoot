@@ -2,6 +2,7 @@ package celtech.roboxremote;
 
 import celtech.roboxbase.comms.remote.Configuration;
 import celtech.roboxbase.configuration.BaseConfiguration;
+import celtech.roboxbase.configuration.MachineType;
 import celtech.roboxbase.configuration.fileRepresentation.CameraSettings;
 import celtech.roboxbase.utils.ScriptUtils;
 import celtech.roboxremote.comms.CameraCommsManager;
@@ -28,7 +29,8 @@ public class CameraAPI
 {
 
     private final Stenographer STENO = StenographerFactory.getStenographer(LowLevelAPI.class.getName());
-
+    private static final int BYTE_SCRIPT_TIMEOUT = 15;
+    
     private final CameraCommsManager cameraCommsManager;
     
     public CameraAPI(CameraCommsManager cameraCommsManager)
@@ -37,20 +39,24 @@ public class CameraAPI
     }
     
     private byte[] takeSnapshot(CameraSettings settings) {
-        //STENO.info("Taking snapshot for camera " + camera.toString());
+        STENO.debug("Taking snapshot for camera " + settings.getCamera().getCameraName());
         List<String> parameters = settings.encodeSettingsForRootScript();
         byte[] imageData = null;
         // Synchronized access with CameraTriggerManager::triggerUSBCamera, so both are not trying to access the
         // camera at the same time. Synchronize on the CameraSettings class object as it
         // is easily accessable to both methods.
-        synchronized(CameraSettings.class){
-            imageData = ScriptUtils.runScriptB(BaseConfiguration.getApplicationInstallDirectory(CameraAPI.class) + "takeSnapshot.sh",
-                                                  parameters.toArray(new String[0]));
+        if (BaseConfiguration.getMachineType() == MachineType.LINUX_X86 ||
+            BaseConfiguration.getMachineType() == MachineType.LINUX_X86) {
+            synchronized(CameraSettings.class) {
+                imageData = ScriptUtils.runByteScript(BaseConfiguration.getApplicationInstallDirectory(CameraAPI.class) + "takeSnapshot.sh",
+                                                      BYTE_SCRIPT_TIMEOUT,
+                                                      parameters.toArray(new String[0]));
+            }
         }
-        //if (imageData == null)
-        //    STENO.info("ImageData = null");
-        //else
-        //    STENO.info("ImageData length = " + imageData.length);
+        if (imageData == null)
+            STENO.debug("ImageData = null");
+        else
+            STENO.debug("ImageData length = " + imageData.length);
 
         return imageData;
     }
