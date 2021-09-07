@@ -25,7 +25,7 @@ import javafx.scene.paint.Color;
 public class StatusData
 {
     private static final double HEATING_THREASHOLD = 5;
-    private static final double EJECT_TEMPERATURE = 140.0;
+    private static final double EJECT_TEMPERATURE_DELTA = 20.0;
 
     private String printerID;
     private String printerName;
@@ -362,7 +362,7 @@ public class StatusData
                     break;
                     
                 case FILAMENT_EJECT:
-                    targetTemperature = EJECT_TEMPERATURE;
+                    targetTemperature = heater.nozzleTargetTemperatureProperty().get() - EJECT_TEMPERATURE_DELTA;
                     break;
 
                 case NORMAL:
