@@ -1,0 +1,14 @@
+2023-01-01 13:09:32,654 [main] INFO - StenographerFactory initialised with logfile=nologname.log loglevel= logmode=LOCAL
+>>>> ERROR loading system config (using -DlibertySystems.configFile) org.apache.commons.configuration.ConfigurationException: Cannot locate configuration source null
+2023-01-01 13:09:32,983 [main] ERROR celtech.roboxbase.configuration.BaseConfiguration.loadConfigurationInstance(BaseConfiguration.java:293) - Couldn't load configuration - the application cannot derive the install directory
+Exception in thread "main" 
+java.lang.NullPointerException
+	at java.base/java.io.File.<init>(File.java:278)
+	at celtech.roboxbase.configuration.BaseConfiguration.getCommonApplicationDirectory(BaseConfiguration.java:398)
+	at celtech.roboxbase.configuration.BaseConfiguration.getApplicationPrinterDirectory(BaseConfiguration.java:419)
+	at celtech.roboxbase.configuration.datafileaccessors.PrinterContainer.<init>(PrinterContainer.java:36)
+	at celtech.roboxbase.configuration.datafileaccessors.PrinterContainer.getCompletePrinterList(PrinterContainer.java:97)
+	at celtech.roboxbase.configuration.BaseConfiguration.initialise(BaseConfiguration.java:176)
+	at celtech.roboxremote.Root.initialize(Root.java:65)
+	at io.dropwizard.Application.run(Application.java:88)
+	at celtech.roboxremote.Root.main(Root.java:48)
