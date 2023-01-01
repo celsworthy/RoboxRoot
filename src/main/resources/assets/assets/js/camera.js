@@ -1,4 +1,3 @@
-//var cameraprofilejson = {"profile":{"profileName":"Default","captureHeight":720,"captureWidth":1080,"headLightOff":true,"ambientLightOff":false,"moveBeforeCapture":true,"moveToX":50,"moveToY":50,"cameraName":"","controlSettings":{}},"camera":{"udevName":"/dev/video0","cameraName":"camera0","cameraNumber":0,"serverIP":""}};
 var cameraprofilejson;
 function cameraInit()
 {
@@ -17,7 +16,7 @@ function GetCameraProfile(){
                     // only supporting one for now
                     var camera = result.cameras[0];
                     cameraprofilejson = {"profile":{},"camera":{"udevName":camera.udevName,"cameraName":camera.cameraName,"cameraNumber":camera.cameraNumber,"serverIP":""}}
-                    setInterval(loadFrame, 1000);                    
+                    loadFrame();                    
                 }
                 else{
                     $("#no-cameras").removeClass("hidden");
@@ -34,6 +33,7 @@ function loadFrame(){
                 reader.onload = function() {                         
                     var b64 = reader.result
                     document.getElementById("camerapreview").src = b64
+                    loadFrame();
                 }
                 reader.readAsDataURL(result)
               });    
