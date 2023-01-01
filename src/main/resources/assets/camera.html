@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Robox :: Server Name</title>
+    <title>Robox :: Camera</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro:200,300,400,500,600,700,900">
@@ -14,27 +14,31 @@
     <link rel="stylesheet" href="assets/css/RootFonts.css">
 </head>
 
-<body id="server-name" class="canvas-grey no-touch-action">
-    <div class="container page">
+<body id="camera" class="canvas-grey no-touch-action">
+    <div class="container page" style="height: 67.25vh">
         <div class="row">
             <div>
-                <h1 class="localised page-title" data-i18n="printer-name-title">Server Name</h1>
+                <h1 class="localised page-title" data-i18n="camera-title">Camera Preview</h1>
             </div>
         </div>
         <div class="row panel rbx-white" style="margin: 0vh 1.25vh; padding:0vh 2.5vh;">
             <div>
                 <div class="row">
                     <div>
-                        <p class="localised rbx-field-title no-margins" data-i18n="server-name-enter" style="margin-top: 1vh">Enter Server Name:</p><input type="text" id="sname-input" class="rbx-field rbx-text-xlarge" autofocus="">
-                        <p class="rbx-text-note localised" data-i18n="settings-save" style="padding: 1.5vh 0vh 1.5vh">Click Save to store your settings.</p>
+                        <p class="localised rbx-field-title no-margins" data-i18n="reset-pin-label" style="margin-top: 1vh">Enter Serial Number:</p><input type="text" id="printer-serial" class="rbx-field rbx-text-serial" style="padding-left: 7.5vh;" placeholder="------" maxlength="6" autofocus="" inputmode="numeric">
+                        <p class="rbx-text-note localised"
+                            data-i18n="reset-pin-instructions" style="padding: 1.5vh 0vh 1.5vh">Enter the last six digits of the serial number of an attached printer, then click reset to return the PIN to the default of '1111'.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="container footer">
-        <div class="btn-group btn-group-justified" role="group"><a class="btn btn-default menu-bottom-button" role="button" id="left-button" href="/menu-horz.html?id=settings-s"> <img class="menu-bottom-button-icon" src="assets/img/Icon_Menu_Back.svg"></a><a class="btn btn-default menu-bottom-button rbx-invisible" role="button"
-                id="middle-button" href="/menu-grid.html?id=main"> <img style="height:6.5vh;" src="assets/img/Icon-Menu.svg"></a><a class="btn btn-default menu-bottom-button" role="button" id="right-button" href="#"> <img class="menu-bottom-button-icon" src="assets/img/Icon-Menu-Save.svg"></a></div>
+        <div class="btn-group btn-group-justified" role="group">
+            <a class="btn btn-default menu-bottom-button" role="button" id="left-button" href="/login.html"> <img class="menu-bottom-button-icon" src="assets/img/Icon_Menu_Back.svg"></a>
+            
+        </div>
     </div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>

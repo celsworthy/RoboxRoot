@@ -9,6 +9,7 @@
 	"axis-testing":"FRTest Axis/Speed",
 	"b":"FRB",
 	"bed-temp":"FRBed",
+	"camera-title": "FRCamera Preview",
 	"clean-nozzle-right":"FRClean Right Nozzle",
 	"clean-nozzle-left":"FRClean Left Nozzle",
 	"clean-nozzle-description":"FRPlease wait while the nozzle is cleaned.",
