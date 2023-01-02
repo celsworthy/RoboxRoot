@@ -4,8 +4,6 @@ function cameraInit()
     $('#left-button').on('click', goToPreviousPage);
     
     GetCameraProfile();
-    
-    setHomeButton();
 }
 
 function GetCameraProfile(){
