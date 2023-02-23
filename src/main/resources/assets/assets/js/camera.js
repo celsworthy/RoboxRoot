@@ -1,8 +1,9 @@
 var cameraprofilejson;
+var cameras;
 function cameraInit()
 {
     $('#left-button').on('click', goToPreviousPage);
-    
+    $("#selectcamera").on('change', changeCamera);
     GetCameraProfile();
 }
 
@@ -11,10 +12,19 @@ function GetCameraProfile(){
         .then(function(result) 
               {
                 if(result.cameras.length){
-                    // only supporting one for now
-                    var camera = result.cameras[0];
-                    cameraprofilejson = {"profile":{},"camera":{"udevName":camera.udevName,"cameraName":camera.cameraName,"cameraNumber":camera.cameraNumber,"serverIP":""}}
-                    loadFrame();                    
+                    cameras = result.cameras;
+
+                    if(cameras.length > 1){
+                        var select = $("#selectcamera");
+                        $("#camera-select-panel").removeClass("hidden");
+                        cameras.forEach(element => {
+                            var opt = document.createElement('option');
+                            opt.value = element.cameraNumber;
+                            opt.innerHTML = `${element.cameraNumber} : ${element.cameraName}`;
+                            select[0].appendChild(opt);
+                        });
+                    }
+                    loadCamera(0);
                 }
                 else{
                     $("#no-cameras").removeClass("hidden");
@@ -22,9 +32,15 @@ function GetCameraProfile(){
               });   
 }
 
+function loadCamera(cameraIndex){
+    var camera = cameras[cameraIndex];
+    cameraprofilejson = {"profile":{},"camera":{"udevName":camera.udevName,"cameraName":camera.cameraName,"cameraNumber":camera.cameraNumber,"serverIP":""}}
+    loadFrame();     
+}
+
 function loadFrame(){
     if(cameraprofilejson){
-        promisePostCommandToRoot('cameraControl/0/snapshot', cameraprofilejson, true)
+        promisePostCommandToRoot(`cameraControl/${cameraprofilejson.camera.cameraNumber}/snapshot`, cameraprofilejson, true)
         .then(function(result) 
               {
                 var reader = new FileReader();
@@ -36,4 +52,8 @@ function loadFrame(){
                 reader.readAsDataURL(result)
               });    
     }
+}
+
+function changeCamera(){
+    loadCamera($("#selectcamera").find(":selected").val());
 }

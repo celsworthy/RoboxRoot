@@ -10,6 +10,7 @@
 	"b":"B",
 	"bed-temp":"Bed",
 	"camera-title": "Camera Preview",
+	"camera-select-label": "Select Camera",	
 	"clean-nozzle-right":"Clean Right Nozzle",
 	"clean-nozzle-left":"Clean Left Nozzle",
 	"clean-nozzle-description":"Please wait while the nozzle is cleaned.",
