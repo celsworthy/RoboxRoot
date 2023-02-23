@@ -1,5 +1,6 @@
 var pageInitMap = {'about':aboutInit,
                    'access-pin':accessPINInit,
+                   'camera':cameraInit,
                    'console':consoleInit,
                    'head-eeprom':headEEPromInit,
                    'home':homeInit,

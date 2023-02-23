@@ -1,4 +1,4 @@
-function promiseCommandToRoot(requestType, service, dataToSend)
+function promiseCommandToRoot(requestType, service, dataToSend, isBinary)
 {
 	return new Promise(function(resolve, reject)
 	{
@@ -13,6 +13,8 @@ function promiseCommandToRoot(requestType, service, dataToSend)
                     },
                 contentType: 'application/json', // send as JSON
                 type: requestType,
+                dataType: isBinary ? "binary" : "",
+                processData: !isBinary,
                 success:function (data, textStatus, jqXHR)
                     {
                         resolve(data);
@@ -47,7 +49,7 @@ function promiseGetCommandToRoot(service, dataToSend)
     return promiseCommandToRoot('GET', service, dataToSend);
 }
 
-function promisePostCommandToRoot(service, dataToSend)
+function promisePostCommandToRoot(service, dataToSend, isBinary)
 {
-    return promiseCommandToRoot('POST', service, dataToSend);
+    return promiseCommandToRoot('POST', service, dataToSend, isBinary);
 }
