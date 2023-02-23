@@ -24,7 +24,7 @@ function GetCameraProfile(){
                             select[0].appendChild(opt);
                         });
                     }
-                    loadCamera(0);
+                    loadCamera(cameras[0].cameraNumber);
                 }
                 else{
                     $("#no-cameras").removeClass("hidden");
@@ -32,8 +32,8 @@ function GetCameraProfile(){
               });   
 }
 
-function loadCamera(cameraIndex){
-    var camera = cameras[cameraIndex];
+function loadCamera(cameranumber){
+    var camera = cameras.find(camera => camera.cameraNumber === Number(cameranumber));;
     cameraprofilejson = {"profile":{},"camera":{"udevName":camera.udevName,"cameraName":camera.cameraName,"cameraNumber":camera.cameraNumber,"serverIP":""}}
     loadFrame();     
 }
